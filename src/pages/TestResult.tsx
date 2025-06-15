@@ -16,6 +16,13 @@ interface ScoreData {
   max_score: number;
   interpretation: string;
   dimensions: { [key: string]: number };
+  detailed_interpretations?: {
+    openness?: string;
+    conscientiousness?: string;
+    extraversion?: string;
+    agreeableness?: string;
+    neuroticism?: string;
+  };
 }
 
 interface TestResultData {
@@ -73,6 +80,13 @@ const TestResult = () => {
       empathy: 'Empatie',
       social_skills: 'Abilități Sociale',
 
+      // Big Five
+      openness: 'Deschidere către Experiență',
+      conscientiousness: 'Conștiinciozitate',
+      extraversion: 'Extraversiune',
+      agreeableness: 'Amabilitate',
+      neuroticism: 'Nevrotism',
+
       // Legacy/Other - might still be in use
       emotional_intelligence: 'Inteligență Emoțională',
       leadership: 'Leadership',
@@ -114,6 +128,8 @@ const TestResult = () => {
       </div>
     );
   }
+
+  const isBigFiveTest = result.test_types.name.includes('Big Five');
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -183,6 +199,29 @@ const TestResult = () => {
                       </span>
                     </div>
                     <Progress value={value} className="w-full" />
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Detailed Interpretations for Big Five */}
+        {isBigFiveTest && result.score.detailed_interpretations && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Interpretări Detaliate</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-6">
+                {Object.entries(result.score.detailed_interpretations).map(([dimension, interpretation]) => (
+                  <div key={dimension} className="border-l-4 border-blue-500 pl-4">
+                    <h3 className="font-semibold text-lg mb-2 text-blue-700">
+                      {getDimensionLabel(dimension)}
+                    </h3>
+                    <p className="text-gray-700 leading-relaxed">
+                      {interpretation}
+                    </p>
                   </div>
                 ))}
               </div>

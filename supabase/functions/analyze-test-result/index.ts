@@ -36,7 +36,9 @@ serve(async (req) => {
       });
 
       if (!bigFiveResponse.ok) {
-        throw new Error('Failed to analyze Big Five results');
+        const errorText = await bigFiveResponse.text();
+        console.error('Big Five analysis failed:', errorText);
+        throw new Error(`Failed to analyze Big Five results: ${errorText}`);
       }
 
       analysisResult = await bigFiveResponse.json();

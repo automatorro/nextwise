@@ -73,14 +73,29 @@ const TestRunner = () => {
     mutationFn: async (resultData: any) => {
       console.log('Saving test result:', resultData);
       
-      // Save directly to Supabase
+      // Call the analyze-test-result edge function
+      const { data: analysisData, error: analysisError } = await supabase.functions.invoke('analyze-test-result', {
+        body: {
+          answers: resultData.answers,
+          test_type_id: resultData.testTypeId
+        }
+      });
+
+      if (analysisError) {
+        console.error('Analysis error:', analysisError);
+        throw new Error(`Analysis failed: ${analysisError.message}`);
+      }
+
+      console.log('Analysis result:', analysisData);
+
+      // Save to database with analyzed score
       const { data, error } = await supabase
         .from('test_results')
         .insert({
           test_type_id: resultData.testTypeId,
           user_id: resultData.userId,
           answers: resultData.answers,
-          score: resultData.score,
+          score: analysisData,
           completed_at: resultData.completedAt
         })
         .select()
@@ -275,23 +290,23 @@ const TestRunner = () => {
 
     console.log('Submitting test with:', { testInfo, answers, questions });
 
-    let score;
-    
-    // Calculate score based on test type
-    if (testInfo.name === 'Evaluare Anxietate GAD-7') {
-      score = calculateGAD7Score(answers, questions);
-    } else if (testInfo.name === 'Inteligență Emoțională') {
-      score = calculateEQScore(answers, questions);
-    } else {
-      // Default scoring for other tests
-      score = calculateDefaultScore(answers, questions);
-    }
+    // Convert answers to the format expected by the analysis function
+    const formattedAnswers: { [key: string]: number } = {};
+    questions.forEach((question, index) => {
+      const answer = answers[index];
+      if (answer !== undefined) {
+        const optionIndex = question.options.indexOf(answer);
+        if (optionIndex !== -1) {
+          // Use 1-based indexing for the answer value (1-5 for Likert scale)
+          formattedAnswers[(index + 1).toString()] = optionIndex + 1;
+        }
+      }
+    });
 
     const resultData = {
       testTypeId: testInfo.id,
       userId: user.id,
-      answers: answers,
-      score: score,
+      answers: formattedAnswers,
       completedAt: new Date().toISOString()
     };
 
