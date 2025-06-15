@@ -34,13 +34,17 @@ const App = () => (
               <Route path="/dashboard" element={
                 <ProtectedRoute>
                   <Navbar />
-                  <Dashboard />
+                  <div className="pt-20">
+                    <Dashboard />
+                  </div>
                 </ProtectedRoute>
               } />
               <Route path="/teste" element={
                 <ProtectedRoute>
                   <Navbar />
-                  <TestsPage />
+                  <div className="pt-20">
+                    <TestsPage />
+                  </div>
                 </ProtectedRoute>
               } />
               <Route path="/test/:testId" element={
@@ -51,13 +55,15 @@ const App = () => (
               <Route path="/test-result/:resultId" element={
                 <ProtectedRoute>
                   <Navbar />
-                  <TestResult />
+                  <div className="pt-20">
+                    <TestResult />
+                  </div>
                 </ProtectedRoute>
               } />
               <Route path="/career-paths" element={
                 <ProtectedRoute>
                   <Navbar />
-                  <div className="p-8 text-center">
+                  <div className="pt-20 p-8 text-center">
                     <h1 className="text-2xl font-bold">Planuri de Carieră</h1>
                     <p className="text-gray-600 mt-2">În dezvoltare...</p>
                   </div>
@@ -66,13 +72,17 @@ const App = () => (
               <Route path="/profil" element={
                 <ProtectedRoute>
                   <Navbar />
-                  <MyPage />
+                  <div className="pt-20">
+                    <MyPage />
+                  </div>
                 </ProtectedRoute>
               } />
               <Route path="/abonament" element={
                 <ProtectedRoute>
                   <Navbar />
-                  <SubscriptionPage />
+                  <div className="pt-20">
+                    <SubscriptionPage />
+                  </div>
                 </ProtectedRoute>
               } />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

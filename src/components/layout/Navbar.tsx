@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
@@ -22,7 +21,7 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
-      <div className="bg-white/80 backdrop-blur-md shadow-lg border border-white/20 rounded-2xl">
+      <div className="bg-white/60 backdrop-blur-md shadow-lg border border-white/20 rounded-2xl">
         <div className="px-6 lg:px-8">
           <div className="flex justify-between h-14">
             <div className="flex items-center">
