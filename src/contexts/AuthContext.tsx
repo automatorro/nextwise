@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
@@ -29,26 +28,48 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
+  // Check subscription when user state changes
+  const checkSubscription = async (userId: string, accessToken: string) => {
+    try {
+      await supabase.functions.invoke('check-subscription', {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+    } catch (error) {
+      console.error('Error checking subscription:', error);
+    }
+  };
+
   useEffect(() => {
     // Set up auth state listener
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         console.log('Auth event:', event, session);
         setSession(session);
         setUser(session?.user ?? null);
         setLoading(false);
 
-        // Handle email confirmation
-        if (event === 'SIGNED_IN' && session) {
+        // Check subscription status when user signs in
+        if (event === 'SIGNED_IN' && session?.user) {
           toast({
             title: "Bun venit!",
             description: "Te-ai autentificat cu succes."
           });
+          
+          // Check subscription in background
+          setTimeout(() => {
+            checkSubscription(session.user.id, session.access_token);
+          }, 1000);
         }
 
         // Handle email confirmation success
-        if (event === 'TOKEN_REFRESHED') {
+        if (event === 'TOKEN_REFRESHED' && session?.user) {
           console.log('Token refreshed successfully');
+          // Also check subscription on token refresh
+          setTimeout(() => {
+            checkSubscription(session.user.id, session.access_token);
+          }, 1000);
         }
       }
     );
@@ -58,6 +79,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setSession(session);
       setUser(session?.user ?? null);
       setLoading(false);
+      
+      // Check subscription for existing session
+      if (session?.user) {
+        setTimeout(() => {
+          checkSubscription(session.user.id, session.access_token);
+        }, 1000);
+      }
     });
 
     return () => subscription.unsubscribe();
