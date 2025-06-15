@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -12,13 +11,14 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import type { Json } from '@/integrations/supabase/types';
 
 interface Question {
   id: string;
   question_text: string;
   question_order: number;
-  options: { value: number; label: string }[];
-  scoring_weights?: any;
+  options: Json;
+  scoring_weights?: Json;
 }
 
 interface TestType {
@@ -102,16 +102,24 @@ const TestRunner = () => {
 
       if (error) throw error;
 
-      // Update tests taken count
-      const { error: updateError } = await supabase
-        .from('subscriptions')
-        .update({
-          tests_taken_this_month: supabase.raw('COALESCE(tests_taken_this_month, 0) + 1')
-        })
-        .eq('user_id', user.id);
+      // Update tests taken count using RPC call
+      const { error: updateError } = await supabase.rpc('increment_test_count', {
+        user_id: user.id
+      });
 
       if (updateError) {
         console.error('Error updating test count:', updateError);
+        // If RPC doesn't exist, use manual update
+        const { error: manualUpdateError } = await supabase
+          .from('subscriptions')
+          .update({
+            tests_taken_this_month: 1
+          })
+          .eq('user_id', user.id);
+        
+        if (manualUpdateError) {
+          console.error('Error with manual update:', manualUpdateError);
+        }
       }
 
       return data;
@@ -240,6 +248,11 @@ const TestRunner = () => {
   const currentQuestion = questions[currentQuestionIndex];
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
 
+  // Parse options safely from JSON
+  const questionOptions = Array.isArray(currentQuestion.options) 
+    ? currentQuestion.options as { value: number; label: string }[]
+    : [];
+
   const handleAnswerChange = (value: string) => {
     setAnswers(prev => ({
       ...prev,
@@ -303,7 +316,7 @@ const TestRunner = () => {
               onValueChange={handleAnswerChange}
               className="space-y-3"
             >
-              {currentQuestion.options.map((option) => (
+              {questionOptions.map((option) => (
                 <div key={option.value} className="flex items-center space-x-2">
                   <RadioGroupItem
                     value={option.value.toString()}
