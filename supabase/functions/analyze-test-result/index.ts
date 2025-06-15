@@ -1,137 +1,130 @@
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
-
-interface TestResultRequest {
-  testTypeId: string;
-  userId: string;
-  answers: { [key: string]: string };
-  completedAt: string;
 }
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders })
   }
 
   try {
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      {
-        global: {
-          headers: { Authorization: req.headers.get('Authorization')! },
+      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+    )
+
+    const { answers, test_type_id } = await req.json()
+    console.log('Analyzing test result for test_type_id:', test_type_id)
+
+    let analysisResult;
+
+    // Route to appropriate analysis function based on test type
+    if (test_type_id === 'big5-test-2024-v1') {
+      // Call the Big Five analysis function
+      const bigFiveResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/analyze-big-five-result`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`
         },
+        body: JSON.stringify({ answers, test_type_id })
+      });
+
+      if (!bigFiveResponse.ok) {
+        throw new Error('Failed to analyze Big Five results');
       }
-    );
 
-    const { testTypeId, userId, answers, completedAt }: TestResultRequest = await req.json();
-
-    // Calculate basic score
-    const totalQuestions = Object.keys(answers).length;
-    const answeredQuestions = Object.values(answers).filter(answer => answer).length;
-    const completionRate = (answeredQuestions / totalQuestions) * 100;
-
-    // Generate AI analysis using Gemini
-    const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
-    let aiAnalysis = '';
-    let recommendations = '';
-
-    if (geminiApiKey) {
-      try {
-        const analysisPrompt = `
-Analizează următoarele răspunsuri la un test psihologic și oferă o analiză detaliată în română:
-
-Răspunsuri: ${JSON.stringify(answers)}
-Rata de completare: ${completionRate}%
-
-Te rog să oferi:
-1. O analiză detaliată a personalității bazată pe răspunsuri
-2. Puncte forte identificate
-3. Domenii de dezvoltare
-4. Recomandări practice pentru dezvoltare personală și profesională
-
-Răspunsul să fie în română, profesional și constructiv.
-        `;
-
-        const geminiResponse = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            contents: [{
-              parts: [{
-                text: analysisPrompt
-              }]
-            }]
-          }),
-        });
-
-        if (geminiResponse.ok) {
-          const geminiData = await geminiResponse.json();
-          const fullResponse = geminiData.candidates[0]?.content?.parts[0]?.text || '';
-          
-          // Split the response into analysis and recommendations
-          const parts = fullResponse.split('Recomandări');
-          aiAnalysis = parts[0]?.trim() || fullResponse;
-          recommendations = parts[1] ? 'Recomandări' + parts[1].trim() : 'Recomandări personalizate vor fi disponibile în curând.';
-        }
-      } catch (error) {
-        console.error('Error calling Gemini API:', error);
-        aiAnalysis = 'Analiza AI nu este disponibilă momentan.';
-        recommendations = 'Recomandările vor fi generate în curând.';
-      }
+      analysisResult = await bigFiveResponse.json();
+    } else {
+      // Handle other test types with existing logic
+      analysisResult = await analyzeOtherTests(answers, test_type_id, supabaseClient);
     }
 
-    // Calculate score based on answers
-    const score = {
-      overall: completionRate,
-      dimensions: {
-        emotional_intelligence: Math.random() * 100,
-        social_skills: Math.random() * 100,
-        leadership: Math.random() * 100,
-        stress_management: Math.random() * 100
+    return new Response(
+      JSON.stringify(analysisResult),
+      { 
+        headers: { 
+          ...corsHeaders,
+          'Content-Type': 'application/json' 
+        } 
       }
-    };
-
-    // Save to database
-    const { data, error } = await supabaseClient
-      .from('test_results')
-      .insert({
-        test_type_id: testTypeId,
-        user_id: userId,
-        answers: answers,
-        score: score,
-        ai_analysis: aiAnalysis,
-        recommendations: recommendations,
-        completed_at: completedAt
-      })
-      .select()
-      .single();
-
-    if (error) {
-      console.error('Database error:', error);
-      throw error;
-    }
-
-    return new Response(JSON.stringify(data), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-
+    )
   } catch (error) {
-    console.error('Error in analyze-test-result function:', error);
+    console.error('Error in analyze-test-result:', error)
     return new Response(
       JSON.stringify({ error: error.message }),
-      {
+      { 
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        headers: { 
+          ...corsHeaders,
+          'Content-Type': 'application/json' 
+        } 
       }
-    );
+    )
   }
-});
+})
+
+async function analyzeOtherTests(answers: any, test_type_id: string, supabaseClient: any) {
+  // Get test questions to understand the scoring
+  const { data: questions } = await supabaseClient
+    .from('test_questions')
+    .select('*')
+    .eq('test_type_id', test_type_id)
+    .order('question_order')
+
+  if (!questions || questions.length === 0) {
+    throw new Error('No questions found for this test')
+  }
+
+  // Calculate score based on answers
+  let totalScore = 0
+  let maxScore = 0
+
+  questions.forEach((question: any, index: number) => {
+    const questionNumber = (index + 1).toString()
+    const answer = answers[questionNumber]
+    
+    if (answer !== undefined && question.scoring_weights) {
+      const weights = Array.isArray(question.scoring_weights) 
+        ? question.scoring_weights 
+        : JSON.parse(question.scoring_weights)
+      
+      if (weights && weights[answer - 1] !== undefined) {
+        totalScore += weights[answer - 1]
+        maxScore += Math.max(...weights)
+      }
+    }
+  })
+
+  // Calculate percentage
+  const percentage = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0
+
+  // Generate interpretation based on percentage
+  let interpretation = ''
+  if (percentage >= 80) {
+    interpretation = 'Scor foarte ridicat'
+  } else if (percentage >= 60) {
+    interpretation = 'Scor ridicat'
+  } else if (percentage >= 40) {
+    interpretation = 'Scor moderat'
+  } else if (percentage >= 20) {
+    interpretation = 'Scor scăzut'
+  } else {
+    interpretation = 'Scor foarte scăzut'
+  }
+
+  return {
+    overall: percentage,
+    raw_score: totalScore,
+    max_score: maxScore,
+    interpretation: interpretation,
+    dimensions: {
+      general_score: percentage
+    }
+  }
+}
