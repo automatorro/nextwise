@@ -3,11 +3,12 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useUserRole } from '@/hooks/useUserRole';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
-import { Loader2, Trophy, TrendingUp, User, Calendar, Award, BookOpen } from 'lucide-react';
+import { Loader2, Trophy, TrendingUp, User, Calendar, Award, BookOpen, Shield } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface TestResult {
@@ -29,6 +30,7 @@ interface UserStats {
 
 const MyPage = () => {
   const { user } = useAuth();
+  const { isAdmin, loading: roleLoading } = useUserRole();
   const navigate = useNavigate();
 
   // Fetch user's test results
@@ -118,7 +120,7 @@ const MyPage = () => {
     return 'destructive';
   };
 
-  if (resultsLoading || profileLoading) {
+  if (resultsLoading || profileLoading || roleLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin" />
@@ -131,8 +133,16 @@ const MyPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Pagina Mea</h1>
-          <p className="text-gray-600">
+          <div className="flex items-center space-x-3">
+            <h1 className="text-3xl font-bold text-gray-900">Pagina Mea</h1>
+            {isAdmin() && (
+              <Badge variant="destructive" className="flex items-center space-x-1">
+                <Shield className="w-3 h-3" />
+                <span>Administrator</span>
+              </Badge>
+            )}
+          </div>
+          <p className="text-gray-600 mt-2">
             Bun venit, {profile?.full_name || user?.email}! Aici poți vedea progresul tău și rezultatele testelor.
           </p>
         </div>
@@ -182,13 +192,34 @@ const MyPage = () => {
               <div className="flex items-center">
                 <Award className="h-8 w-8 text-purple-600" />
                 <div className="ml-4">
-                  <p className="text-sm font-medium text-gray-600">Cel Mai Bun La</p>
-                  <p className="text-sm font-bold text-gray-900">{userStats.bestCategory}</p>
+                  <p className="text-sm font-medium text-gray-600">
+                    {isAdmin() ? 'Status' : 'Cel Mai Bun La'}
+                  </p>
+                  <p className="text-sm font-bold text-gray-900">
+                    {isAdmin() ? 'Administrator' : userStats.bestCategory}
+                  </p>
                 </div>
               </div>
             </CardContent>
           </Card>
         </div>
+
+        {/* Admin Notice */}
+        {isAdmin() && (
+          <Card className="mb-8 border-orange-200 bg-orange-50">
+            <CardContent className="p-6">
+              <div className="flex items-center space-x-3">
+                <Shield className="h-6 w-6 text-orange-600" />
+                <div>
+                  <h3 className="font-semibold text-orange-900">Acces Administrator</h3>
+                  <p className="text-orange-700 text-sm">
+                    Ai acces nelimitat la toate testele și funcționalitățile platformei.
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           {/* Recent Test Results */}
@@ -274,6 +305,15 @@ const MyPage = () => {
                     <label className="text-sm font-medium text-gray-600">Email</label>
                     <p className="text-gray-900">{user?.email}</p>
                   </div>
+                  {isAdmin() && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-600">Rol</label>
+                      <div className="flex items-center space-x-2 mt-1">
+                        <Shield className="w-4 h-4 text-red-600" />
+                        <span className="text-red-600 font-medium">Administrator</span>
+                      </div>
+                    </div>
+                  )}
                   <div>
                     <label className="text-sm font-medium text-gray-600">Membru din</label>
                     <p className="text-gray-900">
@@ -304,9 +344,17 @@ const MyPage = () => {
                   <div>
                     <div className="flex justify-between text-sm mb-2">
                       <span>Teste Completate</span>
-                      <span>{userStats.totalTests}/10</span>
+                      <span>
+                        {isAdmin() 
+                          ? `${userStats.totalTests}/∞` 
+                          : `${userStats.totalTests}/10`
+                        }
+                      </span>
                     </div>
-                    <Progress value={Math.min((userStats.totalTests / 10) * 100, 100)} className="w-full" />
+                    <Progress 
+                      value={isAdmin() ? 100 : Math.min((userStats.totalTests / 10) * 100, 100)} 
+                      className="w-full" 
+                    />
                   </div>
                 </div>
               </CardContent>
@@ -332,13 +380,15 @@ const MyPage = () => {
                   >
                     Mergi la Dashboard
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    className="w-full"
-                    onClick={() => navigate('/abonament')}
-                  >
-                    Vezi Abonamentul
-                  </Button>
+                  {!isAdmin() && (
+                    <Button 
+                      variant="outline" 
+                      className="w-full"
+                      onClick={() => navigate('/abonament')}
+                    >
+                      Vezi Abonamentul
+                    </Button>
+                  )}
                 </div>
               </CardContent>
             </Card>
