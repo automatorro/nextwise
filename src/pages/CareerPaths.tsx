@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscription } from '@/hooks/useSubscription';
@@ -56,19 +55,19 @@ const CareerPaths = () => {
 
   const recommendations = [
     {
-      type: 'skill',
+      type: 'skill' as const,
       title: 'Dezvoltă competențele de comunicare',
       description: 'Bazat pe testul de personalitate, îți recomandăm să lucrezi la abilități de prezentare',
       action: 'Vezi cursuri'
     },
     {
-      type: 'path',
+      type: 'path' as const,
       title: 'Explorează UX/UI Design',
       description: 'Rezultatele tale sugerează o afinitate pentru design și experiența utilizatorului',
       action: 'Creează plan'
     },
     {
-      type: 'test',
+      type: 'test' as const,
       title: 'Completează testul de leadership',
       description: 'Pentru recomandări mai precise despre rolurile de management',
       action: 'Fă testul'
