@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -9,6 +8,8 @@ import { Progress } from '@/components/ui/progress';
 import { Loader2, ArrowLeft, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import BigFiveRadarChart from '@/components/charts/BigFiveRadarChart';
+import BigFiveExplanations from '@/components/charts/BigFiveExplanations';
 
 interface ScoreData {
   overall: number;
@@ -182,6 +183,22 @@ const TestResult = () => {
           </CardContent>
         </Card>
 
+        {/* Big Five Radar Chart */}
+        {isBigFiveTest && result.score.dimensions && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Vizualizare Radar - Dimensiunile Big Five</CardTitle>
+              <p className="text-sm text-gray-600">
+                Graficul radar arată profilul tău de personalitate pe cele 5 dimensiuni principale. 
+                Fiecare axă reprezintă o dimensiune, iar scorul este afișat ca procent din scorul maxim (40 puncte).
+              </p>
+            </CardHeader>
+            <CardContent>
+              <BigFiveRadarChart dimensions={result.score.dimensions} />
+            </CardContent>
+          </Card>
+        )}
+
         {/* Dimensions */}
         {result.score.dimensions && Object.keys(result.score.dimensions).length > 0 && (
           <Card className="mb-8">
@@ -202,6 +219,18 @@ const TestResult = () => {
                   </div>
                 ))}
               </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Big Five Explanations */}
+        {isBigFiveTest && result.score.dimensions && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Ghid de Interpretare</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <BigFiveExplanations dimensions={result.score.dimensions} />
             </CardContent>
           </Card>
         )}
