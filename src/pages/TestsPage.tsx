@@ -25,6 +25,7 @@ const TestsPage = () => {
   const { data: tests, isLoading, error } = useQuery({
     queryKey: ['tests'],
     queryFn: async () => {
+      console.log('Fetching tests from database...');
       const { data, error } = await supabase
         .from('test_types')
         .select(`
@@ -35,8 +36,21 @@ const TestsPage = () => {
           )
         `);
       
-      if (error) throw error;
-      return data as TestType[];
+      if (error) {
+        console.error('Error fetching tests:', error);
+        throw error;
+      }
+      
+      console.log('Raw test data from database:', data);
+      
+      // Filter out any duplicates on the frontend as well
+      const uniqueTests = data?.filter((test, index, self) => 
+        index === self.findIndex(t => t.name === test.name && t.questions_count === test.questions_count)
+      ) || [];
+      
+      console.log('Filtered unique tests:', uniqueTests);
+      
+      return uniqueTests as TestType[];
     }
   });
 
@@ -86,6 +100,11 @@ const TestsPage = () => {
           <p className="text-gray-600 mt-2">
             Descoperă-ți personalitatea și abilitățile prin testele noastre validate științific
           </p>
+          {tests && (
+            <p className="text-sm text-gray-500 mt-2">
+              Total teste găsite: {tests.length}
+            </p>
+          )}
         </div>
 
         {Object.entries(groupedTests).map(([categoryName, categoryTests]) => (
@@ -107,6 +126,9 @@ const TestsPage = () => {
                         <CardDescription className="mt-2">
                           {test.description}
                         </CardDescription>
+                        <div className="text-xs text-gray-400 mt-1">
+                          ID: {test.id}
+                        </div>
                       </div>
                       <div className={`p-2 rounded-lg ${
                         test.subscription_required === 'basic' ? 'bg-green-100' :
