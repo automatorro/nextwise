@@ -15,6 +15,7 @@ import TestRunner from "@/pages/TestRunner";
 import TestResult from "@/pages/TestResult";
 import SubscriptionPage from "@/pages/SubscriptionPage";
 import MyPage from "@/pages/MyPage";
+import CareerPaths from "@/pages/CareerPaths";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -63,9 +64,8 @@ const App = () => (
               <Route path="/career-paths" element={
                 <ProtectedRoute>
                   <Navbar />
-                  <div className="pt-20 p-8 text-center">
-                    <h1 className="text-2xl font-bold">Planuri de Carieră</h1>
-                    <p className="text-gray-600 mt-2">În dezvoltare...</p>
+                  <div className="pt-20">
+                    <CareerPaths />
                   </div>
                 </ProtectedRoute>
               } />
