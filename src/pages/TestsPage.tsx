@@ -5,8 +5,9 @@ import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Loader2, Clock, Users, Brain, Target, Heart } from 'lucide-react';
+import { Loader2, Clock, Users, Brain, Target, Heart, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { useSubscription } from '@/hooks/useSubscription';
 
 interface TestType {
   id: string;
@@ -19,14 +20,19 @@ interface TestType {
     name: string;
     icon: string;
   };
+  actual_questions_count?: number;
 }
 
 const TestsPage = () => {
+  const { subscription, canTakeTest } = useSubscription();
+
   const { data: tests, isLoading, error } = useQuery({
     queryKey: ['tests'],
     queryFn: async () => {
       console.log('Fetching tests from database...');
-      const { data, error } = await supabase
+      
+      // First get all test types with their categories
+      const { data: testTypes, error: testTypesError } = await supabase
         .from('test_types')
         .select(`
           *,
@@ -36,21 +42,40 @@ const TestsPage = () => {
           )
         `);
       
-      if (error) {
-        console.error('Error fetching tests:', error);
-        throw error;
+      if (testTypesError) {
+        console.error('Error fetching test types:', testTypesError);
+        throw testTypesError;
       }
       
-      console.log('Raw test data from database:', data);
+      console.log('Raw test types from database:', testTypes);
       
-      // Filter out any duplicates on the frontend as well
-      const uniqueTests = data?.filter((test, index, self) => 
-        index === self.findIndex(t => t.name === test.name && t.questions_count === test.questions_count)
-      ) || [];
+      // For each test type, count actual questions
+      const testsWithQuestionCounts = await Promise.all(
+        testTypes.map(async (testType) => {
+          const { count, error: countError } = await supabase
+            .from('test_questions')
+            .select('*', { count: 'exact', head: true })
+            .eq('test_type_id', testType.id);
+          
+          if (countError) {
+            console.error(`Error counting questions for test ${testType.id}:`, countError);
+          }
+          
+          return {
+            ...testType,
+            actual_questions_count: count || 0
+          };
+        })
+      );
       
-      console.log('Filtered unique tests:', uniqueTests);
+      // Filter out tests with no questions
+      const validTests = testsWithQuestionCounts.filter(test => 
+        test.actual_questions_count > 0
+      );
       
-      return uniqueTests as TestType[];
+      console.log('Valid tests with questions:', validTests);
+      
+      return validTests as TestType[];
     }
   });
 
@@ -64,10 +89,46 @@ const TestsPage = () => {
     return icons[iconName] || Brain;
   };
 
+  const canUserTakeTest = (test: TestType) => {
+    if (!canTakeTest()) return false;
+    
+    // Check subscription requirements
+    if (!subscription) return test.subscription_required === 'basic';
+    
+    if (subscription.is_admin) return true;
+    
+    switch (test.subscription_required) {
+      case 'basic':
+        return true;
+      case 'professional':
+        return ['professional', 'premium'].includes(subscription.subscription_type);
+      case 'premium':
+        return subscription.subscription_type === 'premium';
+      default:
+        return true;
+    }
+  };
+
+  const getSubscriptionBadgeColor = (required: string) => {
+    switch (required) {
+      case 'basic':
+        return 'bg-green-100 text-green-800';
+      case 'professional':
+        return 'bg-blue-100 text-blue-800';
+      case 'premium':
+        return 'bg-purple-100 text-purple-800';
+      default:
+        return 'bg-gray-100 text-gray-800';
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin" />
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
+          <p>Se încarcă testele...</p>
+        </div>
       </div>
     );
   }
@@ -76,6 +137,7 @@ const TestsPage = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
+          <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Eroare la încărcarea testelor</h2>
           <p className="text-gray-600">Vă rugăm să încercați din nou mai târziu.</p>
         </div>
@@ -102,7 +164,7 @@ const TestsPage = () => {
           </p>
           {tests && (
             <p className="text-sm text-gray-500 mt-2">
-              Total teste găsite: {tests.length}
+              {tests.length} teste disponibile
             </p>
           )}
         </div>
@@ -117,54 +179,79 @@ const TestsPage = () => {
             </h2>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categoryTests.map((test) => (
-                <Card key={test.id} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg">{test.name}</CardTitle>
-                        <CardDescription className="mt-2">
-                          {test.description}
-                        </CardDescription>
-                        <div className="text-xs text-gray-400 mt-1">
-                          ID: {test.id}
+              {categoryTests.map((test) => {
+                const userCanTake = canUserTakeTest(test);
+                
+                return (
+                  <Card key={test.id} className="hover:shadow-lg transition-shadow">
+                    <CardHeader>
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <CardTitle className="text-lg">{test.name}</CardTitle>
+                          <CardDescription className="mt-2">
+                            {test.description}
+                          </CardDescription>
+                        </div>
+                        <div className={`p-2 rounded-lg ${
+                          test.subscription_required === 'basic' ? 'bg-green-100' :
+                          test.subscription_required === 'professional' ? 'bg-blue-100' :
+                          'bg-purple-100'
+                        }`}>
+                          {React.createElement(getIconComponent(test.test_categories.icon), {
+                            className: `w-5 h-5 ${
+                              test.subscription_required === 'basic' ? 'text-green-600' :
+                              test.subscription_required === 'professional' ? 'text-blue-600' :
+                              'text-purple-600'
+                            }`
+                          })}
                         </div>
                       </div>
-                      <div className={`p-2 rounded-lg ${
-                        test.subscription_required === 'basic' ? 'bg-green-100' :
-                        test.subscription_required === 'professional' ? 'bg-blue-100' :
-                        'bg-purple-100'
-                      }`}>
-                        {React.createElement(getIconComponent(test.test_categories.icon), {
-                          className: `w-5 h-5 ${
-                            test.subscription_required === 'basic' ? 'text-green-600' :
-                            test.subscription_required === 'professional' ? 'text-blue-600' :
-                            'text-purple-600'
-                          }`
-                        })}
+                    </CardHeader>
+                    
+                    <CardContent>
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Clock className="w-4 h-4 mr-1" />
+                          {test.estimated_duration} min
+                        </div>
+                        <Badge variant="secondary">
+                          {test.actual_questions_count} întrebări
+                        </Badge>
                       </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent>
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {test.estimated_duration} min
-                      </div>
-                      <Badge variant="secondary">
-                        {test.questions_count} întrebări
-                      </Badge>
-                    </div>
 
-                    <Link to={`/test/${test.id}`}>
-                      <Button className="w-full">
-                        Începe Testul
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
+                      <div className="mb-4">
+                        <Badge 
+                          variant="outline" 
+                          className={getSubscriptionBadgeColor(test.subscription_required)}
+                        >
+                          {test.subscription_required === 'basic' && 'Gratuit'}
+                          {test.subscription_required === 'professional' && 'Professional'}
+                          {test.subscription_required === 'premium' && 'Premium'}
+                        </Badge>
+                      </div>
+
+                      {userCanTake ? (
+                        <Link to={`/test/${test.id}`}>
+                          <Button className="w-full">
+                            Începe Testul
+                          </Button>
+                        </Link>
+                      ) : (
+                        <div className="space-y-2">
+                          <Button disabled className="w-full">
+                            Necesită {test.subscription_required}
+                          </Button>
+                          <Link to="/abonament">
+                            <Button variant="outline" size="sm" className="w-full">
+                              Upgrade abonament
+                            </Button>
+                          </Link>
+                        </div>
+                      )}
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           </div>
         ))}

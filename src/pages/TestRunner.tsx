@@ -4,328 +4,145 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useSubscription } from '@/hooks/useSubscription';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
+import { Loader2, AlertCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 interface Question {
   id: string;
   question_text: string;
   question_order: number;
-  options: string[];
-  question_type: string;
-  scoring_weights: number[];
+  options: { value: number; label: string }[];
+  scoring_weights?: any;
 }
 
 interface TestType {
   id: string;
   name: string;
   description: string;
-  questions_count: number;
   estimated_duration: number;
+  questions_count: number;
 }
 
 const TestRunner = () => {
   const { testId } = useParams<{ testId: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { canTakeTest } = useSubscription();
   const { toast } = useToast();
-  
-  const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [answers, setAnswers] = useState<{ [key: number]: string }>({});
-  const [timeRemaining, setTimeRemaining] = useState(0);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [answers, setAnswers] = useState<{ [questionId: string]: number }>({});
+  const [isStarted, setIsStarted] = useState(false);
 
-  const { data: testInfo, isLoading: testLoading } = useQuery({
-    queryKey: ['test', testId],
+  // Fetch test type
+  const { data: testType, isLoading: testTypeLoading, error: testTypeError } = useQuery({
+    queryKey: ['testType', testId],
     queryFn: async () => {
+      if (!testId) throw new Error('Test ID is required');
+      
       const { data, error } = await supabase
         .from('test_types')
         .select('*')
         .eq('id', testId)
         .single();
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching test type:', error);
+        throw error;
+      }
+      
       return data as TestType;
     },
     enabled: !!testId
   });
 
-  const { data: questions, isLoading: questionsLoading } = useQuery({
-    queryKey: ['test-questions', testId],
+  // Fetch questions
+  const { data: questions, isLoading: questionsLoading, error: questionsError } = useQuery({
+    queryKey: ['questions', testId],
     queryFn: async () => {
+      if (!testId) throw new Error('Test ID is required');
+      
       const { data, error } = await supabase
         .from('test_questions')
         .select('*')
         .eq('test_type_id', testId)
         .order('question_order');
       
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching questions:', error);
+        throw error;
+      }
+      
+      console.log('Fetched questions:', data);
       return data as Question[];
     },
-    enabled: !!testId
+    enabled: !!testId && !!testType
   });
 
-  const saveResultMutation = useMutation({
-    mutationFn: async (resultData: any) => {
-      console.log('Saving test result:', resultData);
-      
-      // Call the analyze-test-result edge function
-      const { data: analysisData, error: analysisError } = await supabase.functions.invoke('analyze-test-result', {
-        body: {
-          answers: resultData.answers,
-          test_type_id: resultData.testTypeId
-        }
-      });
+  // Submit test mutation
+  const submitTestMutation = useMutation({
+    mutationFn: async (testData: { answers: any; score: any }) => {
+      if (!user || !testId) throw new Error('Missing required data');
 
-      if (analysisError) {
-        console.error('Analysis error:', analysisError);
-        throw new Error(`Analysis failed: ${analysisError.message}`);
-      }
-
-      console.log('Analysis result:', analysisData);
-
-      // Save to database with analyzed score
       const { data, error } = await supabase
         .from('test_results')
         .insert({
-          test_type_id: resultData.testTypeId,
-          user_id: resultData.userId,
-          answers: resultData.answers,
-          score: analysisData,
-          completed_at: resultData.completedAt
+          user_id: user.id,
+          test_type_id: testId,
+          answers: testData.answers,
+          score: testData.score
         })
         .select()
         .single();
 
-      if (error) {
-        console.error('Supabase error:', error);
-        throw error;
+      if (error) throw error;
+
+      // Update tests taken count
+      const { error: updateError } = await supabase
+        .from('subscriptions')
+        .update({
+          tests_taken_this_month: supabase.raw('COALESCE(tests_taken_this_month, 0) + 1')
+        })
+        .eq('user_id', user.id);
+
+      if (updateError) {
+        console.error('Error updating test count:', updateError);
       }
 
-      console.log('Test result saved successfully:', data);
       return data;
     },
     onSuccess: (data) => {
-      toast({
-        title: "Test completat!",
-        description: "Rezultatul tău a fost salvat cu succes."
-      });
       navigate(`/test-result/${data.id}`);
     },
-    onError: (error: any) => {
-      console.error('Error saving test result:', error);
+    onError: (error) => {
+      console.error('Error submitting test:', error);
       toast({
         title: "Eroare",
-        description: error?.message || "Nu am putut salva rezultatul testului.",
+        description: "Nu am putut salva rezultatul testului.",
         variant: "destructive"
       });
     }
   });
 
+  // Check if user can take test
   useEffect(() => {
-    if (testInfo) {
-      setTimeRemaining(testInfo.estimated_duration * 60);
-    }
-  }, [testInfo]);
-
-  useEffect(() => {
-    if (timeRemaining > 0) {
-      const timer = setTimeout(() => {
-        setTimeRemaining(timeRemaining - 1);
-      }, 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [timeRemaining]);
-
-  const calculateGAD7Score = (answers: { [key: number]: string }, questions: Question[]) => {
-    let totalScore = 0;
-    
-    Object.entries(answers).forEach(([questionIndex, answer]) => {
-      const question = questions[parseInt(questionIndex)];
-      if (question && question.scoring_weights) {
-        const optionIndex = question.options.indexOf(answer);
-        if (optionIndex !== -1 && question.scoring_weights[optionIndex] !== undefined) {
-          totalScore += question.scoring_weights[optionIndex];
-        }
-      }
-    });
-
-    // GAD-7 interpretation
-    let interpretation = '';
-    if (totalScore <= 4) {
-      interpretation = 'Anxietate minimală';
-    } else if (totalScore <= 9) {
-      interpretation = 'Anxietate ușoară';
-    } else if (totalScore <= 14) {
-      interpretation = 'Anxietate moderată';
-    } else {
-      interpretation = 'Anxietate severă';
-    }
-
-    return {
-      overall: Math.round((totalScore / 21) * 100),
-      raw_score: totalScore,
-      max_score: 21,
-      interpretation: interpretation,
-      dimensions: {
-        anxiety_level: Math.round((totalScore / 21) * 100)
-      }
-    };
-  };
-
-  const calculateEQScore = (answers: { [key: number]: string }, questions: Question[]) => {
-    const dimensions = {
-      self_awareness: [0, 1],
-      self_regulation: [2, 3],
-      motivation: [4, 5],
-      empathy: [6, 7],
-      social_skills: [8, 9]
-    };
-
-    let totalScore = 0;
-    const dimensionScores: { [key: string]: number } = {
-      self_awareness: 0,
-      self_regulation: 0,
-      motivation: 0,
-      empathy: 0,
-      social_skills: 0,
-    };
-
-    Object.entries(answers).forEach(([questionIndexStr, answer]) => {
-      const questionIndex = parseInt(questionIndexStr);
-      const question = questions[questionIndex];
-      if (question && question.scoring_weights) {
-        const optionIndex = question.options.indexOf(answer);
-        if (optionIndex !== -1 && question.scoring_weights[optionIndex] !== undefined) {
-          const score = question.scoring_weights[optionIndex];
-          totalScore += score;
-
-          for (const [dim, indices] of Object.entries(dimensions)) {
-            if (indices.includes(questionIndex)) {
-              dimensionScores[dim] += score;
-            }
-          }
-        }
-      }
-    });
-
-    const maxScorePerQuestion = 5;
-    const maxTotalScore = questions.length * maxScorePerQuestion;
-    
-    const formattedDimensions: { [key: string]: number } = {};
-    for (const [dim, indices] of Object.entries(dimensions)) {
-      const maxDimScore = indices.length * maxScorePerQuestion;
-      formattedDimensions[dim] = maxDimScore > 0 ? Math.round((dimensionScores[dim] / maxDimScore) * 100) : 0;
-    }
-
-    return {
-      overall: maxTotalScore > 0 ? Math.round((totalScore / maxTotalScore) * 100) : 0,
-      raw_score: totalScore,
-      max_score: maxTotalScore,
-      interpretation: 'Rezultat calculat pentru Inteligența Emoțională.',
-      dimensions: formattedDimensions,
-    };
-  };
-
-  const calculateDefaultScore = (answers: { [key: number]: string }, questions: Question[]) => {
-    let totalScore = 0;
-    let maxScore = 0;
-    
-    Object.entries(answers).forEach(([questionIndex, answer]) => {
-      const question = questions[parseInt(questionIndex)];
-      if (question && question.scoring_weights) {
-        const optionIndex = question.options.indexOf(answer);
-        if (optionIndex !== -1 && question.scoring_weights[optionIndex] !== undefined) {
-          totalScore += question.scoring_weights[optionIndex];
-        }
-        maxScore += Math.max(...question.scoring_weights);
-      }
-    });
-
-    const percentage = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
-
-    return {
-      overall: percentage,
-      raw_score: totalScore,
-      max_score: maxScore,
-      interpretation: 'Rezultat calculat',
-      dimensions: {
-        general_score: percentage
-      }
-    };
-  };
-
-  const handleAnswerChange = (value: string) => {
-    setAnswers(prev => ({
-      ...prev,
-      [currentQuestion]: value
-    }));
-  };
-
-  const handleNext = () => {
-    if (questions && currentQuestion < questions.length - 1) {
-      setCurrentQuestion(currentQuestion + 1);
-    }
-  };
-
-  const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion(currentQuestion - 1);
-    }
-  };
-
-  const handleSubmit = () => {
-    if (!user || !testInfo || !questions) {
+    if (!canTakeTest()) {
       toast({
-        title: "Eroare",
-        description: "Informații lipsă pentru salvarea testului.",
+        title: "Limită atinsă",
+        description: "Ai atins limita de teste pentru această lună.",
         variant: "destructive"
       });
-      return;
+      navigate('/abonament');
     }
+  }, [canTakeTest, navigate, toast]);
 
-    console.log('Submitting test with:', { testInfo, answers, questions });
-
-    // Convert answers to the format expected by the analysis function
-    const formattedAnswers: { [key: string]: number } = {};
-    questions.forEach((question, index) => {
-      const answer = answers[index];
-      if (answer !== undefined) {
-        const optionIndex = question.options.indexOf(answer);
-        if (optionIndex !== -1) {
-          // Use 1-based indexing for the answer value (1-5 for Likert scale)
-          formattedAnswers[(index + 1).toString()] = optionIndex + 1;
-        }
-      }
-    });
-
-    const resultData = {
-      testTypeId: testInfo.id,
-      userId: user.id,
-      answers: formattedAnswers,
-      completedAt: new Date().toISOString()
-    };
-
-    console.log('Final result data:', resultData);
-    saveResultMutation.mutate(resultData);
-  };
-
-  const formatTime = (seconds: number) => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
-  };
-
-  const isLoading = testLoading || questionsLoading;
-  const progress = questions ? ((currentQuestion + 1) / questions.length) * 100 : 0;
-  const isLastQuestion = questions ? currentQuestion === questions.length - 1 : false;
-  const canProceed = answers[currentQuestion] !== undefined;
-
-  if (isLoading) {
+  // Handle loading states and errors
+  if (testTypeLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin" />
@@ -333,120 +150,202 @@ const TestRunner = () => {
     );
   }
 
-  if (!testInfo || !questions || questions.length === 0) {
+  if (testTypeError || !testType) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Card className="max-w-md">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <AlertCircle className="w-5 h-5 mr-2 text-red-500" />
+              Test nu a fost găsit
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">
+              Testul solicitat nu există sau nu este disponibil.
+            </p>
+            <Button onClick={() => navigate('/teste')} className="w-full">
+              Înapoi la teste
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (questionsLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Test nu a fost găsit</h2>
-          <Button onClick={() => navigate('/teste')}>
-            Înapoi la teste
-          </Button>
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
+          <p>Se încarcă întrebările...</p>
         </div>
       </div>
     );
   }
 
-  const currentQuestionData = questions[currentQuestion];
+  if (questionsError || !questions || questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Card className="max-w-md">
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <AlertCircle className="w-5 h-5 mr-2 text-orange-500" />
+              Test indisponibil
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">
+              Testul "{testType.name}" nu are întrebări configurate momentan. 
+              Vă rugăm să încercați mai târziu sau să alegeți un alt test.
+            </p>
+            <Button onClick={() => navigate('/teste')} className="w-full">
+              Înapoi la teste
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  // Show test start screen
+  if (!isStarted) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Card className="max-w-2xl">
+          <CardHeader>
+            <CardTitle>{testType.name}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 mb-4">{testType.description}</p>
+            <div className="grid grid-cols-2 gap-4 mb-6">
+              <div>
+                <p className="text-sm text-gray-500">Numărul de întrebări</p>
+                <p className="font-semibold">{questions.length}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500">Durata estimată</p>
+                <p className="font-semibold">{testType.estimated_duration} minute</p>
+              </div>
+            </div>
+            <Button onClick={() => setIsStarted(true)} className="w-full">
+              Începe testul
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  const currentQuestion = questions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+
+  const handleAnswerChange = (value: string) => {
+    setAnswers(prev => ({
+      ...prev,
+      [currentQuestion.id]: parseInt(value)
+    }));
+  };
+
+  const handleNext = () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
+    } else {
+      handleSubmit();
+    }
+  };
+
+  const handleSubmit = () => {
+    // Calculate score based on answers
+    let totalScore = 0;
+    Object.entries(answers).forEach(([questionId, answer]) => {
+      totalScore += answer;
+    });
+
+    const score = {
+      total: totalScore,
+      average: totalScore / questions.length,
+      answers_count: Object.keys(answers).length
+    };
+
+    submitTestMutation.mutate({ answers, score });
+  };
+
+  const isCurrentQuestionAnswered = answers[currentQuestion.id] !== undefined;
+  const isLastQuestion = currentQuestionIndex === questions.length - 1;
 
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/teste')}
-              className="flex items-center"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Înapoi la teste
-            </Button>
-            
-            <div className="text-right">
-              <div className="text-sm text-gray-600">Timp rămas</div>
-              <div className="text-lg font-bold text-red-600">
-                {formatTime(timeRemaining)}
-              </div>
-            </div>
+          <div className="flex justify-between items-center mb-4">
+            <h1 className="text-2xl font-bold text-gray-900">{testType.name}</h1>
+            <span className="text-sm text-gray-500">
+              {currentQuestionIndex + 1} din {questions.length}
+            </span>
           </div>
-
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">{testInfo.name}</h1>
-          <div className="flex items-center justify-between">
-            <p className="text-gray-600">
-              Întrebarea {currentQuestion + 1} din {questions.length}
-            </p>
-            <div className="text-sm text-gray-600">
-              {Math.round(progress)}% completat
-            </div>
-          </div>
-          
-          <Progress value={progress} className="mt-4" />
+          <Progress value={progress} className="h-2" />
         </div>
 
-        {/* Question Card */}
-        <Card className="mb-8">
+        <Card>
           <CardHeader>
-            <CardTitle className="text-xl">
-              {currentQuestionData.question_text}
+            <CardTitle className="text-lg">
+              Întrebarea {currentQuestionIndex + 1}
             </CardTitle>
           </CardHeader>
-          
           <CardContent>
-            <RadioGroup 
-              value={answers[currentQuestion] || ''} 
+            <p className="text-gray-700 mb-6 text-lg leading-relaxed">
+              {currentQuestion.question_text}
+            </p>
+
+            <RadioGroup
+              value={answers[currentQuestion.id]?.toString() || ''}
               onValueChange={handleAnswerChange}
-              className="space-y-4"
+              className="space-y-3"
             >
-              {currentQuestionData.options.map((option, index) => (
-                <div key={index} className="flex items-center space-x-2">
-                  <RadioGroupItem value={option} id={`option-${index}`} />
-                  <Label 
-                    htmlFor={`option-${index}`} 
-                    className="text-sm font-normal cursor-pointer flex-1 py-2"
+              {currentQuestion.options.map((option) => (
+                <div key={option.value} className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value={option.value.toString()}
+                    id={`option-${option.value}`}
+                  />
+                  <Label
+                    htmlFor={`option-${option.value}`}
+                    className="text-sm cursor-pointer flex-1 py-2"
                   >
-                    {option}
+                    {option.label}
                   </Label>
                 </div>
               ))}
             </RadioGroup>
+
+            <div className="flex justify-between mt-8">
+              <Button
+                variant="outline"
+                onClick={() => setCurrentQuestionIndex(prev => prev - 1)}
+                disabled={currentQuestionIndex === 0}
+              >
+                Înapoi
+              </Button>
+              
+              <Button
+                onClick={handleNext}
+                disabled={!isCurrentQuestionAnswered || submitTestMutation.isPending}
+              >
+                {submitTestMutation.isPending ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Se salvează...
+                  </>
+                ) : isLastQuestion ? (
+                  'Finalizează testul'
+                ) : (
+                  'Următoarea'
+                )}
+              </Button>
+            </div>
           </CardContent>
         </Card>
-
-        {/* Navigation */}
-        <div className="flex justify-between">
-          <Button 
-            variant="outline" 
-            onClick={handlePrevious}
-            disabled={currentQuestion === 0}
-            className="flex items-center"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Anterior
-          </Button>
-
-          {isLastQuestion ? (
-            <Button 
-              onClick={handleSubmit}
-              disabled={!canProceed || saveResultMutation.isPending}
-              className="flex items-center"
-            >
-              {saveResultMutation.isPending ? (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              ) : null}
-              Finalizează Testul
-            </Button>
-          ) : (
-            <Button 
-              onClick={handleNext}
-              disabled={!canProceed}
-              className="flex items-center"
-            >
-              Următoarea
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
-          )}
-        </div>
       </div>
     </div>
   );
