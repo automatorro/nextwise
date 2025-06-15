@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
 const corsHeaders = {
@@ -42,7 +41,7 @@ serve(async (req) => {
   try {
     console.log('Function called, parsing request body...');
     const requestBody = await req.text();
-    console.log('Raw request body:', requestBody);
+    console.log('Raw request body length:', requestBody.length);
     
     if (!requestBody) {
       console.error('Empty request body');
@@ -52,8 +51,19 @@ serve(async (req) => {
       );
     }
 
-    const { answers, test_type_id, prompt, testResultId } = JSON.parse(requestBody);
-    console.log('Parsed data:', { answers, test_type_id, prompt, testResultId });
+    let parsedData;
+    try {
+      parsedData = JSON.parse(requestBody);
+    } catch (parseError) {
+      console.error('JSON parsing error:', parseError);
+      return new Response(
+        JSON.stringify({ error: 'Invalid JSON in request body' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { answers, test_type_id, prompt, testResultId } = parsedData;
+    console.log('Parsed data keys:', Object.keys(parsedData));
 
     // If this is a detailed analysis request (has prompt), handle it differently
     if (prompt) {
@@ -69,6 +79,7 @@ serve(async (req) => {
       }
 
       try {
+        console.log('Calling Gemini API...');
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
           method: 'POST',
           headers: {
@@ -83,46 +94,64 @@ serve(async (req) => {
           })
         });
 
+        if (!response.ok) {
+          console.error('Gemini API response not ok:', response.status, response.statusText);
+          const errorText = await response.text();
+          console.error('Gemini API error details:', errorText);
+          throw new Error(`Gemini API error: ${response.status}`);
+        }
+
         const geminiData = await response.json();
-        console.log('Gemini response:', geminiData);
+        console.log('Gemini response received');
 
         if (geminiData.candidates && geminiData.candidates[0]) {
           const analysis = geminiData.candidates[0].content.parts[0].text;
+          console.log('Analysis generated successfully');
           return new Response(
             JSON.stringify({ analysis }),
             { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
           );
         } else {
+          console.error('No content generated from Gemini:', geminiData);
           throw new Error('No content generated from Gemini');
         }
       } catch (error) {
         console.error('Error calling Gemini API:', error);
         return new Response(
-          JSON.stringify({ error: 'Failed to generate analysis with Gemini' }),
+          JSON.stringify({ error: 'Failed to generate analysis with Gemini', details: error.message }),
           { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
     }
 
-    // Handle Big Five scoring
-    if (test_type_id !== 'f47ac10b-58cc-4372-a567-0e02b2c3d480') {
+    // Handle Big Five scoring (legacy functionality)
+    if (!test_type_id || test_type_id !== 'f47ac10b-58cc-4372-a567-0e02b2c3d480') {
+      console.log('Not a Big Five test or missing test_type_id');
       return new Response(
         JSON.stringify({ error: 'This function only handles Big Five tests' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
+    if (!answers) {
+      console.error('No answers provided for Big Five analysis');
+      return new Response(
+        JSON.stringify({ error: 'No answers provided' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     const result = analyzeBigFiveResults(answers);
-    console.log('Analysis result:', result);
+    console.log('Big Five analysis result calculated');
 
     return new Response(
       JSON.stringify(result),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
-    console.error('Error analyzing Big Five results:', error);
+    console.error('Error in function:', error);
     return new Response(
-      JSON.stringify({ error: 'Failed to analyze results', details: error.message }),
+      JSON.stringify({ error: 'Internal server error', details: error.message }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

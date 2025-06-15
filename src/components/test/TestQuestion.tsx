@@ -36,6 +36,48 @@ interface TestQuestionProps {
   onPrevious: () => void;
 }
 
+// Helper function to safely parse and normalize question options
+const parseQuestionOptions = (options: Json): { value: number; label: string }[] => {
+  console.log('Parsing options:', options);
+  
+  if (!options) {
+    console.log('No options provided');
+    return [];
+  }
+
+  // Handle array of objects with value and label
+  if (Array.isArray(options)) {
+    return options
+      .filter(option => option && typeof option === 'object')
+      .map(option => ({
+        value: option.value || 0,
+        label: option.label || option.text || `Option ${option.value || 0}`
+      }));
+  }
+
+  // Handle object format
+  if (typeof options === 'object' && options !== null) {
+    // If it's an object with numeric keys (common format)
+    const entries = Object.entries(options);
+    if (entries.length > 0) {
+      return entries.map(([key, value]) => ({
+        value: parseInt(key) || 0,
+        label: typeof value === 'string' ? value : `Option ${key}`
+      }));
+    }
+  }
+
+  // Fallback to default Likert scale if parsing fails
+  console.log('Using fallback Likert scale options');
+  return [
+    { value: 1, label: 'Complet dezacord' },
+    { value: 2, label: 'Dezacord' },
+    { value: 3, label: 'Neutru' },
+    { value: 4, label: 'Acord' },
+    { value: 5, label: 'Complet de acord' }
+  ];
+};
+
 const TestQuestion: React.FC<TestQuestionProps> = ({
   testType,
   currentQuestion,
@@ -50,9 +92,8 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
   // Parse options safely from JSON
-  const questionOptions = Array.isArray(currentQuestion.options) 
-    ? currentQuestion.options as { value: number; label: string }[]
-    : [];
+  const questionOptions = parseQuestionOptions(currentQuestion.options);
+  console.log('Parsed question options:', questionOptions);
 
   const isCurrentQuestionAnswered = answers[currentQuestion.id] !== undefined;
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;

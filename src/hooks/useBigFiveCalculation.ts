@@ -11,11 +11,38 @@ interface BigFiveDimensions {
   extraversion: number;
   agreeableness: number;
   neuroticism: number;
+  [key: string]: number; // Add index signature for compatibility
 }
 
 export const useBigFiveCalculation = (answers: BigFiveAnswers | undefined) => {
   return useMemo(() => {
+    console.log('useBigFiveCalculation called with answers:', answers);
+    
     if (!answers) {
+      console.log('No answers provided, returning zeros');
+      return {
+        openness: 0,
+        conscientiousness: 0,
+        extraversion: 0,
+        agreeableness: 0,
+        neuroticism: 0
+      };
+    }
+
+    // Check if we have answers that look like Big Five (40 questions numbered 1-40)
+    const answerKeys = Object.keys(answers);
+    console.log('Answer keys:', answerKeys);
+    
+    // Try to find numeric keys that could be question numbers
+    const numericKeys = answerKeys
+      .map(key => parseInt(key))
+      .filter(num => !isNaN(num) && num >= 1 && num <= 40)
+      .sort((a, b) => a - b);
+    
+    console.log('Numeric keys found:', numericKeys);
+    
+    if (numericKeys.length === 0) {
+      console.log('No valid numeric keys found, not a Big Five test');
       return {
         openness: 0,
         conscientiousness: 0,
@@ -49,14 +76,33 @@ export const useBigFiveCalculation = (answers: BigFiveAnswers | undefined) => {
     // Calculate each dimension score
     Object.entries(dimensions).forEach(([dimension, questionNumbers]) => {
       let score = 0;
+      let validAnswers = 0;
+      
       questionNumbers.forEach(questionNum => {
-        const answer = answers[questionNum.toString()];
+        // Try different key formats: string number, just number, UUID-based
+        const possibleKeys = [
+          questionNum.toString(),
+          questionNum,
+          // Look for any key that might correspond to this question
+        ];
+        
+        let answer = undefined;
+        for (const key of possibleKeys) {
+          if (answers[key] !== undefined) {
+            answer = answers[key];
+            break;
+          }
+        }
+        
         if (answer !== undefined) {
           // Apply reverse scoring if needed: (6 - answer)
           const adjustedScore = reverseScored.includes(questionNum) ? (6 - answer) : answer;
           score += adjustedScore;
+          validAnswers++;
         }
       });
+      
+      console.log(`Dimension ${dimension}: score=${score}, validAnswers=${validAnswers}`);
       dimensionScores[dimension as keyof BigFiveDimensions] = score;
     });
 
@@ -69,6 +115,7 @@ export const useBigFiveCalculation = (answers: BigFiveAnswers | undefined) => {
       neuroticism: Math.round(((dimensionScores.neuroticism - 8) / 32) * 100)
     };
 
+    console.log('Final dimension percentages:', dimensionPercentages);
     return dimensionPercentages;
   }, [answers]);
 };

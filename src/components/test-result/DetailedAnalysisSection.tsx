@@ -22,12 +22,21 @@ const DetailedAnalysisSection = ({ dimensions, resultId }: DetailedAnalysisSecti
     setIsGeneratingAnalysis(true);
     
     try {
+      // Safely extract Big Five dimensions with fallbacks
+      const safeDimensions = {
+        openness: dimensions.openness || 0,
+        conscientiousness: dimensions.conscientiousness || 0,
+        extraversion: dimensions.extraversion || 0,
+        agreeableness: dimensions.agreeableness || 0,
+        neuroticism: dimensions.neuroticism || 0
+      };
+
       const rawScores = {
-        openness: Math.round((dimensions.openness / 100) * 40),
-        conscientiousness: Math.round((dimensions.conscientiousness / 100) * 40),
-        extraversion: Math.round((dimensions.extraversion / 100) * 40),
-        agreeableness: Math.round((dimensions.agreeableness / 100) * 40),
-        neuroticism: Math.round((dimensions.neuroticism / 100) * 40)
+        openness: Math.round((safeDimensions.openness / 100) * 40),
+        conscientiousness: Math.round((safeDimensions.conscientiousness / 100) * 40),
+        extraversion: Math.round((safeDimensions.extraversion / 100) * 40),
+        agreeableness: Math.round((safeDimensions.agreeableness / 100) * 40),
+        neuroticism: Math.round((safeDimensions.neuroticism / 100) * 40)
       };
 
       const prompt = `Ești un psiholog expert în consiliere vocațională. Un utilizator a finalizat testul de personalitate Big Five. Iată rezultatele sale (scoruri din 40):
@@ -37,7 +46,7 @@ const DetailedAnalysisSection = ({ dimensions, resultId }: DetailedAnalysisSecti
 - Agreabilitate: ${rawScores.agreeableness}
 - Nevrotism: ${rawScores.neuroticism}
 
-Sarcina ta este să generezi o analiză completă și personalizată, structurată în 3 secțiuni clare:
+Sarcina ta este să generezi o analiză completă și personalizată, structurată în 3 secțiuni claire:
 1. **Profilul Tău de Personalitate:** Explică pe înțelesul tuturor ce înseamnă scorul obținut la fiecare din cele 5 dimensiuni. Folosește un limbaj pozitiv și încurajator, evitând etichetările negative.
 2. **Puncte Forte și Oportunități de Dezvoltare:** Pe baza acestui profil unic, identifică 2-3 puncte forte clare (ex: 'Combinația ta de Conștiinciozitate ridicată și Agreabilitate te face un coechipier de încredere') și 1-2 zone unde utilizatorul ar putea dori să se dezvolte, oferind sugestii concrete și blânde.
 3. **Recomandări de Carieră Aliniate Profilului:** Sugerează 3-5 tipuri de roluri sau domenii profesionale care se potrivesc cu acest profil, explicând la fiecare *de ce* este o potrivire bună (ex: 'Un rol în management de proiect ar valorifica la maximum Conștiinciozitatea ta ridicată').

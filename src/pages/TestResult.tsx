@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -46,7 +47,20 @@ interface BigFiveDimensions {
   extraversion: number;
   agreeableness: number;
   neuroticism: number;
+  [key: string]: number; // Add index signature for compatibility
 }
+
+// Helper function to safely convert dimensions to the right format
+const convertToBigFiveDimensions = (dimensions: { [key: string]: number }): BigFiveDimensions => {
+  return {
+    openness: dimensions.openness || 0,
+    conscientiousness: dimensions.conscientiousness || 0,
+    extraversion: dimensions.extraversion || 0,
+    agreeableness: dimensions.agreeableness || 0,
+    neuroticism: dimensions.neuroticism || 0,
+    ...dimensions // Include any additional dimensions
+  };
+};
 
 const TestResult = () => {
   const { resultId } = useParams<{ resultId: string }>();
@@ -163,7 +177,7 @@ const TestResult = () => {
               
               {/* Generate Detailed Analysis Button */}
               <DetailedAnalysisSection 
-                dimensions={bigFiveDimensions} 
+                dimensions={convertToBigFiveDimensions(bigFiveDimensions)} 
                 resultId={resultId!} 
               />
             </CardContent>
@@ -171,7 +185,7 @@ const TestResult = () => {
         )}
 
         {/* Dimensions - use Big Five dimensions for Big Five tests, otherwise use general dimensions */}
-        <DimensionsAnalysis dimensions={isBigFiveTest ? bigFiveDimensions : generalDisplayDimensions} />
+        <DimensionsAnalysis dimensions={isBigFiveTest ? convertToBigFiveDimensions(bigFiveDimensions) : generalDisplayDimensions} />
 
         {/* Big Five Explanations */}
         {isBigFiveTest && hasValidBigFive && (
