@@ -14,8 +14,11 @@ import { useToast } from '@/hooks/use-toast';
 
 interface Question {
   id: string;
-  text: string;
+  question_text: string;
+  question_order: number;
   options: string[];
+  question_type: string;
+  scoring_weights: number[];
 }
 
 interface TestType {
@@ -36,19 +39,6 @@ const TestRunner = () => {
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [timeRemaining, setTimeRemaining] = useState(0);
 
-  // Mock questions - în realitate ar veni din baza de date
-  const mockQuestions: Question[] = Array.from({ length: 20 }, (_, i) => ({
-    id: `q${i + 1}`,
-    text: `Întrebarea ${i + 1}: În ce măsură te-ai descrie ca fiind o persoană sociabilă?`,
-    options: [
-      'Deloc de acord',
-      'Puțin de acord', 
-      'Moderat de acord',
-      'Foarte de acord',
-      'Complet de acord'
-    ]
-  }));
-
   const { data: testInfo, isLoading: testLoading } = useQuery({
     queryKey: ['test', testId],
     queryFn: async () => {
@@ -60,6 +50,21 @@ const TestRunner = () => {
       
       if (error) throw error;
       return data as TestType;
+    },
+    enabled: !!testId
+  });
+
+  const { data: questions, isLoading: questionsLoading } = useQuery({
+    queryKey: ['test-questions', testId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('test_questions')
+        .select('*')
+        .eq('test_type_id', testId)
+        .order('question_order');
+      
+      if (error) throw error;
+      return data as Question[];
     },
     enabled: !!testId
   });
@@ -98,7 +103,7 @@ const TestRunner = () => {
 
   useEffect(() => {
     if (testInfo) {
-      setTimeRemaining(testInfo.estimated_duration * 60); // Convert to seconds
+      setTimeRemaining(testInfo.estimated_duration * 60);
     }
   }, [testInfo]);
 
@@ -111,6 +116,42 @@ const TestRunner = () => {
     }
   }, [timeRemaining]);
 
+  const calculateGAD7Score = (answers: { [key: number]: string }, questions: Question[]) => {
+    let totalScore = 0;
+    
+    Object.entries(answers).forEach(([questionIndex, answer]) => {
+      const question = questions[parseInt(questionIndex)];
+      if (question && question.scoring_weights) {
+        const optionIndex = question.options.indexOf(answer);
+        if (optionIndex !== -1 && question.scoring_weights[optionIndex] !== undefined) {
+          totalScore += question.scoring_weights[optionIndex];
+        }
+      }
+    });
+
+    // GAD-7 interpretation
+    let interpretation = '';
+    if (totalScore <= 4) {
+      interpretation = 'Anxietate minimală';
+    } else if (totalScore <= 9) {
+      interpretation = 'Anxietate ușoară';
+    } else if (totalScore <= 14) {
+      interpretation = 'Anxietate moderată';
+    } else {
+      interpretation = 'Anxietate severă';
+    }
+
+    return {
+      overall: Math.round((totalScore / 21) * 100), // Convert to percentage
+      raw_score: totalScore,
+      max_score: 21,
+      interpretation: interpretation,
+      dimensions: {
+        anxiety_level: Math.round((totalScore / 21) * 100)
+      }
+    };
+  };
+
   const handleAnswerChange = (value: string) => {
     setAnswers(prev => ({
       ...prev,
@@ -119,7 +160,7 @@ const TestRunner = () => {
   };
 
   const handleNext = () => {
-    if (currentQuestion < mockQuestions.length - 1) {
+    if (questions && currentQuestion < questions.length - 1) {
       setCurrentQuestion(currentQuestion + 1);
     }
   };
@@ -131,12 +172,26 @@ const TestRunner = () => {
   };
 
   const handleSubmit = () => {
-    if (!user || !testInfo) return;
+    if (!user || !testInfo || !questions) return;
+
+    let score;
+    
+    // Calculate score based on test type
+    if (testInfo.name === 'Evaluare Anxietate GAD-7') {
+      score = calculateGAD7Score(answers, questions);
+    } else {
+      // Default scoring for other tests (to be implemented)
+      score = {
+        overall: 50,
+        dimensions: {}
+      };
+    }
 
     const resultData = {
       testTypeId: testInfo.id,
       userId: user.id,
       answers: answers,
+      score: score,
       completedAt: new Date().toISOString()
     };
 
@@ -149,11 +204,12 @@ const TestRunner = () => {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   };
 
-  const progress = ((currentQuestion + 1) / mockQuestions.length) * 100;
-  const isLastQuestion = currentQuestion === mockQuestions.length - 1;
+  const isLoading = testLoading || questionsLoading;
+  const progress = questions ? ((currentQuestion + 1) / questions.length) * 100 : 0;
+  const isLastQuestion = questions ? currentQuestion === questions.length - 1 : false;
   const canProceed = answers[currentQuestion] !== undefined;
 
-  if (testLoading) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin" />
@@ -161,7 +217,7 @@ const TestRunner = () => {
     );
   }
 
-  if (!testInfo) {
+  if (!testInfo || !questions || questions.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
@@ -173,6 +229,8 @@ const TestRunner = () => {
       </div>
     );
   }
+
+  const currentQuestionData = questions[currentQuestion];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -200,7 +258,7 @@ const TestRunner = () => {
           <h1 className="text-3xl font-bold text-gray-900 mb-2">{testInfo.name}</h1>
           <div className="flex items-center justify-between">
             <p className="text-gray-600">
-              Întrebarea {currentQuestion + 1} din {mockQuestions.length}
+              Întrebarea {currentQuestion + 1} din {questions.length}
             </p>
             <div className="text-sm text-gray-600">
               {Math.round(progress)}% completat
@@ -214,7 +272,7 @@ const TestRunner = () => {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="text-xl">
-              {mockQuestions[currentQuestion]?.text}
+              {currentQuestionData.question_text}
             </CardTitle>
           </CardHeader>
           
@@ -224,7 +282,7 @@ const TestRunner = () => {
               onValueChange={handleAnswerChange}
               className="space-y-4"
             >
-              {mockQuestions[currentQuestion]?.options.map((option, index) => (
+              {currentQuestionData.options.map((option, index) => (
                 <div key={index} className="flex items-center space-x-2">
                   <RadioGroupItem value={option} id={`option-${index}`} />
                   <Label 

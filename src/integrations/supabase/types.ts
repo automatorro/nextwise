@@ -138,6 +138,47 @@ export type Database = {
         }
         Relationships: []
       }
+      test_questions: {
+        Row: {
+          created_at: string | null
+          id: string
+          options: Json
+          question_order: number
+          question_text: string
+          question_type: string
+          scoring_weights: Json | null
+          test_type_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          options: Json
+          question_order: number
+          question_text: string
+          question_type?: string
+          scoring_weights?: Json | null
+          test_type_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          options?: Json
+          question_order?: number
+          question_text?: string
+          question_type?: string
+          scoring_weights?: Json | null
+          test_type_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_questions_test_type_id_fkey"
+            columns: ["test_type_id"]
+            isOneToOne: false
+            referencedRelation: "test_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       test_results: {
         Row: {
           ai_analysis: string | null
