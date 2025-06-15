@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -161,6 +162,60 @@ const TestRunner = () => {
     };
   };
 
+  const calculateEQScore = (answers: { [key: number]: string }, questions: Question[]) => {
+    const dimensions = {
+      self_awareness: [0, 1],
+      self_regulation: [2, 3],
+      motivation: [4, 5],
+      empathy: [6, 7],
+      social_skills: [8, 9]
+    };
+
+    let totalScore = 0;
+    const dimensionScores: { [key: string]: number } = {
+      self_awareness: 0,
+      self_regulation: 0,
+      motivation: 0,
+      empathy: 0,
+      social_skills: 0,
+    };
+
+    Object.entries(answers).forEach(([questionIndexStr, answer]) => {
+      const questionIndex = parseInt(questionIndexStr);
+      const question = questions[questionIndex];
+      if (question && question.scoring_weights) {
+        const optionIndex = question.options.indexOf(answer);
+        if (optionIndex !== -1 && question.scoring_weights[optionIndex] !== undefined) {
+          const score = question.scoring_weights[optionIndex];
+          totalScore += score;
+
+          for (const [dim, indices] of Object.entries(dimensions)) {
+            if (indices.includes(questionIndex)) {
+              dimensionScores[dim] += score;
+            }
+          }
+        }
+      }
+    });
+
+    const maxScorePerQuestion = 5;
+    const maxTotalScore = questions.length * maxScorePerQuestion;
+    
+    const formattedDimensions: { [key: string]: number } = {};
+    for (const [dim, indices] of Object.entries(dimensions)) {
+      const maxDimScore = indices.length * maxScorePerQuestion;
+      formattedDimensions[dim] = maxDimScore > 0 ? Math.round((dimensionScores[dim] / maxDimScore) * 100) : 0;
+    }
+
+    return {
+      overall: maxTotalScore > 0 ? Math.round((totalScore / maxTotalScore) * 100) : 0,
+      raw_score: totalScore,
+      max_score: maxTotalScore,
+      interpretation: 'Rezultat calculat pentru Inteligența Emoțională.',
+      dimensions: formattedDimensions,
+    };
+  };
+
   const calculateDefaultScore = (answers: { [key: number]: string }, questions: Question[]) => {
     let totalScore = 0;
     let maxScore = 0;
@@ -225,6 +280,8 @@ const TestRunner = () => {
     // Calculate score based on test type
     if (testInfo.name === 'Evaluare Anxietate GAD-7') {
       score = calculateGAD7Score(answers, questions);
+    } else if (testInfo.name === 'Inteligență Emoțională') {
+      score = calculateEQScore(answers, questions);
     } else {
       // Default scoring for other tests
       score = calculateDefaultScore(answers, questions);

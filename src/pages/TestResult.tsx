@@ -1,27 +1,24 @@
+
 import React from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
-import { Loader2, ArrowLeft, Download, Share2, BarChart3 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Loader2, ArrowLeft, TrendingUp } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 interface TestResult {
   id: string;
   score: {
     overall: number;
-    dimensions: {
-      emotional_intelligence: number;
-      social_skills: number;
-      leadership: number;
-      stress_management: number;
-    };
+    raw_score: number;
+    max_score: number;
+    interpretation: string;
+    dimensions: { [key: string]: number };
   };
-  ai_analysis: string;
-  recommendations: string;
   completed_at: string;
   test_types: {
     name: string;
@@ -32,7 +29,6 @@ interface TestResult {
 const TestResult = () => {
   const { resultId } = useParams<{ resultId: string }>();
   const navigate = useNavigate();
-  const { toast } = useToast();
 
   const { data: result, isLoading, error } = useQuery({
     queryKey: ['test-result', resultId],
@@ -50,44 +46,33 @@ const TestResult = () => {
         .single();
       
       if (error) throw error;
-      
-      // Transform the data to match our interface
-      return {
-        id: data.id,
-        score: data.score as TestResult['score'],
-        ai_analysis: data.ai_analysis || '',
-        recommendations: data.recommendations || '',
-        completed_at: data.completed_at || '',
-        test_types: data.test_types
-      } as TestResult;
+      return data as TestResult;
     },
     enabled: !!resultId
   });
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'Rezultatul testului meu psihologic',
-        text: 'Am completat un test psihologic și am obținut rezultate interesante!',
-        url: window.location.href
-      });
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: "Link copiat!",
-        description: "Link-ul a fost copiat în clipboard."
-      });
-    }
-  };
-
   const getDimensionLabel = (key: string) => {
     const labels: { [key: string]: string } = {
-      emotional_intelligence: 'Inteligență Emoțională',
+      // General
+      general_score: 'Scor General',
+
+      // GAD-7
+      anxiety_level: 'Nivel de Anxietate',
+
+      // Emotional Intelligence
+      self_awareness: 'Conștientizare de Sine',
+      self_regulation: 'Autoreglare',
+      motivation: 'Motivație',
+      empathy: 'Empatie',
       social_skills: 'Abilități Sociale',
+
+      // Legacy/Other - might still be in use
+      emotional_intelligence: 'Inteligență Emoțională',
       leadership: 'Leadership',
-      stress_management: 'Gestionarea Stresului'
+      stress_management: 'Gestionarea Stresului',
     };
-    return labels[key] || key;
+    // A nice fallback for any keys not explicitly defined
+    return labels[key] || key.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
   };
 
   const getScoreColor = (score: number) => {
@@ -96,11 +81,10 @@ const TestResult = () => {
     return 'text-red-600';
   };
 
-  const getScoreLabel = (score: number) => {
-    if (score >= 80) return 'Excelent';
-    if (score >= 60) return 'Bun';
-    if (score >= 40) return 'Mediu';
-    return 'Necesită îmbunătățire';
+  const getScoreBadgeVariant = (score: number) => {
+    if (score >= 80) return 'default';
+    if (score >= 60) return 'secondary';
+    return 'destructive';
   };
 
   if (isLoading) {
@@ -116,8 +100,8 @@ const TestResult = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Rezultatul nu a fost găsit</h2>
-          <Button onClick={() => navigate('/dashboard')}>
-            Înapoi la dashboard
+          <Button onClick={() => navigate('/teste')}>
+            Înapoi la teste
           </Button>
         </div>
       </div>
@@ -129,31 +113,20 @@ const TestResult = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <div className="flex items-center justify-between mb-4">
-            <Button 
-              variant="ghost" 
-              onClick={() => navigate('/dashboard')}
-              className="flex items-center"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Înapoi la dashboard
-            </Button>
-            
-            <div className="flex space-x-2">
-              <Button variant="outline" onClick={handleShare}>
-                <Share2 className="w-4 h-4 mr-2" />
-                Partajează
-              </Button>
-              <Button variant="outline">
-                <Download className="w-4 h-4 mr-2" />
-                Descarcă PDF
-              </Button>
-            </div>
-          </div>
-
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Rezultatul Testului</h1>
+          <Button 
+            variant="ghost" 
+            onClick={() => navigate('/teste')}
+            className="flex items-center mb-4"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Înapoi la teste
+          </Button>
+          
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+            Rezultatul testului: {result.test_types.name}
+          </h1>
           <p className="text-gray-600">
-            {result.test_types.name} • Completat pe {new Date(result.completed_at).toLocaleDateString('ro-RO')}
+            Completat pe {new Date(result.completed_at).toLocaleDateString('ro-RO')}
           </p>
         </div>
 
@@ -161,89 +134,62 @@ const TestResult = () => {
         <Card className="mb-8">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <BarChart3 className="w-6 h-6 mr-2 text-blue-600" />
+              <TrendingUp className="w-5 h-5 mr-2" />
               Scorul General
             </CardTitle>
           </CardHeader>
-          
           <CardContent>
-            <div className="text-center mb-6">
-              <div className={`text-6xl font-bold ${getScoreColor(result.score.overall)}`}>
-                {Math.round(result.score.overall)}%
-              </div>
-              <Badge variant="secondary" className="mt-2">
-                {getScoreLabel(result.score.overall)}
-              </Badge>
-            </div>
-            
-            <Progress value={result.score.overall} className="h-3" />
-          </CardContent>
-        </Card>
-
-        {/* Dimension Scores */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Scoruri pe Dimensiuni</CardTitle>
-          </CardHeader>
-          
-          <CardContent>
-            <div className="space-y-6">
-              {Object.entries(result.score.dimensions).map(([key, score]) => (
-                <div key={key}>
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="font-medium">{getDimensionLabel(key)}</span>
-                    <span className={`font-bold ${getScoreColor(score)}`}>
-                      {Math.round(score)}%
-                    </span>
-                  </div>
-                  <Progress value={score} className="h-2" />
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <div className="text-3xl font-bold mb-2">
+                  <span className={getScoreColor(result.score.overall)}>
+                    {result.score.overall}%
+                  </span>
                 </div>
-              ))}
+                <Badge variant={getScoreBadgeVariant(result.score.overall)}>
+                  {result.score.interpretation}
+                </Badge>
+              </div>
+              <div className="text-right text-sm text-gray-600">
+                <div>Scor obținut: {result.score.raw_score}</div>
+                <div>Scor maxim: {result.score.max_score}</div>
+              </div>
             </div>
+            <Progress value={result.score.overall} className="w-full" />
           </CardContent>
         </Card>
 
-        {/* AI Analysis */}
-        {result.ai_analysis && (
+        {/* Dimensions */}
+        {result.score.dimensions && Object.keys(result.score.dimensions).length > 0 && (
           <Card className="mb-8">
             <CardHeader>
-              <CardTitle>Analiza AI</CardTitle>
+              <CardTitle>Analiza pe Dimensiuni</CardTitle>
             </CardHeader>
-            
             <CardContent>
-              <div className="prose max-w-none">
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                  {result.ai_analysis}
-                </p>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Recommendations */}
-        {result.recommendations && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Recomandări pentru Dezvoltare</CardTitle>
-            </CardHeader>
-            
-            <CardContent>
-              <div className="prose max-w-none">
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line">
-                  {result.recommendations}
-                </p>
+              <div className="space-y-6">
+                {Object.entries(result.score.dimensions).map(([key, value]) => (
+                  <div key={key}>
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-medium">{getDimensionLabel(key)}</h3>
+                      <span className={`font-bold ${getScoreColor(value)}`}>
+                        {value}%
+                      </span>
+                    </div>
+                    <Progress value={value} className="w-full" />
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
         )}
 
         {/* Actions */}
-        <div className="flex justify-center space-x-4">
-          <Button onClick={() => navigate('/teste')}>
-            Încearcă Alt Test
+        <div className="flex gap-4">
+          <Button onClick={() => navigate('/teste')} className="flex-1">
+            Încearcă un alt test
           </Button>
-          <Button variant="outline" onClick={() => navigate('/career-paths')}>
-            Creează Plan de Carieră
+          <Button variant="outline" onClick={() => navigate('/dashboard')} className="flex-1">
+            Mergi la Dashboard
           </Button>
         </div>
       </div>
