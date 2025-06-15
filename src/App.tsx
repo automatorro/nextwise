@@ -14,6 +14,7 @@ import TestsPage from "@/pages/TestsPage";
 import TestRunner from "@/pages/TestRunner";
 import TestResult from "@/pages/TestResult";
 import SubscriptionPage from "@/pages/SubscriptionPage";
+import MyPage from "@/pages/MyPage";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -65,10 +66,7 @@ const App = () => (
               <Route path="/profil" element={
                 <ProtectedRoute>
                   <Navbar />
-                  <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold">Profil Utilizator</h1>
-                    <p className="text-gray-600 mt-2">În dezvoltare...</p>
-                  </div>
+                  <MyPage />
                 </ProtectedRoute>
               } />
               <Route path="/abonament" element={
