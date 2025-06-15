@@ -141,8 +141,9 @@ serve(async (req) => {
       );
     }
 
+    console.log('Processing Big Five answers with UUID keys...');
     const result = analyzeBigFiveResults(answers);
-    console.log('Big Five analysis result calculated');
+    console.log('Big Five analysis result calculated:', result);
 
     return new Response(
       JSON.stringify(result),
@@ -158,7 +159,13 @@ serve(async (req) => {
 });
 
 function analyzeBigFiveResults(answers: BigFiveAnswers): BigFiveInterpretation {
-  // Define which questions belong to each dimension (40 questions total, 8 per dimension)
+  console.log('Starting Big Five analysis with answers:', Object.keys(answers));
+  
+  // Convert UUID-based answers to position-based answers for processing
+  const sortedAnswerEntries = Object.entries(answers);
+  console.log('Total answers received:', sortedAnswerEntries.length);
+  
+  // Define which question positions belong to each dimension (1-based indexing)
   const dimensions = {
     openness: [1, 2, 3, 4, 5, 6, 7, 8],
     conscientiousness: [9, 10, 11, 12, 13, 14, 15, 16],
@@ -167,7 +174,7 @@ function analyzeBigFiveResults(answers: BigFiveAnswers): BigFiveInterpretation {
     neuroticism: [33, 34, 35, 36, 37, 38, 39, 40]
   };
 
-  // Define which questions are reverse scored
+  // Define which questions are reverse scored (1-based positions)
   const reverseScored = [4, 5, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 37, 40];
 
   // Calculate scores for each dimension
@@ -179,34 +186,49 @@ function analyzeBigFiveResults(answers: BigFiveAnswers): BigFiveInterpretation {
     neuroticism: 0
   };
 
-  // Calculate each dimension score
-  Object.entries(dimensions).forEach(([dimension, questionNumbers]) => {
+  // Calculate each dimension score using position-based mapping
+  Object.entries(dimensions).forEach(([dimension, questionPositions]) => {
     let score = 0;
-    questionNumbers.forEach(questionNum => {
-      const answer = answers[questionNum.toString()];
-      if (answer !== undefined) {
-        // Apply reverse scoring if needed: (6 - answer)
-        const adjustedScore = reverseScored.includes(questionNum) ? (6 - answer) : answer;
-        score += adjustedScore;
+    let validAnswers = 0;
+    
+    questionPositions.forEach(position => {
+      // Get the answer at this position (position is 1-based, array is 0-based)
+      const answerIndex = position - 1;
+      if (answerIndex < sortedAnswerEntries.length) {
+        const [, answer] = sortedAnswerEntries[answerIndex];
+        
+        if (answer !== undefined && answer !== null) {
+          // Apply reverse scoring if needed: (6 - answer)
+          const adjustedScore = reverseScored.includes(position) ? (6 - answer) : answer;
+          score += adjustedScore;
+          validAnswers++;
+          console.log(`Position ${position} (${dimension}): answer=${answer}, adjusted=${adjustedScore}, reverse=${reverseScored.includes(position)}`);
+        }
       }
     });
+    
+    console.log(`Dimension ${dimension}: raw score=${score}, validAnswers=${validAnswers}`);
     dimensionScores[dimension as keyof BigFiveDimensions] = score;
   });
 
   // Convert raw scores to percentages (each dimension: 8-40 points -> 0-100%)
   const dimensionPercentages: BigFiveDimensions = {
-    openness: Math.round(((dimensionScores.openness - 8) / 32) * 100),
-    conscientiousness: Math.round(((dimensionScores.conscientiousness - 8) / 32) * 100),
-    extraversion: Math.round(((dimensionScores.extraversion - 8) / 32) * 100),
-    agreeableness: Math.round(((dimensionScores.agreeableness - 8) / 32) * 100),
-    neuroticism: Math.round(((dimensionScores.neuroticism - 8) / 32) * 100)
+    openness: Math.max(0, Math.min(100, Math.round(((dimensionScores.openness - 8) / 32) * 100))),
+    conscientiousness: Math.max(0, Math.min(100, Math.round(((dimensionScores.conscientiousness - 8) / 32) * 100))),
+    extraversion: Math.max(0, Math.min(100, Math.round(((dimensionScores.extraversion - 8) / 32) * 100))),
+    agreeableness: Math.max(0, Math.min(100, Math.round(((dimensionScores.agreeableness - 8) / 32) * 100))),
+    neuroticism: Math.max(0, Math.min(100, Math.round(((dimensionScores.neuroticism - 8) / 32) * 100)))
   };
 
   // Calculate overall score (average of all dimensions)
   const totalRawScore = Object.values(dimensionScores).reduce((sum, score) => sum + score, 0);
   const maxPossibleScore = 200; // 5 dimensions × 40 points each
   const minPossibleScore = 40; // 5 dimensions × 8 points each
-  const overallPercentage = Math.round(((totalRawScore - minPossibleScore) / (maxPossibleScore - minPossibleScore)) * 100);
+  const overallPercentage = Math.max(0, Math.min(100, Math.round(((totalRawScore - minPossibleScore) / (maxPossibleScore - minPossibleScore)) * 100)));
+
+  console.log('Raw scores:', dimensionScores);
+  console.log('Percentage scores:', dimensionPercentages);
+  console.log('Total raw score:', totalRawScore, 'Overall percentage:', overallPercentage);
 
   // Generate interpretations using the exact text provided
   const detailedInterpretations = {
