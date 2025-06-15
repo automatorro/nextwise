@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -95,31 +94,33 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Navigation */}
-      <nav className="bg-white/80 backdrop-blur-md border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">EC</span>
+      <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
+        <div className="bg-white/80 backdrop-blur-md shadow-lg border border-white/30 rounded-2xl">
+          <div className="px-6 lg:px-8">
+            <div className="flex justify-between h-16">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
+                  <span className="text-white font-bold text-sm">EC</span>
+                </div>
+                <span className="font-bold text-xl text-gray-900">EmpowerCareer</span>
               </div>
-              <span className="font-bold text-xl text-gray-900">EmpowerCareer</span>
-            </div>
-            <div className="flex items-center space-x-4">
-              <Link to="/auth">
-                <Button variant="ghost">Autentificare</Button>
-              </Link>
-              <Link to="/auth">
-                <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
-                  Începe Gratuit
-                </Button>
-              </Link>
+              <div className="flex items-center space-x-4">
+                <Link to="/auth">
+                  <Button variant="ghost" className="hover:bg-white/60 transition-colors">Autentificare</Button>
+                </Link>
+                <Link to="/auth">
+                  <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+                    Începe Gratuit
+                  </Button>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 pt-28">
         <div className="max-w-7xl mx-auto text-center">
           <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-200">
             <Zap className="w-3 h-3 mr-1" />
