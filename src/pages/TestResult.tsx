@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -51,7 +50,16 @@ const TestResult = () => {
         .single();
       
       if (error) throw error;
-      return data as TestResult;
+      
+      // Transform the data to match our interface
+      return {
+        id: data.id,
+        score: data.score as TestResult['score'],
+        ai_analysis: data.ai_analysis || '',
+        recommendations: data.recommendations || '',
+        completed_at: data.completed_at || '',
+        test_types: data.test_types
+      } as TestResult;
     },
     enabled: !!resultId
   });
