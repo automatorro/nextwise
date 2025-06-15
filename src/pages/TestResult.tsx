@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -83,13 +82,12 @@ const TestResult = () => {
   const isBigFiveTest = result?.test_types.name.includes('Big Five');
   const calculatedDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
 
-  // Convert to Big Five format for components that need it
-  const getBigFiveDimensions = (): BigFiveDimensions => {
+  // Get properly typed Big Five dimensions
+  const bigFiveDimensions: BigFiveDimensions = React.useMemo(() => {
     if (isBigFiveTest && calculatedDimensions) {
       return calculatedDimensions;
     }
     
-    // Fallback for non-Big Five tests or when calculation fails
     return {
       openness: 0,
       conscientiousness: 0,
@@ -97,13 +95,12 @@ const TestResult = () => {
       agreeableness: 0,
       neuroticism: 0
     };
-  };
+  }, [isBigFiveTest, calculatedDimensions]);
 
-  const bigFiveDimensions = getBigFiveDimensions();
   const hasValidBigFive = isBigFiveTest && Object.values(bigFiveDimensions).some(value => value > 0);
 
-  // Use original dimensions for the general dimensions display
-  const displayDimensions = isBigFiveTest ? bigFiveDimensions : (result?.score.dimensions || {});
+  // Use different dimensions for general display vs Big Five specific components
+  const generalDisplayDimensions = result?.score.dimensions || {};
 
   if (isLoading) {
     return (
@@ -173,8 +170,8 @@ const TestResult = () => {
           </Card>
         )}
 
-        {/* Dimensions */}
-        <DimensionsAnalysis dimensions={displayDimensions} />
+        {/* Dimensions - use Big Five dimensions for Big Five tests, otherwise use general dimensions */}
+        <DimensionsAnalysis dimensions={isBigFiveTest ? bigFiveDimensions : generalDisplayDimensions} />
 
         {/* Big Five Explanations */}
         {isBigFiveTest && hasValidBigFive && (
