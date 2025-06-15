@@ -114,8 +114,8 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="mb-8">
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold text-gray-900">{testType.name}</h1>
             <span className="text-sm text-gray-500">
@@ -125,43 +125,47 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
           <Progress value={progress} className="h-2" />
         </div>
 
-        <Card>
-          <CardHeader>
+        <Card className="shadow-sm">
+          <CardHeader className="pb-4">
             <CardTitle className="text-lg">
               Întrebarea {currentQuestionIndex + 1}
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 mb-6 text-lg leading-relaxed">
+          <CardContent className="space-y-6">
+            <p className="text-gray-700 text-lg leading-relaxed">
               {currentQuestion.question_text}
             </p>
 
-            <RadioGroup
-              value={answers[currentQuestion.id]?.toString() || ''}
-              onValueChange={onAnswerChange}
-              className="space-y-3"
-            >
-              {questionOptions.map((option) => (
-                <div key={option.value} className="flex items-center space-x-2">
-                  <RadioGroupItem
-                    value={option.value.toString()}
-                    id={`option-${option.value}`}
-                  />
-                  <Label
-                    htmlFor={`option-${option.value}`}
-                    className="text-sm cursor-pointer flex-1 py-2"
-                  >
-                    {option.label}
-                  </Label>
-                </div>
-              ))}
-            </RadioGroup>
+            <div className="space-y-4">
+              <RadioGroup
+                value={answers[currentQuestion.id]?.toString() || ''}
+                onValueChange={onAnswerChange}
+                className="space-y-2"
+              >
+                {questionOptions.map((option) => (
+                  <div key={option.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <RadioGroupItem
+                      value={option.value.toString()}
+                      id={`option-${option.value}`}
+                      className="flex-shrink-0"
+                    />
+                    <Label
+                      htmlFor={`option-${option.value}`}
+                      className="text-sm cursor-pointer flex-1 leading-relaxed"
+                    >
+                      {option.label}
+                    </Label>
+                  </div>
+                ))}
+              </RadioGroup>
+            </div>
 
-            <div className="flex justify-between mt-8">
+            <div className="flex justify-between pt-4 border-t border-gray-100">
               <Button
                 variant="outline"
                 onClick={onPrevious}
                 disabled={currentQuestionIndex === 0}
+                className="px-6"
               >
                 Înapoi
               </Button>
@@ -169,6 +173,7 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
               <Button
                 onClick={onNext}
                 disabled={!isCurrentQuestionAnswered || isSubmitting}
+                className="px-6"
               >
                 {isSubmitting ? (
                   <>
