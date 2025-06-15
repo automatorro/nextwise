@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { Link } from 'react-router-dom';
@@ -21,9 +22,9 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
-      <div className="bg-white/60 backdrop-blur-md shadow-lg border border-white/20 rounded-2xl">
+      <div className="bg-white/80 backdrop-blur-md shadow-lg border border-white/30 rounded-2xl">
         <div className="px-6 lg:px-8">
-          <div className="flex justify-between h-14">
+          <div className="flex justify-between h-16">
             <div className="flex items-center">
               <Link to="/dashboard" className="flex items-center space-x-2">
                 <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
@@ -37,13 +38,13 @@ const Navbar = () => {
               {user && (
                 <>
                   <Link to="/teste">
-                    <Button variant="ghost" className="flex items-center space-x-2 hover:bg-white/50">
+                    <Button variant="ghost" className="flex items-center space-x-2 hover:bg-white/60 transition-colors">
                       <BarChart3 className="w-4 h-4" />
                       <span>Teste</span>
                     </Button>
                   </Link>
                   <Link to="/career-paths">
-                    <Button variant="ghost" className="flex items-center space-x-2 hover:bg-white/50">
+                    <Button variant="ghost" className="flex items-center space-x-2 hover:bg-white/60 transition-colors">
                       <Target className="w-4 h-4" />
                       <span>Carieră</span>
                     </Button>
@@ -51,7 +52,7 @@ const Navbar = () => {
                   
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-white/50">
+                      <Button variant="ghost" className="relative h-8 w-8 rounded-full hover:bg-white/60 transition-colors">
                         <Avatar className="h-8 w-8">
                           <AvatarFallback className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white">
                             {getInitials(user.user_metadata?.full_name)}
