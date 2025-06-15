@@ -10,15 +10,17 @@ import { Loader2, ArrowLeft, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
-interface TestResult {
+interface ScoreData {
+  overall: number;
+  raw_score: number;
+  max_score: number;
+  interpretation: string;
+  dimensions: { [key: string]: number };
+}
+
+interface TestResultData {
   id: string;
-  score: {
-    overall: number;
-    raw_score: number;
-    max_score: number;
-    interpretation: string;
-    dimensions: { [key: string]: number };
-  };
+  score: ScoreData;
   completed_at: string;
   test_types: {
     name: string;
@@ -46,7 +48,12 @@ const TestResult = () => {
         .single();
       
       if (error) throw error;
-      return data as TestResult;
+      
+      // Type cast the score from Json to our expected structure
+      return {
+        ...data,
+        score: data.score as ScoreData
+      } as TestResultData;
     },
     enabled: !!resultId
   });
