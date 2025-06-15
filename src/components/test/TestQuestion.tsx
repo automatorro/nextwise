@@ -48,15 +48,29 @@ const parseQuestionOptions = (options: Json): { value: number; label: string }[]
   // Handle array of objects with value and label
   if (Array.isArray(options)) {
     return options
-      .filter(option => option && typeof option === 'object')
-      .map(option => ({
-        value: option.value || 0,
-        label: option.label || option.text || `Option ${option.value || 0}`
-      }));
+      .filter(option => option && typeof option === 'object' && option !== null)
+      .map(option => {
+        // Type guard to ensure option is an object with the expected properties
+        const optionObj = option as { [key: string]: any };
+        return {
+          value: typeof optionObj.value === 'number' ? optionObj.value : 0,
+          label: typeof optionObj.label === 'string' ? optionObj.label : 
+                 typeof optionObj.text === 'string' ? optionObj.text : 
+                 `Option ${optionObj.value || 0}`
+        };
+      });
+  }
+
+  // Handle array of strings (simple format)
+  if (Array.isArray(options) && options.every(opt => typeof opt === 'string')) {
+    return options.map((label, index) => ({
+      value: index + 1,
+      label: label as string
+    }));
   }
 
   // Handle object format
-  if (typeof options === 'object' && options !== null) {
+  if (typeof options === 'object' && options !== null && !Array.isArray(options)) {
     // If it's an object with numeric keys (common format)
     const entries = Object.entries(options);
     if (entries.length > 0) {
