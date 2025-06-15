@@ -39,19 +39,74 @@ const DetailedAnalysisSection = ({ dimensions, resultId }: DetailedAnalysisSecti
         neuroticism: Math.round((safeDimensions.neuroticism / 100) * 40)
       };
 
-      const prompt = `Ești un psiholog expert în consiliere vocațională. Un utilizator a finalizat testul de personalitate Big Five. Iată rezultatele sale (scoruri din 40):
-- Deschidere: ${rawScores.openness}
-- Conștiinciozitate: ${rawScores.conscientiousness}
-- Extraversiune: ${rawScores.extraversion}
-- Agreabilitate: ${rawScores.agreeableness}
-- Nevrotism: ${rawScores.neuroticism}
+      // Enhanced, detailed prompt for more comprehensive analysis
+      const prompt = `Ești un psiholog expert în consiliere vocațională cu 15+ ani experiență în analiza personalității și dezvoltare de carieră. Un utilizator a finalizat testul de personalitate Big Five și acum ai nevoie să generezi o analiză completă, profundă și extrem de personalizată.
 
-Sarcina ta este să generezi o analiză completă și personalizată, structurată în 3 secțiuni claire:
-1. **Profilul Tău de Personalitate:** Explică pe înțelesul tuturor ce înseamnă scorul obținut la fiecare din cele 5 dimensiuni. Folosește un limbaj pozitiv și încurajator, evitând etichetările negative.
-2. **Puncte Forte și Oportunități de Dezvoltare:** Pe baza acestui profil unic, identifică 2-3 puncte forte clare (ex: 'Combinația ta de Conștiinciozitate ridicată și Agreabilitate te face un coechipier de încredere') și 1-2 zone unde utilizatorul ar putea dori să se dezvolte, oferind sugestii concrete și blânde.
-3. **Recomandări de Carieră Aliniate Profilului:** Sugerează 3-5 tipuri de roluri sau domenii profesionale care se potrivesc cu acest profil, explicând la fiecare *de ce* este o potrivire bună (ex: 'Un rol în management de proiect ar valorifica la maximum Conștiinciozitatea ta ridicată').
+**REZULTATELE TESTULUI (scoruri din 40 de puncte posibile):**
+- Deschidere către Experiență: ${rawScores.openness}/40 (${safeDimensions.openness}%)
+- Conștiinciozitate: ${rawScores.conscientiousness}/40 (${safeDimensions.conscientiousness}%)
+- Extraversiune: ${rawScores.extraversion}/40 (${safeDimensions.extraversion}%)
+- Agreabilitate: ${rawScores.agreeableness}/40 (${safeDimensions.agreeableness}%)
+- Nevrotism: ${rawScores.neuroticism}/40 (${safeDimensions.neuroticism}%)
 
-Formatează întregul răspuns folosind Markdown, cu titluri și liste pentru a fi ușor de citit.`;
+**CONTEXT PENTRU INTERPRETARE:**
+- Scoruri 0-30%: Scăzute
+- Scoruri 31-70%: Moderate
+- Scoruri 71-100%: Ridicate
+
+**INSTRUCȚIUNI PENTRU ANALIZA DETALIATĂ:**
+
+Generează o analiză structurată în **5 secțiuni distincte**, fiecare cu minimum 200-300 de cuvinte:
+
+## **1. Profilul Tău Unic de Personalitate**
+- Explică pe înțelesul tuturor ce înseamnă fiecare scor obținut
+- Analizează interacțiunile între dimensiuni (ex: "Combinația ta de Conștiinciozitate ridicată cu Agreabilitate moderată înseamnă că...")
+- Identifică pattern-uri unice în profil și ce îl face special
+- Folosește metafore și exemple concrete pentru a face explicația accesibilă
+- Evită etichetările negative, transformă tot în oportunități de creștere
+
+## **2. Punctele Tale Forte și Superputerile Naturale**
+- Identifică 3-4 puncte forte clare bazate pe scorurile ridicate
+- Explică cum se manifestă aceste puncte forte în viața de zi cu zi
+- Dă exemple concrete de situații în care aceste trăsături îți aduc avantaje
+- Analizează combinațiile unice de trăsături care îți creează "superputeri" distincte
+- Oferă sfaturi pentru a valorifica și dezvolta aceste puncte forte
+
+## **3. Zonele de Dezvoltare și Creștere Personală**
+- Identifică 2-3 zone unde ai potențial de dezvoltare (nu defecte!)
+- Explică cum aceste zone pot fi transformate în oportunități
+- Oferă strategii concrete și practice pentru dezvoltare
+- Sugerează resurse specifice (cărți, cursuri, exerciții) pentru fiecare zonă
+- Încurajează o perspectivă pozitivă asupra dezvoltării continue
+
+## **4. Recomandări Detaliate de Carieră**
+- Sugerează 5-7 tipuri de roluri sau domenii profesionale specifice
+- Pentru fiecare recomandare, explică în detaliu DE CE este o potrivire perfectă
+- Descrie mediul de lucru ideal pentru profilul tău
+- Oferă sfaturi pentru dezvoltarea carierei pe termen scurt (6-12 luni) și lung (2-5 ani)
+- Identifică tipurile de companii și culturi organizaționale care ți s-ar potrivi
+- Menționează ce roluri ar trebui evitate și de ce
+
+## **5. Plan de Acțiune Personalizat**
+- Creează 5-7 acțiuni concrete și specifice pe care le poți lua în următoarele 30 de zile
+- Pentru fiecare acțiune, explică cum va contribui la dezvoltarea ta
+- Sugerează resurse practice: cărți specifice, cursuri online, aplicații, comunități
+- Oferă exerciții zilnice sau săptămânale pentru fortificarea punctelor forte
+- Propune modalități de monitorizare a progresului
+- Înclude sfaturi pentru gestionarea provocărilor specifice profilului tău
+
+**TON ȘI STIL:**
+- Folosește un ton cald, empatic și motivațional
+- Adresează-te direct utilizatorului cu "tu" și "al tău"
+- Folosește exemple concrete și metafore pentru claritate
+- Fii specific și acționabil, nu vag
+- Încurajează și inspiră încrederea în sine
+- Evită jargonul psihologic - explică totul în termeni simpli
+- Fii pozitiv dar realist în recomandări
+
+**LUNGIME:** Analiza finală trebuie să aibă minimum 1200-1500 de cuvinte, cu fiecare secțiune având conținut substanțial și detaliat.
+
+Formatează întregul răspuns folosind Markdown cu titluri clare (##) și liste pentru o citire ușoară.`;
 
       const { data, error } = await supabase.functions.invoke('analyze-big-five-result', {
         body: { 
@@ -68,8 +123,8 @@ Formatează întregul răspuns folosind Markdown, cu titluri și liste pentru a 
       if (data && data.analysis) {
         setDetailedAnalysis(data.analysis);
         toast({
-          title: "Analiză generată cu succes",
-          description: "Analiza detaliată a profilului tău a fost generată."
+          title: "Analiză detaliată generată cu succes",
+          description: "Analiza personalizată completă a profilului tău a fost generată cu AI."
         });
       } else {
         throw new Error('No analysis returned from function');
@@ -133,7 +188,7 @@ Formatează întregul răspuns folosind Markdown, cu titluri și liste pentru a 
           )}
         </Button>
         <p className="text-sm text-gray-500 mt-2">
-          Primește o analiză personalizată și recomandări de carieră bazate pe profilul tău Big Five
+          Primește o analiză personalizată extrem de detaliată și un plan de acțiune complet bazate pe profilul tău Big Five
         </p>
       </div>
 
@@ -143,7 +198,7 @@ Formatează întregul răspuns folosind Markdown, cu titluri și liste pentru a 
           <CardHeader>
             <CardTitle className="flex items-center">
               <Brain className="w-5 h-5 mr-2 text-blue-600" />
-              Analiza Detaliată a Profilului Tău
+              Analiza Detaliată Completă a Profilului Tău
             </CardTitle>
           </CardHeader>
           <CardContent>
