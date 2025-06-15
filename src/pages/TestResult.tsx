@@ -52,7 +52,7 @@ const TestResult = () => {
       // Type cast the score from Json to our expected structure
       return {
         ...data,
-        score: data.score as ScoreData
+        score: data.score as unknown as ScoreData
       } as TestResultData;
     },
     enabled: !!resultId
