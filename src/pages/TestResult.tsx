@@ -41,6 +41,14 @@ interface TestResultData {
   };
 }
 
+interface BigFiveDimensions {
+  openness: number;
+  conscientiousness: number;
+  extraversion: number;
+  agreeableness: number;
+  neuroticism: number;
+}
+
 const TestResult = () => {
   const { resultId } = useParams<{ resultId: string }>();
   const navigate = useNavigate();
@@ -75,12 +83,27 @@ const TestResult = () => {
   const isBigFiveTest = result?.test_types.name.includes('Big Five');
   const calculatedDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
 
-  // Use calculated dimensions or fallback to existing dimensions
-  const finalDimensions = isBigFiveTest && calculatedDimensions 
-    ? calculatedDimensions 
-    : (result?.score.dimensions || {});
+  // Convert to Big Five format for components that need it
+  const getBigFiveDimensions = (): BigFiveDimensions => {
+    if (isBigFiveTest && calculatedDimensions) {
+      return calculatedDimensions;
+    }
+    
+    // Fallback for non-Big Five tests or when calculation fails
+    return {
+      openness: 0,
+      conscientiousness: 0,
+      extraversion: 0,
+      agreeableness: 0,
+      neuroticism: 0
+    };
+  };
 
-  const hasValidBigFive = isBigFiveTest && Object.keys(finalDimensions).length > 0;
+  const bigFiveDimensions = getBigFiveDimensions();
+  const hasValidBigFive = isBigFiveTest && Object.values(bigFiveDimensions).some(value => value > 0);
+
+  // Use original dimensions for the general dimensions display
+  const displayDimensions = isBigFiveTest ? bigFiveDimensions : (result?.score.dimensions || {});
 
   if (isLoading) {
     return (
@@ -139,11 +162,11 @@ const TestResult = () => {
               </p>
             </CardHeader>
             <CardContent>
-              <BigFiveRadarChart dimensions={finalDimensions} />
+              <BigFiveRadarChart dimensions={bigFiveDimensions} />
               
               {/* Generate Detailed Analysis Button */}
               <DetailedAnalysisSection 
-                dimensions={finalDimensions} 
+                dimensions={bigFiveDimensions} 
                 resultId={resultId!} 
               />
             </CardContent>
@@ -151,7 +174,7 @@ const TestResult = () => {
         )}
 
         {/* Dimensions */}
-        <DimensionsAnalysis dimensions={finalDimensions} />
+        <DimensionsAnalysis dimensions={displayDimensions} />
 
         {/* Big Five Explanations */}
         {isBigFiveTest && hasValidBigFive && (
@@ -160,7 +183,7 @@ const TestResult = () => {
               <CardTitle>Ghid de Interpretare</CardTitle>
             </CardHeader>
             <CardContent>
-              <BigFiveExplanations dimensions={finalDimensions} />
+              <BigFiveExplanations dimensions={bigFiveDimensions} />
             </CardContent>
           </Card>
         )}
