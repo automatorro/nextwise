@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery, useMutation } from '@tanstack/react-query';
@@ -71,19 +70,28 @@ const TestRunner = () => {
 
   const saveResultMutation = useMutation({
     mutationFn: async (resultData: any) => {
-      const response = await fetch('/api/analyze-test-result', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(resultData),
-      });
+      console.log('Saving test result:', resultData);
+      
+      // Save directly to Supabase
+      const { data, error } = await supabase
+        .from('test_results')
+        .insert({
+          test_type_id: resultData.testTypeId,
+          user_id: resultData.userId,
+          answers: resultData.answers,
+          score: resultData.score,
+          completed_at: resultData.completedAt
+        })
+        .select()
+        .single();
 
-      if (!response.ok) {
-        throw new Error('Eroare la salvarea rezultatului');
+      if (error) {
+        console.error('Supabase error:', error);
+        throw error;
       }
 
-      return response.json();
+      console.log('Test result saved successfully:', data);
+      return data;
     },
     onSuccess: (data) => {
       toast({
@@ -92,10 +100,11 @@ const TestRunner = () => {
       });
       navigate(`/test-result/${data.id}`);
     },
-    onError: (error) => {
+    onError: (error: any) => {
+      console.error('Error saving test result:', error);
       toast({
         title: "Eroare",
-        description: "Nu am putut salva rezultatul testului.",
+        description: error?.message || "Nu am putut salva rezultatul testului.",
         variant: "destructive"
       });
     }
@@ -142,12 +151,40 @@ const TestRunner = () => {
     }
 
     return {
-      overall: Math.round((totalScore / 21) * 100), // Convert to percentage
+      overall: Math.round((totalScore / 21) * 100),
       raw_score: totalScore,
       max_score: 21,
       interpretation: interpretation,
       dimensions: {
         anxiety_level: Math.round((totalScore / 21) * 100)
+      }
+    };
+  };
+
+  const calculateDefaultScore = (answers: { [key: number]: string }, questions: Question[]) => {
+    let totalScore = 0;
+    let maxScore = 0;
+    
+    Object.entries(answers).forEach(([questionIndex, answer]) => {
+      const question = questions[parseInt(questionIndex)];
+      if (question && question.scoring_weights) {
+        const optionIndex = question.options.indexOf(answer);
+        if (optionIndex !== -1 && question.scoring_weights[optionIndex] !== undefined) {
+          totalScore += question.scoring_weights[optionIndex];
+        }
+        maxScore += Math.max(...question.scoring_weights);
+      }
+    });
+
+    const percentage = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0;
+
+    return {
+      overall: percentage,
+      raw_score: totalScore,
+      max_score: maxScore,
+      interpretation: 'Rezultat calculat',
+      dimensions: {
+        general_score: percentage
       }
     };
   };
@@ -172,7 +209,16 @@ const TestRunner = () => {
   };
 
   const handleSubmit = () => {
-    if (!user || !testInfo || !questions) return;
+    if (!user || !testInfo || !questions) {
+      toast({
+        title: "Eroare",
+        description: "Informații lipsă pentru salvarea testului.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    console.log('Submitting test with:', { testInfo, answers, questions });
 
     let score;
     
@@ -180,11 +226,8 @@ const TestRunner = () => {
     if (testInfo.name === 'Evaluare Anxietate GAD-7') {
       score = calculateGAD7Score(answers, questions);
     } else {
-      // Default scoring for other tests (to be implemented)
-      score = {
-        overall: 50,
-        dimensions: {}
-      };
+      // Default scoring for other tests
+      score = calculateDefaultScore(answers, questions);
     }
 
     const resultData = {
@@ -195,6 +238,7 @@ const TestRunner = () => {
       completedAt: new Date().toISOString()
     };
 
+    console.log('Final result data:', resultData);
     saveResultMutation.mutate(resultData);
   };
 
