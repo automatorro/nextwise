@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -109,6 +110,17 @@ const TestResult = () => {
     return 'destructive';
   };
 
+  // Helper function to safely convert dimensions to Big Five format
+  const getBigFiveDimensions = (dimensions: { [key: string]: number }) => {
+    return {
+      openness: dimensions.openness || 0,
+      conscientiousness: dimensions.conscientiousness || 0,
+      extraversion: dimensions.extraversion || 0,
+      agreeableness: dimensions.agreeableness || 0,
+      neuroticism: dimensions.neuroticism || 0
+    };
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -131,6 +143,7 @@ const TestResult = () => {
   }
 
   const isBigFiveTest = result.test_types.name.includes('Big Five');
+  const bigFiveDimensions = getBigFiveDimensions(result.score.dimensions);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -194,7 +207,7 @@ const TestResult = () => {
               </p>
             </CardHeader>
             <CardContent>
-              <BigFiveRadarChart dimensions={result.score.dimensions} />
+              <BigFiveRadarChart dimensions={bigFiveDimensions} />
             </CardContent>
           </Card>
         )}
@@ -230,7 +243,7 @@ const TestResult = () => {
               <CardTitle>Ghid de Interpretare</CardTitle>
             </CardHeader>
             <CardContent>
-              <BigFiveExplanations dimensions={result.score.dimensions} />
+              <BigFiveExplanations dimensions={bigFiveDimensions} />
             </CardContent>
           </Card>
         )}
