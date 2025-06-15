@@ -114,7 +114,17 @@ const TestResult = () => {
   };
 
   // Helper function to safely convert dimensions to Big Five format
-  const getBigFiveDimensions = (dimensions: { [key: string]: number }) => {
+  const getBigFiveDimensions = (dimensions: { [key: string]: number } | undefined) => {
+    if (!dimensions) {
+      return {
+        openness: 0,
+        conscientiousness: 0,
+        extraversion: 0,
+        agreeableness: 0,
+        neuroticism: 0
+      };
+    }
+    
     return {
       openness: dimensions.openness || 0,
       conscientiousness: dimensions.conscientiousness || 0,
@@ -124,8 +134,16 @@ const TestResult = () => {
     };
   };
 
+  // Helper function to check if we have valid Big Five data
+  const hasValidBigFiveData = (dimensions: { [key: string]: number } | undefined) => {
+    if (!dimensions) return false;
+    return 'openness' in dimensions && 'conscientiousness' in dimensions && 
+           'extraversion' in dimensions && 'agreeableness' in dimensions && 
+           'neuroticism' in dimensions;
+  };
+
   const generateDetailedAnalysis = async () => {
-    if (!result || !isBigFiveTest) return;
+    if (!result || !isBigFiveTest || !hasValidBigFiveData(result.score.dimensions)) return;
     
     setIsGeneratingAnalysis(true);
     
@@ -225,6 +243,7 @@ Formatează întregul răspuns folosind Markdown, cu titluri și liste pentru a 
 
   const isBigFiveTest = result.test_types.name.includes('Big Five');
   const bigFiveDimensions = getBigFiveDimensions(result.score.dimensions);
+  const hasValidBigFive = hasValidBigFiveData(result.score.dimensions);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -278,7 +297,7 @@ Formatează întregul răspuns folosind Markdown, cu titluri și liste pentru a 
         </Card>
 
         {/* Big Five Radar Chart */}
-        {isBigFiveTest && result.score.dimensions && (
+        {isBigFiveTest && hasValidBigFive && (
           <Card className="mb-8">
             <CardHeader>
               <CardTitle>Vizualizare Radar - Dimensiunile Big Five</CardTitle>
@@ -357,7 +376,7 @@ Formatează întregul răspuns folosind Markdown, cu titluri și liste pentru a 
         )}
 
         {/* Big Five Explanations */}
-        {isBigFiveTest && result.score.dimensions && (
+        {isBigFiveTest && hasValidBigFive && (
           <Card className="mb-8">
             <CardHeader>
               <CardTitle>Ghid de Interpretare</CardTitle>
