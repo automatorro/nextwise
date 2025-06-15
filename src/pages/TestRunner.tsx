@@ -1,0 +1,281 @@
+
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useQuery, useMutation } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { Loader2, ArrowLeft, ArrowRight } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+
+interface Question {
+  id: string;
+  text: string;
+  options: string[];
+}
+
+interface TestType {
+  id: string;
+  name: string;
+  description: string;
+  questions_count: number;
+  estimated_duration: number;
+}
+
+const TestRunner = () => {
+  const { testId } = useParams<{ testId: string }>();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const { toast } = useToast();
+  
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [answers, setAnswers] = useState<{ [key: number]: string }>({});
+  const [timeRemaining, setTimeRemaining] = useState(0);
+
+  // Mock questions - în realitate ar veni din baza de date
+  const mockQuestions: Question[] = Array.from({ length: 20 }, (_, i) => ({
+    id: `q${i + 1}`,
+    text: `Întrebarea ${i + 1}: În ce măsură te-ai descrie ca fiind o persoană sociabilă?`,
+    options: [
+      'Deloc de acord',
+      'Puțin de acord', 
+      'Moderat de acord',
+      'Foarte de acord',
+      'Complet de acord'
+    ]
+  }));
+
+  const { data: testInfo, isLoading: testLoading } = useQuery({
+    queryKey: ['test', testId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('test_types')
+        .select('*')
+        .eq('id', testId)
+        .single();
+      
+      if (error) throw error;
+      return data as TestType;
+    },
+    enabled: !!testId
+  });
+
+  const saveResultMutation = useMutation({
+    mutationFn: async (resultData: any) => {
+      const response = await fetch('/api/analyze-test-result', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(resultData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Eroare la salvarea rezultatului');
+      }
+
+      return response.json();
+    },
+    onSuccess: (data) => {
+      toast({
+        title: "Test completat!",
+        description: "Rezultatul tău a fost salvat cu succes."
+      });
+      navigate(`/test-result/${data.id}`);
+    },
+    onError: (error) => {
+      toast({
+        title: "Eroare",
+        description: "Nu am putut salva rezultatul testului.",
+        variant: "destructive"
+      });
+    }
+  });
+
+  useEffect(() => {
+    if (testInfo) {
+      setTimeRemaining(testInfo.estimated_duration * 60); // Convert to seconds
+    }
+  }, [testInfo]);
+
+  useEffect(() => {
+    if (timeRemaining > 0) {
+      const timer = setTimeout(() => {
+        setTimeRemaining(timeRemaining - 1);
+      }, 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [timeRemaining]);
+
+  const handleAnswerChange = (value: string) => {
+    setAnswers(prev => ({
+      ...prev,
+      [currentQuestion]: value
+    }));
+  };
+
+  const handleNext = () => {
+    if (currentQuestion < mockQuestions.length - 1) {
+      setCurrentQuestion(currentQuestion + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestion > 0) {
+      setCurrentQuestion(currentQuestion - 1);
+    }
+  };
+
+  const handleSubmit = () => {
+    if (!user || !testInfo) return;
+
+    const resultData = {
+      testTypeId: testInfo.id,
+      userId: user.id,
+      answers: answers,
+      completedAt: new Date().toISOString()
+    };
+
+    saveResultMutation.mutate(resultData);
+  };
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
+
+  const progress = ((currentQuestion + 1) / mockQuestions.length) * 100;
+  const isLastQuestion = currentQuestion === mockQuestions.length - 1;
+  const canProceed = answers[currentQuestion] !== undefined;
+
+  if (testLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <Loader2 className="w-8 h-8 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!testInfo) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Test nu a fost găsit</h2>
+          <Button onClick={() => navigate('/teste')}>
+            Înapoi la teste
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <Button 
+              variant="ghost" 
+              onClick={() => navigate('/teste')}
+              className="flex items-center"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Înapoi la teste
+            </Button>
+            
+            <div className="text-right">
+              <div className="text-sm text-gray-600">Timp rămas</div>
+              <div className="text-lg font-bold text-red-600">
+                {formatTime(timeRemaining)}
+              </div>
+            </div>
+          </div>
+
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">{testInfo.name}</h1>
+          <div className="flex items-center justify-between">
+            <p className="text-gray-600">
+              Întrebarea {currentQuestion + 1} din {mockQuestions.length}
+            </p>
+            <div className="text-sm text-gray-600">
+              {Math.round(progress)}% completat
+            </div>
+          </div>
+          
+          <Progress value={progress} className="mt-4" />
+        </div>
+
+        {/* Question Card */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle className="text-xl">
+              {mockQuestions[currentQuestion]?.text}
+            </CardTitle>
+          </CardHeader>
+          
+          <CardContent>
+            <RadioGroup 
+              value={answers[currentQuestion] || ''} 
+              onValueChange={handleAnswerChange}
+              className="space-y-4"
+            >
+              {mockQuestions[currentQuestion]?.options.map((option, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <RadioGroupItem value={option} id={`option-${index}`} />
+                  <Label 
+                    htmlFor={`option-${index}`} 
+                    className="text-sm font-normal cursor-pointer flex-1 py-2"
+                  >
+                    {option}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+          </CardContent>
+        </Card>
+
+        {/* Navigation */}
+        <div className="flex justify-between">
+          <Button 
+            variant="outline" 
+            onClick={handlePrevious}
+            disabled={currentQuestion === 0}
+            className="flex items-center"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Anterior
+          </Button>
+
+          {isLastQuestion ? (
+            <Button 
+              onClick={handleSubmit}
+              disabled={!canProceed || saveResultMutation.isPending}
+              className="flex items-center"
+            >
+              {saveResultMutation.isPending ? (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              ) : null}
+              Finalizează Testul
+            </Button>
+          ) : (
+            <Button 
+              onClick={handleNext}
+              disabled={!canProceed}
+              className="flex items-center"
+            >
+              Următoarea
+              <ArrowRight className="w-4 h-4 ml-2" />
+            </Button>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default TestRunner;

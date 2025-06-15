@@ -10,6 +10,9 @@ import ProtectedRoute from "@/components/layout/ProtectedRoute";
 import Navbar from "@/components/layout/Navbar";
 import AuthPage from "@/components/auth/AuthPage";
 import Dashboard from "@/pages/Dashboard";
+import TestsPage from "@/pages/TestsPage";
+import TestRunner from "@/pages/TestRunner";
+import TestResult from "@/pages/TestResult";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 
@@ -35,10 +38,18 @@ const App = () => (
               <Route path="/teste" element={
                 <ProtectedRoute>
                   <Navbar />
-                  <div className="p-8 text-center">
-                    <h1 className="text-2xl font-bold">Pagina Teste</h1>
-                    <p className="text-gray-600 mt-2">În dezvoltare...</p>
-                  </div>
+                  <TestsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/test/:testId" element={
+                <ProtectedRoute>
+                  <TestRunner />
+                </ProtectedRoute>
+              } />
+              <Route path="/test-result/:resultId" element={
+                <ProtectedRoute>
+                  <Navbar />
+                  <TestResult />
                 </ProtectedRoute>
               } />
               <Route path="/career-paths" element={
