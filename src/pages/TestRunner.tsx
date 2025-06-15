@@ -8,6 +8,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTestSubmission } from '@/hooks/useTestSubmission';
+import Navbar from '@/components/layout/Navbar';
 import TestStartScreen from '@/components/test/TestStartScreen';
 import TestQuestion from '@/components/test/TestQuestion';
 import TestErrorScreen from '@/components/test/TestErrorScreen';
@@ -178,28 +179,38 @@ const TestRunner = () => {
   // Show test start screen
   if (!isStarted) {
     return (
-      <TestStartScreen
-        testType={testType}
-        questionsCount={questions.length}
-        onStartTest={() => setIsStarted(true)}
-      />
+      <div>
+        <Navbar />
+        <div className="pt-20">
+          <TestStartScreen
+            testType={testType}
+            questionsCount={questions.length}
+            onStartTest={() => setIsStarted(true)}
+          />
+        </div>
+      </div>
     );
   }
 
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <TestQuestion
-      testType={testType}
-      currentQuestion={currentQuestion}
-      currentQuestionIndex={currentQuestionIndex}
-      totalQuestions={questions.length}
-      answers={answers}
-      isSubmitting={submitTestMutation.isPending}
-      onAnswerChange={handleAnswerChange}
-      onNext={handleNext}
-      onPrevious={handlePrevious}
-    />
+    <div>
+      <Navbar />
+      <div className="pt-20">
+        <TestQuestion
+          testType={testType}
+          currentQuestion={currentQuestion}
+          currentQuestionIndex={currentQuestionIndex}
+          totalQuestions={questions.length}
+          answers={answers}
+          isSubmitting={submitTestMutation.isPending}
+          onAnswerChange={handleAnswerChange}
+          onNext={handleNext}
+          onPrevious={handlePrevious}
+        />
+      </div>
+    </div>
   );
 };
 
