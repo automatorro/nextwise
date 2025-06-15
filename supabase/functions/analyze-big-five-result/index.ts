@@ -33,7 +33,7 @@ serve(async (req) => {
     const { answers, test_type_id } = await req.json();
 
     // Verify this is a Big Five test
-    if (test_type_id !== 'big5-test-2024-v1') {
+    if (test_type_id !== 'f47ac10b-58cc-4372-a567-0e02b2c3d480') {
       return new Response(
         JSON.stringify({ error: 'This function only handles Big Five tests' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
@@ -56,7 +56,7 @@ serve(async (req) => {
 });
 
 function analyzeBigFiveResults(answers: BigFiveAnswers): BigFiveInterpretation {
-  // Define which questions belong to each dimension
+  // Define which questions belong to each dimension (40 questions total, 8 per dimension)
   const dimensions = {
     openness: [1, 2, 3, 4, 5, 6, 7, 8],
     conscientiousness: [9, 10, 11, 12, 13, 14, 15, 16],
@@ -83,7 +83,7 @@ function analyzeBigFiveResults(answers: BigFiveAnswers): BigFiveInterpretation {
     questionNumbers.forEach(questionNum => {
       const answer = answers[questionNum.toString()];
       if (answer !== undefined) {
-        // Apply reverse scoring if needed
+        // Apply reverse scoring if needed: (6 - answer)
         const adjustedScore = reverseScored.includes(questionNum) ? (6 - answer) : answer;
         score += adjustedScore;
       }
@@ -106,7 +106,7 @@ function analyzeBigFiveResults(answers: BigFiveAnswers): BigFiveInterpretation {
   const minPossibleScore = 40; // 5 dimensions × 8 points each
   const overallPercentage = Math.round(((totalRawScore - minPossibleScore) / (maxPossibleScore - minPossibleScore)) * 100);
 
-  // Generate interpretations
+  // Generate interpretations using the exact text provided
   const detailedInterpretations = {
     openness: getOpennessInterpretation(dimensionScores.openness),
     conscientiousness: getConscientiousnessInterpretation(dimensionScores.conscientiousness),
