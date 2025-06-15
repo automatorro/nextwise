@@ -13,14 +13,14 @@ import OverallScoreCard from '@/components/test-result/OverallScoreCard';
 import DimensionsAnalysis from '@/components/test-result/DimensionsAnalysis';
 import DetailedAnalysisSection from '@/components/test-result/DetailedAnalysisSection';
 import DetailedInterpretations from '@/components/test-result/DetailedInterpretations';
-import { getBigFiveDimensions, hasValidBigFiveData } from '@/utils/testResultHelpers';
+import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
 
 interface ScoreData {
   overall: number;
   raw_score: number;
   max_score: number;
   interpretation: string;
-  dimensions: { [key: string]: number };
+  dimensions?: { [key: string]: number };
   detailed_interpretations?: {
     openness?: string;
     conscientiousness?: string;
@@ -33,6 +33,7 @@ interface ScoreData {
 interface TestResultData {
   id: string;
   score: ScoreData;
+  answers: { [key: string]: number };
   completed_at: string;
   test_types: {
     name: string;
@@ -61,14 +62,25 @@ const TestResult = () => {
       
       if (error) throw error;
       
-      // Type cast the score from Json to our expected structure
       return {
         ...data,
-        score: data.score as unknown as ScoreData
+        score: data.score as unknown as ScoreData,
+        answers: data.answers as unknown as { [key: string]: number }
       } as TestResultData;
     },
     enabled: !!resultId
   });
+
+  // Calculate Big Five dimensions from answers if it's a Big Five test
+  const isBigFiveTest = result?.test_types.name.includes('Big Five');
+  const calculatedDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
+
+  // Use calculated dimensions or fallback to existing dimensions
+  const finalDimensions = isBigFiveTest && calculatedDimensions 
+    ? calculatedDimensions 
+    : (result?.score.dimensions || {});
+
+  const hasValidBigFive = isBigFiveTest && Object.keys(finalDimensions).length > 0;
 
   if (isLoading) {
     return (
@@ -90,10 +102,6 @@ const TestResult = () => {
       </div>
     );
   }
-
-  const isBigFiveTest = result.test_types.name.includes('Big Five');
-  const bigFiveDimensions = getBigFiveDimensions(result.score.dimensions);
-  const hasValidBigFive = hasValidBigFiveData(result.score.dimensions);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -127,15 +135,15 @@ const TestResult = () => {
               <CardTitle>Vizualizare Radar - Dimensiunile Big Five</CardTitle>
               <p className="text-sm text-gray-600">
                 Graficul radar arată profilul tău de personalitate pe cele 5 dimensiuni principale. 
-                Fiecare axă reprezintă o dimensiune, iar scorul este afișat ca procent din scorul maxim (40 puncte).
+                Fiecare axă reprezintă o dimensiune, iar scorul este afișat ca procent.
               </p>
             </CardHeader>
             <CardContent>
-              <BigFiveRadarChart dimensions={bigFiveDimensions} />
+              <BigFiveRadarChart dimensions={finalDimensions} />
               
               {/* Generate Detailed Analysis Button */}
               <DetailedAnalysisSection 
-                dimensions={bigFiveDimensions} 
+                dimensions={finalDimensions} 
                 resultId={resultId!} 
               />
             </CardContent>
@@ -143,7 +151,7 @@ const TestResult = () => {
         )}
 
         {/* Dimensions */}
-        <DimensionsAnalysis dimensions={result.score.dimensions} />
+        <DimensionsAnalysis dimensions={finalDimensions} />
 
         {/* Big Five Explanations */}
         {isBigFiveTest && hasValidBigFive && (
@@ -152,7 +160,7 @@ const TestResult = () => {
               <CardTitle>Ghid de Interpretare</CardTitle>
             </CardHeader>
             <CardContent>
-              <BigFiveExplanations dimensions={bigFiveDimensions} />
+              <BigFiveExplanations dimensions={finalDimensions} />
             </CardContent>
           </Card>
         )}

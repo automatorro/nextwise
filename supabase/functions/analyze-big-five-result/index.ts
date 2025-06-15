@@ -1,6 +1,11 @@
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
 interface BigFiveAnswers {
   [key: string]: number;
 }
@@ -29,28 +34,96 @@ interface BigFiveInterpretation {
 }
 
 serve(async (req) => {
-  try {
-    const { answers, test_type_id } = await req.json();
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
 
-    // Verify this is a Big Five test
+  try {
+    console.log('Function called, parsing request body...');
+    const requestBody = await req.text();
+    console.log('Raw request body:', requestBody);
+    
+    if (!requestBody) {
+      console.error('Empty request body');
+      return new Response(
+        JSON.stringify({ error: 'Empty request body' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const { answers, test_type_id, prompt, testResultId } = JSON.parse(requestBody);
+    console.log('Parsed data:', { answers, test_type_id, prompt, testResultId });
+
+    // If this is a detailed analysis request (has prompt), handle it differently
+    if (prompt) {
+      console.log('Handling detailed analysis request...');
+      const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+      
+      if (!GEMINI_API_KEY) {
+        console.error('GEMINI_API_KEY not found');
+        return new Response(
+          JSON.stringify({ error: 'Gemini API key not configured' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{
+                text: prompt
+              }]
+            }]
+          })
+        });
+
+        const geminiData = await response.json();
+        console.log('Gemini response:', geminiData);
+
+        if (geminiData.candidates && geminiData.candidates[0]) {
+          const analysis = geminiData.candidates[0].content.parts[0].text;
+          return new Response(
+            JSON.stringify({ analysis }),
+            { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        } else {
+          throw new Error('No content generated from Gemini');
+        }
+      } catch (error) {
+        console.error('Error calling Gemini API:', error);
+        return new Response(
+          JSON.stringify({ error: 'Failed to generate analysis with Gemini' }),
+          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+    }
+
+    // Handle Big Five scoring
     if (test_type_id !== 'f47ac10b-58cc-4372-a567-0e02b2c3d480') {
       return new Response(
         JSON.stringify({ error: 'This function only handles Big Five tests' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     const result = analyzeBigFiveResults(answers);
+    console.log('Analysis result:', result);
 
     return new Response(
       JSON.stringify(result),
-      { headers: { 'Content-Type': 'application/json' } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (error) {
     console.error('Error analyzing Big Five results:', error);
     return new Response(
-      JSON.stringify({ error: 'Failed to analyze results' }),
-      { status: 500, headers: { 'Content-Type': 'application/json' } }
+      JSON.stringify({ error: 'Failed to analyze results', details: error.message }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });

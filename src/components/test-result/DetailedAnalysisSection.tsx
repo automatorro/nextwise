@@ -8,11 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 
 interface DetailedAnalysisSectionProps {
   dimensions: {
-    openness: number;
-    conscientiousness: number;
-    extraversion: number;
-    agreeableness: number;
-    neuroticism: number;
+    [key: string]: number;
   };
   resultId: string;
 }
@@ -55,13 +51,20 @@ Formatează întregul răspuns folosind Markdown, cu titluri și liste pentru a 
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
 
-      setDetailedAnalysis(data.analysis);
-      toast({
-        title: "Analiză generată cu succes",
-        description: "Analiza detaliată a profilului tău a fost generată."
-      });
+      if (data && data.analysis) {
+        setDetailedAnalysis(data.analysis);
+        toast({
+          title: "Analiză generată cu succes",
+          description: "Analiza detaliată a profilului tău a fost generată."
+        });
+      } else {
+        throw new Error('No analysis returned from function');
+      }
     } catch (error) {
       console.error('Error generating analysis:', error);
       toast({
@@ -101,25 +104,28 @@ Formatează întregul răspuns folosind Markdown, cu titluri și liste pentru a 
   return (
     <>
       {/* Generate Analysis Button */}
-      <div className="mt-6 text-center">
+      <div className="mt-6 text-center border-t pt-6">
         <Button
           onClick={generateDetailedAnalysis}
           disabled={isGeneratingAnalysis}
           size="lg"
-          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-8 rounded-lg shadow-lg transform transition hover:scale-105"
+          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-lg shadow-lg transform transition hover:scale-105"
         >
           {isGeneratingAnalysis ? (
             <>
               <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-              Se generează analiza...
+              Se generează analiza cu AI...
             </>
           ) : (
             <>
               <Brain className="w-5 h-5 mr-2" />
-              Generează Analiza Detaliată a Profilului
+              Generează Analiza Detaliată cu AI
             </>
           )}
         </Button>
+        <p className="text-sm text-gray-500 mt-2">
+          Primește o analiză personalizată și recomandări de carieră bazate pe profilul tău Big Five
+        </p>
       </div>
 
       {/* Detailed Analysis Display */}
