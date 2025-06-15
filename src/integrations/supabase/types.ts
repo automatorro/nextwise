@@ -9,7 +9,217 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      career_paths: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          generated_by_ai: boolean | null
+          id: string
+          milestones: Json | null
+          progress_percentage: number | null
+          title: string
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          generated_by_ai?: boolean | null
+          id?: string
+          milestones?: Json | null
+          progress_percentage?: number | null
+          title: string
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          generated_by_ai?: boolean | null
+          id?: string
+          milestones?: Json | null
+          progress_percentage?: number | null
+          title?: string
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          email: string | null
+          full_name: string | null
+          id: string
+          updated_at: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id: string
+          updated_at?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      subscriptions: {
+        Row: {
+          created_at: string | null
+          current_period_end: string | null
+          current_period_start: string | null
+          id: string
+          status: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          subscription_type: Database["public"]["Enums"]["subscription_type"]
+          tests_taken_this_month: number | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_type?: Database["public"]["Enums"]["subscription_type"]
+          tests_taken_this_month?: number | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          current_period_end?: string | null
+          current_period_start?: string | null
+          id?: string
+          status?: Database["public"]["Enums"]["subscription_status"]
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          subscription_type?: Database["public"]["Enums"]["subscription_type"]
+          tests_taken_this_month?: number | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      test_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          icon: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          icon?: string | null
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
+      test_results: {
+        Row: {
+          ai_analysis: string | null
+          answers: Json
+          completed_at: string | null
+          id: string
+          recommendations: string | null
+          score: Json
+          test_type_id: string
+          user_id: string
+        }
+        Insert: {
+          ai_analysis?: string | null
+          answers: Json
+          completed_at?: string | null
+          id?: string
+          recommendations?: string | null
+          score: Json
+          test_type_id: string
+          user_id: string
+        }
+        Update: {
+          ai_analysis?: string | null
+          answers?: Json
+          completed_at?: string | null
+          id?: string
+          recommendations?: string | null
+          score?: Json
+          test_type_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_results_test_type_id_fkey"
+            columns: ["test_type_id"]
+            isOneToOne: false
+            referencedRelation: "test_types"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      test_types: {
+        Row: {
+          category_id: string
+          created_at: string | null
+          description: string | null
+          estimated_duration: number
+          id: string
+          name: string
+          questions_count: number
+          subscription_required: Database["public"]["Enums"]["subscription_type"]
+        }
+        Insert: {
+          category_id: string
+          created_at?: string | null
+          description?: string | null
+          estimated_duration?: number
+          id?: string
+          name: string
+          questions_count?: number
+          subscription_required?: Database["public"]["Enums"]["subscription_type"]
+        }
+        Update: {
+          category_id?: string
+          created_at?: string | null
+          description?: string | null
+          estimated_duration?: number
+          id?: string
+          name?: string
+          questions_count?: number
+          subscription_required?: Database["public"]["Enums"]["subscription_type"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "test_types_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "test_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +228,8 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      subscription_status: "active" | "inactive" | "cancelled" | "past_due"
+      subscription_type: "basic" | "professional" | "premium"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +344,9 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      subscription_status: ["active", "inactive", "cancelled", "past_due"],
+      subscription_type: ["basic", "professional", "premium"],
+    },
   },
 } as const
