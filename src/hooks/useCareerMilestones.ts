@@ -30,7 +30,7 @@ export const useCareerMilestones = (careerPathId?: string) => {
       if (!careerPathId) return [];
 
       const { data, error } = await supabase
-        .from('career_milestones')
+        .from('career_milestones' as any)
         .select('*')
         .eq('career_path_id', careerPathId)
         .order('milestone_order', { ascending: true });
@@ -50,7 +50,7 @@ export const useCareerMilestones = (careerPathId?: string) => {
       milestone_order?: number;
     }) => {
       const { data, error } = await supabase
-        .from('career_milestones')
+        .from('career_milestones' as any)
         .insert(milestoneData)
         .select()
         .single();
@@ -71,7 +71,7 @@ export const useCareerMilestones = (careerPathId?: string) => {
   const updateMilestone = useMutation({
     mutationFn: async ({ id, updates }: { id: string; updates: Partial<CareerMilestone> }) => {
       const { data, error } = await supabase
-        .from('career_milestones')
+        .from('career_milestones' as any)
         .update(updates)
         .eq('id', id)
         .select()
@@ -98,7 +98,7 @@ export const useCareerMilestones = (careerPathId?: string) => {
       };
 
       const { data, error } = await supabase
-        .from('career_milestones')
+        .from('career_milestones' as any)
         .update(updates)
         .eq('id', id)
         .select()
@@ -116,7 +116,7 @@ export const useCareerMilestones = (careerPathId?: string) => {
   const deleteMilestone = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from('career_milestones')
+        .from('career_milestones' as any)
         .delete()
         .eq('id', id);
 

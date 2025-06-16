@@ -30,7 +30,7 @@ export const useCareerRecommendations = () => {
       if (!user?.id) return [];
 
       const { data, error } = await supabase
-        .from('career_recommendations')
+        .from('career_recommendations' as any)
         .select('*')
         .eq('user_id', user.id)
         .eq('is_dismissed', false)
@@ -46,7 +46,7 @@ export const useCareerRecommendations = () => {
   const dismissRecommendation = useMutation({
     mutationFn: async (id: string) => {
       const { error } = await supabase
-        .from('career_recommendations')
+        .from('career_recommendations' as any)
         .update({ is_dismissed: true })
         .eq('id', id);
 

@@ -18,7 +18,6 @@ import {
 } from 'lucide-react';
 import { useCareerPlans } from '@/hooks/useCareerPlans';
 import { useCareerRecommendations } from '@/hooks/useCareerRecommendations';
-import { useCareerMilestones } from '@/hooks/useCareerMilestones';
 import { useSubscription } from '@/hooks/useSubscription';
 
 const CareerDashboardReal = () => {
@@ -57,9 +56,12 @@ const CareerDashboardReal = () => {
   };
 
   const getTotalCompletedMilestones = () => {
-    // This would need to be calculated by fetching all milestones
-    // For now, we'll use a placeholder
-    return careerPlans.reduce((sum, plan) => sum + Math.floor((plan.progress_percentage || 0) / 10), 0);
+    // For now, estimate based on progress percentage
+    return careerPlans.reduce((sum, plan) => {
+      const estimatedTotal = 5; // Estimate 5 milestones per plan
+      const completed = Math.floor((plan.progress_percentage || 0) / 100 * estimatedTotal);
+      return sum + completed;
+    }, 0);
   };
 
   if (plansLoading) {

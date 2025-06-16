@@ -2,6 +2,7 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useCareerPlans } from '@/hooks/useCareerPlans';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { 
@@ -17,6 +18,7 @@ import AIMentoring from '@/components/career/AIMentoring';
 const CareerPaths = () => {
   const { user } = useAuth();
   const { subscription } = useSubscription();
+  const { careerPlans } = useCareerPlans();
   const [activeTab, setActiveTab] = React.useState('dashboard');
 
   const getSubscriptionFeatures = () => {
@@ -95,7 +97,7 @@ const CareerPaths = () => {
           {activeTab === 'create' && (
             <CreateCareerPlan 
               maxPlans={features.maxPlans}
-              currentPlansCount={0}
+              currentPlansCount={careerPlans.length}
             />
           )}
           
