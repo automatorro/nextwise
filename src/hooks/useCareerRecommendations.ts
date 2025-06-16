@@ -38,7 +38,7 @@ export const useCareerRecommendations = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as CareerRecommendation[];
+      return (data as any[]) as CareerRecommendation[];
     },
     enabled: !!user?.id
   });

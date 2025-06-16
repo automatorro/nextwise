@@ -36,7 +36,7 @@ export const useCareerMilestones = (careerPathId?: string) => {
         .order('milestone_order', { ascending: true });
 
       if (error) throw error;
-      return data as CareerMilestone[];
+      return (data as any[]) as CareerMilestone[];
     },
     enabled: !!careerPathId
   });
