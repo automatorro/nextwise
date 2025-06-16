@@ -1,24 +1,16 @@
+
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscription } from '@/hooks/useSubscription';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
 import { 
   Target, 
-  Brain, 
-  TrendingUp, 
-  Calendar,
-  CheckCircle,
-  Clock,
-  ArrowRight,
-  Sparkles,
-  BookOpen,
   MessageCircle,
-  BarChart3
+  BarChart3,
+  Sparkles
 } from 'lucide-react';
-import CareerDashboard from '@/components/career/CareerDashboard';
+import CareerDashboardReal from '@/components/career/CareerDashboardReal';
 import CreateCareerPlan from '@/components/career/CreateCareerPlan';
 import AIMentoring from '@/components/career/AIMentoring';
 
@@ -26,53 +18,6 @@ const CareerPaths = () => {
   const { user } = useAuth();
   const { subscription } = useSubscription();
   const [activeTab, setActiveTab] = React.useState('dashboard');
-
-  // Mock data pentru demonstrație
-  const activeCareerPlans = [
-    {
-      id: '1',
-      title: 'Full Stack Developer',
-      description: 'Dezvoltare completă web cu React și Node.js',
-      progress: 65,
-      totalMilestones: 8,
-      completedMilestones: 5,
-      estimatedCompletion: '3 luni',
-      nextMilestone: 'Învățare TypeScript avansant',
-      aiGenerated: true
-    },
-    {
-      id: '2',
-      title: 'Product Manager',
-      description: 'Leadership în dezvoltarea produselor digitale',
-      progress: 30,
-      totalMilestones: 10,
-      completedMilestones: 3,
-      estimatedCompletion: '6 luni',
-      nextMilestone: 'Certificare Agile/Scrum',
-      aiGenerated: true
-    }
-  ];
-
-  const recommendations = [
-    {
-      type: 'skill' as const,
-      title: 'Dezvoltă competențele de comunicare',
-      description: 'Bazat pe testul de personalitate, îți recomandăm să lucrezi la abilități de prezentare',
-      action: 'Vezi cursuri'
-    },
-    {
-      type: 'path' as const,
-      title: 'Explorează UX/UI Design',
-      description: 'Rezultatele tale sugerează o afinitate pentru design și experiența utilizatorului',
-      action: 'Creează plan'
-    },
-    {
-      type: 'test' as const,
-      title: 'Completează testul de leadership',
-      description: 'Pentru recomandări mai precise despre rolurile de management',
-      action: 'Fă testul'
-    }
-  ];
 
   const getSubscriptionFeatures = () => {
     if (!subscription) return { maxPlans: 1, hasAI: false, hasAnalytics: false };
@@ -145,24 +90,16 @@ const CareerPaths = () => {
       {/* Main Content */}
       <section className="py-8 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          {activeTab === 'dashboard' && (
-            <CareerDashboard 
-              activeCareerPlans={activeCareerPlans}
-              recommendations={recommendations}
-              features={features}
-            />
-          )}
+          {activeTab === 'dashboard' && <CareerDashboardReal />}
           
           {activeTab === 'create' && (
             <CreateCareerPlan 
               maxPlans={features.maxPlans}
-              currentPlansCount={activeCareerPlans.length}
+              currentPlansCount={0}
             />
           )}
           
-          {activeTab === 'mentoring' && features.hasAI && (
-            <AIMentoring />
-          )}
+          {activeTab === 'mentoring' && features.hasAI && <AIMentoring />}
         </div>
       </section>
     </div>
