@@ -1,57 +1,50 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { 
   MessageCircle, 
   Brain, 
   Send,
   Sparkles,
   User,
-  Bot
+  Bot,
+  Loader2
 } from 'lucide-react';
+import { useAIChat } from '@/hooks/useAIChat';
+import { useSessionId } from '@/hooks/useSessionId';
 
 const AIMentoring = () => {
-  const [messages, setMessages] = useState([
-    {
-      id: '1',
-      type: 'ai',
-      content: 'Salut! Sunt mentorul tău AI personal. Sunt aici să te ajut cu planificarea carierei, dezvoltarea competențelor și orice întrebări legate de evoluția ta profesională. Cu ce te pot ajuta astăzi?',
-      timestamp: new Date()
-    }
-  ]);
   const [newMessage, setNewMessage] = useState('');
-  const [isTyping, setIsTyping] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const sessionId = useSessionId();
+  
+  const { 
+    messages, 
+    isLoadingHistory, 
+    isLoading, 
+    sendMessage 
+  } = useAIChat(sessionId);
 
-  const handleSendMessage = async () => {
-    if (!newMessage.trim()) return;
+  // Auto-scroll to bottom when new messages arrive
+  useEffect(() => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [messages]);
 
-    // Add user message
-    const userMessage = {
-      id: Date.now().toString(),
-      type: 'user',
-      content: newMessage,
-      timestamp: new Date()
-    };
-
-    setMessages(prev => [...prev, userMessage]);
+  const handleSendMessage = () => {
+    if (!newMessage.trim() || isLoading) return;
+    
+    sendMessage(newMessage);
     setNewMessage('');
-    setIsTyping(true);
+  };
 
-    // Simulate AI response
-    setTimeout(() => {
-      const aiResponse = {
-        id: (Date.now() + 1).toString(),
-        type: 'ai',
-        content: 'Aceasta este o simulare a răspunsului AI. În implementarea finală, aici va fi integrată inteligența artificială pentru consiliere personalizată bazată pe profilul și rezultatele tale din teste.',
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, aiResponse]);
-      setIsTyping(false);
-    }, 2000);
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
   };
 
   const predefinedQuestions = [
@@ -60,6 +53,14 @@ const AIMentoring = () => {
     "Ce certificări îmi recomanzi pentru rolul meu?",
     "Cum pot face tranziția către management?"
   ];
+
+  // Show initial AI message if no messages exist
+  const displayMessages = messages.length === 0 ? [{
+    id: 'initial',
+    message_type: 'ai' as const,
+    content: 'Salut! Sunt mentorul tău AI personal. Sunt aici să te ajut cu planificarea carierei, dezvoltarea competențelor și orice întrebări legate de evoluția ta profesională. Cu ce te pot ajuta astăzi?',
+    created_at: new Date().toISOString()
+  }] : messages;
 
   return (
     <div className="space-y-6">
@@ -90,51 +91,61 @@ const AIMentoring = () => {
             <CardContent className="flex-1 flex flex-col">
               {/* Messages */}
               <div className="flex-1 overflow-y-auto space-y-4 mb-4">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex ${message.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
+                {isLoadingHistory ? (
+                  <div className="flex justify-center items-center h-32">
+                    <Loader2 className="w-6 h-6 animate-spin text-blue-600" />
+                    <span className="ml-2 text-gray-500">Se încarcă conversația...</span>
+                  </div>
+                ) : (
+                  displayMessages.map((message) => (
                     <div
-                      className={`max-w-[80%] rounded-lg p-3 ${
-                        message.type === 'user'
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-gray-100 text-gray-900'
-                      }`}
+                      key={message.id}
+                      className={`flex ${message.message_type === 'user' ? 'justify-end' : 'justify-start'}`}
                     >
-                      <div className="flex items-start space-x-2">
-                        {message.type === 'ai' && (
-                          <Bot className="w-4 h-4 mt-1 text-blue-600" />
-                        )}
-                        {message.type === 'user' && (
-                          <User className="w-4 h-4 mt-1" />
-                        )}
-                        <div className="flex-1">
-                          <p className="text-sm">{message.content}</p>
-                          <p className={`text-xs mt-1 ${
-                            message.type === 'user' ? 'text-blue-100' : 'text-gray-500'
-                          }`}>
-                            {message.timestamp.toLocaleTimeString('ro-RO', { 
-                              hour: '2-digit', 
-                              minute: '2-digit' 
-                            })}
-                          </p>
+                      <div
+                        className={`max-w-[80%] rounded-lg p-3 ${
+                          message.message_type === 'user'
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-100 text-gray-900'
+                        }`}
+                      >
+                        <div className="flex items-start space-x-2">
+                          {message.message_type === 'ai' && (
+                            <Bot className="w-4 h-4 mt-1 text-blue-600" />
+                          )}
+                          {message.message_type === 'user' && (
+                            <User className="w-4 h-4 mt-1" />
+                          )}
+                          <div className="flex-1">
+                            <p className="text-sm whitespace-pre-wrap">{message.content}</p>
+                            <p className={`text-xs mt-1 ${
+                              message.message_type === 'user' ? 'text-blue-100' : 'text-gray-500'
+                            }`}>
+                              {new Date(message.created_at).toLocaleTimeString('ro-RO', { 
+                                hour: '2-digit', 
+                                minute: '2-digit' 
+                              })}
+                            </p>
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
+                  ))
+                )}
                 
-                {isTyping && (
+                {isLoading && (
                   <div className="flex justify-start">
                     <div className="bg-gray-100 rounded-lg p-3">
                       <div className="flex items-center space-x-2">
                         <Bot className="w-4 h-4 text-blue-600" />
-                        <div className="text-sm text-gray-600">Mentorul scrie...</div>
+                        <Loader2 className="w-4 h-4 animate-spin text-blue-600" />
+                        <div className="text-sm text-gray-600">Mentorul gândește...</div>
                       </div>
                     </div>
                   </div>
                 )}
+                
+                <div ref={messagesEndRef} />
               </div>
 
               {/* Input */}
@@ -143,11 +154,19 @@ const AIMentoring = () => {
                   placeholder="Scrie întrebarea ta aici..."
                   value={newMessage}
                   onChange={(e) => setNewMessage(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
+                  onKeyPress={handleKeyPress}
+                  disabled={isLoading}
                   className="flex-1"
                 />
-                <Button onClick={handleSendMessage} disabled={!newMessage.trim()}>
-                  <Send className="w-4 h-4" />
+                <Button 
+                  onClick={handleSendMessage} 
+                  disabled={!newMessage.trim() || isLoading}
+                >
+                  {isLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Send className="w-4 h-4" />
+                  )}
                 </Button>
               </div>
             </CardContent>
@@ -169,6 +188,7 @@ const AIMentoring = () => {
                   variant="outline"
                   className="w-full text-left justify-start h-auto p-3"
                   onClick={() => setNewMessage(question)}
+                  disabled={isLoading}
                 >
                   <MessageCircle className="w-4 h-4 mr-2 text-blue-600" />
                   <span className="text-sm">{question}</span>
