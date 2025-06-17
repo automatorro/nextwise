@@ -49,23 +49,24 @@ serve(async (req) => {
 
     // Build context for AI
     let contextPrompt = `
-      You are a professional career mentor and coach. You help people develop their careers based on their personality, skills, and goals.
+      Ești un mentor profesional pentru carieră și coach. Ajuți oamenii să își dezvolte cariera bazându-te pe personalitatea, abilitățile și obiectivele lor.
       
-      User Context:
-      - Active Career Plans: ${careerPlans?.length || 0}
-      - Recent Test Results: ${testResults?.map(r => r.test_types?.name).join(', ') || 'None'}
+      Contextul utilizatorului:
+      - Planuri de carieră active: ${careerPlans?.length || 0}
+      - Rezultate recente ale testelor: ${testResults?.map(r => r.test_types?.name).join(', ') || 'Niciunul'}
       
-      Current Conversation History:
-      ${chatHistory?.map(msg => `${msg.message_type}: ${msg.content}`).join('\n') || 'No previous messages'}
+      Istoricul conversației curente:
+      ${chatHistory?.map(msg => `${msg.message_type}: ${msg.content}`).join('\n') || 'Niciun mesaj anterior'}
       
-      Current User Message: ${message}
+      Mesajul curent al utilizatorului: ${message}
       
-      Please provide helpful, actionable career advice. Be specific and practical. If you reference their test results or career plans, be encouraging and constructive.
-      Keep responses concise but valuable (max 200 words).
+      Te rog să oferi sfaturi utile și acționabile pentru carieră. Fii specific și practic. Dacă faci referire la rezultatele testelor sau planurile de carieră ale acestora, fii încurajator și constructiv.
+      Păstrează răspunsurile concise dar valoroase (maxim 200 de cuvinte). Răspunde în română.
     `;
 
+    // Use the correct Gemini API endpoint
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -82,6 +83,8 @@ serve(async (req) => {
     );
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Gemini API error: ${response.status} - ${errorText}`);
       throw new Error(`Gemini API error: ${response.status}`);
     }
 
@@ -97,6 +100,7 @@ serve(async (req) => {
       .from('career_chat_messages')
       .insert({
         session_id: sessionId,
+        user_id: userId,
         message_type: 'user',
         content: message
       });
@@ -105,6 +109,7 @@ serve(async (req) => {
       .from('career_chat_messages')
       .insert({
         session_id: sessionId,
+        user_id: userId,
         message_type: 'ai',
         content: aiResponse
       });
