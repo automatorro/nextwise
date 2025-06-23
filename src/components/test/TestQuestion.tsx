@@ -48,9 +48,9 @@ interface TestQuestionProps {
   onPrevious: () => void;
 }
 
-// Helper function to safely parse and normalize question options
+// Enhanced helper function to safely parse and normalize question options
 const parseQuestionOptions = (options: Json): { value: number; label: string }[] => {
-  console.log('=== DETAILED PARSING DEBUG ===');
+  console.log('=== ENHANCED PARSING DEBUG ===');
   console.log('Input options:', options);
   console.log('Options type:', typeof options);
   console.log('Is array:', Array.isArray(options));
@@ -60,57 +60,75 @@ const parseQuestionOptions = (options: Json): { value: number; label: string }[]
     return [];
   }
 
-  // Handle array of strings (simple format) - most common case
+  // Handle array format (most common)
   if (Array.isArray(options)) {
-    console.log('Options is an array with length:', options.length);
-    console.log('Array contents:', options);
+    console.log('Processing array with length:', options.length);
     
-    // Check if all elements are strings
-    const allStrings = options.every(opt => typeof opt === 'string');
-    console.log('All elements are strings:', allStrings);
+    // Case 1: Array of objects with label and value properties
+    if (options.length > 0 && typeof options[0] === 'object' && options[0] !== null) {
+      const firstOption = options[0] as { [key: string]: any };
+      
+      // Check if it has label and value properties
+      if ('label' in firstOption && 'value' in firstOption) {
+        console.log('Processing as array of objects with label/value');
+        return options.map((option: any) => ({
+          value: typeof option.value === 'number' ? option.value : parseInt(option.value) || 0,
+          label: String(option.label || `Option ${option.value || 0}`)
+        }));
+      }
+      
+      // Check if it has text and value properties (alternative format)
+      if ('text' in firstOption && 'value' in firstOption) {
+        console.log('Processing as array of objects with text/value');
+        return options.map((option: any) => ({
+          value: typeof option.value === 'number' ? option.value : parseInt(option.value) || 0,
+          label: String(option.text || `Option ${option.value || 0}`)
+        }));
+      }
+      
+      // Check if it has value property only
+      if ('value' in firstOption) {
+        console.log('Processing as array of objects with value only');
+        return options.map((option: any, index: number) => ({
+          value: typeof option.value === 'number' ? option.value : parseInt(option.value) || (index + 1),
+          label: String(option.label || option.text || `Option ${option.value || (index + 1)}`)
+        }));
+      }
+    }
     
-    if (allStrings && options.length > 0) {
+    // Case 2: Array of strings (simple format)
+    if (options.length > 0 && typeof options[0] === 'string') {
       console.log('Processing as array of strings');
-      const result = options.map((label, index) => ({
+      return options.map((label: string, index: number) => ({
         value: index + 1,
         label: String(label)
       }));
-      console.log('Parsed result:', result);
-      return result;
     }
     
-    // Handle array of objects with value and label
-    console.log('Processing as array of objects');
-    const result = options
-      .filter(option => option && typeof option === 'object' && option !== null)
-      .map(option => {
-        const optionObj = option as { [key: string]: any };
-        return {
-          value: typeof optionObj.value === 'number' ? optionObj.value : 0,
-          label: typeof optionObj.label === 'string' ? optionObj.label : 
-                 typeof optionObj.text === 'string' ? optionObj.text : 
-                 `Option ${optionObj.value || 0}`
-        };
-      });
-    console.log('Object array result:', result);
-    return result;
+    // Case 3: Array of numbers or mixed types
+    console.log('Processing as array of mixed types');
+    return options.map((item: any, index: number) => ({
+      value: index + 1,
+      label: String(item || `Option ${index + 1}`)
+    }));
   }
 
-  // Handle object format
+  // Handle object format (legacy support)
   if (typeof options === 'object' && options !== null) {
     console.log('Processing object format');
+    
+    // Check if it's an object with numeric keys
     const entries = Object.entries(options);
     if (entries.length > 0) {
-      const result = entries.map(([key, value]) => ({
+      console.log('Converting object entries to options');
+      return entries.map(([key, value]) => ({
         value: parseInt(key) || 0,
         label: typeof value === 'string' ? value : `Option ${key}`
-      }));
-      console.log('Object format result:', result);
-      return result;
+      })).sort((a, b) => a.value - b.value);
     }
   }
 
-  // Fallback to default Likert scale if parsing fails
+  // Fallback to default Likert scale if all parsing fails
   console.log('Using fallback Likert scale options');
   return [
     { value: 1, label: 'Complet dezacord' },

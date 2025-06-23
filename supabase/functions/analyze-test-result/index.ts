@@ -42,6 +42,9 @@ serve(async (req) => {
       }
 
       analysisResult = await bigFiveResponse.json();
+    } else if (test_type_id === 'f47ac10b-58cc-4372-a567-0e02b2c3d480') {
+      // Big Five test with specific ID
+      analysisResult = await analyzeBigFiveTest(answers, test_type_id, supabaseClient);
     } else {
       // Handle other test types with existing logic
       analysisResult = await analyzeOtherTests(answers, test_type_id, supabaseClient);
@@ -71,6 +74,69 @@ serve(async (req) => {
   }
 })
 
+async function analyzeBigFiveTest(answers: any, test_type_id: string, supabaseClient: any) {
+  // Get test questions to understand the scoring
+  const { data: questions } = await supabaseClient
+    .from('test_questions')
+    .select('*')
+    .eq('test_type_id', test_type_id)
+    .order('question_order')
+
+  if (!questions || questions.length === 0) {
+    throw new Error('No questions found for this test')
+  }
+
+  // Big Five dimensions mapping (based on standard Big Five questionnaire)
+  const dimensions = {
+    openness: { total: 0, count: 0 },
+    conscientiousness: { total: 0, count: 0 },
+    extraversion: { total: 0, count: 0 },
+    agreeableness: { total: 0, count: 0 },
+    neuroticism: { total: 0, count: 0 }
+  }
+
+  // Map questions to dimensions (typical Big Five structure)
+  const dimensionMapping = [
+    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
+    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
+    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
+    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
+    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
+    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
+    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
+    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
+    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
+    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness'
+  ]
+
+  questions.forEach((question: any, index: number) => {
+    const questionId = question.id
+    const answer = answers[questionId]
+    
+    if (answer !== undefined && dimensionMapping[index]) {
+      const dimension = dimensionMapping[index] as keyof typeof dimensions
+      dimensions[dimension].total += answer
+      dimensions[dimension].count += 1
+    }
+  })
+
+  // Calculate percentages for each dimension
+  const results = Object.entries(dimensions).reduce((acc, [key, value]) => {
+    const percentage = value.count > 0 ? Math.round((value.total / (value.count * 5)) * 100) : 0
+    acc[key] = Math.min(100, Math.max(0, percentage))
+    return acc
+  }, {} as { [key: string]: number })
+
+  // Calculate overall score
+  const overall = Math.round(Object.values(results).reduce((sum, val) => sum + val, 0) / 5)
+
+  return {
+    overall,
+    dimensions: results,
+    interpretation: generateBigFiveInterpretation(results)
+  }
+}
+
 async function analyzeOtherTests(answers: any, test_type_id: string, supabaseClient: any) {
   // Get test questions to understand the scoring
   const { data: questions } = await supabaseClient
@@ -83,14 +149,112 @@ async function analyzeOtherTests(answers: any, test_type_id: string, supabaseCli
     throw new Error('No questions found for this test')
   }
 
-  // Calculate score based on answers
+  // Get test type information
+  const { data: testType } = await supabaseClient
+    .from('test_types')
+    .select('name')
+    .eq('id', test_type_id)
+    .single()
+
+  // Special handling for specific tests
+  if (testType?.name?.toLowerCase().includes('gad-7')) {
+    return analyzeGAD7Test(answers, questions)
+  }
+
+  if (testType?.name?.toLowerCase().includes('inteligență emoțională')) {
+    return analyzeEmotionalIntelligenceTest(answers, questions)
+  }
+
+  // Default analysis for other tests
+  return analyzeGenericTest(answers, questions)
+}
+
+function analyzeGAD7Test(answers: any, questions: any[]) {
+  let totalScore = 0
+  
+  questions.forEach((question: any) => {
+    const answer = answers[question.id]
+    if (answer !== undefined) {
+      // GAD-7 scoring: 0=Not at all, 1=Several days, 2=More than half the days, 3=Nearly every day
+      totalScore += (answer - 1) // Convert from 1-4 to 0-3 scale
+    }
+  })
+
+  let severity = ''
+  let interpretation = ''
+  
+  if (totalScore <= 4) {
+    severity = 'Minimal'
+    interpretation = 'Anxietate minimă - în limite normale'
+  } else if (totalScore <= 9) {
+    severity = 'Ușoară'
+    interpretation = 'Anxietate ușoară - poate necesita monitorizare'
+  } else if (totalScore <= 14) {
+    severity = 'Moderată'
+    interpretation = 'Anxietate moderată - se recomandă consultarea unui specialist'
+  } else {
+    severity = 'Severă'
+    interpretation = 'Anxietate severă - este recomandată urgent consultarea unui specialist'
+  }
+
+  const percentage = Math.round((totalScore / 21) * 100) // GAD-7 max score is 21
+
+  return {
+    overall: percentage,
+    raw_score: totalScore,
+    max_score: 21,
+    severity,
+    interpretation,
+    dimensions: {
+      anxiety_level: percentage
+    }
+  }
+}
+
+function analyzeEmotionalIntelligenceTest(answers: any, questions: any[]) {
   let totalScore = 0
   let maxScore = 0
 
-  questions.forEach((question: any, index: number) => {
-    const questionNumber = (index + 1).toString()
-    const answer = answers[questionNumber]
-    
+  questions.forEach((question: any) => {
+    const answer = answers[question.id]
+    if (answer !== undefined) {
+      totalScore += answer
+      maxScore += 5 // Assuming 5-point Likert scale
+    }
+  })
+
+  const percentage = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0
+
+  let interpretation = ''
+  if (percentage >= 80) {
+    interpretation = 'Inteligență emoțională foarte ridicată - excelentă capacitate de a înțelege și gestiona emoțiile'
+  } else if (percentage >= 65) {
+    interpretation = 'Inteligență emoțională ridicată - bună capacitate de management emoțional'
+  } else if (percentage >= 50) {
+    interpretation = 'Inteligență emoțională moderată - există potențial de îmbunătățire'
+  } else if (percentage >= 35) {
+    interpretation = 'Inteligență emoțională scăzută - se recomandă dezvoltarea abilităților emoționale'
+  } else {
+    interpretation = 'Inteligență emoțională foarte scăzută - necesită atenție și dezvoltare urgentă'
+  }
+
+  return {
+    overall: percentage,
+    raw_score: totalScore,
+    max_score: maxScore,
+    interpretation,
+    dimensions: {
+      emotional_intelligence: percentage
+    }
+  }
+}
+
+function analyzeGenericTest(answers: any, questions: any[]) {
+  let totalScore = 0
+  let maxScore = 0
+
+  questions.forEach((question: any) => {
+    const answer = answers[question.id]
     if (answer !== undefined && question.scoring_weights) {
       const weights = Array.isArray(question.scoring_weights) 
         ? question.scoring_weights 
@@ -129,4 +293,30 @@ async function analyzeOtherTests(answers: any, test_type_id: string, supabaseCli
       general_score: percentage
     }
   }
+}
+
+function generateBigFiveInterpretation(results: { [key: string]: number }) {
+  const interpretations = []
+  
+  if (results.openness >= 70) interpretations.push('foarte deschis la experiențe noi')
+  else if (results.openness >= 30) interpretations.push('moderat deschis la experiențe noi')
+  else interpretations.push('preferi rutina și stabilitatea')
+  
+  if (results.conscientiousness >= 70) interpretations.push('foarte disciplinat și organizat')
+  else if (results.conscientiousness >= 30) interpretations.push('moderat organizat')
+  else interpretations.push('mai spontan și flexibil')
+  
+  if (results.extraversion >= 70) interpretations.push('foarte sociabil și energic')
+  else if (results.extraversion >= 30) interpretations.push('echilibrat între introverție și extraverție')
+  else interpretations.push('preferi activitățile calme și solitudinea')
+  
+  if (results.agreeableness >= 70) interpretations.push('foarte cooperant și empatic')
+  else if (results.agreeableness >= 30) interpretations.push('echilibrat în relațiile sociale')
+  else interpretations.push('mai competitiv și direct')
+  
+  if (results.neuroticism >= 70) interpretations.push('tendință spre anxietate și stres')
+  else if (results.neuroticism >= 30) interpretations.push('stabilitate emoțională moderată')
+  else interpretations.push('foarte stabil emoțional și calm')
+  
+  return `Personalitatea ta se caracterizează prin: ${interpretations.join(', ')}.`
 }
