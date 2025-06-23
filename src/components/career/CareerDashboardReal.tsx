@@ -14,16 +14,24 @@ import {
   BookOpen,
   Brain,
   Lightbulb,
-  Plus
+  Plus,
+  Sparkles,
+  X
 } from 'lucide-react';
 import { useCareerPlans } from '@/hooks/useCareerPlans';
 import { useCareerRecommendations } from '@/hooks/useCareerRecommendations';
+import { useCareerPlanGeneration } from '@/hooks/useCareerPlanGeneration';
+import { useTestResults } from '@/hooks/useTestResults';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useToast } from '@/hooks/use-toast';
 
 const CareerDashboardReal = () => {
   const { careerPlans, isLoading: plansLoading } = useCareerPlans();
   const { recommendations, dismissRecommendation } = useCareerRecommendations();
+  const { generateCareerPlan, generateRecommendations, isGeneratingPlan, isGeneratingRecommendations } = useCareerPlanGeneration();
+  const { testResults } = useTestResults();
   const { subscription } = useSubscription();
+  const { toast } = useToast();
 
   const getSubscriptionFeatures = () => {
     if (!subscription) return { maxPlans: 1, hasAI: false, hasAnalytics: false };
@@ -40,11 +48,32 @@ const CareerDashboardReal = () => {
 
   const features = getSubscriptionFeatures();
 
+  const handleGenerateCareerPlan = () => {
+    if (testResults.length === 0) {
+      toast({
+        title: "Teste necesare",
+        description: "Pentru a genera un plan de carieră personalizat, completează mai întâi un test de personalitate.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    // For demo, we'll use a default career goal. In production, this should come from user input
+    const careerGoal = "dezvoltator software";
+    generateCareerPlan.mutate({ careerGoal, testResults });
+  };
+
+  const handleGenerateRecommendations = () => {
+    generateRecommendations.mutate();
+  };
+
   const getRecommendationIcon = (type: string) => {
     switch (type) {
       case 'skill': return BookOpen;
       case 'path': return Target;
       case 'test': return Brain;
+      case 'course': return BookOpen;
+      case 'certification': return Badge;
       default: return Lightbulb;
     }
   };
@@ -112,6 +141,40 @@ const CareerDashboardReal = () => {
         </Card>
       </div>
 
+      {/* AI Actions */}
+      {features.hasAI && (
+        <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+          <CardHeader>
+            <CardTitle className="flex items-center space-x-2">
+              <Sparkles className="w-5 h-5 text-blue-600" />
+              <span>Acțiuni AI</span>
+            </CardTitle>
+            <CardDescription>
+              Generează automat planuri de carieră și recomandări personalizate
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex flex-wrap gap-3">
+            <Button 
+              onClick={handleGenerateCareerPlan}
+              disabled={isGeneratingPlan}
+              className="flex items-center space-x-2"
+            >
+              <Brain className="w-4 h-4" />
+              <span>{isGeneratingPlan ? 'Generez...' : 'Generează Plan de Carieră'}</span>
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={handleGenerateRecommendations}
+              disabled={isGeneratingRecommendations}
+              className="flex items-center space-x-2"
+            >
+              <Lightbulb className="w-4 h-4" />
+              <span>{isGeneratingRecommendations ? 'Generez...' : 'Actualizează Recomandări'}</span>
+            </Button>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Active Career Plans */}
       <div>
         <div className="flex justify-between items-center mb-6">
@@ -127,11 +190,23 @@ const CareerDashboardReal = () => {
             <CardContent className="py-12 text-center">
               <Target className="w-16 h-16 mx-auto mb-4 text-gray-300" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">Nu ai planuri de carieră încă</h3>
-              <p className="text-gray-600 mb-6">Creează primul tău plan personalizat pentru a-ți atinge obiectivele profesionale.</p>
-              <Button>
-                <Plus className="w-4 h-4 mr-2" />
-                Creează primul plan
-              </Button>
+              <p className="text-gray-600 mb-6">
+                {testResults.length === 0 
+                  ? 'Completează mai întâi un test de personalitate, apoi poți genera automat un plan personalizat.'
+                  : 'Generează automat un plan personalizat bazat pe rezultatele testelor tale.'
+                }
+              </p>
+              {testResults.length > 0 && features.hasAI ? (
+                <Button onClick={handleGenerateCareerPlan} disabled={isGeneratingPlan}>
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  {isGeneratingPlan ? 'Generez planul...' : 'Generează plan AI'}
+                </Button>
+              ) : (
+                <Button>
+                  <Plus className="w-4 h-4 mr-2" />
+                  Creează primul plan
+                </Button>
+              )}
             </CardContent>
           </Card>
         ) : (
@@ -191,34 +266,53 @@ const CareerDashboardReal = () => {
       {/* AI Recommendations */}
       {recommendations.length > 0 && (
         <div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Recomandări AI pentru tine</h2>
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-900">Recomandări AI pentru tine</h2>
+            {features.hasAI && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleGenerateRecommendations}
+                disabled={isGeneratingRecommendations}
+              >
+                <Sparkles className="w-4 h-4 mr-2" />
+                {isGeneratingRecommendations ? 'Actualizez...' : 'Actualizează'}
+              </Button>
+            )}
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {recommendations.slice(0, 3).map((rec) => {
+            {recommendations.slice(0, 6).map((rec) => {
               const Icon = getRecommendationIcon(rec.recommendation_type);
               return (
                 <Card key={rec.id} className="hover:shadow-lg transition-shadow">
                   <CardHeader>
-                    <div className="flex items-center space-x-2">
-                      <div className="p-2 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg">
-                        <Icon className="w-5 h-5 text-blue-600" />
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-2">
+                        <div className="p-2 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg">
+                          <Icon className="w-5 h-5 text-blue-600" />
+                        </div>
+                        <CardTitle className="text-lg">{rec.title}</CardTitle>
                       </div>
-                      <CardTitle className="text-lg">{rec.title}</CardTitle>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 mb-4">{rec.description}</p>
-                    <div className="flex space-x-2">
-                      <Button variant="outline" className="flex-1">
-                        {rec.action_text}
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
                       <Button 
                         variant="ghost" 
                         size="sm"
                         onClick={() => dismissRecommendation.mutate(rec.id)}
+                        className="h-6 w-6 p-0"
                       >
-                        ✕
+                        <X className="w-4 h-4" />
                       </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-gray-600 mb-4">{rec.description}</p>
+                    <div className="flex items-center justify-between">
+                      <Button variant="outline" className="flex-1">
+                        {rec.action_text}
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                      <Badge variant="secondary" className="ml-2">
+                        Prioritate {rec.priority}
+                      </Badge>
                     </div>
                   </CardContent>
                 </Card>

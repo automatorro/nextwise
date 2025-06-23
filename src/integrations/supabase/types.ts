@@ -72,6 +72,48 @@ export type Database = {
         }
         Relationships: []
       }
+      career_recommendations: {
+        Row: {
+          action_text: string
+          based_on_test_ids: string[] | null
+          created_at: string
+          description: string
+          id: string
+          is_dismissed: boolean
+          priority: number
+          recommendation_type: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          action_text: string
+          based_on_test_ids?: string[] | null
+          created_at?: string
+          description: string
+          id?: string
+          is_dismissed?: boolean
+          priority: number
+          recommendation_type: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          action_text?: string
+          based_on_test_ids?: string[] | null
+          created_at?: string
+          description?: string
+          id?: string
+          is_dismissed?: boolean
+          priority?: number
+          recommendation_type?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null

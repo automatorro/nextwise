@@ -3,6 +3,7 @@ import { useState, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useSubscription } from '@/hooks/useSubscription';
 import { useToast } from '@/hooks/use-toast';
 
 export interface ChatMessage {
@@ -16,9 +17,13 @@ export interface ChatMessage {
 
 export const useAIChat = (sessionId: string) => {
   const { user } = useAuth();
+  const { subscription } = useSubscription();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [isLoading, setIsLoading] = useState(false);
+
+  // Check if user has Premium subscription
+  const hasPremiumAccess = subscription?.subscription_type === 'premium';
 
   // Fetch chat history
   const {
@@ -42,10 +47,20 @@ export const useAIChat = (sessionId: string) => {
     enabled: !!user?.id && !!sessionId
   });
 
+  // Count messages in current session for non-premium users
+  const messageCount = messages?.filter(m => m.message_type === 'user').length || 0;
+  const FREE_MESSAGE_LIMIT = 5;
+  const canSendMessage = hasPremiumAccess || messageCount < FREE_MESSAGE_LIMIT;
+
   // Send message mutation
   const sendMessage = useMutation({
     mutationFn: async (content: string) => {
       if (!user?.id) throw new Error('User not authenticated');
+
+      // Check Premium restrictions
+      if (!hasPremiumAccess && messageCount >= FREE_MESSAGE_LIMIT) {
+        throw new Error('PREMIUM_REQUIRED');
+      }
 
       setIsLoading(true);
 
@@ -77,27 +92,50 @@ export const useAIChat = (sessionId: string) => {
       // Refresh the chat messages
       queryClient.invalidateQueries({ queryKey: ['chat-messages', sessionId] });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       console.error('Error in AI chat:', error);
-      toast({
-        title: "Eroare",
-        description: "Nu am putut trimite mesajul. Te rog încearcă din nou.",
-        variant: "destructive"
-      });
+      
+      if (error.message === 'PREMIUM_REQUIRED') {
+        toast({
+          title: "Upgrade necesar",
+          description: `Ai atins limita de ${FREE_MESSAGE_LIMIT} mesaje gratuite. Upgrade la Premium pentru acces nelimitat la mentoring AI.`,
+          variant: "destructive"
+        });
+      } else {
+        toast({
+          title: "Eroare",
+          description: "Nu am putut trimite mesajul. Te rog încearcă din nou.",
+          variant: "destructive"
+        });
+      }
       setIsLoading(false);
     }
   });
 
   const handleSendMessage = useCallback((content: string) => {
     if (!content.trim()) return;
+    
+    if (!canSendMessage) {
+      toast({
+        title: "Upgrade necesar",
+        description: `Ai atins limita de ${FREE_MESSAGE_LIMIT} mesaje gratuite. Upgrade la Premium pentru acces nelimitat.`,
+        variant: "destructive"
+      });
+      return;
+    }
+    
     sendMessage.mutate(content);
-  }, [sendMessage]);
+  }, [sendMessage, canSendMessage, toast]);
 
   return {
     messages: messages || [],
     isLoadingHistory,
     isLoading,
     error,
-    sendMessage: handleSendMessage
+    sendMessage: handleSendMessage,
+    messageCount,
+    canSendMessage,
+    hasPremiumAccess,
+    remainingMessages: hasPremiumAccess ? Infinity : Math.max(0, FREE_MESSAGE_LIMIT - messageCount)
   };
 };

@@ -39,6 +39,13 @@ serve(async (req) => {
       .select('*')
       .eq('user_id', userId);
 
+    // Get existing recommendations to avoid duplicates
+    const { data: existingRecs } = await supabase
+      .from('career_recommendations')
+      .select('recommendation_type, title')
+      .eq('user_id', userId)
+      .eq('is_dismissed', false);
+
     if (!testResults || testResults.length === 0) {
       return new Response(
         JSON.stringify({ 
@@ -48,8 +55,8 @@ serve(async (req) => {
               user_id: userId,
               recommendation_type: 'test',
               title: 'Completează primul test de personalitate',
-              description: 'Pentru a primi recomandări personalizate, completează testul Big Five.',
-              action_text: 'Fă testul',
+              description: 'Pentru a primi recomandări personalizate, completează testul Big Five pentru a-ți înțelege mai bine personalitatea și preferințele profesionale.',
+              action_text: 'Fă testul Big Five',
               priority: 5
             }
           ]
@@ -58,35 +65,58 @@ serve(async (req) => {
       );
     }
 
-    // Analyze test results
+    // Analyze test results for recommendations
     const bigFiveResult = testResults.find(r => 
       r.test_type_id === 'f47ac10b-58cc-4372-a567-0e02b2c3d480'
     );
 
+    let personalityAnalysis = '';
+    if (bigFiveResult?.score?.dimensions) {
+      const dims = bigFiveResult.score.dimensions;
+      personalityAnalysis = `
+        Analiză Big Five:
+        - Deschidere: ${dims.openness}/100
+        - Conștiinciozitate: ${dims.conscientiousness}/100  
+        - Extraversiune: ${dims.extraversion}/100
+        - Amabilitate: ${dims.agreeableness}/100
+        - Nevroza: ${dims.neuroticism}/100
+      `;
+    }
+
     let analysisPrompt = `
-      Based on the following user profile, generate 3-5 personalized career recommendations:
+      Pe baza următorului profil al utilizatorului, generează 3-5 recomandări personalizate pentru carieră:
       
-      Test Results:
-      ${testResults.map(r => `- ${r.test_types?.name}: Score ${JSON.stringify(r.score)}`).join('\n')}
+      Rezultatele testelor:
+      ${testResults.map(r => `- ${r.test_types?.name}: Scor ${JSON.stringify(r.score)}`).join('\n')}
       
-      Existing Career Plans: ${careerPlans?.map(p => p.title).join(', ') || 'None'}
+      ${personalityAnalysis}
       
-      Generate recommendations in these categories: skill, path, test, course, certification
+      Planuri de carieră existente: ${careerPlans?.map(p => p.title).join(', ') || 'Niciunul'}
       
-      Format as JSON array:
+      Recomandări existente (evită duplicatele): ${existingRecs?.map(r => r.title).join(', ') || 'Niciunul'}
+      
+      Generează recomandări în aceste categorii: skill, path, test, course, certification
+      
+      Criterii pentru recomandări:
+      - Bazate pe punctele forte și slăbiciunile din teste
+      - Relevante pentru dezvoltarea carierei
+      - Acționabile și specifice
+      - Evită duplicarea recomandărilor existente
+      
+      Formatează ca array JSON (DOAR JSON, fără alte explicații):
       [
         {
           "recommendation_type": "skill|path|test|course|certification",
-          "title": "Short recommendation title",
-          "description": "Why this is recommended based on their profile",
-          "action_text": "Call to action text",
+          "title": "Titlu scurt al recomandării",
+          "description": "De ce este recomandată pe baza profilului lor",
+          "action_text": "Text pentru call-to-action",
           "priority": 1-5
         }
       ]
     `;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
       {
         method: 'POST',
         headers: {
@@ -103,6 +133,8 @@ serve(async (req) => {
     );
 
     if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`Gemini API error: ${response.status} - ${errorText}`);
       throw new Error(`Gemini API error: ${response.status}`);
     }
 
@@ -116,23 +148,69 @@ serve(async (req) => {
         recommendations = JSON.parse(jsonMatch[0]);
       }
     } catch (parseError) {
-      // Fallback recommendations
-      recommendations = [
-        {
-          recommendation_type: 'skill',
-          title: 'Dezvoltă competențe de comunicare',
-          description: 'Bazat pe profilul tău, competențele de comunicare te vor ajuta să progresezi.',
-          action_text: 'Vezi cursuri',
-          priority: 4
-        },
-        {
-          recommendation_type: 'path',
-          title: 'Explorează leadership',
-          description: 'Profilul tău sugerează potențial pentru roluri de conducere.',
-          action_text: 'Creează plan',
-          priority: 3
+      console.error('JSON Parse Error:', parseError);
+      // Fallback recommendations based on Big Five results
+      if (bigFiveResult?.score?.dimensions) {
+        const dims = bigFiveResult.score.dimensions;
+        
+        if (dims.openness > 70) {
+          recommendations.push({
+            recommendation_type: 'skill',
+            title: 'Explorează tehnologii noi',
+            description: 'Deschiderea ta ridicată sugerează că ai avea succes în învățarea de tehnologii inovatoare.',
+            action_text: 'Vezi cursuri noi',
+            priority: 4
+          });
         }
-      ];
+        
+        if (dims.conscientiousness > 70) {
+          recommendations.push({
+            recommendation_type: 'certification',
+            title: 'Obține certificări profesionale',
+            description: 'Conștiinciozitatea ta ridicată te va ajuta să completezi cu succes programe de certificare.',
+            action_text: 'Explorează certificări',
+            priority: 5
+          });
+        }
+        
+        if (dims.extraversion > 70) {
+          recommendations.push({
+            recommendation_type: 'path',
+            title: 'Consideră roluri de leadership',
+            description: 'Extraversiunea ta ridicată indică potențial pentru roluri manageriale sau de conducere.',
+            action_text: 'Explorează leadership',
+            priority: 4
+          });
+        } else if (dims.extraversion < 40) {
+          recommendations.push({
+            recommendation_type: 'skill',
+            title: 'Dezvoltă competențe tehnice specializate',
+            description: 'Introversiunea ta poate fi un avantaj în roluri tehnice care necesită concentrare profundă.',
+            action_text: 'Vezi competențe tehnice',
+            priority: 4
+          });
+        }
+      }
+      
+      // Default fallback
+      if (recommendations.length === 0) {
+        recommendations = [
+          {
+            recommendation_type: 'skill',
+            title: 'Dezvoltă competențe de comunicare',
+            description: 'Competențele de comunicare sunt esențiale în orice carieră și te vor ajuta să progresezi.',
+            action_text: 'Vezi cursuri de comunicare',
+            priority: 4
+          },
+          {
+            recommendation_type: 'path',
+            title: 'Explorează opțiuni de carieră',
+            description: 'Pe baza profilului tău, ar fi util să explorezi diferite căi de carieră disponibile.',
+            action_text: 'Explorează cariere',
+            priority: 3
+          }
+        ];
+      }
     }
 
     // Add user_id and test_ids to each recommendation
