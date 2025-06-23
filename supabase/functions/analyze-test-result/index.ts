@@ -1,4 +1,3 @@
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0'
 
 const corsHeaders = {
@@ -97,7 +96,13 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify(result), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
-    } else if (testType?.name === 'Test GAD-7 pentru Anxietate') {
+    } else if (test_type_id === 'efa9a075-6e16-4467-b13a-e3dcf2e25bda') {
+      // GAD-7 Anxiety Test (specific ID for existing test)
+      const result = await analyzeGAD7(answers, supabaseClient);
+      return new Response(JSON.stringify(result), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    } else if (testType?.name === 'Test GAD-7 pentru Anxietate' || testType?.name === 'Evaluare Anxietate GAD-7') {
       // GAD-7 Anxiety Test (by name lookup)
       const result = await analyzeGAD7(answers, supabaseClient);
       return new Response(JSON.stringify(result), {
