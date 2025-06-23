@@ -1,504 +1,425 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
-serve(async (req) => {
+interface AnalysisRequest {
+  answers: { [questionId: string]: number };
+  test_type_id: string;
+}
+
+interface BigFiveDimension {
+  openness: number;
+  conscientiousness: number;
+  extraversion: number;
+  agreeableness: number;
+  neuroticism: number;
+}
+
+interface DISCDimension {
+  D: number;
+  I: number;
+  S: number;
+  C: number;
+}
+
+interface EnneagramResult {
+  dominant_type: number;
+  scores: { [key: string]: number };
+  type_descriptions: { [key: string]: string };
+}
+
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
-    )
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+    );
 
-    const { answers, test_type_id } = await req.json()
-    console.log('Analyzing test result for test_type_id:', test_type_id)
+    const { answers, test_type_id }: AnalysisRequest = await req.json();
+    console.log('Analyzing test results for test type:', test_type_id);
 
-    let analysisResult;
-
-    // Route to appropriate analysis function based on test type
-    if (test_type_id === 'big5-test-2024-v1') {
-      // Call the Big Five analysis function
-      const bigFiveResponse = await fetch(`${Deno.env.get('SUPABASE_URL')}/functions/v1/analyze-big-five-result`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${Deno.env.get('SUPABASE_ANON_KEY')}`
-        },
-        body: JSON.stringify({ answers, test_type_id })
+    // Determine test type and run appropriate analysis
+    if (test_type_id === 'f47ac10b-58cc-4372-a567-0e02b2c3d480') {
+      // Big Five Personality Test
+      const result = await analyzeBigFive(answers, supabaseClient);
+      return new Response(JSON.stringify(result), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
-
-      if (!bigFiveResponse.ok) {
-        const errorText = await bigFiveResponse.text();
-        console.error('Big Five analysis failed:', errorText);
-        throw new Error(`Failed to analyze Big Five results: ${errorText}`);
-      }
-
-      analysisResult = await bigFiveResponse.json();
-    } else if (test_type_id === 'f47ac10b-58cc-4372-a567-0e02b2c3d480') {
-      // Big Five test with specific ID
-      analysisResult = await analyzeBigFiveTest(answers, test_type_id, supabaseClient);
     } else if (test_type_id === 'a1b2c3d4-e5f6-7890-abcd-ef1234567890') {
-      // DISC test
-      analysisResult = await analyzeDISCTest(answers, test_type_id, supabaseClient);
+      // DISC Test
+      const result = await analyzeDISC(answers, supabaseClient);
+      return new Response(JSON.stringify(result), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    } else if (test_type_id === 'b2c3d4e5-f6g7-8901-bcde-fg2345678901') {
+      // Enneagram Test
+      const result = await analyzeEnneagram(answers, supabaseClient);
+      return new Response(JSON.stringify(result), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     } else {
-      // Handle other test types with existing logic
-      analysisResult = await analyzeOtherTests(answers, test_type_id, supabaseClient);
-    }
+      // Default analysis for other tests
+      const questionsCount = Object.keys(answers).length;
+      const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
+      const maxPossibleScore = questionsCount * 5; // Assuming 5-point scale
+      const average = totalScore / questionsCount;
+      const percentage = (totalScore / maxPossibleScore) * 100;
 
-    // Generate AI interpretation using Gemini if available
-    if (Deno.env.get('GEMINI_API_KEY')) {
-      try {
-        const aiInterpretation = await generateAIInterpretation(analysisResult, test_type_id, supabaseClient);
-        analysisResult.ai_interpretation = aiInterpretation;
-      } catch (error) {
-        console.error('Failed to generate AI interpretation:', error);
-        // Continue without AI interpretation if it fails
-      }
+      return new Response(JSON.stringify({
+        total: totalScore,
+        average: Math.round(average * 100) / 100,
+        answers_count: questionsCount,
+        overall: Math.round(percentage),
+        raw_score: totalScore,
+        max_score: maxPossibleScore,
+        interpretation: getBasicInterpretation(percentage)
+      }), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
-
-    return new Response(
-      JSON.stringify(analysisResult),
-      { 
-        headers: { 
-          ...corsHeaders,
-          'Content-Type': 'application/json' 
-        } 
-      }
-    )
   } catch (error) {
-    console.error('Error in analyze-test-result:', error)
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { 
-        status: 500,
-        headers: { 
-          ...corsHeaders,
-          'Content-Type': 'application/json' 
-        } 
-      }
-    )
+    console.error('Error in analyze-test-result:', error);
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
-})
+});
 
-async function generateAIInterpretation(analysisResult: any, testTypeId: string, supabaseClient: any) {
-  const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
-  if (!geminiApiKey) {
-    throw new Error('Gemini API key not configured');
-  }
+async function analyzeBigFive(answers: { [questionId: string]: number }, supabaseClient: any): Promise<any> {
+  const { data: questions, error } = await supabaseClient
+    .from('test_questions')
+    .select('*')
+    .eq('test_type_id', 'f47ac10b-58cc-4372-a567-0e02b2c3d480')
+    .order('question_order');
 
-  // Get test type information
-  const { data: testType } = await supabaseClient
-    .from('test_types')
-    .select('name, description')
-    .eq('id', testTypeId)
-    .single();
+  if (error) throw error;
 
-  const testName = testType?.name || 'Test Psihologic';
-  
-  let prompt = `Analizează următoarele rezultate pentru testul "${testName}" și oferă o interpretare personalizată, detaliată și constructivă în română:
+  const dimensions: BigFiveDimension = {
+    openness: 0,
+    conscientiousness: 0,
+    extraversion: 0,
+    agreeableness: 0,
+    neuroticism: 0
+  };
 
-Rezultate: ${JSON.stringify(analysisResult, null, 2)}
+  const dimensionCounts = {
+    openness: 0,
+    conscientiousness: 0,
+    extraversion: 0,
+    agreeableness: 0,
+    neuroticism: 0
+  };
 
-Te rog să oferi:
-1. O interpretare clară și accesibilă a rezultatelor
-2. Puncte forte identificate
-3. Domenii de dezvoltare
-4. Recomandări practice și specifice
-5. Sfaturi pentru dezvoltare personală sau profesională
-
-Răspunsul să fie structurat, empatic și constructiv, de aproximativ 300-400 de cuvinte.`;
-
-  // Customize prompt based on test type
-  if (testName.toLowerCase().includes('big five') || testName.toLowerCase().includes('personalitate')) {
-    prompt += '\n\nConcentrează-te pe trăsăturile de personalitate și cum influențează acestea comportamentul și relațiile interpersonale.';
-  } else if (testName.toLowerCase().includes('gad') || testName.toLowerCase().includes('anxietate')) {
-    prompt += '\n\nOferi sfaturi constructive pentru gestionarea anxietății și căutarea suportului professional când este necesar.';
-  } else if (testName.toLowerCase().includes('inteligență emoțională')) {
-    prompt += '\n\nConcentrează-te pe abilități emoționale și modalități de îmbunătățire a acestora în viața personală și profesională.';
-  } else if (testName.toLowerCase().includes('disc')) {
-    prompt += '\n\nConcentrează-te pe stilurile de comportament DISC și cum acestea influențează comunicarea, leadership-ul și colaborarea în echipă.';
-  }
-
-  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      contents: [{
-        parts: [{
-          text: prompt
-        }]
-      }],
-      generationConfig: {
-        temperature: 0.7,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: 1024,
-      }
-    })
+  questions.forEach((question: any) => {
+    const answer = answers[question.id];
+    if (answer && question.scoring_weights) {
+      const weights = question.scoring_weights;
+      
+      Object.entries(weights).forEach(([dimension, weight]: [string, any]) => {
+        if (dimensions.hasOwnProperty(dimension)) {
+          const adjustedScore = weight > 0 ? answer : (6 - answer);
+          dimensions[dimension as keyof BigFiveDimension] += adjustedScore;
+          dimensionCounts[dimension as keyof BigFiveDimension]++;
+        }
+      });
+    }
   });
 
-  if (!response.ok) {
-    throw new Error(`Gemini API error: ${response.status}`);
-  }
+  // Calculate percentages
+  const dimensionPercentages: BigFiveDimension = {
+    openness: dimensionCounts.openness > 0 ? Math.round((dimensions.openness / (dimensionCounts.openness * 5)) * 100) : 0,
+    conscientiousness: dimensionCounts.conscientiousness > 0 ? Math.round((dimensions.conscientiousness / (dimensionCounts.conscientiousness * 5)) * 100) : 0,
+    extraversion: dimensionCounts.extraversion > 0 ? Math.round((dimensions.extraversion / (dimensionCounts.extraversion * 5)) * 100) : 0,
+    agreeableness: dimensionCounts.agreeableness > 0 ? Math.round((dimensions.agreeableness / (dimensionCounts.agreeableness * 5)) * 100) : 0,
+    neuroticism: dimensionCounts.neuroticism > 0 ? Math.round((dimensions.neuroticism / (dimensionCounts.neuroticism * 5)) * 100) : 0
+  };
 
-  const data = await response.json();
-  return data.candidates[0]?.content?.parts[0]?.text || 'Nu s-a putut genera interpretarea AI.';
+  const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
+  const questionsCount = Object.keys(answers).length;
+  const average = totalScore / questionsCount;
+  const overallPercentage = Math.round((average / 5) * 100);
+
+  return {
+    total: totalScore,
+    average: Math.round(average * 100) / 100,
+    answers_count: questionsCount,
+    overall: overallPercentage,
+    raw_score: totalScore,
+    max_score: questionsCount * 5,
+    interpretation: getBigFiveInterpretation(overallPercentage),
+    dimensions: dimensionPercentages,
+    detailed_interpretations: getBigFiveDetailedInterpretations(dimensionPercentages)
+  };
 }
 
-async function analyzeDISCTest(answers: any, test_type_id: string, supabaseClient: any) {
-  // Get test questions to understand the dimensions
-  const { data: questions } = await supabaseClient
+async function analyzeDISC(answers: { [questionId: string]: number }, supabaseClient: any): Promise<any> {
+  const { data: questions, error } = await supabaseClient
     .from('test_questions')
     .select('*')
-    .eq('test_type_id', test_type_id)
-    .order('question_order')
+    .eq('test_type_id', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890')
+    .order('question_order');
 
-  if (!questions || questions.length === 0) {
-    throw new Error('No questions found for this test')
-  }
+  if (error) throw error;
 
-  // DISC dimensions scoring
-  const dimensions = {
-    D: { total: 0, count: 0 }, // Dominance
-    I: { total: 0, count: 0 }, // Influence
-    S: { total: 0, count: 0 }, // Steadiness
-    C: { total: 0, count: 0 }  // Conformity
-  }
+  const scores: DISCDimension = { D: 0, I: 0, S: 0, C: 0 };
 
-  // Process each answer
   questions.forEach((question: any) => {
-    const questionId = question.id
-    const answer = answers[questionId]
-    
-    if (answer !== undefined && question.options) {
-      const options = Array.isArray(question.options) ? question.options : JSON.parse(question.options)
-      
-      // Find the selected option and its dimension
-      const selectedOption = options.find((opt: any) => opt.value === answer)
+    const answer = answers[question.id];
+    if (answer && question.options) {
+      const selectedOption = question.options.find((opt: any) => opt.value === answer);
       if (selectedOption && selectedOption.dimension) {
-        const dimension = selectedOption.dimension as keyof typeof dimensions
-        if (dimensions[dimension]) {
-          dimensions[dimension].total += 1
-          dimensions[dimension].count += 1
-        }
+        scores[selectedOption.dimension as keyof DISCDimension]++;
       }
     }
-  })
+  });
 
-  // Calculate percentages for each dimension
-  const totalAnswers = Object.values(dimensions).reduce((sum, dim) => sum + dim.total, 0)
-  const results = Object.entries(dimensions).reduce((acc, [key, value]) => {
-    const percentage = totalAnswers > 0 ? Math.round((value.total / totalAnswers) * 100) : 0
-    acc[key] = percentage
-    return acc
-  }, {} as { [key: string]: number })
+  const totalAnswers = Object.values(scores).reduce((sum, value) => sum + value, 0);
+  const percentages = {
+    D: Math.round((scores.D / totalAnswers) * 100),
+    I: Math.round((scores.I / totalAnswers) * 100),
+    S: Math.round((scores.S / totalAnswers) * 100),
+    C: Math.round((scores.C / totalAnswers) * 100)
+  };
 
-  // Determine dominant style
-  const dominantStyle = Object.entries(results).reduce((max, [key, value]) => 
-    value > max.value ? { key, value } : max, 
-    { key: 'D', value: 0 }
-  )
+  const dominantStyle = Object.entries(percentages).reduce((a, b) => 
+    percentages[a[0] as keyof DISCDimension] > percentages[b[0] as keyof DISCDimension] ? a : b
+  )[0];
 
-  // Calculate overall adaptability score
-  const overall = Math.round(Object.values(results).reduce((sum, val) => sum + val, 0) / 4)
+  const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
+  const questionsCount = Object.keys(answers).length;
+  const average = totalScore / questionsCount;
+  const overallPercentage = Math.round((average / 4) * 100);
 
   return {
-    overall,
-    dimensions: results,
-    dominant_style: dominantStyle.key,
-    interpretation: generateDISCInterpretation(results, dominantStyle.key),
-    style_description: getDISCStyleDescription(dominantStyle.key)
-  }
+    total: totalScore,
+    average: Math.round(average * 100) / 100,
+    answers_count: questionsCount,
+    overall: overallPercentage,
+    raw_score: totalScore,
+    max_score: questionsCount * 4,
+    interpretation: getDISCInterpretation(dominantStyle, percentages[dominantStyle as keyof DISCDimension]),
+    dimensions: percentages,
+    dominant_style: dominantStyle,
+    detailed_interpretations: getDISCDetailedInterpretations(percentages, dominantStyle)
+  };
 }
 
-function generateDISCInterpretation(results: { [key: string]: number }, dominantStyle: string) {
-  const styleNames = {
-    D: 'Dominanță',
-    I: 'Influență', 
-    S: 'Stabilitate',
-    C: 'Conformitate'
-  }
-
-  const interpretations = []
-  
-  // Primary style
-  interpretations.push(`Stilul tău dominant este ${styleNames[dominantStyle as keyof typeof styleNames]} (${results[dominantStyle]}%)`)
-  
-  // Secondary styles
-  const sortedStyles = Object.entries(results)
-    .filter(([key]) => key !== dominantStyle)
-    .sort(([,a], [,b]) => b - a)
-  
-  if (sortedStyles.length > 0 && sortedStyles[0][1] > 20) {
-    interpretations.push(`cu elemente puternice de ${styleNames[sortedStyles[0][0] as keyof typeof styleNames]} (${sortedStyles[0][1]}%)`)
-  }
-  
-  return interpretations.join(' ')
-}
-
-function getDISCStyleDescription(style: string) {
-  const descriptions = {
-    D: 'Persoane orientate spre rezultate, competitive și hotărâte. Îți place să conduci și să iei decizii rapide.',
-    I: 'Persoane sociabile, optimiste și expresive. Îți place să colaborezi și să motivezi pe alții.',
-    S: 'Persoane calme, perseverente și diplomatice. Îți place stabilitatea și lucrul în echipă.',
-    C: 'Persoane analitice, precise și sistematice. Îți place să urmezi procedurile și să menții standardele înalte.'
-  }
-  
-  return descriptions[style as keyof typeof descriptions] || 'Stil echilibrat de comportament.'
-}
-
-async function analyzeBigFiveTest(answers: any, test_type_id: string, supabaseClient: any) {
-  // Get test questions to understand the scoring
-  const { data: questions } = await supabaseClient
+async function analyzeEnneagram(answers: { [questionId: string]: number }, supabaseClient: any): Promise<any> {
+  const { data: questions, error } = await supabaseClient
     .from('test_questions')
     .select('*')
-    .eq('test_type_id', test_type_id)
-    .order('question_order')
+    .eq('test_type_id', 'b2c3d4e5-f6g7-8901-bcde-fg2345678901')
+    .order('question_order');
 
-  if (!questions || questions.length === 0) {
-    throw new Error('No questions found for this test')
-  }
+  if (error) throw error;
 
-  // Big Five dimensions mapping (based on standard Big Five questionnaire)
-  const dimensions = {
-    openness: { total: 0, count: 0 },
-    conscientiousness: { total: 0, count: 0 },
-    extraversion: { total: 0, count: 0 },
-    agreeableness: { total: 0, count: 0 },
-    neuroticism: { total: 0, count: 0 }
-  }
-
-  // Map questions to dimensions (typical Big Five structure)
-  const dimensionMapping = [
-    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
-    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
-    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
-    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
-    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
-    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
-    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
-    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
-    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness',
-    'extraversion', 'agreeableness', 'conscientiousness', 'neuroticism', 'openness'
-  ]
-
-  questions.forEach((question: any, index: number) => {
-    const questionId = question.id
-    const answer = answers[questionId]
-    
-    if (answer !== undefined && dimensionMapping[index]) {
-      const dimension = dimensionMapping[index] as keyof typeof dimensions
-      dimensions[dimension].total += answer
-      dimensions[dimension].count += 1
-    }
-  })
-
-  // Calculate percentages for each dimension
-  const results = Object.entries(dimensions).reduce((acc, [key, value]) => {
-    const percentage = value.count > 0 ? Math.round((value.total / (value.count * 5)) * 100) : 0
-    acc[key] = Math.min(100, Math.max(0, percentage))
-    return acc
-  }, {} as { [key: string]: number })
-
-  // Calculate overall score
-  const overall = Math.round(Object.values(results).reduce((sum, val) => sum + val, 0) / 5)
-
-  return {
-    overall,
-    dimensions: results,
-    interpretation: generateBigFiveInterpretation(results)
-  }
-}
-
-async function analyzeOtherTests(answers: any, test_type_id: string, supabaseClient: any) {
-  // Get test questions to understand the scoring
-  const { data: questions } = await supabaseClient
-    .from('test_questions')
-    .select('*')
-    .eq('test_type_id', test_type_id)
-    .order('question_order')
-
-  if (!questions || questions.length === 0) {
-    throw new Error('No questions found for this test')
-  }
-
-  // Get test type information
-  const { data: testType } = await supabaseClient
-    .from('test_types')
-    .select('name')
-    .eq('id', test_type_id)
-    .single()
-
-  // Special handling for specific tests
-  if (testType?.name?.toLowerCase().includes('gad-7')) {
-    return analyzeGAD7Test(answers, questions)
-  }
-
-  if (testType?.name?.toLowerCase().includes('inteligență emoțională')) {
-    return analyzeEmotionalIntelligenceTest(answers, questions)
-  }
-
-  // Default analysis for other tests
-  return analyzeGenericTest(answers, questions)
-}
-
-function analyzeGAD7Test(answers: any, questions: any[]) {
-  let totalScore = 0
-  
-  questions.forEach((question: any) => {
-    const answer = answers[question.id]
-    if (answer !== undefined) {
-      // GAD-7 scoring: 0=Not at all, 1=Several days, 2=More than half the days, 3=Nearly every day
-      totalScore += (answer - 1) // Convert from 1-4 to 0-3 scale
-    }
-  })
-
-  let severity = ''
-  let interpretation = ''
-  
-  if (totalScore <= 4) {
-    severity = 'Minimal'
-    interpretation = 'Anxietate minimă - în limite normale'
-  } else if (totalScore <= 9) {
-    severity = 'Ușoară'
-    interpretation = 'Anxietate ușoară - poate necesita monitorizare'
-  } else if (totalScore <= 14) {
-    severity = 'Moderată'
-    interpretation = 'Anxietate moderată - se recomandă consultarea unui specialist'
-  } else {
-    severity = 'Severă'
-    interpretation = 'Anxietate severă - este recomandată urgent consultarea unui specialist'
-  }
-
-  const percentage = Math.round((totalScore / 21) * 100) // GAD-7 max score is 21
-
-  return {
-    overall: percentage,
-    raw_score: totalScore,
-    max_score: 21,
-    severity,
-    interpretation,
-    dimensions: {
-      anxiety_level: percentage
-    }
-  }
-}
-
-function analyzeEmotionalIntelligenceTest(answers: any, questions: any[]) {
-  let totalScore = 0
-  let maxScore = 0
+  const typeScores: { [key: number]: number } = {
+    1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0
+  };
 
   questions.forEach((question: any) => {
-    const answer = answers[question.id]
-    if (answer !== undefined) {
-      totalScore += answer
-      maxScore += 5 // Assuming 5-point Likert scale
-    }
-  })
-
-  const percentage = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0
-
-  let interpretation = ''
-  if (percentage >= 80) {
-    interpretation = 'Inteligență emoțională foarte ridicată - excelentă capacitate de a înțelege și gestiona emoțiile'
-  } else if (percentage >= 65) {
-    interpretation = 'Inteligență emoțională ridicată - bună capacitate de management emoțional'
-  } else if (percentage >= 50) {
-    interpretation = 'Inteligență emoțională moderată - există potențial de îmbunătățire'
-  } else if (percentage >= 35) {
-    interpretation = 'Inteligență emoțională scăzută - se recomandă dezvoltarea abilităților emoționale'
-  } else {
-    interpretation = 'Inteligență emoțională foarte scăzută - necesită atenție și dezvoltare urgentă'
-  }
-
-  return {
-    overall: percentage,
-    raw_score: totalScore,
-    max_score: maxScore,
-    interpretation,
-    dimensions: {
-      emotional_intelligence: percentage
-    }
-  }
-}
-
-function analyzeGenericTest(answers: any, questions: any[]) {
-  let totalScore = 0
-  let maxScore = 0
-
-  questions.forEach((question: any) => {
-    const answer = answers[question.id]
-    if (answer !== undefined && question.scoring_weights) {
-      const weights = Array.isArray(question.scoring_weights) 
-        ? question.scoring_weights 
-        : JSON.parse(question.scoring_weights)
-      
-      if (weights && weights[answer - 1] !== undefined) {
-        totalScore += weights[answer - 1]
-        maxScore += Math.max(...weights)
+    const answer = answers[question.id];
+    if (answer && question.options) {
+      const selectedOption = question.options.find((opt: any) => opt.value === answer);
+      if (selectedOption && selectedOption.type) {
+        typeScores[selectedOption.type]++;
       }
     }
-  })
+  });
 
-  // Calculate percentage
-  const percentage = maxScore > 0 ? Math.round((totalScore / maxScore) * 100) : 0
+  const dominantType = Object.entries(typeScores).reduce((a, b) => 
+    typeScores[parseInt(a[0])] > typeScores[parseInt(b[0])] ? a : b
+  )[0];
 
-  // Generate interpretation based on percentage
-  let interpretation = ''
-  if (percentage >= 80) {
-    interpretation = 'Scor foarte ridicat'
-  } else if (percentage >= 60) {
-    interpretation = 'Scor ridicat'
-  } else if (percentage >= 40) {
-    interpretation = 'Scor moderat'
-  } else if (percentage >= 20) {
-    interpretation = 'Scor scăzut'
-  } else {
-    interpretation = 'Scor foarte scăzut'
-  }
+  const totalAnswers = Object.values(typeScores).reduce((sum, value) => sum + value, 0);
+  const percentages: { [key: string]: number } = {};
+  
+  Object.entries(typeScores).forEach(([type, score]) => {
+    percentages[type] = Math.round((score / totalAnswers) * 100);
+  });
+
+  const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
+  const questionsCount = Object.keys(answers).length;
+  const average = totalScore / questionsCount;
+  const overallPercentage = Math.round((average / 9) * 100);
 
   return {
-    overall: percentage,
+    total: totalScore,
+    average: Math.round(average * 100) / 100,
+    answers_count: questionsCount,
+    overall: overallPercentage,
     raw_score: totalScore,
-    max_score: maxScore,
-    interpretation: interpretation,
-    dimensions: {
-      general_score: percentage
-    }
-  }
+    max_score: questionsCount * 9,
+    interpretation: getEnneagramInterpretation(parseInt(dominantType), percentages[dominantType]),
+    dimensions: percentages,
+    dominant_type: parseInt(dominantType),
+    detailed_interpretations: getEnneagramDetailedInterpretations(parseInt(dominantType), percentages)
+  };
 }
 
-function generateBigFiveInterpretation(results: { [key: string]: number }) {
-  const interpretations = []
+function getBasicInterpretation(percentage: number): string {
+  if (percentage >= 80) return "Scor foarte ridicat";
+  if (percentage >= 60) return "Scor ridicat";
+  if (percentage >= 40) return "Scor mediu";
+  if (percentage >= 20) return "Scor scăzut";
+  return "Scor foarte scăzut";
+}
+
+function getBigFiveInterpretation(percentage: number): string {
+  if (percentage >= 80) return "Profil de personalitate foarte echilibrat cu trăsături pronunțate";
+  if (percentage >= 60) return "Profil de personalitate echilibrat cu tendințe clare";
+  if (percentage >= 40) return "Profil de personalitate moderat";
+  return "Profil de personalitate cu trăsături mai puțin pronunțate";
+}
+
+function getBigFiveDetailedInterpretations(dimensions: BigFiveDimension): any {
+  return {
+    openness: dimensions.openness >= 60 ? 
+      "Ești deschis la experiențe noi, creativ și curios. Îți place să explorezi idei noi și să gândești în mod abstract." :
+      "Preferi rutina și tradițiile. Ești practic și te concentrezi pe aspectele concrete ale vieții.",
+    conscientiousness: dimensions.conscientiousness >= 60 ?
+      "Ești organizat, disciplinat și orientat spre obiective. Îți place să planifici și să îți duci sarcinile la bun sfârșit." :
+      "Ești mai spontan și flexibil. Preferi să îți păstrezi opțiunile deschise și să te adaptezi situațiilor.",
+    extraversion: dimensions.extraversion >= 60 ?
+      "Ești sociabil, energic și îți place să fii în centrul atenției. Te energizezi în compania altora." :
+      "Ești mai introvertit și preferi activitățile liniștite. Te energizezi prin timp petrecut singur.",
+    agreeableness: dimensions.agreeableness >= 60 ?
+      "Ești empatic, cooperant și îți pasă de bunăstarea altora. Eviti conflictele și cauți armonia." :
+      "Ești mai competitiv și sceptic. Nu eziti să îți exprimi opiniile chiar dacă pot deranja pe alții.",
+    neuroticism: dimensions.neuroticism >= 60 ?
+      "Tendi să experimentezi emoții negative mai intense și să fii mai sensibil la stres." :
+      "Ești emoțional stabil și calm. Te descurci bine cu stresul și păstrezi echilibrul emoțional."
+  };
+}
+
+function getDISCInterpretation(dominantStyle: string, percentage: number): string {
+  const styles = {
+    D: `Stilul tău dominant este DOMINANȚĂ (${percentage}%). Ești direct, hotărât și orientat spre rezultate.`,
+    I: `Stilul tău dominant este INFLUENȚĂ (${percentage}%). Ești sociabil, optimist și îți place să motivezi pe alții.`,
+    S: `Stilul tău dominant este STABILITATE (${percentage}%). Ești calm, patient și îți place stabilitatea.`,
+    C: `Stilul tău dominant este CONFORMITATE (${percentage}%). Ești analitic, precis și orientat spre calitate.`
+  };
+  return styles[dominantStyle as keyof typeof styles] || "Profil DISC echilibrat";
+}
+
+function getDISCDetailedInterpretations(percentages: DISCDimension, dominantStyle: string): any {
+  return {
+    summary: `Stilul tău dominant este ${dominantStyle} cu ${percentages[dominantStyle as keyof DISCDimension]}% din răspunsuri.`,
+    D: `Dominanță: ${percentages.D}% - ${percentages.D >= 30 ? 'Nivel ridicat de dominanță. Ești direct, hotărât și îți place să conduci.' : 'Nivel moderat/scăzut de dominanță. Preferi colaborarea și consultarea.'}`,
+    I: `Influență: ${percentages.I}% - ${percentages.I >= 30 ? 'Nivel ridicat de influență. Ești sociabil, optimist și îți place să motivezi pe alții.' : 'Nivel moderat/scăzut de influență. Ești mai rezervat în interacțiunile sociale.'}`,
+    S: `Stabilitate: ${percentages.S}% - ${percentages.S >= 30 ? 'Nivel ridicat de stabilitate. Ești calm, patient și îți place rutina.' : 'Nivel moderat/scăzut de stabilitate. Îți place schimbarea și varietatea.'}`,
+    C: `Conformitate: ${percentages.C}% - ${percentages.C >= 30 ? 'Nivel ridicat de conformitate. Ești analitic, precis și orientat spre calitate.' : 'Nivel moderat/scăzut de conformitate. Ești mai flexibil cu regulile și procedurile.'}`
+  };
+}
+
+function getEnneagramInterpretation(dominantType: number, percentage: number): string {
+  const typeDescriptions = {
+    1: `Tipul tău dominant este PERFECȚIONISTUL (${percentage}%). Ești principial, autocontrolat și urmărești să îmbunătățești totul.`,
+    2: `Tipul tău dominant este AJUTĂTORUL (${percentage}%). Ești empatic, sincer și îți place să ajuți pe alții.`,
+    3: `Tipul tău dominant este REALIZATORUL (${percentage}%). Ești adapabil, ambicios și orientat spre succes.`,
+    4: `Tipul tău dominant este INDIVIDUALISTUL (${percentage}%). Ești expresiv, dramatic și auto-absorbit.`,
+    5: `Tipul tău dominant este INVESTIGATORUL (${percentage}%). Ești intens, secretos și izolat.`,
+    6: `Tipul tău dominant este LOIALISTUL (${percentage}%). Ești angajat, responsabil și anxios.`,
+    7: `Tipul tău dominant este ENTUZIASTUL (${percentage}%). Ești spontan, versatil și dispersat.`,
+    8: `Tipul tău dominant este PROVOCATORUL (${percentage}%). Ești auto-încrezător, decisiv și confruntațional.`,
+    9: `Tipul tău dominant este PACIFICATORUL (${percentage}%). Ești calm, stabil și complacent.`
+  };
+  return typeDescriptions[dominantType as keyof typeof typeDescriptions] || "Tip Enneagram nedeterminat";
+}
+
+function getEnneagramDetailedInterpretations(dominantType: number, percentages: { [key: string]: number }): any {
+  const typeDetails = {
+    1: {
+      name: "Perfecționistul",
+      core_fear: "Să fie corupt, defect sau greșit",
+      core_desire: "Să fie bun, corect, perfect și îmbunătățit",
+      characteristics: "Principial, idealist, autocontrolat, perfecționist",
+      growth_direction: "Când ești sănătos, devii mai spontan și bucuros (către 7)",
+      stress_direction: "Când ești stresat, devii critic și iritabil (către 4)"
+    },
+    2: {
+      name: "Ajutătorul", 
+      core_fear: "Să nu fie iubit sau vrut",
+      core_desire: "Să se simtă iubit",
+      characteristics: "Atent, interpersonal, posesiv, manipulativ",
+      growth_direction: "Când ești sănătos, devii mai auto-cultivat (către 4)",
+      stress_direction: "Când ești stresat, devii agresiv și dominant (către 8)"
+    },
+    3: {
+      name: "Realizatorul",
+      core_fear: "Să nu aibă valoare în afară de realizări",
+      core_desire: "Să se simtă valoros și demn",
+      characteristics: "Adapabil, ambicios, orientat spre imagine, ostil",
+      growth_direction: "Când ești sănătos, devii mai cooperant și angajat (către 6)",
+      stress_direction: "Când ești stresat, devii apatic și retras (către 9)"
+    },
+    4: {
+      name: "Individualistul",
+      core_fear: "Să nu aibă identitate sau semnificație personală",
+      core_desire: "Să se găsească pe sine și semnificația lor",
+      characteristics: "Expresiv, dramatic, egocentric, temperamental",
+      growth_direction: "Când ești sănătos, devii mai principial și obiectiv (către 1)",
+      stress_direction: "Când ești stresat, devii clingy și dependent (către 2)"
+    },
+    5: {
+      name: "Investigatorul",
+      core_fear: "Să fie incompetent sau invadat",
+      core_desire: "Să fie capabil și competent",
+      characteristics: "Intens, cerebral, perceptiv, izolat",
+      growth_direction: "Când ești sănătos, devii mai încrezător și decisiv (către 8)",
+      stress_direction: "Când ești stresat, devii hiperractiv și dispersat (către 7)"
+    },
+    6: {
+      name: "Loialistul",
+      core_fear: "Să nu aibă sprijin sau îndrumare",
+      core_desire: "Să aibă securitate și sprijin",
+      characteristics: "Angajat, responsabil, anxios, suspect",
+      growth_direction: "Când ești sănătos, devii mai relaxat și optimist (către 9)",
+      stress_direction: "Când ești stresat, devii competitiv și arogant (către 3)"
+    },
+    7: {
+      name: "Entuziastul",
+      core_fear: "Să fie prins în durere sau privațiune",
+      core_desire: "Să mențină fericirea și satisfacția",
+      characteristics: "Spontan, versatil, acquisitiv, dispersat",
+      growth_direction: "Când ești sănătos, devii mai concentrat și dedicat (către 5)",
+      stress_direction: "Când ești stresat, devii perfecționist și critic (către 1)"
+    },
+    8: {
+      name: "Provocatorul",
+      core_fear: "Să fie controlat sau vulnerabil",
+      core_desire: "Să se auto-controleze",
+      characteristics: "Auto-încrezător, decisiv, dominat, confruntațional",
+      growth_direction: "Când ești sănătos, devii mai atent și protector (către 2)",
+      stress_direction: "Când ești stresat, devii secretos și temător (către 5)"
+    },
+    9: {
+      name: "Pacificatorul",
+      core_fear: "Fragmentarea, separarea și pierderea conexiunii",
+      core_desire: "Să mențină pacea interioară și exterioară",
+      characteristics: "Calm, stabil, complacent, resignat",
+      growth_direction: "Când ești sănătos, devii mai auto-dezvoltat și energic (către 3)",
+      stress_direction: "Când ești stresat, devii anxios și preocupat (către 6)"
+    }
+  };
+
+  const details = typeDetails[dominantType as keyof typeof typeDetails];
   
-  if (results.openness >= 70) interpretations.push('foarte deschis la experiențe noi')
-  else if (results.openness >= 30) interpretations.push('moderat deschis la experiențe noi')
-  else interpretations.push('preferi rutina și stabilitatea')
-  
-  if (results.conscientiousness >= 70) interpretations.push('foarte disciplinat și organizat')
-  else if (results.conscientiousness >= 30) interpretations.push('moderat organizat')
-  else interpretations.push('mai spontan și flexibil')
-  
-  if (results.extraversion >= 70) interpretations.push('foarte sociabil și energic')
-  else if (results.extraversion >= 30) interpretations.push('echilibrat între introverție și extraverție')
-  else interpretations.push('preferi activitățile calme și solitudinea')
-  
-  if (results.agreeableness >= 70) interpretations.push('foarte cooperant și empatic')
-  else if (results.agreeableness >= 30) interpretations.push('echilibrat în relațiile sociale')
-  else interpretations.push('mai competitiv și direct')
-  
-  if (results.neuroticism >= 70) interpretations.push('tendință spre anxietate și stres')
-  else if (results.neuroticism >= 30) interpretations.push('stabilitate emoțională moderată')
-  else interpretations.push('foarte stabil emoțional și calm')
-  
-  return `Personalitatea ta se caracterizează prin: ${interpretations.join(', ')}.`
+  return {
+    dominant_type_info: details,
+    type_scores: Object.entries(percentages).map(([type, score]) => ({
+      type: parseInt(type),
+      name: typeDetails[parseInt(type) as keyof typeof typeDetails]?.name || `Tip ${type}`,
+      percentage: score
+    })).sort((a, b) => b.percentage - a.percentage)
+  };
 }
