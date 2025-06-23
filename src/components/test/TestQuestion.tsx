@@ -45,8 +45,18 @@ const parseQuestionOptions = (options: Json): { value: number; label: string }[]
     return [];
   }
 
+  // Handle array of strings (simple format) - moved this check first
+  if (Array.isArray(options) && options.every(opt => typeof opt === 'string')) {
+    console.log('Processing array of strings');
+    return options.map((label, index) => ({
+      value: index + 1,
+      label: label as string
+    }));
+  }
+
   // Handle array of objects with value and label
   if (Array.isArray(options)) {
+    console.log('Processing array of objects');
     return options
       .filter(option => option && typeof option === 'object' && option !== null)
       .map(option => {
@@ -61,16 +71,9 @@ const parseQuestionOptions = (options: Json): { value: number; label: string }[]
       });
   }
 
-  // Handle array of strings (simple format)
-  if (Array.isArray(options) && options.every(opt => typeof opt === 'string')) {
-    return options.map((label, index) => ({
-      value: index + 1,
-      label: label as string
-    }));
-  }
-
   // Handle object format
   if (typeof options === 'object' && options !== null && !Array.isArray(options)) {
+    console.log('Processing object format');
     // If it's an object with numeric keys (common format)
     const entries = Object.entries(options);
     if (entries.length > 0) {
