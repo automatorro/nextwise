@@ -38,6 +38,12 @@ interface EmotionalIntelligenceDimension {
   relationship_management: number;
 }
 
+interface GAD7Result {
+  total_score: number;
+  severity_level: string;
+  clinical_interpretation: string;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -74,6 +80,12 @@ Deno.serve(async (req) => {
     } else if (test_type_id === 'c3d4e5f6-g7h8-9012-cdef-gh3456789012') {
       // Emotional Intelligence Test
       const result = await analyzeEmotionalIntelligence(answers, supabaseClient);
+      return new Response(JSON.stringify(result), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    } else if (test_type_id === 'd4e5f6g7-h8i9-0123-defg-hi4567890123') {
+      // GAD-7 Anxiety Test
+      const result = await analyzeGAD7(answers, supabaseClient);
       return new Response(JSON.stringify(result), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -340,6 +352,54 @@ async function analyzeEmotionalIntelligence(answers: { [questionId: string]: num
   };
 }
 
+async function analyzeGAD7(answers: { [questionId: string]: number }, supabaseClient: any): Promise<any> {
+  // Calculate total GAD-7 score (0-21 scale)
+  const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
+  
+  // Determine severity level based on GAD-7 scoring
+  let severityLevel = '';
+  let clinicalInterpretation = '';
+  
+  if (totalScore >= 0 && totalScore <= 4) {
+    severityLevel = 'Minimă';
+    clinicalInterpretation = 'Nivel minimal de anxietate. Simptomele sunt rare sau absente.';
+  } else if (totalScore >= 5 && totalScore <= 9) {
+    severityLevel = 'Ușoară';
+    clinicalInterpretation = 'Anxietate ușoară. Este recomandat monitorizarea și tehnici de relaxare.';
+  } else if (totalScore >= 10 && totalScore <= 14) {
+    severityLevel = 'Moderată';
+    clinicalInterpretation = 'Anxietate moderată. Se recomandă consultarea unui specialist pentru evaluare și posibil tratament.';
+  } else if (totalScore >= 15 && totalScore <= 21) {
+    severityLevel = 'Severă';
+    clinicalInterpretation = 'Anxietate severă. Este necesară evaluarea și tratamentul de către un profesionist în sănătate mentală.';
+  }
+
+  const questionsCount = Object.keys(answers).length;
+  const average = totalScore / questionsCount;
+  const maxPossibleScore = questionsCount * 3; // GAD-7 uses 0-3 scale
+  const percentage = Math.round((totalScore / maxPossibleScore) * 100);
+
+  return {
+    total: totalScore,
+    average: Math.round(average * 100) / 100,
+    answers_count: questionsCount,
+    overall: percentage,
+    raw_score: totalScore,
+    max_score: maxPossibleScore,
+    interpretation: `${severityLevel} - ${clinicalInterpretation}`,
+    gad7_score: totalScore,
+    severity_level: severityLevel,
+    clinical_interpretation: clinicalInterpretation,
+    recommendations: getGAD7Recommendations(totalScore),
+    detailed_interpretations: {
+      score_range: `${totalScore}/21`,
+      severity: severityLevel,
+      description: clinicalInterpretation,
+      next_steps: getGAD7NextSteps(totalScore)
+    }
+  };
+}
+
 function getBasicInterpretation(percentage: number): string {
   if (percentage >= 80) return "Scor foarte ridicat";
   if (percentage >= 60) return "Scor ridicat";
@@ -541,4 +601,48 @@ function getEmotionalIntelligenceDetailedInterpretations(dimensions: EmotionalIn
         "Gestionarea relațiilor necesită atenție. Concentrează-te pe dezvoltarea abilităților de comunicare și colaborare."
     }
   };
+}
+
+function getGAD7Recommendations(score: number): string[] {
+  if (score <= 4) {
+    return [
+      'Continuă să practici tehnici de gestionare a stresului',
+      'Menține un stil de viață echilibrat',
+      'Practică exerciții de respirație când te simți tensionat'
+    ];
+  } else if (score <= 9) {
+    return [
+      'Învață și practică tehnici de relaxare regulat',
+      'Consideră meditația sau mindfulness-ul',
+      'Menține o rutină de exerciții fizice',
+      'Limitează cafeina și alcoolul'
+    ];
+  } else if (score <= 14) {
+    return [
+      'Consultă un psiholog sau psihiatru pentru evaluare',
+      'Consideră terapia cognitiv-comportamentală',
+      'Practică tehnici de gestionare a anxietății zilnic',
+      'Evaluează factorii de stres din viața ta'
+    ];
+  } else {
+    return [
+      'Caută ajutor profesional urgent',
+      'Discută cu medicul despre opțiunile de tratament',
+      'Consideră atât terapia cât și medicația',
+      'Creează un sistem de suport puternic',
+      'Evită auto-medicația cu substanțe'
+    ];
+  }
+}
+
+function getGAD7NextSteps(score: number): string {
+  if (score <= 4) {
+    return 'Monitorizează simptomele și continuă practicile sănătoase de gestionare a stresului.';
+  } else if (score <= 9) {
+    return 'Implementează strategii de coping și monitorizează evoluția simptomelor.';
+  } else if (score <= 14) {
+    return 'Programează o consultație cu un specialist în sănătate mentală pentru evaluare și plan de tratament.';
+  } else {
+    return 'Caută ajutor profesional cât mai curând posibil. Anxietatea severă necesită intervenție specializată.';
+  }
 }
