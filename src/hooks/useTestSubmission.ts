@@ -21,13 +21,14 @@ export const useTestSubmission = (userId: string | undefined, testId: string | u
     mutationFn: async (testData: TestSubmissionData) => {
       if (!userId || !testId) throw new Error('Missing required data');
 
-      // For Big Five test, call the analysis function
+      // For specific tests, call the analysis function
       let finalScore = testData.score;
       
-      if (testId === 'f47ac10b-58cc-4372-a567-0e02b2c3d480') {
-        console.log('Analyzing Big Five test results...');
+      if (testId === 'f47ac10b-58cc-4372-a567-0e02b2c3d480' || 
+          testId === 'a1b2c3d4-e5f6-7890-abcd-ef1234567890') {
+        console.log('Analyzing test results for:', testId);
         try {
-          const { data: analysisResult, error: analysisError } = await supabase.functions.invoke('analyze-big-five-result', {
+          const { data: analysisResult, error: analysisError } = await supabase.functions.invoke('analyze-test-result', {
             body: { 
               answers: testData.answers, 
               test_type_id: testId 
@@ -42,7 +43,7 @@ export const useTestSubmission = (userId: string | undefined, testId: string | u
           console.log('Analysis result:', analysisResult);
           finalScore = analysisResult;
         } catch (error) {
-          console.error('Failed to analyze Big Five results:', error);
+          console.error('Failed to analyze test results:', error);
           // Fall back to basic scoring if analysis fails
         }
       }

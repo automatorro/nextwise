@@ -44,6 +44,9 @@ serve(async (req) => {
     } else if (test_type_id === 'f47ac10b-58cc-4372-a567-0e02b2c3d480') {
       // Big Five test with specific ID
       analysisResult = await analyzeBigFiveTest(answers, test_type_id, supabaseClient);
+    } else if (test_type_id === 'a1b2c3d4-e5f6-7890-abcd-ef1234567890') {
+      // DISC test
+      analysisResult = await analyzeDISCTest(answers, test_type_id, supabaseClient);
     } else {
       // Handle other test types with existing logic
       analysisResult = await analyzeOtherTests(answers, test_type_id, supabaseClient);
@@ -119,6 +122,8 @@ Răspunsul să fie structurat, empatic și constructiv, de aproximativ 300-400 d
     prompt += '\n\nOferi sfaturi constructive pentru gestionarea anxietății și căutarea suportului professional când este necesar.';
   } else if (testName.toLowerCase().includes('inteligență emoțională')) {
     prompt += '\n\nConcentrează-te pe abilități emoționale și modalități de îmbunătățire a acestora în viața personală și profesională.';
+  } else if (testName.toLowerCase().includes('disc')) {
+    prompt += '\n\nConcentrează-te pe stilurile de comportament DISC și cum acestea influențează comunicarea, leadership-ul și colaborarea în echipă.';
   }
 
   const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
@@ -147,6 +152,108 @@ Răspunsul să fie structurat, empatic și constructiv, de aproximativ 300-400 d
 
   const data = await response.json();
   return data.candidates[0]?.content?.parts[0]?.text || 'Nu s-a putut genera interpretarea AI.';
+}
+
+async function analyzeDISCTest(answers: any, test_type_id: string, supabaseClient: any) {
+  // Get test questions to understand the dimensions
+  const { data: questions } = await supabaseClient
+    .from('test_questions')
+    .select('*')
+    .eq('test_type_id', test_type_id)
+    .order('question_order')
+
+  if (!questions || questions.length === 0) {
+    throw new Error('No questions found for this test')
+  }
+
+  // DISC dimensions scoring
+  const dimensions = {
+    D: { total: 0, count: 0 }, // Dominance
+    I: { total: 0, count: 0 }, // Influence
+    S: { total: 0, count: 0 }, // Steadiness
+    C: { total: 0, count: 0 }  // Conformity
+  }
+
+  // Process each answer
+  questions.forEach((question: any) => {
+    const questionId = question.id
+    const answer = answers[questionId]
+    
+    if (answer !== undefined && question.options) {
+      const options = Array.isArray(question.options) ? question.options : JSON.parse(question.options)
+      
+      // Find the selected option and its dimension
+      const selectedOption = options.find((opt: any) => opt.value === answer)
+      if (selectedOption && selectedOption.dimension) {
+        const dimension = selectedOption.dimension as keyof typeof dimensions
+        if (dimensions[dimension]) {
+          dimensions[dimension].total += 1
+          dimensions[dimension].count += 1
+        }
+      }
+    }
+  })
+
+  // Calculate percentages for each dimension
+  const totalAnswers = Object.values(dimensions).reduce((sum, dim) => sum + dim.total, 0)
+  const results = Object.entries(dimensions).reduce((acc, [key, value]) => {
+    const percentage = totalAnswers > 0 ? Math.round((value.total / totalAnswers) * 100) : 0
+    acc[key] = percentage
+    return acc
+  }, {} as { [key: string]: number })
+
+  // Determine dominant style
+  const dominantStyle = Object.entries(results).reduce((max, [key, value]) => 
+    value > max.value ? { key, value } : max, 
+    { key: 'D', value: 0 }
+  )
+
+  // Calculate overall adaptability score
+  const overall = Math.round(Object.values(results).reduce((sum, val) => sum + val, 0) / 4)
+
+  return {
+    overall,
+    dimensions: results,
+    dominant_style: dominantStyle.key,
+    interpretation: generateDISCInterpretation(results, dominantStyle.key),
+    style_description: getDISCStyleDescription(dominantStyle.key)
+  }
+}
+
+function generateDISCInterpretation(results: { [key: string]: number }, dominantStyle: string) {
+  const styleNames = {
+    D: 'Dominanță',
+    I: 'Influență', 
+    S: 'Stabilitate',
+    C: 'Conformitate'
+  }
+
+  const interpretations = []
+  
+  // Primary style
+  interpretations.push(`Stilul tău dominant este ${styleNames[dominantStyle as keyof typeof styleNames]} (${results[dominantStyle]}%)`)
+  
+  // Secondary styles
+  const sortedStyles = Object.entries(results)
+    .filter(([key]) => key !== dominantStyle)
+    .sort(([,a], [,b]) => b - a)
+  
+  if (sortedStyles.length > 0 && sortedStyles[0][1] > 20) {
+    interpretations.push(`cu elemente puternice de ${styleNames[sortedStyles[0][0] as keyof typeof styleNames]} (${sortedStyles[0][1]}%)`)
+  }
+  
+  return interpretations.join(' ')
+}
+
+function getDISCStyleDescription(style: string) {
+  const descriptions = {
+    D: 'Persoane orientate spre rezultate, competitive și hotărâte. Îți place să conduci și să iei decizii rapide.',
+    I: 'Persoane sociabile, optimiste și expresive. Îți place să colaborezi și să motivezi pe alții.',
+    S: 'Persoane calme, perseverente și diplomatice. Îți place stabilitatea și lucrul în echipă.',
+    C: 'Persoane analitice, precise și sistematice. Îți place să urmezi procedurile și să menții standardele înalte.'
+  }
+  
+  return descriptions[style as keyof typeof descriptions] || 'Stil echilibrat de comportament.'
 }
 
 async function analyzeBigFiveTest(answers: any, test_type_id: string, supabaseClient: any) {
