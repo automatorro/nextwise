@@ -1,136 +1,81 @@
 
-import { useMutation } from '@tanstack/react-query';
-import { useNavigate } from 'react-router-dom';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
 
 interface TestSubmissionData {
-  answers: { [questionId: string]: number };
-  score: {
-    total: number;
-    average: number;
-    answers_count: number;
-  };
+  test_type_id: string;
+  answers: { [key: string]: number };
 }
 
-export const useTestSubmission = (userId: string | undefined, testId: string | undefined) => {
-  const navigate = useNavigate();
-  const { toast } = useToast();
+export const useTestSubmission = () => {
+  const { user } = useAuth();
+  const queryClient = useQueryClient();
 
-  return useMutation({
-    mutationFn: async (testData: TestSubmissionData) => {
-      if (!userId || !testId) throw new Error('Missing required data');
+  const submitTest = useMutation({
+    mutationFn: async (data: TestSubmissionData) => {
+      if (!user) throw new Error('User not authenticated');
 
-      // For specific tests, call the analysis function
-      let finalScore = testData.score;
-      
-      if (testId === 'f47ac10b-58cc-4372-a567-0e02b2c3d480' || 
-          testId === 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' ||
-          testId === 'b2c3d4e5-f6g7-8901-bcde-fg2345678901' ||
-          testId === 'c3d4e5f6-g7h8-9012-cdef-gh3456789012' ||
-          testId === 'd4e5f6g7-h8i9-0123-defg-hi4567890123') {
-        console.log('Analyzing test results for:', testId);
-        try {
-          const { data: analysisResult, error: analysisError } = await supabase.functions.invoke('analyze-test-result', {
-            body: { 
-              answers: testData.answers, 
-              test_type_id: testId 
-            }
-          });
+      console.log('Submitting test with data:', data);
 
-          if (analysisError) {
-            console.error('Analysis error:', analysisError);
-            throw analysisError;
-          }
+      // Call the analyze function
+      const { data: analysisResult, error: analysisError } = await supabase.functions.invoke('analyze-test-result', {
+        body: data
+      });
 
-          console.log('Analysis result:', analysisResult);
-          finalScore = analysisResult;
-        } catch (error) {
-          console.error('Failed to analyze test results:', error);
-          // Fall back to basic scoring if analysis fails
-        }
+      if (analysisError) {
+        console.error('Analysis error:', analysisError);
+        throw analysisError;
       }
 
-      // Check if this is the GAD-7 test by getting test type name
-      const { data: testTypeData } = await supabase
-        .from('test_types')
-        .select('name')
-        .eq('id', testId)
-        .single();
+      console.log('Analysis result:', analysisResult);
 
-      if (testTypeData?.name === 'Test GAD-7 pentru Anxietate') {
-        console.log('Analyzing GAD-7 test results for:', testId);
-        try {
-          const { data: analysisResult, error: analysisError } = await supabase.functions.invoke('analyze-test-result', {
-            body: { 
-              answers: testData.answers, 
-              test_type_id: testId 
-            }
-          });
-
-          if (analysisError) {
-            console.error('GAD-7 Analysis error:', analysisError);
-            throw analysisError;
-          }
-
-          console.log('GAD-7 Analysis result:', analysisResult);
-          finalScore = analysisResult;
-        } catch (error) {
-          console.error('Failed to analyze GAD-7 test results:', error);
-          // Fall back to basic scoring if analysis fails
-        }
-      }
-
-      const { data, error } = await supabase
+      // Save the test result with the complete analysis structure
+      const { data: testResult, error: saveError } = await supabase
         .from('test_results')
         .insert({
-          user_id: userId,
-          test_type_id: testId,
-          answers: testData.answers,
-          score: finalScore
+          user_id: user.id,
+          test_type_id: data.test_type_id,
+          answers: data.answers,
+          score: analysisResult, // Save the complete analysis result
         })
         .select()
         .single();
 
-      if (error) throw error;
-
-      // Update tests taken count using direct increment
-      try {
-        // Get current count and increment
-        const { data: currentSub } = await supabase
-          .from('subscriptions')
-          .select('tests_taken_this_month')
-          .eq('user_id', userId)
-          .single();
-
-        const currentCount = currentSub?.tests_taken_this_month || 0;
-        
-        const { error: updateError } = await supabase
-          .from('subscriptions')
-          .update({
-            tests_taken_this_month: currentCount + 1
-          })
-          .eq('user_id', userId);
-
-        if (updateError) {
-          console.error('Error updating test count:', updateError);
-        }
-      } catch (updateError) {
-        console.error('Error with test count update:', updateError);
+      if (saveError) {
+        console.error('Save error:', saveError);
+        throw saveError;
       }
 
-      return data;
-    },
-    onSuccess: (data) => {
-      navigate(`/test-result/${data.id}`);
-    },
-    onError: (error) => {
-      console.error('Error submitting test:', error);
-      toast({
-        title: "Eroare",
-        description: "Nu am putut salva rezultatul testului.",
-        variant: "destructive"
+      console.log('Test result saved:', testResult);
+
+      // Update subscription usage
+      const { error: usageError } = await supabase.rpc('increment_test_usage', {
+        user_id: user.id
       });
+
+      if (usageError) {
+        console.error('Usage update error:', usageError);
+        // Don't throw here as the test was already saved successfully
+      }
+
+      return testResult;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['test-results'] });
+      queryClient.invalidateQueries({ queryKey: ['subscription'] });
+      toast.success('Test completat cu succes!');
+    },
+    onError: (error: any) => {
+      console.error('Test submission error:', error);
+      toast.error('Eroare la salvarea testului: ' + (error?.message || 'Eroare necunoscută'));
     }
   });
+
+  return {
+    submitTest: submitTest.mutate,
+    isSubmitting: submitTest.isPending,
+    error: submitTest.error
+  };
 };
