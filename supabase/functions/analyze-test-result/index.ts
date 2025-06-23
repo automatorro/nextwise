@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
@@ -50,6 +49,17 @@ serve(async (req) => {
       analysisResult = await analyzeOtherTests(answers, test_type_id, supabaseClient);
     }
 
+    // Generate AI interpretation using Gemini if available
+    if (Deno.env.get('GEMINI_API_KEY')) {
+      try {
+        const aiInterpretation = await generateAIInterpretation(analysisResult, test_type_id, supabaseClient);
+        analysisResult.ai_interpretation = aiInterpretation;
+      } catch (error) {
+        console.error('Failed to generate AI interpretation:', error);
+        // Continue without AI interpretation if it fails
+      }
+    }
+
     return new Response(
       JSON.stringify(analysisResult),
       { 
@@ -73,6 +83,71 @@ serve(async (req) => {
     )
   }
 })
+
+async function generateAIInterpretation(analysisResult: any, testTypeId: string, supabaseClient: any) {
+  const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
+  if (!geminiApiKey) {
+    throw new Error('Gemini API key not configured');
+  }
+
+  // Get test type information
+  const { data: testType } = await supabaseClient
+    .from('test_types')
+    .select('name, description')
+    .eq('id', testTypeId)
+    .single();
+
+  const testName = testType?.name || 'Test Psihologic';
+  
+  let prompt = `Analizează următoarele rezultate pentru testul "${testName}" și oferă o interpretare personalizată, detaliată și constructivă în română:
+
+Rezultate: ${JSON.stringify(analysisResult, null, 2)}
+
+Te rog să oferi:
+1. O interpretare clară și accesibilă a rezultatelor
+2. Puncte forte identificate
+3. Domenii de dezvoltare
+4. Recomandări practice și specifice
+5. Sfaturi pentru dezvoltare personală sau profesională
+
+Răspunsul să fie structurat, empatic și constructiv, de aproximativ 300-400 de cuvinte.`;
+
+  // Customize prompt based on test type
+  if (testName.toLowerCase().includes('big five') || testName.toLowerCase().includes('personalitate')) {
+    prompt += '\n\nConcentrează-te pe trăsăturile de personalitate și cum influențează acestea comportamentul și relațiile interpersonale.';
+  } else if (testName.toLowerCase().includes('gad') || testName.toLowerCase().includes('anxietate')) {
+    prompt += '\n\nOferi sfaturi constructive pentru gestionarea anxietății și căutarea suportului professional când este necesar.';
+  } else if (testName.toLowerCase().includes('inteligență emoțională')) {
+    prompt += '\n\nConcentrează-te pe abilități emoționale și modalități de îmbunătățire a acestora în viața personală și profesională.';
+  }
+
+  const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${geminiApiKey}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      contents: [{
+        parts: [{
+          text: prompt
+        }]
+      }],
+      generationConfig: {
+        temperature: 0.7,
+        topK: 40,
+        topP: 0.95,
+        maxOutputTokens: 1024,
+      }
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error(`Gemini API error: ${response.status}`);
+  }
+
+  const data = await response.json();
+  return data.candidates[0]?.content?.parts[0]?.text || 'Nu s-a putut genera interpretarea AI.';
+}
 
 async function analyzeBigFiveTest(answers: any, test_type_id: string, supabaseClient: any) {
   // Get test questions to understand the scoring
