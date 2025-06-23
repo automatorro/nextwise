@@ -9,7 +9,7 @@ interface TestSubmissionData {
   answers: { [key: string]: number };
 }
 
-export const useTestSubmission = () => {
+export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
@@ -73,10 +73,15 @@ export const useTestSubmission = () => {
 
       return testResult;
     },
-    onSuccess: () => {
+    onSuccess: (testResult) => {
       queryClient.invalidateQueries({ queryKey: ['test-results'] });
       queryClient.invalidateQueries({ queryKey: ['subscription'] });
       toast.success('Test completat cu succes!');
+      
+      // Call the navigation callback if provided
+      if (onSuccess) {
+        onSuccess(testResult.id);
+      }
     },
     onError: (error: any) => {
       console.error('Test submission error:', error);

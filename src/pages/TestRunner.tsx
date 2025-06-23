@@ -39,8 +39,10 @@ const TestRunner = () => {
   const [answers, setAnswers] = useState<{ [questionId: string]: number }>({});
   const [isStarted, setIsStarted] = useState(false);
 
-  // Initialize test submission hook
-  const { submitTest, isSubmitting, error } = useTestSubmission();
+  // Initialize test submission hook with navigation callback
+  const { submitTest, isSubmitting, error } = useTestSubmission((resultId: string) => {
+    navigate(`/test-result/${resultId}`);
+  });
 
   // Fetch test type
   const { data: testType, isLoading: testTypeLoading, error: testTypeError } = useQuery({
