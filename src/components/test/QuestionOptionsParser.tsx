@@ -41,8 +41,8 @@ export const parseQuestionOptions = (options: Json): ParsedOption[] => {
         
         if ('value' in firstItem) {
           return options.map((opt: any, index: number) => ({
-            value: ensureValidNumber(opt.value, index + 1),
-            label: String(opt.label || opt.text || `Option ${index + 1}`)
+            value: ensureValidNumber(opt.value, index),
+            label: String(opt.label || opt.text || `Option ${index}`)
           }));
         }
       }
@@ -50,15 +50,15 @@ export const parseQuestionOptions = (options: Json): ParsedOption[] => {
       // Array of strings
       if (typeof options[0] === 'string') {
         return options.map((label: string, index: number) => ({
-          value: index + 1,
+          value: index,
           label: String(label)
         }));
       }
       
       // Array of primitives
       return options.map((item: any, index: number) => ({
-        value: index + 1,
-        label: String(item || `Option ${index + 1}`)
+        value: index,
+        label: String(item || `Option ${index}`)
       }));
     }
 
@@ -81,7 +81,7 @@ export const parseQuestionOptions = (options: Json): ParsedOption[] => {
         const parsed = JSON.parse(options);
         return parseQuestionOptions(parsed);
       } catch {
-        return [{ value: 1, label: options }];
+        return [{ value: 0, label: options }];
       }
     }
   } catch (error) {
@@ -91,25 +91,25 @@ export const parseQuestionOptions = (options: Json): ParsedOption[] => {
   return getDefaultLikertScale();
 };
 
-const ensureValidNumber = (value: any, fallback: number = 1): number => {
-  if (typeof value === 'number' && !isNaN(value) && value > 0) {
+const ensureValidNumber = (value: any, fallback: number = 0): number => {
+  if (typeof value === 'number' && !isNaN(value) && value >= 0) {
     return Math.round(value);
   }
   
   if (typeof value === 'string') {
     const parsed = parseInt(value, 10);
-    if (!isNaN(parsed) && parsed > 0) {
+    if (!isNaN(parsed) && parsed >= 0) {
       return parsed;
     }
   }
   
-  return Math.max(1, fallback);
+  return Math.max(0, fallback);
 };
 
 const getDefaultLikertScale = (): ParsedOption[] => [
-  { value: 1, label: 'Complet dezacord' },
-  { value: 2, label: 'Dezacord' },
-  { value: 3, label: 'Neutru' },
-  { value: 4, label: 'Acord' },
-  { value: 5, label: 'Complet de acord' }
+  { value: 0, label: 'Complet dezacord' },
+  { value: 1, label: 'Dezacord' },
+  { value: 2, label: 'Neutru' },
+  { value: 3, label: 'Acord' },
+  { value: 4, label: 'Complet de acord' }
 ];

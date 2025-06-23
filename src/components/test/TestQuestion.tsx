@@ -18,6 +18,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { useNavigate } from 'react-router-dom';
+import { parseQuestionOptions } from './QuestionOptionsParser';
 import type { Json } from '@/integrations/supabase/types';
 
 interface Question {
@@ -48,156 +49,6 @@ interface TestQuestionProps {
   onPrevious: () => void;
 }
 
-// Comprehensive helper function to safely parse and normalize question options
-const parseQuestionOptions = (options: Json): { value: number; label: string }[] => {
-  console.log('=== OPTION PARSING DEBUG ===');
-  console.log('Raw options:', options);
-  console.log('Options type:', typeof options);
-  console.log('Is array:', Array.isArray(options));
-  
-  if (!options) {
-    console.log('No options provided, returning default Likert scale');
-    return getDefaultLikertScale();
-  }
-
-  try {
-    // Handle array format (most common)
-    if (Array.isArray(options)) {
-      console.log('Processing array format with', options.length, 'items');
-      
-      if (options.length === 0) {
-        console.log('Empty array, using default options');
-        return getDefaultLikertScale();
-      }
-      
-      // Case 1: Array of objects with label/value or similar properties
-      if (typeof options[0] === 'object' && options[0] !== null) {
-        const firstItem = options[0] as { [key: string]: any };
-        console.log('First item keys:', Object.keys(firstItem));
-        
-        // Standard format: {label: "text", value: number}
-        if ('label' in firstItem && 'value' in firstItem) {
-          console.log('Using label/value format');
-          return options.map((opt: any) => ({
-            value: ensureNumber(opt.value),
-            label: String(opt.label || `Option ${opt.value || 1}`)
-          }));
-        }
-        
-        // Alternative format: {text: "text", value: number}
-        if ('text' in firstItem && 'value' in firstItem) {
-          console.log('Using text/value format');
-          return options.map((opt: any) => ({
-            value: ensureNumber(opt.value),
-            label: String(opt.text || `Option ${opt.value || 1}`)
-          }));
-        }
-        
-        // Value-only format: {value: number}
-        if ('value' in firstItem) {
-          console.log('Using value-only format');
-          return options.map((opt: any, index: number) => ({
-            value: ensureNumber(opt.value, index + 1),
-            label: String(opt.label || opt.text || `Option ${opt.value || (index + 1)}`)
-          }));
-        }
-        
-        // Generic object format - try to extract meaningful data
-        console.log('Using generic object format');
-        return options.map((opt: any, index: number) => {
-          const keys = Object.keys(opt);
-          const valueKey = keys.find(k => k.toLowerCase().includes('value')) || keys[0];
-          const labelKey = keys.find(k => k.toLowerCase().includes('label') || k.toLowerCase().includes('text')) || keys[1] || keys[0];
-          
-          return {
-            value: ensureNumber(opt[valueKey], index + 1),
-            label: String(opt[labelKey] || `Option ${index + 1}`)
-          };
-        });
-      }
-      
-      // Case 2: Array of strings
-      if (typeof options[0] === 'string') {
-        console.log('Processing string array');
-        return options.map((label: string, index: number) => ({
-          value: index + 1,
-          label: String(label)
-        }));
-      }
-      
-      // Case 3: Array of numbers or mixed primitives
-      console.log('Processing primitive array');
-      return options.map((item: any, index: number) => ({
-        value: index + 1,
-        label: String(item || `Option ${index + 1}`)
-      }));
-    }
-
-    // Handle object format (key-value pairs)
-    if (typeof options === 'object' && options !== null) {
-      console.log('Processing object format');
-      const entries = Object.entries(options);
-      
-      if (entries.length === 0) {
-        console.log('Empty object, using default options');
-        return getDefaultLikertScale();
-      }
-      
-      // Convert object entries to options, sorting by numeric keys if possible
-      return entries
-        .map(([key, value]) => ({
-          value: ensureNumber(key),
-          label: typeof value === 'string' ? value : String(value || `Option ${key}`)
-        }))
-        .sort((a, b) => a.value - b.value);
-    }
-
-    // Handle string format (JSON string)
-    if (typeof options === 'string') {
-      console.log('Attempting to parse string as JSON');
-      try {
-        const parsed = JSON.parse(options);
-        return parseQuestionOptions(parsed); // Recursive call with parsed data
-      } catch (parseError) {
-        console.log('Failed to parse JSON string, treating as single option');
-        return [{ value: 1, label: options }];
-      }
-    }
-
-  } catch (error) {
-    console.error('Error parsing options:', error);
-  }
-
-  // Ultimate fallback
-  console.log('Using fallback default options');
-  return getDefaultLikertScale();
-};
-
-// Helper function to ensure a value is a valid number
-const ensureNumber = (value: any, fallback: number = 1): number => {
-  if (typeof value === 'number' && !isNaN(value)) {
-    return Math.max(1, Math.round(value));
-  }
-  
-  if (typeof value === 'string') {
-    const parsed = parseInt(value, 10);
-    if (!isNaN(parsed)) {
-      return Math.max(1, parsed);
-    }
-  }
-  
-  return fallback;
-};
-
-// Default Likert scale for fallback
-const getDefaultLikertScale = (): { value: number; label: string }[] => [
-  { value: 1, label: 'Complet dezacord' },
-  { value: 2, label: 'Dezacord' },
-  { value: 3, label: 'Neutru' },
-  { value: 4, label: 'Acord' },
-  { value: 5, label: 'Complet de acord' }
-];
-
 const TestQuestion: React.FC<TestQuestionProps> = ({
   testType,
   currentQuestion,
@@ -212,7 +63,7 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
   const navigate = useNavigate();
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
-  // Parse options safely from JSON
+  // Parse options safely from JSON using the dedicated parser
   const questionOptions = parseQuestionOptions(currentQuestion.options);
   console.log('Final parsed options for question:', currentQuestion.id, questionOptions);
 
@@ -225,7 +76,7 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
 
   // Validate that we have valid options
   const hasValidOptions = questionOptions.length > 0 && 
-    questionOptions.every(opt => opt.value > 0 && opt.label);
+    questionOptions.every(opt => opt.value >= 0 && opt.label);
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -283,14 +134,14 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
                   className="space-y-2"
                 >
                   {questionOptions.map((option) => (
-                    <div key={option.value} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                    <div key={`${currentQuestion.id}-${option.value}`} className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                       <RadioGroupItem
                         value={option.value.toString()}
-                        id={`option-${option.value}`}
+                        id={`option-${currentQuestion.id}-${option.value}`}
                         className="flex-shrink-0"
                       />
                       <Label
-                        htmlFor={`option-${option.value}`}
+                        htmlFor={`option-${currentQuestion.id}-${option.value}`}
                         className="text-sm cursor-pointer flex-1 leading-relaxed"
                       >
                         {option.label}
