@@ -51,7 +51,7 @@ export const useTestSubmission = (userId: string | undefined, testId: string | u
         }
       }
 
-      // Check if this is the new GAD-7 test by getting test type name
+      // Check if this is the GAD-7 test by getting test type name
       const { data: testTypeData } = await supabase
         .from('test_types')
         .select('name')
@@ -94,30 +94,8 @@ export const useTestSubmission = (userId: string | undefined, testId: string | u
 
       if (error) throw error;
 
-      // Update tests taken count using RPC function or direct increment
+      // Update tests taken count using direct increment
       try {
-        const { error: updateError } = await supabase.rpc('increment_user_test_count', {
-          user_id: userId
-        });
-
-        if (updateError) {
-          console.error('Error updating test count with RPC:', updateError);
-          
-          // Fallback: try direct update with increment
-          const { error: fallbackError } = await supabase
-            .from('subscriptions')
-            .update({
-              tests_taken_this_month: supabase.sql`tests_taken_this_month + 1`
-            })
-            .eq('user_id', userId);
-
-          if (fallbackError) {
-            console.error('Error updating test count with fallback:', fallbackError);
-          }
-        }
-      } catch (rpcError) {
-        console.error('RPC function not available, using direct update:', rpcError);
-        
         // Get current count and increment
         const { data: currentSub } = await supabase
           .from('subscriptions')
@@ -127,16 +105,18 @@ export const useTestSubmission = (userId: string | undefined, testId: string | u
 
         const currentCount = currentSub?.tests_taken_this_month || 0;
         
-        const { error: directUpdateError } = await supabase
+        const { error: updateError } = await supabase
           .from('subscriptions')
           .update({
             tests_taken_this_month: currentCount + 1
           })
           .eq('user_id', userId);
 
-        if (directUpdateError) {
-          console.error('Error with direct count update:', directUpdateError);
+        if (updateError) {
+          console.error('Error updating test count:', updateError);
         }
+      } catch (updateError) {
+        console.error('Error with test count update:', updateError);
       }
 
       return data;
