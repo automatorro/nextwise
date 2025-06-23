@@ -19,7 +19,7 @@ export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
 
       console.log('Submitting test with data:', data);
 
-      // Call the analyze function
+      // Call the analyze function - this works for ALL test types now
       const { data: analysisResult, error: analysisError } = await supabase.functions.invoke('analyze-test-result', {
         body: data
       });
@@ -32,13 +32,14 @@ export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
       console.log('Analysis result:', analysisResult);
 
       // Save the test result with the complete analysis structure
+      // This is now uniform for all test types
       const { data: testResult, error: saveError } = await supabase
         .from('test_results')
         .insert({
           user_id: user.id,
           test_type_id: data.test_type_id,
           answers: data.answers,
-          score: analysisResult, // Save the complete analysis result
+          score: analysisResult, // Save the complete analysis result for any test type
         })
         .select()
         .single();
@@ -50,7 +51,7 @@ export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
 
       console.log('Test result saved:', testResult);
 
-      // Update subscription usage - first get current count, then increment
+      // Update subscription usage - uniform for all tests
       const { data: currentSub } = await supabase
         .from('subscriptions')
         .select('tests_taken_this_month')
@@ -74,11 +75,12 @@ export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
       return testResult;
     },
     onSuccess: (testResult) => {
+      // Invalidate queries - uniform for all tests
       queryClient.invalidateQueries({ queryKey: ['test-results'] });
       queryClient.invalidateQueries({ queryKey: ['subscription'] });
       toast.success('Test completat cu succes!');
       
-      // Call the navigation callback if provided
+      // Call the navigation callback if provided - uniform navigation for all tests
       if (onSuccess) {
         onSuccess(testResult.id);
       }

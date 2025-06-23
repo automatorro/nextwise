@@ -58,12 +58,14 @@ Deno.serve(async (req) => {
     const { answers, test_type_id }: AnalysisRequest = await req.json();
     console.log('Analyzing test results for test type:', test_type_id);
 
-    // Check if this is GAD-7 test by name instead of hardcoded ID
+    // Get test type information for better analysis
     const { data: testType } = await supabaseClient
       .from('test_types')
       .select('name')
       .eq('id', test_type_id)
       .single();
+
+    console.log('Test type found:', testType);
 
     // Determine test type and run appropriate analysis
     if (test_type_id === 'f47ac10b-58cc-4372-a567-0e02b2c3d480') {
@@ -90,41 +92,19 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify(result), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
-    } else if (test_type_id === 'd4e5f6g7-h8i9-0123-defg-hi4567890123') {
-      // GAD-7 Anxiety Test
-      const result = await analyzeGAD7(answers, supabaseClient);
-      return new Response(JSON.stringify(result), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    } else if (test_type_id === 'efa9a075-6e16-4467-b13a-e3dcf2e25bda') {
-      // GAD-7 Anxiety Test (specific ID for existing test)
-      const result = await analyzeGAD7(answers, supabaseClient);
-      return new Response(JSON.stringify(result), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    } else if (testType?.name === 'Test GAD-7 pentru Anxietate' || testType?.name === 'Evaluare Anxietate GAD-7') {
-      // GAD-7 Anxiety Test (by name lookup)
+    } else if (test_type_id === 'd4e5f6g7-h8i9-0123-defg-hi4567890123' || 
+               test_type_id === 'efa9a075-6e16-4467-b13a-e3dcf2e25bda' ||
+               testType?.name?.includes('GAD-7') || 
+               testType?.name?.includes('Anxietate')) {
+      // GAD-7 Anxiety Test (multiple possible IDs and name matching)
       const result = await analyzeGAD7(answers, supabaseClient);
       return new Response(JSON.stringify(result), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     } else {
-      // Default analysis for other tests
-      const questionsCount = Object.keys(answers).length;
-      const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
-      const maxPossibleScore = questionsCount * 5; // Assuming 5-point scale
-      const average = totalScore / questionsCount;
-      const percentage = (totalScore / maxPossibleScore) * 100;
-
-      return new Response(JSON.stringify({
-        total: totalScore,
-        average: Math.round(average * 100) / 100,
-        answers_count: questionsCount,
-        overall: Math.round(percentage),
-        raw_score: totalScore,
-        max_score: maxPossibleScore,
-        interpretation: getBasicInterpretation(percentage)
-      }), {
+      // Enhanced default analysis for other tests
+      const result = await analyzeGenericTest(answers, supabaseClient, test_type_id, testType);
+      return new Response(JSON.stringify(result), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -136,6 +116,102 @@ Deno.serve(async (req) => {
     });
   }
 });
+
+async function analyzeGenericTest(answers: { [questionId: string]: number }, supabaseClient: any, testTypeId: string, testType: any): Promise<any> {
+  console.log('Running generic test analysis for:', testType?.name || testTypeId);
+  
+  // Get questions to determine the scoring structure
+  const { data: questions } = await supabaseClient
+    .from('test_questions')
+    .select('*')
+    .eq('test_type_id', testTypeId)
+    .order('question_order');
+
+  const questionsCount = Object.keys(answers).length;
+  const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
+  
+  // Determine scale based on answer values
+  const maxAnswerValue = Math.max(...Object.values(answers));
+  const minAnswerValue = Math.min(...Object.values(answers));
+  const answerRange = maxAnswerValue - minAnswerValue + 1;
+  
+  const maxPossibleScore = questionsCount * maxAnswerValue;
+  const average = totalScore / questionsCount;
+  const percentage = Math.round((totalScore / maxPossibleScore) * 100);
+
+  // Try to extract dimensions if questions have scoring_weights
+  const dimensions: { [key: string]: number } = {};
+  const dimensionCounts: { [key: string]: number } = {};
+
+  if (questions && questions.length > 0) {
+    questions.forEach((question: any) => {
+      const answer = answers[question.id];
+      if (answer && question.scoring_weights) {
+        Object.entries(question.scoring_weights).forEach(([dimension, weight]: [string, any]) => {
+          if (!dimensions[dimension]) {
+            dimensions[dimension] = 0;
+            dimensionCounts[dimension] = 0;
+          }
+          const adjustedScore = typeof weight === 'object' && weight.reverse ? (maxAnswerValue + 1 - answer) : answer;
+          dimensions[dimension] += adjustedScore;
+          dimensionCounts[dimension]++;
+        });
+      }
+    });
+
+    // Convert to percentages
+    Object.keys(dimensions).forEach(dimension => {
+      if (dimensionCounts[dimension] > 0) {
+        dimensions[dimension] = Math.round((dimensions[dimension] / (dimensionCounts[dimension] * maxAnswerValue)) * 100);
+      }
+    });
+  }
+
+  return {
+    total: totalScore,
+    average: Math.round(average * 100) / 100,
+    answers_count: questionsCount,
+    overall: percentage,
+    raw_score: totalScore,
+    max_score: maxPossibleScore,
+    interpretation: getEnhancedInterpretation(percentage, testType?.name || 'Test'),
+    dimensions: Object.keys(dimensions).length > 0 ? dimensions : undefined,
+    test_name: testType?.name || 'Test necunoscut',
+    detailed_interpretations: getGenericDetailedInterpretations(percentage, dimensions, testType?.name)
+  };
+}
+
+function getEnhancedInterpretation(percentage: number, testName: string): string {
+  const level = percentage >= 80 ? 'foarte ridicat' : 
+                percentage >= 65 ? 'ridicat' : 
+                percentage >= 50 ? 'moderat-ridicat' :
+                percentage >= 35 ? 'moderat' :
+                percentage >= 20 ? 'scăzut' : 'foarte scăzut';
+  
+  return `Scor ${level} la ${testName} (${percentage}%)`;
+}
+
+function getGenericDetailedInterpretations(percentage: number, dimensions: { [key: string]: number }, testName?: string): any {
+  const interpretations: any = {
+    overall_score: `Ai obținut un scor de ${percentage}% la acest test, ceea ce indică ${
+      percentage >= 75 ? 'un nivel foarte bun de performanță în domeniile evaluate.' :
+      percentage >= 60 ? 'un nivel bun cu oportunități de dezvoltare în anumite zone.' :
+      percentage >= 40 ? 'un nivel moderat cu potențial semnificativ de îmbunătățire.' :
+      'un nivel care sugerează nevoia de atenție și dezvoltare în domeniile evaluate.'
+    }`
+  };
+
+  // Add dimension-specific interpretations if available
+  Object.entries(dimensions).forEach(([dimension, score]) => {
+    interpretations[dimension] = `${dimension}: ${score}% - ${
+      score >= 70 ? 'Puncte forte clare în această dimensiune.' :
+      score >= 50 ? 'Nivel decent cu potențial de îmbunătățire.' :
+      'Zonă care ar beneficia de atenție și dezvoltare.'
+    }`;
+  });
+
+  return interpretations;
+}
 
 async function analyzeBigFive(answers: { [questionId: string]: number }, supabaseClient: any): Promise<any> {
   const { data: questions, error } = await supabaseClient
@@ -335,7 +411,6 @@ async function analyzeEmotionalIntelligence(answers: { [questionId: string]: num
   questions.forEach((question: any) => {
     const answer = answers[question.id];
     if (answer && question.options) {
-      // Extract dimension from the first option (they should all have the same dimension)
       const firstOption = Array.isArray(question.options) ? question.options[0] : null;
       if (firstOption && firstOption.dimension) {
         const dimension = firstOption.dimension as keyof EmotionalIntelligenceDimension;
@@ -345,7 +420,6 @@ async function analyzeEmotionalIntelligence(answers: { [questionId: string]: num
     }
   });
 
-  // Calculate percentages for each dimension
   const dimensionPercentages: EmotionalIntelligenceDimension = {
     self_awareness: dimensionCounts.self_awareness > 0 ? Math.round((dimensions.self_awareness / (dimensionCounts.self_awareness * 5)) * 100) : 0,
     self_regulation: dimensionCounts.self_regulation > 0 ? Math.round((dimensions.self_regulation / (dimensionCounts.self_regulation * 5)) * 100) : 0,
@@ -372,10 +446,8 @@ async function analyzeEmotionalIntelligence(answers: { [questionId: string]: num
 }
 
 async function analyzeGAD7(answers: { [questionId: string]: number }, supabaseClient: any): Promise<any> {
-  // Calculate total GAD-7 score (0-21 scale)
   const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
   
-  // Determine severity level based on GAD-7 scoring
   let severityLevel = '';
   let clinicalInterpretation = '';
   
@@ -395,7 +467,7 @@ async function analyzeGAD7(answers: { [questionId: string]: number }, supabaseCl
 
   const questionsCount = Object.keys(answers).length;
   const average = totalScore / questionsCount;
-  const maxPossibleScore = questionsCount * 3; // GAD-7 uses 0-3 scale
+  const maxPossibleScore = questionsCount * 3;
   const percentage = Math.round((totalScore / maxPossibleScore) * 100);
 
   return {

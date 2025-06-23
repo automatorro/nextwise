@@ -47,7 +47,7 @@ interface BigFiveDimensions {
   extraversion: number;
   agreeableness: number;
   neuroticism: number;
-  [key: string]: number; // Add index signature for compatibility
+  [key: string]: number;
 }
 
 // Helper function to safely convert dimensions to the right format
@@ -58,7 +58,7 @@ const convertToBigFiveDimensions = (dimensions: { [key: string]: number }): BigF
     extraversion: dimensions.extraversion || 0,
     agreeableness: dimensions.agreeableness || 0,
     neuroticism: dimensions.neuroticism || 0,
-    ...dimensions // Include any additional dimensions
+    ...dimensions
   };
 };
 
@@ -162,7 +162,7 @@ const TestResult = () => {
         {/* Overall Score */}
         <OverallScoreCard score={result.score} />
 
-        {/* Big Five Radar Chart */}
+        {/* Big Five Radar Chart - only for Big Five tests */}
         {isBigFiveTest && hasValidBigFive && (
           <Card className="mb-8">
             <CardHeader>
@@ -174,12 +174,6 @@ const TestResult = () => {
             </CardHeader>
             <CardContent>
               <BigFiveRadarChart dimensions={bigFiveDimensions} />
-              
-              {/* Generate Detailed Analysis Button */}
-              <DetailedAnalysisSection 
-                dimensions={convertToBigFiveDimensions(bigFiveDimensions)} 
-                resultId={resultId!} 
-              />
             </CardContent>
           </Card>
         )}
@@ -187,7 +181,7 @@ const TestResult = () => {
         {/* Dimensions - use Big Five dimensions for Big Five tests, otherwise use general dimensions */}
         <DimensionsAnalysis dimensions={isBigFiveTest ? convertToBigFiveDimensions(bigFiveDimensions) : generalDisplayDimensions} />
 
-        {/* Big Five Explanations */}
+        {/* Big Five Explanations - only for Big Five tests */}
         {isBigFiveTest && hasValidBigFive && (
           <Card className="mb-8">
             <CardHeader>
@@ -203,6 +197,24 @@ const TestResult = () => {
         {isBigFiveTest && result.score.detailed_interpretations && (
           <DetailedInterpretations interpretations={result.score.detailed_interpretations} />
         )}
+
+        {/* Detailed Analysis Section - NOW AVAILABLE FOR ALL TESTS */}
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>Analiză Detaliată cu AI</CardTitle>
+            <p className="text-sm text-gray-600">
+              Generează o analiză personalizată și recomandări specifice bazate pe rezultatele tale.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <DetailedAnalysisSection 
+              dimensions={isBigFiveTest ? convertToBigFiveDimensions(bigFiveDimensions) : generalDisplayDimensions} 
+              resultId={resultId!}
+              testType={result.test_types.name}
+              score={result.score}
+            />
+          </CardContent>
+        </Card>
 
         {/* Actions */}
         <div className="flex gap-4">

@@ -1,6 +1,5 @@
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Loader2, Brain } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,18 +10,29 @@ interface DetailedAnalysisSectionProps {
     [key: string]: number;
   };
   resultId: string;
+  testType: string;
+  score: {
+    overall: number;
+    raw_score: number;
+    max_score: number;
+    interpretation: string;
+  };
 }
 
-const DetailedAnalysisSection = ({ dimensions, resultId }: DetailedAnalysisSectionProps) => {
+const DetailedAnalysisSection = ({ dimensions, resultId, testType, score }: DetailedAnalysisSectionProps) => {
   const [detailedAnalysis, setDetailedAnalysis] = useState<string>('');
   const [isGeneratingAnalysis, setIsGeneratingAnalysis] = useState(false);
   const { toast } = useToast();
 
-  const generateDetailedAnalysis = async () => {
-    setIsGeneratingAnalysis(true);
-    
-    try {
-      // Safely extract Big Five dimensions with fallbacks
+  const generatePromptForTestType = (testType: string, score: any, dimensions: any) => {
+    const baseInfo = `
+**REZULTATELE TESTULUI:**
+- Test: ${testType}
+- Scor general: ${score.overall}% (${score.raw_score}/${score.max_score} puncte)
+- Interpretare: ${score.interpretation}
+`;
+
+    if (testType.includes('Big Five')) {
       const safeDimensions = {
         openness: dimensions.openness || 0,
         conscientiousness: dimensions.conscientiousness || 0,
@@ -39,74 +49,103 @@ const DetailedAnalysisSection = ({ dimensions, resultId }: DetailedAnalysisSecti
         neuroticism: Math.round((safeDimensions.neuroticism / 100) * 40)
       };
 
-      // Enhanced, detailed prompt for more comprehensive analysis
-      const prompt = `Ești un psiholog expert în consiliere vocațională cu 15+ ani experiență în analiza personalității și dezvoltare de carieră. Un utilizator a finalizat testul de personalitate Big Five și acum ai nevoie să generezi o analiză completă, profundă și extrem de personalizată.
+      return `Ești un psiholog expert în consiliere vocațională cu 15+ ani experiență. Analizează aceste rezultate Big Five și generează o analiză completă, profundă și personalizată.
 
-**REZULTATELE TESTULUI (scoruri din 40 de puncte posibile):**
+${baseInfo}
 - Deschidere către Experiență: ${rawScores.openness}/40 (${safeDimensions.openness}%)
 - Conștiinciozitate: ${rawScores.conscientiousness}/40 (${safeDimensions.conscientiousness}%)
 - Extraversiune: ${rawScores.extraversion}/40 (${safeDimensions.extraversion}%)
 - Agreabilitate: ${rawScores.agreeableness}/40 (${safeDimensions.agreeableness}%)
 - Nevrotism: ${rawScores.neuroticism}/40 (${safeDimensions.neuroticism}%)
 
-**CONTEXT PENTRU INTERPRETARE:**
-- Scoruri 0-30%: Scăzute
-- Scoruri 31-70%: Moderate
-- Scoruri 71-100%: Ridicate
+Generează o analiză structurată în 5 secțiuni: Profilul Unic, Punctele Forte, Zonele de Dezvoltare, Recomandări de Carieră, și Plan de Acțiune. Minimum 1200-1500 cuvinte, ton empatic și motivațional.`;
+    }
+    
+    if (testType.includes('GAD-7') || testType.includes('Anxietate')) {
+      return `Ești un psiholog clinician specializat în tulburări de anxietate. Analizează aceste rezultate GAD-7 și oferă o interpretare profesională.
 
-**INSTRUCȚIUNI PENTRU ANALIZA DETALIATĂ:**
+${baseInfo}
 
-Generează o analiză structurată în **5 secțiuni distincte**, fiecare cu minimum 200-300 de cuvinte:
+Generează o analiză structurată în 4 secțiuni:
+1. **Interpretarea Scorului** - Explică ce înseamnă scorul obținut în contextul GAD-7
+2. **Manifestări și Simptome** - Descrie cum se poate manifesta anxietatea la acest nivel
+3. **Strategii de Gestionare** - Oferă tehnici concrete și practice de coping
+4. **Recomandări și Pași Următori** - Ghidează următoarele acțiuni recomandate
 
-## **1. Profilul Tău Unic de Personalitate**
-- Explică pe înțelesul tuturor ce înseamnă fiecare scor obținut
-- Analizează interacțiunile între dimensiuni (ex: "Combinația ta de Conștiinciozitate ridicată cu Agreabilitate moderată înseamnă că...")
-- Identifică pattern-uri unice în profil și ce îl face special
-- Folosește metafore și exemple concrete pentru a face explicația accesibilă
-- Evită etichetările negative, transformă tot în oportunități de creștere
+Ton profesional dar empatic, evită diagnosticarea, concentrează-te pe educație și suport. Minimum 800-1000 cuvinte.`;
+    }
 
-## **2. Punctele Tale Forte și Superputerile Naturale**
-- Identifică 3-4 puncte forte clare bazate pe scorurile ridicate
-- Explică cum se manifestă aceste puncte forte în viața de zi cu zi
-- Dă exemple concrete de situații în care aceste trăsături îți aduc avantaje
-- Analizează combinațiile unice de trăsături care îți creează "superputeri" distincte
-- Oferă sfaturi pentru a valorifica și dezvolta aceste puncte forte
+    if (testType.includes('DISC')) {
+      const dimensionNames = Object.keys(dimensions);
+      const dominantStyle = dimensionNames.reduce((a, b) => dimensions[a] > dimensions[b] ? a : b, dimensionNames[0]);
+      
+      return `Ești un consultant organizațional expert în profilarea DISC. Analizează aceste rezultate și oferă o interpretare profesională.
 
-## **3. Zonele de Dezvoltare și Creștere Personală**
-- Identifică 2-3 zone unde ai potențial de dezvoltare (nu defecte!)
-- Explică cum aceste zone pot fi transformate în oportunități
-- Oferă strategii concrete și practice pentru dezvoltare
-- Sugerează resurse specifice (cărți, cursuri, exerciții) pentru fiecare zonă
-- Încurajează o perspectivă pozitivă asupra dezvoltării continue
+${baseInfo}
+- Dimensiuni DISC: ${Object.entries(dimensions).map(([key, value]) => `${key}: ${value}%`).join(', ')}
+- Stil dominant: ${dominantStyle}
 
-## **4. Recomandări Detaliate de Carieră**
-- Sugerează 5-7 tipuri de roluri sau domenii profesionale specifice
-- Pentru fiecare recomandare, explică în detaliu DE CE este o potrivire perfectă
-- Descrie mediul de lucru ideal pentru profilul tău
-- Oferă sfaturi pentru dezvoltarea carierei pe termen scurt (6-12 luni) și lung (2-5 ani)
-- Identifică tipurile de companii și culturi organizaționale care ți s-ar potrivi
-- Menționează ce roluri ar trebui evitate și de ce
+Generează o analiză structurată în 4 secțiuni:
+1. **Profilul DISC** - Explică stilul comportamental dominant și combinațiile
+2. **Punctele Forte în Comunicare** - Cum comunici cel mai eficient
+3. **Mediul de Lucru Ideal** - Ce tip de environment îți potrivește
+4. **Dezvoltare și Adaptabilitate** - Cum să îți dezvolți flexibilitatea comportamentală
 
-## **5. Plan de Acțiune Personalizat**
-- Creează 5-7 acțiuni concrete și specifice pe care le poți lua în următoarele 30 de zile
-- Pentru fiecare acțiune, explică cum va contribui la dezvoltarea ta
-- Sugerează resurse practice: cărți specifice, cursuri online, aplicații, comunități
-- Oferă exerciții zilnice sau săptămânale pentru fortificarea punctelor forte
-- Propune modalități de monitorizare a progresului
-- Înclude sfaturi pentru gestionarea provocărilor specifice profilului tău
+Ton profesional și practic, concentrează-te pe aplicații în mediul de lucru. Minimum 800-1000 cuvinte.`;
+    }
 
-**TON ȘI STIL:**
-- Folosește un ton cald, empatic și motivațional
-- Adresează-te direct utilizatorului cu "tu" și "al tău"
-- Folosește exemple concrete și metafore pentru claritate
-- Fii specific și acționabil, nu vag
-- Încurajează și inspiră încrederea în sine
-- Evită jargonul psihologic - explică totul în termeni simpli
-- Fii pozitiv dar realist în recomandări
+    if (testType.includes('Enneagram')) {
+      return `Ești un coach certificat în Enneagram cu experiență vastă. Analizează aceste rezultate și oferă o interpretare profundă.
 
-**LUNGIME:** Analiza finală trebuie să aibă minimum 1200-1500 de cuvinte, cu fiecare secțiune având conținut substanțial și detaliat.
+${baseInfo}
+- Dimensiuni: ${Object.entries(dimensions).map(([key, value]) => `Tip ${key}: ${value}%`).join(', ')}
 
-Formatează întregul răspuns folosind Markdown cu titluri clare (##) și liste pentru o citire ușoară.`;
+Generează o analiză structurată în 4 secțiuni:
+1. **Tipul de Personalitate Dominant** - Explică tipul principal și caracteristicile sale
+2. **Motivații și Frici Profunde** - Analizează driverii inconștienți
+3. **Căile de Creștere** - Direcțiile de dezvoltare sănătoasă
+4. **Relații și Comunicare** - Cum interacționezi cu alții și cum să îmbunătățești relațiile
+
+Ton profund și introspectiv, concentrează-te pe autocunoaștere și creștere personală. Minimum 1000-1200 cuvinte.`;
+    }
+
+    if (testType.includes('Inteligență Emoțională') || testType.includes('Emotional Intelligence')) {
+      return `Ești un expert în inteligența emoțională și dezvoltare personală. Analizează aceste rezultate și oferă o interpretare detaliată.
+
+${baseInfo}
+- Dimensiuni: ${Object.entries(dimensions).map(([key, value]) => `${key}: ${value}%`).join(', ')}
+
+Generează o analiză structurată în 4 secțiuni:
+1. **Profilul Inteligenței Emoționale** - Evaluează punctele forte și zonele de îmbunătățire
+2. **Impact în Relații** - Cum îți influențează abilitățile emoționale relațiile
+3. **Aplicații Profesionale** - Cum să folosești EQ în carieră și leadership
+4. **Plan de Dezvoltare EQ** - Exerciții și tehnici concrete de îmbunătățire
+
+Ton suportiv și practic, concentrează-te pe dezvoltarea abilităților emoționale. Minimum 800-1000 cuvinte.`;
+    }
+
+    // Default prompt for other test types
+    return `Ești un psiholog expert în evaluarea psihologică. Analizează aceste rezultate de test și oferă o interpretare profesională și personalizată.
+
+${baseInfo}
+${Object.keys(dimensions).length > 0 ? `- Dimensiuni: ${Object.entries(dimensions).map(([key, value]) => `${key}: ${value}%`).join(', ')}` : ''}
+
+Generează o analiză structurată în 4 secțiuni:
+1. **Interpretarea Rezultatelor** - Ce înseamnă scorul și dimensiunile obținute
+2. **Punctele Forte Identificate** - Abilitățile și caracteristicile pozitive
+3. **Oportunități de Dezvoltare** - Zone care pot fi îmbunătățite
+4. **Recomandări Practice** - Pași concreți pentru utilizarea acestor insight-uri
+
+Ton profesional dar accesibil, concentrează-te pe aplicabilitate practică. Minimum 800-1000 cuvinte.
+
+Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru o citire ușoară.`;
+  };
+
+  const generateDetailedAnalysis = async () => {
+    setIsGeneratingAnalysis(true);
+    
+    try {
+      const prompt = generatePromptForTestType(testType, score, dimensions);
 
       const { data, error } = await supabase.functions.invoke('analyze-big-five-result', {
         body: { 
@@ -124,7 +163,7 @@ Formatează întregul răspuns folosind Markdown cu titluri clare (##) și liste
         setDetailedAnalysis(data.analysis);
         toast({
           title: "Analiză detaliată generată cu succes",
-          description: "Analiza personalizată completă a profilului tău a fost generată cu AI."
+          description: "Analiza personalizată completă a rezultatelor tale a fost generată cu AI."
         });
       } else {
         throw new Error('No analysis returned from function');
@@ -142,7 +181,6 @@ Formatează întregul răspuns folosind Markdown cu titluri clare (##) și liste
   };
 
   const formatMarkdownToJSX = (markdown: string) => {
-    // Simple markdown to JSX conversion for basic formatting
     const lines = markdown.split('\n');
     const elements: React.ReactNode[] = [];
     
@@ -168,7 +206,7 @@ Formatează întregul răspuns folosind Markdown cu titluri clare (##) și liste
   return (
     <>
       {/* Generate Analysis Button */}
-      <div className="mt-6 text-center border-t pt-6">
+      <div className="text-center">
         <Button
           onClick={generateDetailedAnalysis}
           disabled={isGeneratingAnalysis}
@@ -188,25 +226,21 @@ Formatează întregul răspuns folosind Markdown cu titluri clare (##) și liste
           )}
         </Button>
         <p className="text-sm text-gray-500 mt-2">
-          Primește o analiză personalizată extrem de detaliată și un plan de acțiune complet bazate pe profilul tău Big Five
+          Primește o analiză personalizată extrem de detaliată și recomandări specifice pentru rezultatele tale
         </p>
       </div>
 
       {/* Detailed Analysis Display */}
       {detailedAnalysis && (
-        <Card className="mb-8 mt-6">
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Brain className="w-5 h-5 mr-2 text-blue-600" />
-              Analiza Detaliată Completă a Profilului Tău
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="prose prose-gray max-w-none">
-              {formatMarkdownToJSX(detailedAnalysis)}
-            </div>
-          </CardContent>
-        </Card>
+        <div className="mt-8 p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg border border-blue-200">
+          <div className="flex items-center mb-4">
+            <Brain className="w-5 h-5 mr-2 text-blue-600" />
+            <h3 className="text-lg font-semibold text-gray-800">Analiza Ta Personalizată</h3>
+          </div>
+          <div className="prose prose-gray max-w-none">
+            {formatMarkdownToJSX(detailedAnalysis)}
+          </div>
+        </div>
       )}
     </>
   );
