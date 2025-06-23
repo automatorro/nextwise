@@ -50,11 +50,19 @@ export const useTestSubmission = () => {
 
       console.log('Test result saved:', testResult);
 
-      // Update subscription usage - using a direct update instead of RPC
+      // Update subscription usage - first get current count, then increment
+      const { data: currentSub } = await supabase
+        .from('subscriptions')
+        .select('tests_taken_this_month')
+        .eq('user_id', user.id)
+        .single();
+
+      const currentCount = currentSub?.tests_taken_this_month || 0;
+      
       const { error: usageError } = await supabase
         .from('subscriptions')
         .update({ 
-          tests_taken_this_month: supabase.raw('tests_taken_this_month + 1') 
+          tests_taken_this_month: currentCount + 1
         })
         .eq('user_id', user.id);
 
