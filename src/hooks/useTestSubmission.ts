@@ -51,6 +51,36 @@ export const useTestSubmission = (userId: string | undefined, testId: string | u
         }
       }
 
+      // Check if this is the new GAD-7 test by getting test type name
+      const { data: testTypeData } = await supabase
+        .from('test_types')
+        .select('name')
+        .eq('id', testId)
+        .single();
+
+      if (testTypeData?.name === 'Test GAD-7 pentru Anxietate') {
+        console.log('Analyzing GAD-7 test results for:', testId);
+        try {
+          const { data: analysisResult, error: analysisError } = await supabase.functions.invoke('analyze-test-result', {
+            body: { 
+              answers: testData.answers, 
+              test_type_id: testId 
+            }
+          });
+
+          if (analysisError) {
+            console.error('GAD-7 Analysis error:', analysisError);
+            throw analysisError;
+          }
+
+          console.log('GAD-7 Analysis result:', analysisResult);
+          finalScore = analysisResult;
+        } catch (error) {
+          console.error('Failed to analyze GAD-7 test results:', error);
+          // Fall back to basic scoring if analysis fails
+        }
+      }
+
       const { data, error } = await supabase
         .from('test_results')
         .insert({
@@ -64,16 +94,49 @@ export const useTestSubmission = (userId: string | undefined, testId: string | u
 
       if (error) throw error;
 
-      // Update tests taken count using direct SQL update
-      const { error: updateError } = await supabase
-        .from('subscriptions')
-        .update({
-          tests_taken_this_month: 1
-        })
-        .eq('user_id', userId);
+      // Update tests taken count using RPC function or direct increment
+      try {
+        const { error: updateError } = await supabase.rpc('increment_user_test_count', {
+          user_id: userId
+        });
 
-      if (updateError) {
-        console.error('Error updating test count:', updateError);
+        if (updateError) {
+          console.error('Error updating test count with RPC:', updateError);
+          
+          // Fallback: try direct update with increment
+          const { error: fallbackError } = await supabase
+            .from('subscriptions')
+            .update({
+              tests_taken_this_month: supabase.sql`tests_taken_this_month + 1`
+            })
+            .eq('user_id', userId);
+
+          if (fallbackError) {
+            console.error('Error updating test count with fallback:', fallbackError);
+          }
+        }
+      } catch (rpcError) {
+        console.error('RPC function not available, using direct update:', rpcError);
+        
+        // Get current count and increment
+        const { data: currentSub } = await supabase
+          .from('subscriptions')
+          .select('tests_taken_this_month')
+          .eq('user_id', userId)
+          .single();
+
+        const currentCount = currentSub?.tests_taken_this_month || 0;
+        
+        const { error: directUpdateError } = await supabase
+          .from('subscriptions')
+          .update({
+            tests_taken_this_month: currentCount + 1
+          })
+          .eq('user_id', userId);
+
+        if (directUpdateError) {
+          console.error('Error with direct count update:', directUpdateError);
+        }
       }
 
       return data;

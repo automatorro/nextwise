@@ -1,3 +1,4 @@
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0'
 
 const corsHeaders = {
@@ -58,6 +59,13 @@ Deno.serve(async (req) => {
     const { answers, test_type_id }: AnalysisRequest = await req.json();
     console.log('Analyzing test results for test type:', test_type_id);
 
+    // Check if this is GAD-7 test by name instead of hardcoded ID
+    const { data: testType } = await supabaseClient
+      .from('test_types')
+      .select('name')
+      .eq('id', test_type_id)
+      .single();
+
     // Determine test type and run appropriate analysis
     if (test_type_id === 'f47ac10b-58cc-4372-a567-0e02b2c3d480') {
       // Big Five Personality Test
@@ -85,6 +93,12 @@ Deno.serve(async (req) => {
       });
     } else if (test_type_id === 'd4e5f6g7-h8i9-0123-defg-hi4567890123') {
       // GAD-7 Anxiety Test
+      const result = await analyzeGAD7(answers, supabaseClient);
+      return new Response(JSON.stringify(result), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    } else if (testType?.name === 'Test GAD-7 pentru Anxietate') {
+      // GAD-7 Anxiety Test (by name lookup)
       const result = await analyzeGAD7(answers, supabaseClient);
       return new Response(JSON.stringify(result), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
