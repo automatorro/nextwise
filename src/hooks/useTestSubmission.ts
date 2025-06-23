@@ -50,10 +50,13 @@ export const useTestSubmission = () => {
 
       console.log('Test result saved:', testResult);
 
-      // Update subscription usage
-      const { error: usageError } = await supabase.rpc('increment_test_usage', {
-        user_id: user.id
-      });
+      // Update subscription usage - using a direct update instead of RPC
+      const { error: usageError } = await supabase
+        .from('subscriptions')
+        .update({ 
+          tests_taken_this_month: supabase.raw('tests_taken_this_month + 1') 
+        })
+        .eq('user_id', user.id);
 
       if (usageError) {
         console.error('Usage update error:', usageError);

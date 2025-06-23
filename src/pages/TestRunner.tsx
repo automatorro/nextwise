@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -41,7 +40,7 @@ const TestRunner = () => {
   const [isStarted, setIsStarted] = useState(false);
 
   // Initialize test submission hook
-  const submitTestMutation = useTestSubmission(user?.id, testId);
+  const { submitTest, isSubmitting, error } = useTestSubmission();
 
   // Fetch test type
   const { data: testType, isLoading: testTypeLoading, error: testTypeError } = useQuery({
@@ -121,19 +120,12 @@ const TestRunner = () => {
   };
 
   const handleSubmit = () => {
-    // Calculate score based on answers
-    let totalScore = 0;
-    Object.entries(answers).forEach(([questionId, answer]) => {
-      totalScore += answer;
+    if (!testId) return;
+    
+    submitTest({
+      test_type_id: testId,
+      answers
     });
-
-    const score = {
-      total: totalScore,
-      average: totalScore / questions!.length,
-      answers_count: Object.keys(answers).length
-    };
-
-    submitTestMutation.mutate({ answers, score });
   };
 
   // Handle loading states and errors
@@ -204,7 +196,7 @@ const TestRunner = () => {
           currentQuestionIndex={currentQuestionIndex}
           totalQuestions={questions.length}
           answers={answers}
-          isSubmitting={submitTestMutation.isPending}
+          isSubmitting={isSubmitting}
           onAnswerChange={handleAnswerChange}
           onNext={handleNext}
           onPrevious={handlePrevious}
