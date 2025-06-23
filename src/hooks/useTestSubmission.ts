@@ -26,7 +26,8 @@ export const useTestSubmission = (userId: string | undefined, testId: string | u
       
       if (testId === 'f47ac10b-58cc-4372-a567-0e02b2c3d480' || 
           testId === 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' ||
-          testId === 'b2c3d4e5-f6g7-8901-bcde-fg2345678901') {
+          testId === 'b2c3d4e5-f6g7-8901-bcde-fg2345678901' ||
+          testId === 'c3d4e5f6-g7h8-9012-cdef-gh3456789012') {
         console.log('Analyzing test results for:', testId);
         try {
           const { data: analysisResult, error: analysisError } = await supabase.functions.invoke('analyze-test-result', {

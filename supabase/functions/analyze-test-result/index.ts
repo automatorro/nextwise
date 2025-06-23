@@ -1,4 +1,3 @@
-
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0'
 
 const corsHeaders = {
@@ -32,6 +31,13 @@ interface EnneagramResult {
   type_descriptions: { [key: string]: string };
 }
 
+interface EmotionalIntelligenceDimension {
+  self_awareness: number;
+  self_regulation: number;
+  social_awareness: number;
+  relationship_management: number;
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders });
@@ -62,6 +68,12 @@ Deno.serve(async (req) => {
     } else if (test_type_id === 'b2c3d4e5-f6g7-8901-bcde-fg2345678901') {
       // Enneagram Test
       const result = await analyzeEnneagram(answers, supabaseClient);
+      return new Response(JSON.stringify(result), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    } else if (test_type_id === 'c3d4e5f6-g7h8-9012-cdef-gh3456789012') {
+      // Emotional Intelligence Test
+      const result = await analyzeEmotionalIntelligence(answers, supabaseClient);
       return new Response(JSON.stringify(result), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
@@ -266,6 +278,68 @@ async function analyzeEnneagram(answers: { [questionId: string]: number }, supab
   };
 }
 
+async function analyzeEmotionalIntelligence(answers: { [questionId: string]: number }, supabaseClient: any): Promise<any> {
+  const { data: questions, error } = await supabaseClient
+    .from('test_questions')
+    .select('*')
+    .eq('test_type_id', 'c3d4e5f6-g7h8-9012-cdef-gh3456789012')
+    .order('question_order');
+
+  if (error) throw error;
+
+  const dimensions: EmotionalIntelligenceDimension = {
+    self_awareness: 0,
+    self_regulation: 0,
+    social_awareness: 0,
+    relationship_management: 0
+  };
+
+  const dimensionCounts = {
+    self_awareness: 0,
+    self_regulation: 0,
+    social_awareness: 0,
+    relationship_management: 0
+  };
+
+  questions.forEach((question: any) => {
+    const answer = answers[question.id];
+    if (answer && question.options) {
+      // Extract dimension from the first option (they should all have the same dimension)
+      const firstOption = Array.isArray(question.options) ? question.options[0] : null;
+      if (firstOption && firstOption.dimension) {
+        const dimension = firstOption.dimension as keyof EmotionalIntelligenceDimension;
+        dimensions[dimension] += answer;
+        dimensionCounts[dimension]++;
+      }
+    }
+  });
+
+  // Calculate percentages for each dimension
+  const dimensionPercentages: EmotionalIntelligenceDimension = {
+    self_awareness: dimensionCounts.self_awareness > 0 ? Math.round((dimensions.self_awareness / (dimensionCounts.self_awareness * 5)) * 100) : 0,
+    self_regulation: dimensionCounts.self_regulation > 0 ? Math.round((dimensions.self_regulation / (dimensionCounts.self_regulation * 5)) * 100) : 0,
+    social_awareness: dimensionCounts.social_awareness > 0 ? Math.round((dimensions.social_awareness / (dimensionCounts.social_awareness * 5)) * 100) : 0,
+    relationship_management: dimensionCounts.relationship_management > 0 ? Math.round((dimensions.relationship_management / (dimensionCounts.relationship_management * 5)) * 100) : 0
+  };
+
+  const totalScore = Object.values(answers).reduce((sum, value) => sum + value, 0);
+  const questionsCount = Object.keys(answers).length;
+  const average = totalScore / questionsCount;
+  const overallPercentage = Math.round((average / 5) * 100);
+
+  return {
+    total: totalScore,
+    average: Math.round(average * 100) / 100,
+    answers_count: questionsCount,
+    overall: overallPercentage,
+    raw_score: totalScore,
+    max_score: questionsCount * 5,
+    interpretation: getEmotionalIntelligenceInterpretation(overallPercentage),
+    dimensions: dimensionPercentages,
+    detailed_interpretations: getEmotionalIntelligenceDetailedInterpretations(dimensionPercentages)
+  };
+}
+
 function getBasicInterpretation(percentage: number): string {
   if (percentage >= 80) return "Scor foarte ridicat";
   if (percentage >= 60) return "Scor ridicat";
@@ -421,5 +495,50 @@ function getEnneagramDetailedInterpretations(dominantType: number, percentages: 
       name: typeDetails[parseInt(type) as keyof typeof typeDetails]?.name || `Tip ${type}`,
       percentage: score
     })).sort((a, b) => b.percentage - a.percentage)
+  };
+}
+
+function getEmotionalIntelligenceInterpretation(percentage: number): string {
+  if (percentage >= 85) return "Inteligență emoțională excepțională - ești un lider natural în gestionarea emoțiilor";
+  if (percentage >= 70) return "Inteligență emoțională foarte bună - gestionezi eficient emoțiile în majoritatea situațiilor";
+  if (percentage >= 55) return "Inteligență emoțională bună - ai o bază solidă cu oportunități de dezvoltare";
+  if (percentage >= 40) return "Inteligență emoțională moderată - beneficiezi de dezvoltare în câteva domenii";
+  return "Inteligență emoțională în dezvoltare - concentrează-te pe construirea abilităților emoționale de bază";
+}
+
+function getEmotionalIntelligenceDetailedInterpretations(dimensions: EmotionalIntelligenceDimension): any {
+  return {
+    self_awareness: {
+      score: dimensions.self_awareness,
+      interpretation: dimensions.self_awareness >= 70 ? 
+        "Ai o conștiință emoțională foarte bună. Îți recunoști rapid emoțiile și înțelegi impactul lor asupra comportamentului tău." :
+        dimensions.self_awareness >= 50 ?
+        "Ai o conștiință emoțională moderată. Poți îmbunătăți capacitatea de a-ți recunoaște și înțelege emoțiile în timp real." :
+        "Autocunoașterea emoțională necesită dezvoltare. Practică identificarea și numirea emoțiilor pe măsură ce le experimentezi."
+    },
+    self_regulation: {
+      score: dimensions.self_regulation,
+      interpretation: dimensions.self_regulation >= 70 ?
+        "Excelezi în autocontrolul emoțional. Poți gestiona stresul și emoțiile negative eficient." :
+        dimensions.self_regulation >= 50 ?
+        "Ai abilități moderate de autocontrol. Poți îmbunătăți tehnicile de gestionare a stresului și a emoțiilor intense." :
+        "Autocontrolul emoțional necesită atenție. Învață tehnici de relaxare și strategii de gestionare a emoțiilor."
+    },
+    social_awareness: {
+      score: dimensions.social_awareness,
+      interpretation: dimensions.social_awareness >= 70 ?
+        "Ai o empatie și conștiință socială excelentă. Înțelegi rapid emoțiile și nevoile altora." :
+        dimensions.social_awareness >= 50 ?
+        "Conștiința socială este la un nivel decent. Poți dezvolta mai mult capacitatea de a citi semnalele emoționale ale altora." :
+        "Conștiința socială necesită dezvoltare. Practică observarea și interpretarea semnalelor non-verbale ale altora."
+    },
+    relationship_management: {
+      score: dimensions.relationship_management,
+      interpretation: dimensions.relationship_management >= 70 ?
+        "Ești foarte bun în gestionarea relațiilor. Poți influența pozitiv și rezolva conflicte eficient." :
+        dimensions.relationship_management >= 50 ?
+        "Gestionarea relațiilor este la un nivel moderat. Poți îmbunătăți abilitățile de comunicare și rezolvare a conflictelor." :
+        "Gestionarea relațiilor necesită atenție. Concentrează-te pe dezvoltarea abilităților de comunicare și colaborare."
+    }
   };
 }
