@@ -52,7 +52,7 @@ const ScoringExplanation = ({ testName, overallScore, scoreType = 'percentage' }
               {explanation.scoreRanges.map((range, index) => (
                 <div key={index} className="flex items-center justify-between p-2 bg-white rounded border">
                   <span className="font-medium">{range.range}</span>
-                  <Badge variant={range.variant} size="sm">{range.label}</Badge>
+                  <Badge variant={range.variant}>{range.label}</Badge>
                 </div>
               ))}
             </div>
