@@ -37,7 +37,7 @@ const DimensionExplanations = ({ testName, dimensions }: DimensionExplanationsPr
               <div key={key} className="border-l-4 border-l-green-500 pl-4 pb-4 border-b border-gray-100 last:border-b-0">
                 <div className="flex items-center justify-between mb-2">
                   <h3 className="font-semibold text-lg text-gray-900">
-                    {getDimensionLabel(key)}
+                    {getDimensionLabel(testName, key)}
                   </h3>
                   <div className="flex items-center gap-2">
                     <Badge variant={value >= 70 ? 'default' : value >= 30 ? 'secondary' : 'outline'}>

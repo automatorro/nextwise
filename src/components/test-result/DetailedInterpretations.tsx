@@ -11,9 +11,10 @@ interface DetailedInterpretationsProps {
     agreeableness?: string;
     neuroticism?: string;
   };
+  testName?: string;
 }
 
-const DetailedInterpretations = ({ interpretations }: DetailedInterpretationsProps) => {
+const DetailedInterpretations = ({ interpretations, testName = 'Big Five Personalitate' }: DetailedInterpretationsProps) => {
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -24,7 +25,7 @@ const DetailedInterpretations = ({ interpretations }: DetailedInterpretationsPro
           {Object.entries(interpretations).map(([dimension, interpretation]) => (
             <div key={dimension} className="border-l-4 border-blue-500 pl-4">
               <h3 className="font-semibold text-lg mb-2 text-blue-700">
-                {getDimensionLabel(dimension)}
+                {getDimensionLabel(testName, dimension)}
               </h3>
               <p className="text-gray-700 leading-relaxed">
                 {interpretation}

@@ -13,7 +13,7 @@ interface ScoringExplanationProps {
 
 const ScoringExplanation = ({ testName, overallScore, scoreType = 'percentage' }: ScoringExplanationProps) => {
   const explanation = getTestScoringExplanation(testName);
-  const interpretation = getScoreInterpretation(overallScore, scoreType);
+  const interpretation = getScoreInterpretation(overallScore, testName);
 
   if (!explanation) return null;
 

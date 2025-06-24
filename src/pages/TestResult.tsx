@@ -195,7 +195,10 @@ const TestResult = () => {
         )}
 
         {/* Dimensions - use Big Five dimensions for Big Five tests, otherwise use general dimensions */}
-        <DimensionsAnalysis dimensions={isBigFiveTest ? convertToBigFiveDimensions(bigFiveDimensions) : generalDisplayDimensions} />
+        <DimensionsAnalysis 
+          dimensions={isBigFiveTest ? convertToBigFiveDimensions(bigFiveDimensions) : generalDisplayDimensions}
+          testName={result.test_types.name}
+        />
 
         {/* NEW: Dimension Explanations */}
         <DimensionExplanations 
@@ -217,7 +220,10 @@ const TestResult = () => {
 
         {/* Detailed Interpretations for Big Five */}
         {isBigFiveTest && result.score.detailed_interpretations && (
-          <DetailedInterpretations interpretations={result.score.detailed_interpretations} />
+          <DetailedInterpretations 
+            interpretations={result.score.detailed_interpretations}
+            testName={result.test_types.name}
+          />
         )}
 
         {/* Detailed Analysis Section - NOW AVAILABLE FOR ALL TESTS */}
