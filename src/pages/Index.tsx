@@ -3,96 +3,78 @@ import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { 
-  Brain, 
-  BarChart3, 
-  Target, 
-  Users,
-  Heart,
-  Star,
-  CheckCircle,
-  ArrowRight,
-  Zap
-} from 'lucide-react';
-
+import { Brain, BarChart3, Target, Users, Heart, Star, CheckCircle, ArrowRight, Zap } from 'lucide-react';
 const Index = () => {
-  const features = [
-    {
-      icon: Brain,
-      title: 'Evaluări Psihologice Complete',
-      description: 'Teste validate științific pentru personalitate, inteligență emoțională și aptitudini cognitive'
-    },
-    {
-      icon: Target,
-      title: 'Planuri de Carieră Personalizate',
-      description: 'Recomandări AI pentru dezvoltarea profesională bazate pe rezultatele tale'
-    },
-    {
-      icon: BarChart3,
-      title: 'Analytics Avansate',
-      description: 'Vizualizări interactive ale progresului și comparații cu standardele industriei'
-    },
-    {
-      icon: Users,
-      title: 'Mentoring AI Premium',
-      description: 'Consiliere personalizată cu inteligență artificială pentru abonații premium'
-    }
-  ];
-
-  const subscriptionPlans = [
-    {
-      name: 'Basic',
-      price: 'Gratuit',
-      description: 'Perfect pentru început',
-      features: [
-        '2 teste per lună',
-        'Rezultate de bază',
-        'Profil utilizator',
-        'Suport email'
-      ],
-      highlight: false
-    },
-    {
-      name: 'Professional',
-      price: '29 RON/lună',
-      description: 'Pentru dezvoltare serioasă',
-      features: [
-        'Teste nelimitate',
-        'Planuri de carieră AI',
-        'Analytics avansate',
-        'Export rezultate',
-        'Suport prioritar'
-      ],
-      highlight: true
-    },
-    {
-      name: 'Premium',
-      price: '59 RON/lună',
-      description: 'Experiența completă',
-      features: [
-        'Toate funcționalitățile Pro',
-        'Mentoring AI personal',
-        'Teste exclusive',
-        'Consultanță carieră',
-        'Acces la webinarii'
-      ],
-      highlight: false
-    }
-  ];
-
-  const testCategories = [
-    { name: 'Inteligență Emoțională', icon: '🧠', count: 1 },
-    { name: 'Personalitate', icon: '👤', count: 5 },
-    { name: 'Leadership & Echipă', icon: '👥', count: 1 },
-    { name: 'Competențe Tehnice', icon: '💻', count: 1 },
-    { name: 'Wellness Psihologic', icon: '🌱', count: 2 },
-    { name: 'Aptitudini Cognitive', icon: '🎯', count: 1 },
-    { name: 'Competențe Digitale', icon: '📊', count: 1 },
-    { name: 'Percepție Senzorială', icon: '👁️', count: 1 }
-  ];
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+  const features = [{
+    icon: Brain,
+    title: 'Evaluări Psihologice Complete',
+    description: 'Teste validate științific pentru personalitate, inteligență emoțională și aptitudini cognitive'
+  }, {
+    icon: Target,
+    title: 'Planuri de Carieră Personalizate',
+    description: 'Recomandări AI pentru dezvoltarea profesională bazate pe rezultatele tale'
+  }, {
+    icon: BarChart3,
+    title: 'Analytics Avansate',
+    description: 'Vizualizări interactive ale progresului și comparații cu standardele industriei'
+  }, {
+    icon: Users,
+    title: 'Mentoring AI Premium',
+    description: 'Consiliere personalizată cu inteligență artificială pentru abonații premium'
+  }];
+  const subscriptionPlans = [{
+    name: 'Basic',
+    price: 'Gratuit',
+    description: 'Perfect pentru început',
+    features: ['2 teste per lună', 'Rezultate de bază', 'Profil utilizator', 'Suport email'],
+    highlight: false
+  }, {
+    name: 'Professional',
+    price: '29 RON/lună',
+    description: 'Pentru dezvoltare serioasă',
+    features: ['Teste nelimitate', 'Planuri de carieră AI', 'Analytics avansate', 'Export rezultate', 'Suport prioritar'],
+    highlight: true
+  }, {
+    name: 'Premium',
+    price: '59 RON/lună',
+    description: 'Experiența completă',
+    features: ['Toate funcționalitățile Pro', 'Mentoring AI personal', 'Teste exclusive', 'Consultanță carieră', 'Acces la webinarii'],
+    highlight: false
+  }];
+  const testCategories = [{
+    name: 'Inteligență Emoțională',
+    icon: '🧠',
+    count: 1
+  }, {
+    name: 'Personalitate',
+    icon: '👤',
+    count: 5
+  }, {
+    name: 'Leadership & Echipă',
+    icon: '👥',
+    count: 1
+  }, {
+    name: 'Competențe Tehnice',
+    icon: '💻',
+    count: 1
+  }, {
+    name: 'Wellness Psihologic',
+    icon: '🌱',
+    count: 2
+  }, {
+    name: 'Aptitudini Cognitive',
+    icon: '🎯',
+    count: 1
+  }, {
+    name: 'Competențe Digitale',
+    icon: '📊',
+    count: 1
+  }, {
+    name: 'Percepție Senzorială',
+    icon: '👁️',
+    count: 1
+  }];
+  return <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50">
       {/* Navigation */}
       <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
         <div className="bg-white/80 backdrop-blur-md shadow-lg border border-white/30 rounded-2xl">
@@ -152,16 +134,13 @@ const Index = () => {
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Totul ce ai nevoie pentru dezvoltarea profesională
-            </h2>
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Tot ce ai nevoie pentru dezvoltarea profesională</h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               O platformă completă care combină știința psihologiei cu puterea inteligenței artificiale
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {features.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+            {features.map((feature, index) => <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
                 <CardHeader>
                   <div className="w-12 h-12 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center mb-4">
                     <feature.icon className="w-6 h-6 text-blue-600" />
@@ -171,8 +150,7 @@ const Index = () => {
                 <CardContent>
                   <p className="text-gray-600">{feature.description}</p>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -189,8 +167,7 @@ const Index = () => {
             </p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {testCategories.map((category, index) => (
-              <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+            {testCategories.map((category, index) => <Card key={index} className="text-center hover:shadow-lg transition-shadow">
                 <CardContent className="p-6">
                   <div className="text-4xl mb-3">{category.icon}</div>
                   <h3 className="font-semibold text-gray-900 mb-2">{category.name}</h3>
@@ -198,8 +175,7 @@ const Index = () => {
                     {category.count} {category.count === 1 ? 'test' : 'teste'}
                   </Badge>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -216,16 +192,13 @@ const Index = () => {
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {subscriptionPlans.map((plan, index) => (
-              <Card key={index} className={`relative ${plan.highlight ? 'border-2 border-blue-500 shadow-xl scale-105' : ''}`}>
-                {plan.highlight && (
-                  <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+            {subscriptionPlans.map((plan, index) => <Card key={index} className={`relative ${plan.highlight ? 'border-2 border-blue-500 shadow-xl scale-105' : ''}`}>
+                {plan.highlight && <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     <Badge className="bg-blue-500 text-white">
                       <Star className="w-3 h-3 mr-1" />
                       Cel mai popular
                     </Badge>
-                  </div>
-                )}
+                  </div>}
                 <CardHeader className="text-center">
                   <CardTitle className="text-xl">{plan.name}</CardTitle>
                   <div className="text-3xl font-bold text-gray-900 mt-2">{plan.price}</div>
@@ -233,26 +206,18 @@ const Index = () => {
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-3 mb-6">
-                    {plan.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-center">
+                    {plan.features.map((feature, idx) => <li key={idx} className="flex items-center">
                         <CheckCircle className="w-4 h-4 text-green-500 mr-3" />
                         <span className="text-sm text-gray-600">{feature}</span>
-                      </li>
-                    ))}
+                      </li>)}
                   </ul>
                   <Link to="/auth">
-                    <Button 
-                      className={`w-full ${plan.highlight 
-                        ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' 
-                        : ''}`}
-                      variant={plan.highlight ? 'default' : 'outline'}
-                    >
+                    <Button className={`w-full ${plan.highlight ? 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700' : ''}`} variant={plan.highlight ? 'default' : 'outline'}>
                       {plan.name === 'Basic' ? 'Începe Gratuit' : 'Alege Planul'}
                     </Button>
                   </Link>
                 </CardContent>
-              </Card>
-            ))}
+              </Card>)}
           </div>
         </div>
       </section>
@@ -294,8 +259,6 @@ const Index = () => {
           </div>
         </div>
       </footer>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
