@@ -48,6 +48,12 @@ const TestsPage = () => {
       
       console.log('Raw test types from database:', testTypes);
       
+      // Log specific test we're looking for
+      const cognitiveTest = testTypes.find(test => 
+        test.name.toLowerCase().includes('aptitudini cognitive')
+      );
+      console.log('Found cognitive abilities test:', cognitiveTest);
+      
       // For each test type, count actual questions
       const testsWithQuestionCounts = await Promise.all(
         testTypes.map(async (testType) => {
@@ -60,7 +66,7 @@ const TestsPage = () => {
             console.error(`Error counting questions for test ${testType.id}:`, countError);
           }
           
-          console.log(`Test ${testType.name} has ${count} questions`);
+          console.log(`Test ${testType.name} (ID: ${testType.id}) has ${count} questions`);
           
           return {
             ...testType,
@@ -75,6 +81,7 @@ const TestsPage = () => {
       );
       
       console.log('Valid tests with questions:', validTests);
+      console.log('Tests without questions:', testsWithQuestionCounts.filter(test => test.actual_questions_count === 0));
       
       return validTests as TestType[];
     }
