@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -13,6 +12,8 @@ import OverallScoreCard from '@/components/test-result/OverallScoreCard';
 import DimensionsAnalysis from '@/components/test-result/DimensionsAnalysis';
 import DetailedAnalysisSection from '@/components/test-result/DetailedAnalysisSection';
 import DetailedInterpretations from '@/components/test-result/DetailedInterpretations';
+import ScoringExplanation from '@/components/test-result/ScoringExplanation';
+import DimensionExplanations from '@/components/test-result/DimensionExplanations';
 import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
 
 interface ScoreData {
@@ -137,6 +138,14 @@ const TestResult = () => {
     );
   }
 
+  // Determine score type based on test
+  const getScoreType = (testName: string) => {
+    if (testName.includes('16PF') || testName.includes('Cattell')) return 'scale';
+    return 'percentage';
+  };
+
+  const scoreType = getScoreType(result?.test_types.name || '');
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -162,6 +171,13 @@ const TestResult = () => {
         {/* Overall Score */}
         <OverallScoreCard score={result.score} />
 
+        {/* NEW: Scoring Explanation */}
+        <ScoringExplanation 
+          testName={result.test_types.name}
+          overallScore={result.score.overall}
+          scoreType={scoreType}
+        />
+
         {/* Big Five Radar Chart - only for Big Five tests */}
         {isBigFiveTest && hasValidBigFive && (
           <Card className="mb-8">
@@ -180,6 +196,12 @@ const TestResult = () => {
 
         {/* Dimensions - use Big Five dimensions for Big Five tests, otherwise use general dimensions */}
         <DimensionsAnalysis dimensions={isBigFiveTest ? convertToBigFiveDimensions(bigFiveDimensions) : generalDisplayDimensions} />
+
+        {/* NEW: Dimension Explanations */}
+        <DimensionExplanations 
+          testName={result.test_types.name}
+          dimensions={isBigFiveTest ? convertToBigFiveDimensions(bigFiveDimensions) : generalDisplayDimensions}
+        />
 
         {/* Big Five Explanations - only for Big Five tests */}
         {isBigFiveTest && hasValidBigFive && (
