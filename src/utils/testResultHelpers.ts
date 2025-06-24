@@ -11,6 +11,24 @@ export interface DimensionExplanation {
   };
 }
 
+export interface ScoreRange {
+  range: string;
+  label: string;
+  variant: 'default' | 'secondary' | 'outline';
+}
+
+export interface TestScoringExplanation {
+  description: string;
+  scoreRanges?: ScoreRange[];
+  whatItMeans?: string;
+}
+
+export interface ScoreInterpretationResult {
+  level: string;
+  description: string;
+  variant: 'default' | 'secondary' | 'outline';
+}
+
 export const getDimensionLabel = (dimensionKey: string): string => {
   const labels: { [key: string]: string } = {
     // Big Five dimensions
@@ -49,7 +67,42 @@ export const getDimensionLabel = (dimensionKey: string): string => {
     empathy: 'Empatie',
     decision_making: 'Luarea Deciziilor',
     communication: 'Comunicare',
-    team_building: 'Construirea Echipei'
+    team_building: 'Construirea Echipei',
+
+    // Emotional Intelligence dimensions
+    self_awareness: 'Autoconștientizare',
+    self_regulation: 'Autoreglare',
+    motivation: 'Motivație',
+    social_skills: 'Abilități Sociale',
+
+    // GAD-7 dimensions
+    worry_frequency: 'Frecvența îngrijorărilor',
+    control_difficulty: 'Dificultatea de control',
+    anxiety_symptoms: 'Simptome de anxietate',
+    restlessness: 'Agitație',
+    concentration_problems: 'Probleme de concentrare',
+    irritability: 'Iritabilitate',
+    sleep_disturbance: 'Tulburări de somn',
+
+    // Beck Depression dimensions
+    mood_symptoms: 'Simptome de dispoziție',
+    cognitive_symptoms: 'Simptome cognitive',
+    physical_symptoms: 'Simptome fizice',
+    behavioral_symptoms: 'Simptome comportamentale',
+
+    // Professional Aptitudes dimensions
+    analytical_thinking: 'Gândire Analitică',
+    communication_skills: 'Abilități de Comunicare',
+    leadership_potential: 'Potențial de Leadership',
+    adaptability: 'Adaptabilitate',
+    teamwork: 'Muncă în Echipă',
+
+    // Digital Competencies dimensions
+    technical_proficiency: 'Competență Tehnică',
+    digital_communication: 'Comunicare Digitală',
+    data_analysis: 'Analiză de Date',
+    cybersecurity_awareness: 'Conștientizare Cybersecurity',
+    digital_innovation: 'Inovație Digitală'
   };
   
   return labels[dimensionKey] || dimensionKey.charAt(0).toUpperCase() + dimensionKey.slice(1);
@@ -62,6 +115,137 @@ export const getScoreColor = (score: number): string => {
     return 'text-yellow-500';
   } else {
     return 'text-red-500';
+  }
+};
+
+export const getScoreBadgeVariant = (score: number): 'default' | 'secondary' | 'outline' => {
+  if (score >= 70) {
+    return 'default';
+  } else if (score >= 40) {
+    return 'secondary';
+  } else {
+    return 'outline';
+  }
+};
+
+export const getTestScoringExplanation = (testName: string): TestScoringExplanation | null => {
+  const explanations: { [key: string]: TestScoringExplanation } = {
+    'Big Five': {
+      description: 'Testul Big Five măsoară personalitatea pe 5 dimensiuni fundamentale care descriu trăsăturile tale de personalitate și modul în care interacționezi cu lumea.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Scăzut', variant: 'outline' },
+        { range: '40-69%', label: 'Moderat', variant: 'secondary' },
+        { range: '70-100%', label: 'Ridicat', variant: 'default' }
+      ],
+      whatItMeans: 'Rezultatele tale arată profilul tău de personalitate și cum te poziționezi față de alte persoane în ceea ce privește aceste 5 dimensiuni fundamentale.'
+    },
+    'Inteligență Emoțională': {
+      description: 'Acest test evaluează capacitatea ta de a înțelege, gestiona și utiliza emoțiile în mod eficient în relațiile personale și profesionale.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Dezvoltare necesară', variant: 'outline' },
+        { range: '40-69%', label: 'Competent', variant: 'secondary' },
+        { range: '70-100%', label: 'Foarte dezvoltat', variant: 'default' }
+      ],
+      whatItMeans: 'Un scor mai ridicat indică o capacitate mai bună de a gestiona emoțiile tale și de a înțelege emoțiile altora, ceea ce poate îmbunătăți relațiile și succesul profesional.'
+    },
+    'GAD-7': {
+      description: 'GAD-7 este un screening pentru anxietatea generalizată care măsoară frecvența și intensitatea simptomelor de anxietate din ultimele două săptămâni.',
+      scoreRanges: [
+        { range: '0-4', label: 'Minimal', variant: 'default' },
+        { range: '5-9', label: 'Ușor', variant: 'secondary' },
+        { range: '10-14', label: 'Moderat', variant: 'outline' },
+        { range: '15-21', label: 'Sever', variant: 'outline' }
+      ],
+      whatItMeans: 'Scorurile mai mari indică niveluri mai ridicate de anxietate. Un scor de 10 sau mai mare sugerează că ar putea fi util să vorbești cu un profesionist în sănătate mintală.'
+    },
+    'Beck Depression': {
+      description: 'Beck Depression Inventory evaluează severitatea simptomelor depresive și poate ajuta la identificarea nevoii de suport profesional.',
+      scoreRanges: [
+        { range: '0-13', label: 'Minimal', variant: 'default' },
+        { range: '14-19', label: 'Ușor', variant: 'secondary' },
+        { range: '20-28', label: 'Moderat', variant: 'outline' },
+        { range: '29-63', label: 'Sever', variant: 'outline' }
+      ],
+      whatItMeans: 'Scorurile mai mari indică simptome mai severe de depresie. Este important să discuți rezultatele cu un profesionist dacă scorul este ridicat.'
+    },
+    'Aptitudini Profesionale': {
+      description: 'Acest test evaluează competențele și aptitudinile tale profesionale cheie care sunt importante pentru succesul în carieră.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Dezvoltare necesară', variant: 'outline' },
+        { range: '40-69%', label: 'Competent', variant: 'secondary' },
+        { range: '70-100%', label: 'Foarte dezvoltat', variant: 'default' }
+      ],
+      whatItMeans: 'Rezultatele arată punctele tale forte și zonele unde poți să te dezvolți pentru a-ți îmbunătăți performanța profesională.'
+    },
+    'Competențe Digitale': {
+      description: 'Evaluează nivelul tău de competențe digitale și abilitatea de a utiliza tehnologia în mod eficient în contextul modern.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Începător', variant: 'outline' },
+        { range: '40-69%', label: 'Intermediar', variant: 'secondary' },
+        { range: '70-100%', label: 'Avansat', variant: 'default' }
+      ],
+      whatItMeans: 'Rezultatele îți arată unde te poziționezi în era digitală și ce competențe poți dezvolta pentru a fi mai eficient.'
+    }
+  };
+
+  // Find matching test type
+  for (const [key, explanation] of Object.entries(explanations)) {
+    if (testName.includes(key)) {
+      return explanation;
+    }
+  }
+
+  return null;
+};
+
+export const getScoreInterpretation = (score: number, scoreType: 'percentage' | 'scale' | 'raw' = 'percentage'): ScoreInterpretationResult => {
+  if (scoreType === 'percentage') {
+    if (score >= 70) {
+      return {
+        level: 'Ridicat',
+        description: 'Scorul tău este în intervalul superior, indicând un nivel ridicat pentru această măsură.',
+        variant: 'default'
+      };
+    } else if (score >= 40) {
+      return {
+        level: 'Moderat',
+        description: 'Scorul tău este în intervalul mediu, indicând un nivel moderat pentru această măsură.',
+        variant: 'secondary'
+      };
+    } else {
+      return {
+        level: 'Scăzut',
+        description: 'Scorul tău este în intervalul inferior, indicând un nivel scăzut pentru această măsură.',
+        variant: 'outline'
+      };
+    }
+  } else if (scoreType === 'scale') {
+    if (score >= 7) {
+      return {
+        level: 'Ridicat',
+        description: 'Scorul tău este ridicat pe această scală.',
+        variant: 'default'
+      };
+    } else if (score >= 4) {
+      return {
+        level: 'Moderat',
+        description: 'Scorul tău este moderat pe această scală.',
+        variant: 'secondary'
+      };
+    } else {
+      return {
+        level: 'Scăzut',
+        description: 'Scorul tău este scăzut pe această scală.',
+        variant: 'outline'
+      };
+    }
+  } else {
+    // Raw score interpretation depends on the specific test
+    return {
+      level: 'Individual',
+      description: 'Acest scor necesită interpretare specifică pentru testul respectiv.',
+      variant: 'secondary'
+    };
   }
 };
 
@@ -277,6 +461,34 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
           high: 'Experimentezi simptome fizice ale anxietății (palpitații, transpirație, etc.).',
           low: 'Raramente experimentezi manifestări fizice ale anxietății.'
         }
+      },
+      restlessness: {
+        description: 'Sentimentul de neliniște și incapacitatea de a te relaxa.',
+        interpretations: {
+          high: 'Te simți adesea neliniștit și îți este greu să te relaxezi.',
+          low: 'Reușești să te relaxezi și să îți găsești liniștea interioară.'
+        }
+      },
+      concentration_problems: {
+        description: 'Dificultăți în concentrare și focalizare pe sarcini.',
+        interpretations: {
+          high: 'Anxietatea îți afectează capacitatea de concentrare.',
+          low: 'Poți să te concentrezi bine chiar și în situații stresante.'
+        }
+      },
+      irritability: {
+        description: 'Tendința de a deveni ușor iritabil sau nervos.',
+        interpretations: {
+          high: 'Te superi sau te enervezi mai ușor decât de obicei.',
+          low: 'Menții o dispoziție echilibrată chiar și sub presiune.'
+        }
+      },
+      sleep_disturbance: {
+        description: 'Probleme cu somnul cauzate de anxietate sau îngrijorări.',
+        interpretations: {
+          high: 'Anxietatea îți afectează calitatea și durata somnului.',
+          low: 'Dormi bine și odihnitor, fără să fii afectat de îngrijorări.'
+        }
       }
     },
 
@@ -294,32 +506,145 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
           high: 'Poți avea gânduri negative despre tine sau viitor.',
           low: 'Menții o perspectivă pozitivă și realistă asupra vieții.'
         }
-      }
-    },
-
-    'Cattell 16PF': {
-      warmth: {
-        description: 'Măsoară gradul de căldură și cordialitate în relațiile interpersonale.',
+      },
+      physical_symptoms: {
+        description: 'Manifestările fizice ale depresiei, cum ar fi oboseala și problemele de somn.',
         interpretations: {
-          high: 'Ești o persoană caldă, atentă și îți place să îi ajuți pe alții.',
-          low: 'Ești mai rezervat și formal în relațiile cu ceilalți.'
-        }
-      }
-    },
-
-    'DISC': {
-      dominance_disc: {
-        description: 'Tendința de a fi direct, hotărât și de a prelua controlul în situații.',
-        interpretations: {
-          high: 'Ești direct, hotărât și îți place să conduci proiecte și echipe.',
-          low: 'Preferi să colaborezi și să urmezi indicațiile altora.'
+          high: 'Experimentezi simptome fizice care pot fi legate de starea emoțională.',
+          low: 'Te simți energic și ai un nivel normal de activitate fizică.'
         }
       },
-      influence: {
-        description: 'Abilitatea de a influența și persuada pe alții prin comunicare.',
+      behavioral_symptoms: {
+        description: 'Schimbările în comportament și activități zilnice.',
         interpretations: {
-          high: 'Ești charismatic, optimist și îți place să interactionezi cu oamenii.',
-          low: 'Preferi să te concentrezi pe sarcini concrete decât pe persuasiune.'
+          high: 'Îți poate fi dificil să îți menții rutina obișnuită.',
+          low: 'Îți menții activitățile normale și angajamentele sociale.'
+        }
+      }
+    },
+
+    'Aptitudini Profesionale': {
+      analytical_thinking: {
+        description: 'Capacitatea de a analiza informații complexe și de a lua decizii bazate pe date.',
+        interpretations: {
+          high: 'Excelezi în analizarea problemelor complexe și găsirea soluțiilor logice.',
+          low: 'Poți dezvolta mai mult abilitatea de analiză sistematică a informațiilor.'
+        },
+        yourScore: {
+          high: 'Ai abilități analitice foarte dezvoltate.',
+          moderate: 'Te descurci bine la analizarea problemelor de complexitate medie.',
+          low: 'Poți îmbunătăți tehnicile de gândire analitică și logică.'
+        }
+      },
+      communication_skills: {
+        description: 'Abilitatea de a comunica eficient, atât verbal cât și în scris.',
+        interpretations: {
+          high: 'Comunici clar și persuasiv, adaptându-te la diferite audiențe.',
+          low: 'Poți dezvolta mai mult abilitățile de comunicare pentru a fi mai eficient.'
+        },
+        yourScore: {
+          high: 'Ai abilități de comunicare excelente.',
+          moderate: 'Comunici eficient în majoritatea situațiilor.',
+          low: 'Poți îmbunătăți tehnicile de comunicare verbală și scrisă.'
+        }
+      },
+      leadership_potential: {
+        description: 'Capacitatea de a inspira, motiva și ghida pe alții către obiective comune.',
+        interpretations: {
+          high: 'Demonstrezi calități naturale de leadership și poți inspira pe alții.',
+          low: 'Poți dezvolta mai mult abilitățile de leadership prin practică și formare.'
+        },
+        yourScore: {
+          high: 'Ai un potențial de leadership foarte ridicat.',
+          moderate: 'Arăți semne promițătoare de dezvoltare a leadershipului.',
+          low: 'Poți dezvolta abilitățile de leadership prin experiență și învățare.'
+        }
+      },
+      adaptability: {
+        description: 'Capacitatea de a te adapta la schimbări și situații noi.',
+        interpretations: {
+          high: 'Te adaptezi rapid la schimbări și îmbrățișezi cu ușurință situațiile noi.',
+          low: 'Preferi stabilitatea și îți poate fi dificil să te adaptezi la schimbări rapide.'
+        },
+        yourScore: {
+          high: 'Ești foarte flexibil și adaptabil la schimbări.',
+          moderate: 'Te adaptezi rezonabil de bine la situații noi.',
+          low: 'Poți dezvolta mai mult flexibilitatea și deschiderea către schimbare.'
+        }
+      },
+      teamwork: {
+        description: 'Abilitatea de a lucra eficient în echipă și de a colabora constructiv.',
+        interpretations: {
+          high: 'Colaborezi excelent în echipă și contribui pozitiv la dinamica grupului.',
+          low: 'Poți îmbunătăți abilitățile de colaborare și lucru în echipă.'
+        },
+        yourScore: {
+          high: 'Ești un membru de echipă foarte valoros.',
+          moderate: 'Colaborezi bine cu majoritatea colegilor.',
+          low: 'Poți dezvolta mai mult abilitățile de lucru în echipă.'
+        }
+      }
+    },
+
+    'Competențe Digitale': {
+      technical_proficiency: {
+        description: 'Nivelul de competență în utilizarea tehnologiilor și instrumentelor digitale.',
+        interpretations: {
+          high: 'Stăpânești foarte bine tehnologiile digitale și te adaptezi rapid la unelte noi.',
+          low: 'Poți îmbunătăți abilitățile tehnice prin formare și practică.'
+        },
+        yourScore: {
+          high: 'Ai competențe tehnice foarte dezvoltate.',
+          moderate: 'Te descurci bine cu majoritatea tehnologiilor.',
+          low: 'Poți dezvolta mai mult abilitățile tehnice digitale.'
+        }
+      },
+      digital_communication: {
+        description: 'Abilitatea de a comunica eficient prin mijloace digitale.',
+        interpretations: {
+          high: 'Excelezi în comunicarea digitală și folosești eficient platformele online.',
+          low: 'Poți îmbunătăți modul în care comunici prin mijloace digitale.'
+        },
+        yourScore: {
+          high: 'Ai abilități excelente de comunicare digitală.',
+          moderate: 'Comunici eficient prin majoritatea canalelor digitale.',
+          low: 'Poți dezvolta mai mult abilitățile de comunicare online.'
+        }
+      },
+      data_analysis: {
+        description: 'Capacitatea de a interpreta și analiza date pentru a lua decizii informate.',
+        interpretations: {
+          high: 'Analizezi datele cu ușurință și extragi insight-uri valoroase.',
+          low: 'Poți dezvolta mai mult abilitățile de analiză și interpretare a datelor.'
+        },
+        yourScore: {
+          high: 'Ai abilități foarte bune de analiză a datelor.',
+          moderate: 'Poți interpreta datele de bază și extragi informații utile.',
+          low: 'Poți îmbunătăți abilitățile de lucru cu datele și analiză.'
+        }
+      },
+      cybersecurity_awareness: {
+        description: 'Conștientizarea riscurilor de securitate cibernetică și adoptarea de practici sigure.',
+        interpretations: {
+          high: 'Ești foarte conștient de riscurile digitale și adopți practici sigure.',
+          low: 'Poți îmbunătăți cunoștințele despre securitatea cibernetică.'
+        },
+        yourScore: {
+          high: 'Ai o conștientizare excelentă a securității cibernetice.',
+          moderate: 'Înțelegi riscurile de bază și adopți practici rezonabile.',
+          low: 'Poți învăța mai mult despre securitatea digitală și protecția datelor.'
+        }
+      },
+      digital_innovation: {
+        description: 'Capacitatea de a identifica și implementa soluții digitale inovatoare.',
+        interpretations: {
+          high: 'Ești inovator în utilizarea tehnologiei și găsești soluții creative.',
+          low: 'Poți dezvolta mai mult creativitatea în folosirea tehnologiilor.'
+        },
+        yourScore: {
+          high: 'Ai un spirit inovator foarte dezvoltat în domeniul digital.',
+          moderate: 'Arăți creativitate în utilizarea tehnologiilor.',
+          low: 'Poți explora mai mult potențialul inovator al tehnologiilor.'
         }
       }
     }
@@ -333,26 +658,10 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
   else if (testName.includes('Beck Depression')) testType = 'Beck Depression';
   else if (testName.includes('Cattell') || testName.includes('16PF')) testType = 'Cattell 16PF';
   else if (testName.includes('DISC')) testType = 'DISC';
+  else if (testName.includes('Aptitudini Profesionale')) testType = 'Aptitudini Profesionale';
+  else if (testName.includes('Competențe Digitale')) testType = 'Competențe Digitale';
 
   return explanations[testType]?.[actualKey] || null;
-};
-
-export const getScoreInterpretation = (testName: string, score: number): string => {
-  if (testName.includes('Big Five')) {
-    if (score >= 80) return 'Scor foarte ridicat, indică o trăsătură dominantă.';
-    if (score >= 60) return 'Scor ridicat, indică o trăsătură bine definită.';
-    if (score >= 40) return 'Scor moderat, indică o trăsătură prezentă, dar nu dominantă.';
-    return 'Scor scăzut, indică o trăsătură mai puțin pronunțată.';
-  }
-
-  if (testName.includes('Inteligență Emoțională')) {
-    if (score >= 80) return 'Inteligență emoțională foarte dezvoltată.';
-    if (score >= 60) return 'Inteligență emoțională bună.';
-    if (score >= 40) return 'Inteligență emoțională moderată.';
-    return 'Inteligență emoțională care necesită îmbunătățiri.';
-  }
-
-  return 'Interpretare generală a scorului.';
 };
 
 export const getTestScoreRange = (testName: string): string => {
