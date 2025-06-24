@@ -38,6 +38,75 @@ export const getDimensionLabel = (key: string) => {
     Q3: 'Perfecționism (Perfectionism)',
     Q4: 'Tensiune (Tension)',
 
+    // DISC
+    dominance: 'Dominanță (D)',
+    influence: 'Influență (I)',
+    steadiness: 'Stabilitate (S)',
+    compliance: 'Conformitate (C)',
+
+    // HEXACO
+    honesty_humility: 'Onestitate-Umilință',
+    emotionality: 'Emoționalitate',
+    extraversion_hexaco: 'Extraversiune',
+    agreeableness_hexaco: 'Amabilitate',
+    conscientiousness_hexaco: 'Conștiinciozitate',
+    openness_hexaco: 'Deschidere',
+
+    // Enneagram
+    type_1: 'Tip 1 - Perfecționistul',
+    type_2: 'Tip 2 - Ajutătorul',
+    type_3: 'Tip 3 - Realizatorul',
+    type_4: 'Tip 4 - Individualistul',
+    type_5: 'Tip 5 - Investigatorul',
+    type_6: 'Tip 6 - Loialistul',
+    type_7: 'Tip 7 - Entuziastul',
+    type_8: 'Tip 8 - Provocatorul',
+    type_9: 'Tip 9 - Pacificatorul',
+
+    // Belbin Team Roles
+    plant: 'Plantă (Creativul)',
+    resource_investigator: 'Investigator de Resurse',
+    coordinator: 'Coordonator',
+    shaper: 'Formator',
+    monitor_evaluator: 'Monitor-Evaluator',
+    teamworker: 'Muncitor în Echipă',
+    implementer: 'Implementator',
+    completer_finisher: 'Finalizator',
+    specialist: 'Specialist',
+
+    // Beck Depression
+    depression_level: 'Nivel de Depresie',
+    cognitive_symptoms: 'Simptome Cognitive',
+    emotional_symptoms: 'Simptome Emoționale',
+    physical_symptoms: 'Simptome Fizice',
+
+    // Cognitive Abilities
+    verbal_reasoning: 'Raționament Verbal',
+    numerical_reasoning: 'Raționament Numeric',
+    abstract_reasoning: 'Raționament Abstract',
+    spatial_reasoning: 'Raționament Spațial',
+    logical_reasoning: 'Raționament Logic',
+
+    // Digital & Analytical Competencies
+    digital_literacy: 'Alfabetizare Digitală',
+    data_analysis: 'Analiza Datelor',
+    problem_solving_digital: 'Rezolvarea Problemelor Digitale',
+    digital_communication: 'Comunicare Digitală',
+    digital_security: 'Securitate Digitală',
+
+    // Professional Aptitudes
+    leadership_aptitude: 'Aptitudine Leadership',
+    analytical_aptitude: 'Aptitudine Analitică',
+    creative_aptitude: 'Aptitudine Creativă',
+    technical_aptitude: 'Aptitudine Tehnică',
+    social_aptitude: 'Aptitudine Socială',
+
+    // Sensory Perception
+    visual_perception: 'Percepție Vizuală',
+    auditory_perception: 'Percepție Auditivă',
+    tactile_perception: 'Percepție Tactilă',
+    spatial_perception: 'Percepție Spațială',
+
     // Other legacy dimensions
     emotional_intelligence: 'Inteligență Emoțională',
     leadership: 'Leadership',
@@ -171,6 +240,97 @@ export const getTestScoringExplanation = (testName: string): TestScoringExplanat
         { range: '70-100%', label: 'Gestionare excelentă', variant: 'default' }
       ],
       whatItMeans: 'O gestionare eficientă a stresului este esențială pentru sănătatea mentală și performanța profesională. Tehnicile de management al stresului pot fi învățate și îmbunătățite.'
+    },
+
+    'Test DISC': {
+      description: 'Testul DISC analizează stilul tău de comportament în patru dimensiuni principale: Dominanță, Influență, Stabilitate și Conformitate.',
+      scoreRanges: [
+        { range: '0-30%', label: 'Scăzut', variant: 'outline' },
+        { range: '31-70%', label: 'Moderat', variant: 'secondary' },
+        { range: '71-100%', label: 'Ridicat', variant: 'default' }
+      ],
+      whatItMeans: 'DISC te ajută să înțelegi cum interacționezi cu alții, cum comunici și ce te motivează în mediul de lucru. Este foarte util pentru dezvoltarea echipelor și comunicarea eficientă.'
+    },
+
+    'Enneagram': {
+      description: 'Enneagramul identifică unul din cele 9 tipuri de personalitate, fiecare cu motivații, frici și mecanisme de apărare distincte.',
+      scoreRanges: [
+        { range: 'Tip dominant', label: 'Tipul tău principal', variant: 'default' },
+        { range: 'Wing-uri', label: 'Influențe secundare', variant: 'secondary' }
+      ],
+      whatItMeans: 'Enneagramul oferă perspective profunde asupra motivațiilor inconștiente și căilor de dezvoltare personală. Este un instrument puternic pentru autocunoaștere și creștere spirituală.'
+    },
+
+    'HEXACO': {
+      description: 'Modelul HEXACO măsoară personalitatea pe 6 dimensiuni: Onestitate-Umilință, Emoționalitate, Extraversiune, Amabilitate, Conștiinciozitate și Deschidere.',
+      scoreRanges: [
+        { range: '0-30%', label: 'Scăzut', variant: 'outline' },
+        { range: '31-70%', label: 'Moderat', variant: 'secondary' },
+        { range: '71-100%', label: 'Ridicat', variant: 'default' }
+      ],
+      whatItMeans: 'HEXACO extinde modelul Big Five cu dimensiunea Onestitate-Umilință, oferind o perspectivă mai completă asupra personalității și comportamentului etic.'
+    },
+
+    'Roluri în Echipă Belbin': {
+      description: 'Testul Belbin identifică rolurile tale preferate în echipă din cele 9 roluri distincte, fiecare cu contribuții și slăbiciuni specifice.',
+      scoreRanges: [
+        { range: 'Rol primar', label: 'Rolul tău dominant', variant: 'default' },
+        { range: 'Roluri secundare', label: 'Roluri de backup', variant: 'secondary' },
+        { range: 'Roluri evitate', label: 'Roluri mai puțin preferate', variant: 'outline' }
+      ],
+      whatItMeans: 'Cunoașterea rolurilor tale în echipă te ajută să înțelegi cum contribui cel mai bine la succesul echipei și să colaborezi mai eficient cu alții.'
+    },
+
+    'Test Aptitudini Cognitive': {
+      description: 'Evaluează capacitățile tale cognitive în diverse domenii: raționament verbal, numeric, abstract, spațial și logic.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Sub medie', variant: 'outline' },
+        { range: '40-59%', label: 'Mediu', variant: 'secondary' },
+        { range: '60-79%', label: 'Peste medie', variant: 'default' },
+        { range: '80-100%', label: 'Superior', variant: 'default' }
+      ],
+      whatItMeans: 'Aptitudinile cognitive sunt indicatori ai capacității tale de a procesa informații, rezolva probleme și de a învăța în contexte diverse. Sunt relevante pentru performanța academică și profesională.'
+    },
+
+    'Beck Depression Inventory': {
+      description: 'BDI-II evaluează severitatea simptomelor depresive în ultimele două săptămâni, fiind un instrument standardizat folosit în practică clinică.',
+      scoreRanges: [
+        { range: '0-13', label: 'Minim', variant: 'default' },
+        { range: '14-19', label: 'Ușor', variant: 'secondary' },
+        { range: '20-28', label: 'Moderat', variant: 'outline' },
+        { range: '29-63', label: 'Sever', variant: 'destructive' }
+      ],
+      whatItMeans: 'Acest scor oferă o evaluare a severității simptomelor depresive. Scorurile mai mari indică necesitatea consultării unui specialist pentru evaluare și tratament.'
+    },
+
+    'Competențe Digitale': {
+      description: 'Evaluează nivelul tău de competențe digitale în era modernă: alfabetizare digitală, analiza datelor, securitate și comunicare online.',
+      scoreRanges: [
+        { range: '0-49%', label: 'Dezvoltare necesară', variant: 'outline' },
+        { range: '50-74%', label: 'Competent', variant: 'secondary' },
+        { range: '75-100%', label: 'Avansat', variant: 'default' }
+      ],
+      whatItMeans: 'Competențele digitale sunt esențiale în economia modernă. Rezultatul arată punctele tale forte și domeniile care necesită dezvoltare continuă.'
+    },
+
+    'Aptitudini Profesionale': {
+      description: 'Măsoară aptitudinile tale în diverse domenii profesionale: leadership, analiză, creativitate, tehnologie și abilități sociale.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Dezvoltare necesară', variant: 'outline' },
+        { range: '40-69%', label: 'Competent', variant: 'secondary' },
+        { range: '70-100%', label: 'Foarte dezvoltat', variant: 'default' }
+      ],
+      whatItMeans: 'Aceste aptitudini influențează succesul tău în diverse roluri profesionale și pot ghida deciziile de carieră și dezvoltare profesională.'
+    },
+
+    'Test Percepție Senzorială': {
+      description: 'Evaluează acuitatea și eficiența percepției tale senzoriale în domeniile vizual, auditiv, tactil și spațial.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Sub normal', variant: 'outline' },
+        { range: '40-69%', label: 'Normal', variant: 'secondary' },
+        { range: '70-100%', label: 'Superior', variant: 'default' }
+      ],
+      whatItMeans: 'Percepția senzorială influențează modul în care procesezi informațiile din mediul înconjurător și poate fi relevantă pentru anumite cariere și activități.'
     }
   };
 
@@ -290,7 +450,7 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
 
     'Cattell 16PF': {
       A: {
-        description: 'Măsoară gradul de căldură și sociabilitate în relațiile interpersonale.',
+        description: 'Măsoară gradul de căldură și sociabilitate în relațiile interumane.',
         interpretations: {
           high: 'Ești cald, sociabil și îți place să petreci timp cu oamenii.',
           low: 'Ești mai rezervat, formal și preferi să păstrezi distanța în relații.'
