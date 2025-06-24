@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -8,6 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Clock, Users, Brain, Target, Heart, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useCattell16PFSetup } from '@/hooks/useCattell16PFSetup';
 
 interface TestType {
   id: string;
@@ -24,6 +24,9 @@ interface TestType {
 }
 
 const TestsPage = () => {
+  // Set up Cattell 16PF test automatically
+  useCattell16PFSetup();
+  
   const { subscription, canTakeTest } = useSubscription();
 
   const { data: tests, isLoading, error } = useQuery({
