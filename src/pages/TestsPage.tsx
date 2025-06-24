@@ -7,7 +7,6 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Clock, Users, Brain, Target, Heart, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useSubscription } from '@/hooks/useSubscription';
-import { useCattell16PFSetup } from '@/hooks/useCattell16PFSetup';
 
 interface TestType {
   id: string;
@@ -24,9 +23,6 @@ interface TestType {
 }
 
 const TestsPage = () => {
-  // Set up Cattell 16PF test automatically
-  useCattell16PFSetup();
-  
   const { subscription, canTakeTest } = useSubscription();
 
   const { data: tests, isLoading, error } = useQuery({
@@ -64,6 +60,8 @@ const TestsPage = () => {
             console.error(`Error counting questions for test ${testType.id}:`, countError);
           }
           
+          console.log(`Test ${testType.name} has ${count} questions`);
+          
           return {
             ...testType,
             actual_questions_count: count || 0
@@ -82,7 +80,7 @@ const TestsPage = () => {
     }
   });
 
-  const getIconComponent = (iconName: string) => {
+  function getIconComponent(iconName: string) {
     const icons: { [key: string]: React.ComponentType<any> } = {
       'brain': Brain,
       'users': Users,
@@ -90,9 +88,9 @@ const TestsPage = () => {
       'heart': Heart
     };
     return icons[iconName] || Brain;
-  };
+  }
 
-  const canUserTakeTest = (test: TestType) => {
+  function canUserTakeTest(test: TestType) {
     if (!canTakeTest()) return false;
     
     // Check subscription requirements
@@ -110,9 +108,9 @@ const TestsPage = () => {
       default:
         return true;
     }
-  };
+  }
 
-  const getSubscriptionBadgeColor = (required: string) => {
+  function getSubscriptionBadgeColor(required: string) {
     switch (required) {
       case 'basic':
         return 'bg-green-100 text-green-800';
@@ -123,7 +121,7 @@ const TestsPage = () => {
       default:
         return 'bg-gray-100 text-gray-800';
     }
-  };
+  }
 
   if (isLoading) {
     return (

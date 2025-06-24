@@ -72,6 +72,8 @@ serve(async (req) => {
       throw questionsError;
     }
 
+    console.log('Found questions:', questions?.length);
+
     // Check if this is a Cattell 16PF test
     const isCattell16PF = testType.name.includes('16PF') || testType.name.includes('Cattell');
 
@@ -125,6 +127,9 @@ async function analyzeCattell16PF(answers: { [key: string]: number }, questions:
     }
   });
 
+  console.log('Factor counts:', factorCounts);
+  console.log('Raw factor scores:', factorScores);
+
   // Convert to percentile scores (1-10 scale, typical for 16PF)
   const dimensions: { [key: string]: number } = {};
   Object.keys(CATTELL_16PF_FACTORS).forEach(factor => {
@@ -141,7 +146,7 @@ async function analyzeCattell16PF(answers: { [key: string]: number }, questions:
   // Calculate overall score
   const overallScore = Math.round(Object.values(dimensions).reduce((a, b) => a + b, 0) / 16);
 
-  console.log('16PF factor scores calculated:', dimensions);
+  console.log('Final 16PF factor scores:', dimensions);
 
   const result = {
     overall: overallScore,
