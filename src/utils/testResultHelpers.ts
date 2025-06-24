@@ -29,7 +29,7 @@ export interface ScoreInterpretationResult {
   variant: 'default' | 'secondary' | 'outline';
 }
 
-export const getDimensionLabel = (dimensionKey: string): string => {
+export const getDimensionLabel = (key: string): string => {
   const labels: { [key: string]: string } = {
     // Big Five dimensions
     openness: 'Deschidere către Experiență',
@@ -104,12 +104,17 @@ export const getDimensionLabel = (dimensionKey: string): string => {
     cybersecurity_awareness: 'Conștientizare Cybersecurity',
     digital_innovation: 'Inovație Digitală'
   };
-  
-  return labels[dimensionKey] || dimensionKey.charAt(0).toUpperCase() + dimensionKey.slice(1);
+
+  return labels[key] || key;
 };
 
-export const getScoreColor = (score: number): string => {
-  if (score >= 70) {
+export const getScoreColor = (score: number, testName?: string): string => {
+  if (testName === 'Test Aptitudini Cognitive') {
+    if (score >= 90) return 'text-purple-600';
+    if (score >= 70) return 'text-green-600';
+    if (score >= 40) return 'text-blue-600';
+    return 'text-orange-600';
+  } else if (score >= 70) {
     return 'text-green-500';
   } else if (score >= 40) {
     return 'text-yellow-500';
@@ -118,8 +123,13 @@ export const getScoreColor = (score: number): string => {
   }
 };
 
-export const getScoreBadgeVariant = (score: number): 'default' | 'secondary' | 'outline' => {
-  if (score >= 70) {
+export const getScoreBadgeVariant = (score: number, testName?: string): 'default' | 'secondary' | 'outline' => {
+  if (testName === 'Test Aptitudini Cognitive') {
+    if (score >= 90) return 'default';
+    if (score >= 70) return 'default';
+    if (score >= 40) return 'secondary';
+    return 'outline';
+  } else if (score >= 70) {
     return 'default';
   } else if (score >= 40) {
     return 'secondary';
@@ -185,6 +195,16 @@ export const getTestScoringExplanation = (testName: string): TestScoringExplanat
         { range: '70-100%', label: 'Avansat', variant: 'default' }
       ],
       whatItMeans: 'Rezultatele îți arată unde te poziționezi în era digitală și ce competențe poți dezvolta pentru a fi mai eficient.'
+    },
+    'Test Aptitudini Cognitive': {
+      description: 'Test Aptitudini Cognitive evaluează cinci tipuri fundamentale de raționament cognitiv: verbal, numeric, logic, spațial și abstract. Aceste aptitudini sunt esențiale pentru succesul academic și profesional, oferind o imagine completă asupra capacităților intelectuale. Testul măsoară nu doar cunoștințele, ci și capacitatea de a procesa informații, de a rezolva probleme și de a gândi critic.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Sub medie', variant: 'outline' },
+        { range: '40-69%', label: 'Mediu', variant: 'secondary' },
+        { range: '70-89%', label: 'Ridicat', variant: 'default' },
+        { range: '90-100%', label: 'Excepțional', variant: 'default' }
+      ],
+      whatItMeans: 'Rezultatele te ajută să înțelegi punctele forte și slăbiciunile cognitive, să alegi domenii de studiu sau cariere potrivite aptitudinilor tale și să dezvolți strategii de învățare eficiente. Un profil echilibrat indică versatilitate cognitivă, în timp ce scoruri ridicate în anumite domenii pot sugera specializări naturale.'
     }
   };
 
@@ -647,21 +667,89 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
           low: 'Poți explora mai mult potențialul inovator al tehnologiilor.'
         }
       }
+    },
+
+    'Test Aptitudini Cognitive': {
+      '0': {
+        description: 'Raționamentul verbal măsoară capacitatea de a înțelege, analiza și utiliza limbajul în mod eficient. Include vocabularul, comprehensiunea textului, analogiile verbale și abilitatea de a exprima idei clar și coherent.',
+        interpretations: {
+          high: 'Scoruri ridicate indică o capacitate excelentă de comunicare, vocabular bogat și abilități puternice de comprehensiune. Aceste persoane reușesc bine în domenii care necesită expresie verbală și analiza textelor.',
+          low: 'Scoruri mai mici sugerează posibile dificultăți în comunicarea verbală sau în înțelegerea textelor complexe. Cu practică și dezvoltare, aceste abilități pot fi îmbunătățite semnificativ.'
+        },
+        yourScore: {
+          high: 'Ai o capacitate verbală remarcabilă! Ești capabil să comunici eficient, să înțelegi texte complexe și să faci conexiuni verbale subtile. Consideră cariere în jurnalism, literatură, drept sau educație.',
+          moderate: 'Ai abilități verbale solide care îți permit să comunici eficient în majoritatea situațiilor. Cu mai multă practică în lectură și scriere, poți dezvolta aceste abilități la un nivel superior.',
+          low: 'Raționamentul verbal poate fi îmbunătățit prin lectură regulată, expansiunea vocabularului și practica expresiei scrise și orale. Concentrează-te pe dezvoltarea acestor abilități pentru o comunicare mai eficientă.'
+        }
+      },
+      '1': {
+        description: 'Raționamentul numeric evaluează abilitatea de a lucra cu numere, de a efectua calcule și de a rezolva probleme matematice. Include aritmetica de bază, gândirea cantitativă și recunoașterea modelelor numerice.',
+        interpretations: {
+          high: 'Persoanele cu scoruri ridicate la raționamentul numeric sunt eficiente în lucrul cu date cantitative, calcule și analiza numerică. Sunt potrivite pentru cariere în matematică, științe, inginerie sau finanțe.',
+          low: 'Scoruri mai mici pot indica nevoia de mai multă practică cu conceptele matematice de bază. Aceste abilități pot fi dezvoltate prin exerciții regulate și abordări practice ale matematicii.'
+        },
+        yourScore: {
+          high: 'Ai abilități numerice excelente! Poți lucra cu ușurință cu date cantitative și rezolva probleme matematice complexe. Domeniile STEM, finanțele sau analiza datelor ar putea fi potrivite pentru tine.',
+          moderate: 'Ai o bună înțelegere a conceptelor numerice și poți rezolva majoritatea problemelor matematice. Cu practică suplimentară, poți dezvolta aceste abilități la un nivel avansat.',
+          low: 'Raționamentul numeric poate fi îmbunătățit prin practică regulată cu exerciții matematice și aplicații practice ale numerelor în viața de zi cu zi. Nu te descuraja - cu perseverență, aceste abilități se dezvoltă.'
+        }
+      },
+      '2': {
+        description: 'Raționamentul logic măsoară capacitatea de a gândi secvențial, de a face inferențe valide și de a rezolva probleme prin aplicarea principiilor logice. Include deducția, inducția și gândirea critică.',
+        interpretations: {
+          high: 'Scoruri ridicate indică o capacitate excelentă de a analiza informații, de a identifica relații cauzale și de a lua decizii bazate pe logică. Aceste persoane reușesc în rezolvarea problemelor complexe.',
+          low: 'Scoruri mai mici sugerează nevoia de dezvoltare a gândirii structurate și a abilităților de analiză. Aceste competențe pot fi îmbunătățite prin practică și înțelegerea principiilor logice.'
+        },
+        yourScore: {
+          high: 'Ai o capacitate logică remarcabilă! Poți analiza informații complexe, identifica modele și lua decizii raționale. Consideră cariere în programare, consultanță, cercetare sau management strategic.',
+          moderate: 'Ai abilități logice bune care îți permit să rezolvi majoritatea problemelor. Dezvoltă aceste abilități prin puzzle-uri logice, jocuri de strategie și analiza sistematică a problemelor.',
+          low: 'Raționamentul logic poate fi dezvoltat prin practică cu exerciții de logică, puzzle-uri și abordarea sistematică a problemelor. Încearcă să analizezi pas cu pas situațiile complexe.'
+        }
+      },
+      '3': {
+        description: 'Raționamentul spațial evaluează capacitatea de a vizualiza și manipula mental obiecte în spațiu. Include rotația mentală, orientarea spațială și înțelegerea relațiilor geometrice.',
+        interpretations: {
+          high: 'Persoanele cu abilități spațiale puternice pot vizualiza cu ușurință obiecte tridimensionale, înțeleg planurile și hărțile și pot naviga eficient în spațiu. Sunt potrivite pentru cariere în arhitectură, inginerie sau arte vizuale.',
+          low: 'Scoruri mai mici pot indica dificultăți în vizualizarea spațială sau în înțelegerea relațiilor geometrice. Aceste abilități pot fi dezvoltate prin practică cu puzzle-uri 3D și exerciții de vizualizare.'
+        },
+        yourScore: {
+          high: 'Ai abilități spațiale exceptionale! Poți vizualiza mental obiecte complexe și înțelegi relațiile spațiale cu ușurință. Arhitectura, ingineria, designul sau pilotajul ar putea fi domenii perfecte pentru tine.',
+          moderate: 'Ai o bună înțelegere a relațiilor spațiale. Poți dezvolta aceste abilități prin jocuri de construcție, puzzle-uri 3D și activități care implică vizualizarea spațială.',
+          low: 'Raționamentul spațial poate fi îmbunătățit prin practică cu puzzle-uri, jocuri de construcție și exerciții de vizualizare. Încearcă activități care te ajută să gândești tridimensional.'
+        }
+      },
+      '4': {
+        description: 'Raționamentul abstract măsoară capacitatea de a identifica modele, de a face conexiuni între concepte aparent nerelaționate și de a gândi flexibil. Include recunoașterea de tipare și gândirea creativă.',
+        interpretations: {
+          high: 'Scoruri ridicate indică o capacitate excelentă de a gândi abstract, de a identifica modele complexe și de a face conexiuni inovatoare. Aceste persoane au potențial pentru inovație și creativitate.',
+          low: 'Scoruri mai mici sugerează o preferință pentru gândirea concretă și structurată. Gândirea abstractă poate fi dezvoltată prin expunerea la idei diverse și practica recunoașterii de modele.'
+        },
+        yourScore: {
+          high: 'Ai o capacitate abstractă remarcabilă! Poți identifica modele complexe și face conexiuni creative între idei. Cercetarea, inovația, arta conceptuală sau strategia de business ar putea fi domeniile tale.',
+          moderate: 'Ai abilități abstracte solide care îți permit să înțelegi concepte complexe. Dezvoltă aceste abilități prin expunerea la idei diverse și prin exerciții de recunoaștere a modelelor.',
+          low: 'Gândirea abstractă poate fi dezvoltată prin practică cu puzzle-uri de modele, expunerea la arte și filosofie, și prin încercarea de a identifica conexiuni între concepte diferite.'
+        }
+      }
     }
   };
 
-  // Find the test type
-  let testType = '';
-  if (testName.includes('Big Five')) testType = 'Big Five';
-  else if (testName.includes('Inteligență Emoțională')) testType = 'Inteligență Emoțională';
-  else if (testName.includes('GAD-7')) testType = 'GAD-7';
-  else if (testName.includes('Beck Depression')) testType = 'Beck Depression';
-  else if (testName.includes('Cattell') || testName.includes('16PF')) testType = 'Cattell 16PF';
-  else if (testName.includes('DISC')) testType = 'DISC';
-  else if (testName.includes('Aptitudini Profesionale')) testType = 'Aptitudini Profesionale';
-  else if (testName.includes('Competențe Digitale')) testType = 'Competențe Digitale';
+  // Handle numeric keys for cognitive aptitudes test
+  function getActualDimensionKey(testName: string, key: string): string {
+    if (testName === 'Test Aptitudini Cognitive') {
+      const mapping: { [key: string]: string } = {
+        '0': '0', // Raționament Verbal
+        '1': '1', // Raționament Numeric
+        '2': '2', // Raționament Logic
+        '3': '3', // Raționament Spațial
+        '4': '4'  // Raționament Abstract
+      };
+      return mapping[key] || key;
+    }
+    return key;
+  }
 
-  return explanations[testType]?.[actualKey] || null;
+  const actualKey = getActualDimensionKey(testName, dimensionKey);
+  return explanations[testName]?.[actualKey] || null;
 };
 
 export const getTestScoreRange = (testName: string): string => {
