@@ -320,7 +320,7 @@ export const getTestScoringExplanation = (testName: string): TestScoringExplanat
         { range: '40-69%', label: 'Competent', variant: 'secondary' },
         { range: '70-100%', label: 'Foarte dezvoltat', variant: 'default' }
       ],
-      whatItMeans: 'Aceste aptitudini influențează succesul tău în diverse roluri profesionale și pot ghida deciziile de carieră și dezvoltare profesională.'
+      whatItMeans: 'Aceste aptitudini influențează succesul tău în diverse roluri profesionale și pot ghida deciziile de carieră și dezvoltarea profesională.'
     },
 
     'Test Percepție Senzorială': {
@@ -454,6 +454,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ești cald, sociabil și îți place să petreci timp cu oamenii.',
           low: 'Ești mai rezervat, formal și preferi să păstrezi distanța în relații.'
+        },
+        yourScore: {
+          high: 'Ești foarte deschis și cald în relații, oamenii se simt confortabil în preajma ta.',
+          moderate: 'Ai un echilibru între căldură și rezervă în relațiile sociale.',
+          low: 'Ești mai formal și rezervat, preferi relații mai distante și profesionale.'
         }
       },
       B: {
@@ -461,6 +466,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ai abilități analitice puternice și îți place să rezolvi probleme complexe.',
           low: 'Preferi abordări concrete și practice la probleme.'
+        },
+        yourScore: {
+          high: 'Excel la gândirea abstractă și analizele complexe.',
+          moderate: 'Ai abilități de raționament solide, cu preferință pentru claritate.',
+          low: 'Preferi abordări practice și concrete, cu exemple tangibile.'
         }
       },
       C: {
@@ -468,6 +478,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ești stabil emoțional, calm și gestionezi bine presiunea.',
           low: 'Poți fi mai reactiv la stres și schimbări emoționale.'
+        },
+        yourScore: {
+          high: 'Ești foarte calm și stabil, chiar și în situații stresante.',
+          moderate: 'Ai o stabilitate emoțională bună, cu momente ocazionale de tensiune.',
+          low: 'Poți fi mai sensibil la stres și schimbări emoționale.'
         }
       },
       E: {
@@ -475,13 +490,23 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Îți place să conduci și să iei inițiativa în grupuri.',
           low: 'Preferi să urmezi decât să conduci, ești mai deferențial.'
+        },
+        yourScore: {
+          high: 'Ești un lider natural care își asumă responsabilitatea.',
+          moderate: 'Poți conduce când e necesar, dar nu cauți întotdeauna să fii în centru.',
+          low: 'Preferi să susții și să urmezi, mai degrabă decât să conduci.'
         }
       },
       F: {
         description: 'Măsoară nivelul de energie, veselie și spontaneitate.',
         interpretations: {
           high: 'Ești lively, spontan și aduci energie pozitivă în grupuri.',
-          low: 'Ești mai serios, restraint și controlat în comportament.'
+          low: 'Ești mai serios, restrâns și controlat în comportament.'
+        },
+        yourScore: {
+          high: 'Ești plin de energie și spontaneitate, aduci veselie în grup.',
+          moderate: 'Ai momente de veselie echilibrate cu seriozitate.',
+          low: 'Ești mai serios și controlat, preferi să te gândești înainte să acționezi.'
         }
       },
       G: {
@@ -489,6 +514,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ești conștiincios, respecti regulile și ai o etică puternică.',
           low: 'Ești mai flexibil cu regulile și mai puțin convențional.'
+        },
+        yourScore: {
+          high: 'Ai standarde etice înalte și respecti întotdeauna regulile.',
+          moderate: 'Respecti normele dar poți fi flexibil când situația o cere.',
+          low: 'Ești mai liber în interpretarea regulilor și convențiilor.'
         }
       },
       H: {
@@ -496,6 +526,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ești îndrăzneț social, aventuros și nu te sperii de provocări.',
           low: 'Ești mai timid, prudent și sensibil la amenințări.'
+        },
+        yourScore: {
+          high: 'Ești curajos și îți place să îți asumi riscuri sociale.',
+          moderate: 'Ai încredere socială dar ești prudent în situații noi.',
+          low: 'Ești mai rezervat și prudent în situații sociale noi.'
         }
       },
       I: {
@@ -503,6 +538,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ești sensibil, empatic și apreciezi frumusețea și arta.',
           low: 'Ești mai practic, obiectiv și orientat către utilitate.'
+        },
+        yourScore: {
+          high: 'Ești foarte sensibil la frumusețe și la nevoile emoționale ale altora.',
+          moderate: 'Ai un echilibru între sensibilitate și practicitate.',
+          low: 'Ești pragmatic și te concentrezi pe aspectele practice ale vieții.'
         }
       },
       L: {
@@ -510,6 +550,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ești vigilent, suspicios și cauți motive ascunse.',
           low: 'Ai încredere în oameni și ești mai puțin suspicios.'
+        },
+        yourScore: {
+          high: 'Ești precaut și analizezi atent intențiile oamenilor.',
+          moderate: 'Ai încredere dar ești prudent cu oamenii noi.',
+          low: 'Ai încredere naturală în oameni și vezi binele în ei.'
         }
       },
       M: {
@@ -517,6 +562,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Îți place să te gândești la concepte abstracte și să visezi.',
           low: 'Ești orientat către realitate, practic și concret.'
+        },
+        yourScore: {
+          high: 'Ai o imaginație bogată și îți place să explorezi idei abstracte.',
+          moderate: 'Îți place să visezi dar rămâi conectat la realitate.',
+          low: 'Ești foarte practic și te concentrezi pe lucrurile concrete.'
         }
       },
       N: {
@@ -524,6 +574,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ești discret, îți păstrezi gândurile private și ești diplomat.',
           low: 'Ești deschis, direct și sincer în comunicare.'
+        },
+        yourScore: {
+          high: 'Ești foarte discret și diplomatic în comunicare.',
+          moderate: 'Echilibrezi deschiderea cu discreția când e necesar.',
+          low: 'Ești foarte deschis și direct în exprimarea gândurilor.'
         }
       },
       O: {
@@ -531,6 +586,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Tind să te îngrijorezi și să anticipezi probleme.',
           low: 'Ești sigur pe tine, optimist și nu te îngrijorezi prea mult.'
+        },
+        yourScore: {
+          high: 'Ești prone la îngrijorare și analizezi riscurile atent.',
+          moderate: 'Uneori te îngrijorezi dar în general ești optimist.',
+          low: 'Ești foarte încrezător și optimist, nu te îngrijorezi prea mult.'
         }
       },
       Q1: {
@@ -538,6 +598,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Îți place să experimentezi și să înveți lucruri noi.',
           low: 'Preferi tradițiile și metodele dovedite.'
+        },
+        yourScore: {
+          high: 'Ești foarte deschis la schimbare și inovație.',
+          moderate: 'Accepți schimbarea dar apreciezi și tradițiile.',
+          low: 'Preferi stabilitatea și metodele tradiționale dovedite.'
         }
       },
       Q2: {
@@ -545,6 +610,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Preferi să lucrezi independent și să te bazezi pe tine.',
           low: 'Îți place să faci parte din grupuri și să colaborezi.'
+        },
+        yourScore: {
+          high: 'Ești foarte independent și preferi să lucrezi singur.',
+          moderate: 'Apreciezi atât independența cât și colaborarea.',
+          low: 'Îți place să lucrezi în echipă și să colaborezi cu alții.'
         }
       },
       Q3: {
@@ -552,13 +622,23 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ești foarte organizat și îți place ca totul să fie perfect.',
           low: 'Ești mai relaxat cu privire la ordine și organizare.'
+        },
+        yourScore: {
+          high: 'Ești extrem de organizat și ai standarde înalte.',
+          moderate: 'Îți place ordinea dar poți fi flexibil când e necesar.',
+          low: 'Ești relaxat cu privire la organizare și perfecțiune.'
         }
       },
       Q4: {
         description: 'Reflectă nivelul de tensiune și energie nervoasă.',
         interpretations: {
           high: 'Ai multă energie nervosă și poți fi tensionat sau nerăbdător.',
-          low: 'Ești relaxat, calm și nu te grăbesti.'
+          low: 'Ești relaxat, calm și nu te grăbești.'
+        },
+        yourScore: {
+          high: 'Ai energie mare și poți fi nerăbdător să acționezi.',
+          moderate: 'Ai momente de energie înaltă echilibrate cu relaxare.',
+          low: 'Ești foarte relaxat și calm, nu te grăbești niciodată.'
         }
       }
     },
@@ -569,6 +649,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ai o înțelegere clară a emoțiilor și motivațiilor tale.',
           low: 'Poți avea dificultăți în înțelegerea propriilor emoții.'
+        },
+        yourScore: {
+          high: 'Ești foarte conștient de emoțiile și reacțiile tale.',
+          moderate: 'Ai o bună înțelegere de sine cu potențial de dezvoltare.',
+          low: 'Ar fi util să dedici timp pentru autoreflecție și autocunoaștere.'
         }
       },
       self_regulation: {
@@ -576,6 +661,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Gestionezi bine emoțiile și nu reactionezi impulsiv.',
           low: 'Poți avea dificultăți în controlul emoțiilor și reacțiilor.'
+        },
+        yourScore: {
+          high: 'Excel la controlul emoțional și gestionarea impulsurilor.',
+          moderate: 'Ai un control rezonabil cu ocazionale momente de impulsivitate.',
+          low: 'Ai nevoie să dezvolți tehnici de gestionare emoțională.'
         }
       },
       motivation: {
@@ -583,6 +673,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ești auto-motivat și persistenț în atingerea obiectivelor.',
           low: 'Poți avea nevoie de motivație externă pentru a atinge țelurile.'
+        },
+        yourScore: {
+          high: 'Ai o motivație internă puternică și persistență.',
+          moderate: 'Ești motivat dar uneori ai nevoie de încurajare externă.',
+          low: 'Ar fi util să îți găsești surse de motivație internă.'
         }
       },
       empathy: {
@@ -590,6 +685,11 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Înțelegi bine emoțiile altora și poți să te pui în locul lor.',
           low: 'Poți avea dificultăți în înțelegerea perspectivei altora.'
+        },
+        yourScore: {
+          high: 'Ești foarte empatic și înțelegi intuitiv emoțiile altora.',
+          moderate: 'Ai empatie dar uneori ai nevoie să te concentrezi pentru a înțelege.',
+          low: 'Ar fi util să practice ascultarea activă și empatia.'
         }
       },
       social_skills: {
@@ -597,6 +697,620 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
         interpretations: {
           high: 'Ești priceput în relații sociale și comunicare eficientă.',
           low: 'Poți avea dificultăți în construirea și menținerea relațiilor.'
+        },
+        yourScore: {
+          high: 'Excel în comunicare și construirea relațiilor.',
+          moderate: 'Ai abilități sociale solide cu potențial de îmbunătățire.',
+          low: 'Ar fi util să practice comunicarea și tehnicile sociale.'
+        }
+      }
+    },
+
+    'GAD-7': {
+      anxiety_level: {
+        description: 'Evaluează nivelul general de anxietate experimentat în ultimele două săptămâni.',
+        interpretations: {
+          high: 'Experimentezi un nivel semnificativ de anxietate care poate necesita atenție profesională.',
+          low: 'Ai un nivel minimal de anxietate, ceea ce indică o stare de bunăstare emoțională.'
+        },
+        yourScore: {
+          high: 'Nivelul tău de anxietate este ridicat. Consideră să consulți un specialist.',
+          moderate: 'Experimentezi anxietate moderată. Tehnicile de relaxare pot fi utile.',
+          low: 'Ai un nivel foarte scăzut de anxietate, ceea ce este foarte pozitiv.'
+        }
+      }
+    },
+
+    'Test de Leadership': {
+      leadership: {
+        description: 'Evaluează competențele și stilul tău general de leadership.',
+        interpretations: {
+          high: 'Ai abilități de leadership puternice și poți conduce eficient echipe.',
+          low: 'Ai potențial de dezvoltare în domeniul leadership-ului.'
+        },
+        yourScore: {
+          high: 'Ești un lider natural cu abilități dezvoltate.',
+          moderate: 'Ai competențe de leadership solide care pot fi îmbunătățite.',
+          low: 'Ai potențial de leadership care poate fi dezvoltat prin practică.'
+        }
+      }
+    },
+
+    'Test de Gestionare a Stresului': {
+      stress_management: {
+        description: 'Măsoară capacitatea ta de a face față și gestiona situațiile stresante.',
+        interpretations: {
+          high: 'Gestionezi foarte bine stresul și rămâi calm sub presiune.',
+          low: 'Poți avea dificultăți în gestionarea stresului și a presiunii.'
+        },
+        yourScore: {
+          high: 'Excel în gestionarea stresului și a presiunii.',
+          moderate: 'Gestionezi rezonabil stresul cu ocazionale momente dificile.',
+          low: 'Ar fi util să învețe tehnici de management al stresului.'
+        }
+      }
+    },
+
+    'Test DISC': {
+      dominance: {
+        description: 'Măsoară tendința de a fi direct, hotărât și orientat către rezultate.',
+        interpretations: {
+          high: 'Ești direct, hotărât și îți place să iei controlul situațiilor.',
+          low: 'Ești mai cooperant și preferi să eviți conflictele directe.'
+        },
+        yourScore: {
+          high: 'Ești foarte direct și hotărât în abordări.',
+          moderate: 'Ai un echilibru între asertivitate și cooperare.',
+          low: 'Preferi abordări mai blânde și cooperante.'
+        }
+      },
+      influence: {
+        description: 'Reflectă abilitatea de a inspira și influența pozitiv pe alții.',
+        interpretations: {
+          high: 'Ești charismatic și îți place să interacționezi cu oamenii.',
+          low: 'Ești mai rezervat și preferi comunicarea directă, factuală.'
+        },
+        yourScore: {
+          high: 'Ai abilități excelente de influențare și comunicare.',
+          moderate: 'Poți influența pozitiv dar nu întotdeauna cauți să fii în centru.',
+          low: 'Preferi comunicarea directă și factuală.'
+        }
+      },
+      steadiness: {
+        description: 'Măsoară preferința pentru stabilitate, rutină și medii predictibile.',
+        interpretations: {
+          high: 'Îți place stabilitatea și ești loial în relații și angajamente.',
+          low: 'Îți place schimbarea și varietatea, poți fi mai puțin răbdător cu rutina.'
+        },
+        yourScore: {
+          high: 'Valorizezi stabilitatea și ești foarte loial.',
+          moderate: 'Apreciezi stabilitatea dar te adaptezi la schimbare.',
+          low: 'Îți place varietatea și schimbarea frecventă.'
+        }
+      },
+      compliance: {
+        description: 'Reflectă tendința de a urmări standarde înalte și a respecta regulile.',
+        interpretations: {
+          high: 'Îți place să urmezi proceduri și să menții standarde înalte de calitate.',
+          low: 'Ești mai flexibil cu regulile și preferi să improvizezi.'
+        },
+        yourScore: {
+          high: 'Ai standarde înalte și urmezi întotdeauna procedurile.',
+          moderate: 'Respecti regulile dar poți fi flexibil când e necesar.',
+          low: 'Preferi flexibilitatea și abordările creative.'
+        }
+      }
+    },
+
+    'Enneagram': {
+      type_1: {
+        description: 'Perfecționistul - orientat către îmbunătățire și corectitudine.',
+        interpretations: {
+          high: 'Ai standarde înalte și dorești să îmbunătățești totul în jurul tău.',
+          low: 'Ești mai flexibil cu imperfecțiunile și mai puțin critic.'
+        },
+        yourScore: {
+          high: 'Ești foarte orientat către perfecțiune și îmbunătățire continuă.',
+          moderate: 'Ai standarde înalte dar poți accepta imperfecțiunile.',
+          low: 'Ești relaxat cu privire la imperfecțiuni și mai puțin critic.'
+        }
+      },
+      type_2: {
+        description: 'Ajutătorul - orientat către a ajuta și îngrijí pe alții.',
+        interpretations: {
+          high: 'Îți place să ajuți pe alții și să fii necesar.',
+          low: 'Ești mai centrat pe propriile nevoi și mai puțin focusat pe alții.'
+        },
+        yourScore: {
+          high: 'Ești foarte orientat către ajutorarea altora.',
+          moderate: 'Îți place să ajuți dar nu neglijezi propriile nevoi.',
+          low: 'Te concentrezi mai mult pe propriile nevoi și obiective.'
+        }
+      },
+      type_3: {
+        description: 'Realizatorul - orientat către succes și eficiență.',
+        interpretations: {
+          high: 'Ești foarte motivat să reușești și să fii eficient.',
+          low: 'Ești mai puțin preocupat de imagine și mai puțin competitiv.'
+        },
+        yourScore: {
+          high: 'Ești foarte orientat către succes și realizări.',
+          moderate: 'Îți place să reușești dar nu la orice preț.',
+          low: 'Ești mai puțin preocupat de statut și competiție.'
+        }
+      },
+      type_4: {
+        description: 'Individualistul - orientat către unicitate și autenticitate.',
+        interpretations: {
+          high: 'Valorizezi autenticitatea și îți place să fii unic.',
+          low: 'Ești mai puțin preocupat de a fi diferit și mai conformist.'
+        },
+        yourScore: {
+          high: 'Valorizezi foarte mult autenticitatea și unicitatea.',
+          moderate: 'Îți place să fii autentic dar te adaptezi când e necesar.',
+          low: 'Te simți confortabil să te conformezi normelor sociale.'
+        }
+      },
+      type_5: {
+        description: 'Investigatorul - orientat către cunoaștere și înțelegere.',
+        interpretations: {
+          high: 'Îți place să înveți și să înțelegi lucrurile în profunzime.',
+          low: 'Ești mai puțin interesat de teorii și mai orientat către acțiune.'
+        },
+        yourScore: {
+          high: 'Ești foarte curios și îți place să înțelegi totul în detaliu.',
+          moderate: 'Îți place să înveți dar echilibrezi cu acțiunea.',
+          low: 'Preferi acțiunea și aplicarea practică decât teoria.'
+        }
+      },
+      type_6: {
+        description: 'Loialistul - orientat către securitate și sprijin.',
+        interpretations: {
+          high: 'Valorizezi securitatea și loialitatea în relații.',
+          low: 'Ești mai independent și mai puțin căutător de securitate.'
+        },
+        yourScore: {
+          high: 'Valorizezi foarte mult securitatea și loialitatea.',
+          moderate: 'Îți place securitatea dar poți lua riscuri când e necesar.',
+          low: 'Ești foarte independent și nu te teamă de risc.'
+        }
+      },
+      type_7: {
+        description: 'Entuziastul - orientat către experiențe noi și plăcere.',
+        interpretations: {
+          high: 'Îți place să explorezi și să ai experiențe noi și plăcute.',
+          low: 'Ești mai focusat și mai puțin căutător de stimulare.'
+        },
+        yourScore: {
+          high: 'Ești foarte aventuros și căuti constant experiențe noi.',
+          moderate: 'Îți place varietatea dar poți să te concentrezi când e necesar.',
+          low: 'Preferi focusul și profunzimea în loc de varietate.'
+        }
+      },
+      type_8: {
+        description: 'Provocatorul - orientat către putere și control.',
+        interpretations: {
+          high: 'Îți place să fii în control și să lupți pentru dreptate.',
+          low: 'Ești mai puțin confrontational și mai diplomatic.'
+        },
+        yourScore: {
+          high: 'Ești foarte asertiv și îți place să fii în control.',
+          moderate: 'Poți fi asertiv când e necesar dar nu cauți conflictul.',
+          low: 'Preferi diplomația și evitarea conflictelor.'
+        }
+      },
+      type_9: {
+        description: 'Pacificatorul - orientat către armonie și pace.',
+        interpretations: {
+          high: 'Valorizezi pacea și armonia, evitând conflictele.',
+          low: 'Ești mai dispus să te confrunți și mai puțin evitant.'
+        },
+        yourScore: {
+          high: 'Valorizezi foarte mult pacea și armonia.',
+          moderate: 'Îți place pacea dar poți să te confrunți când e necesar.',
+          low: 'Nu eviți conflictele și poți fi mai direct.'
+        }
+      }
+    },
+
+    'Roluri în Echipă Belbin': {
+      plant: {
+        description: 'Creativul - aduce idei originale și soluții inovatoare.',
+        interpretations: {
+          high: 'Ești foarte creativ și aduci idei originale în echipă.',
+          low: 'Ești mai puțin focusat pe creativitate și mai practic.'
+        },
+        yourScore: {
+          high: 'Ești sursa principală de idei creative în echipă.',
+          moderate: 'Contribui cu idei creative dar nu numai cu acestea.',
+          low: 'Te concentrezi mai mult pe aspectele practice decât pe creativitate.'
+        }
+      },
+      resource_investigator: {
+        description: 'Investigatorul de resurse - explorează oportunități și dezvoltă contacte.',
+        interpretations: {
+          high: 'Ești excelent la găsirea de oportunități și dezvoltarea rețelelor.',
+          low: 'Ești mai puțin orientat spre exterior și mai introspectiv.'
+        },
+        yourScore: {
+          high: 'Excel la găsirea de oportunități și contacte externe.',
+          moderate: 'Poți explora oportunități dar nu este rolul tău principal.',
+          low: 'Preferi să lucrezi cu resursele existente decât să cauți altele noi.'
+        }
+      },
+      coordinator: {
+        description: 'Coordonatorul - clarifică obiectivele și promovează luarea deciziilor.',
+        interpretations: {
+          high: 'Ești natural la coordonarea echipei și facilitarea deciziilor.',
+          low: 'Preferi să contribui individual decât să coordonezi.'
+        },
+        yourScore: {
+          high: 'Ești un coordinator natural care facilitează munca în echipă.',
+          moderate: 'Poți coordona când e necesar dar nu cauți întotdeauna acest rol.',
+          low: 'Preferi să contribui ca membru individual al echipei.'
+        }
+      },
+      shaper: {
+        description: 'Formatorul - provoacă echipa și depășește obstacolele.',
+        interpretations: {
+          high: 'Ești energic și îți place să împingi echipa către realizări.',
+          low: 'Ești mai puțin confrontational și mai diplomatic.'
+        },
+        yourScore: {
+          high: 'Ești forța motrice care împinge echipa să depășească obstacolele.',
+          moderate: 'Poți provoca echipa când e necesar dar nu constant.',
+          low: 'Preferi abordări mai diplomatice și mai puțin directe.'
+        }
+      },
+      monitor_evaluator: {
+        description: 'Monitor-Evaluatorul - analizează opțiunile și judecă cu exactitate.',
+        interpretations: {
+          high: 'Ești foarte bun la analizarea obiectivă și luarea deciziilor înțelepte.',
+          low: 'Ești mai impulsiv și mai puțin analitic în decizii.'
+        },
+        yourScore: {
+          high: 'Excel la analiza obiectivă și evaluarea opțiunilor.',
+          moderate: 'Poți analiza situațiile dar nu întotdeauna în detaliu.',
+          low: 'Preferi să acționezi rapid decât să analizezi îndelung.'
+        }
+      },
+      teamworker: {
+        description: 'Muncitorul în echipă - cooperează și evită conflictele.',
+        interpretations: {
+          high: 'Ești foarte cooperant și ajuți la menținerea armoniei în echipă.',
+          low: 'Ești mai independent și mai puțin focusat pe dinamica echipei.'
+        },
+        yourScore: {
+          high: 'Ești foarte cooperant și menții armonia în echipă.',
+          moderate: 'Cooperezi bine dar poți fi și independent când e necesar.',
+          low: 'Preferi să lucrezi independent și ești mai puțin focusat pe armonie.'
+        }
+      },
+      implementer: {
+        description: 'Implementatorul - transformă ideile în acțiuni practice.',
+        interpretations: {
+          high: 'Ești excelent la transformarea planurilor în acțiuni concrete.',
+          low: 'Ești mai orientat către idei decât către implementare practică.'
+        },
+        yourScore: {
+          high: 'Excel la transformarea ideilor în realitate prin acțiuni concrete.',
+          moderate: 'Poți implementa dar îți place și să contribui cu idei.',
+          low: 'Preferi să dezvolți idei decât să le implementezi practic.'
+        }
+      },
+      completer_finisher: {
+        description: 'Finalizatorul - verifică detaliile și respectă termenele.',
+        interpretations: {
+          high: 'Ești foarte atent la detalii și te asiguri că totul este terminat corect.',
+          low: 'Ești mai puțin preocupat de detalii și mai orientat către imagine de ansamblu.'
+        },
+        yourScore: {
+          high: 'Ești foarte atent la detalii și te asiguri că totul este perfect.',
+          moderate: 'Vezi detaliile importante dar nu te obsedezi cu ele.',
+          low: 'Preferi să te concentrezi pe imaginea de ansamblu decât pe detalii.'
+        }
+      },
+      specialist: {
+        description: 'Specialistul - aduce cunoștințe specializate și dedicare.',
+        interpretations: {
+          high: 'Ești foarte specializat și aduci expertiza tehnică în echipă.',
+          low: 'Ești mai generalist și mai puțin focusat pe o specializare.'
+        },
+        yourScore: {
+          high: 'Ești expertul tehnic care aduce cunoștințe specializate.',
+          moderate: 'Ai expertiză în anumite domenii dar și cunoștințe generale.',
+          low: 'Preferi să ai cunoștințe generale decât să te specializezi într-un domeniu.'
+        }
+      }
+    },
+
+    'Beck Depression Inventory': {
+      depression_level: {
+        description: 'Evaluează severitatea generală a simptomelor depresive.',
+        interpretations: {
+          high: 'Experimentezi simptome semnificative de depresie care necesită atenție profesională.',
+          low: 'Ai un nivel minimal de simptome depresive, ceea ce indică o stare de bunăstare.'
+        },
+        yourScore: {
+          high: 'Scorul indică simptome severe de depresie. Consultă un specialist în sănătate mentală.',
+          moderate: 'Experimentezi simptome moderate de depresie. Consideră să cauți sprijin profesional.',
+          low: 'Ai un nivel foarte scăzut de simptome depresive.'
+        }
+      },
+      cognitive_symptoms: {
+        description: 'Simptomele cognitive ale depresiei: gânduri negative, dificultăți de concentrare.',
+        interpretations: {
+          high: 'Experimentezi gânduri negative frecvente și dificultăți de concentrare.',
+          low: 'Ai puține simptome cognitive ale depresiei.'
+        },
+        yourScore: {
+          high: 'Ai simptome cognitive semnificative care afectează gândirea.',
+          moderate: 'Experimentezi ocazional gânduri negative sau dificultăți de concentrare.',
+          low: 'Gândirea ta este clară și pozitivă în general.'
+        }
+      },
+      emotional_symptoms: {
+        description: 'Simptomele emoționale: tristețe, vinovăție, iritabilitate.',
+        interpretations: {
+          high: 'Experimentezi emoții negative intense și frecvente.',
+          low: 'Ai o stare emoțională stabilă și pozitivă.'
+        },
+        yourScore: {
+          high: 'Simți emoții negative intense care te afectează semnificativ.',
+          moderate: 'Ai momente de tristețe sau iritabilitate dar nu constante.',
+          low: 'Starea ta emoțională este în general stabilă și pozitivă.'
+        }
+      },
+      physical_symptoms: {
+        description: 'Simptomele fizice: oboseală, probleme de somn, pierderea apetitului.',
+        interpretations: {
+          high: 'Experimentezi simptome fizice semnificative legate de depresie.',
+          low: 'Ai puține sau deloc simptome fizice ale depresiei.'
+        },
+        yourScore: {
+          high: 'Ai simptome fizice importante care îți afectează funcționarea zilnică.',
+          moderate: 'Experimentezi unele simptome fizice ocazionale.',
+          low: 'Te simți bine fizic și ai energie adecvată.'
+        }
+      }
+    },
+
+    'Test Aptitudini Cognitive': {
+      verbal_reasoning: {
+        description: 'Capacitatea de a înțelege și manipula informații verbale și concepte.',
+        interpretations: {
+          high: 'Ai abilități verbale excelente și înțelegi ușor concepte complexe.',
+          low: 'Poți avea dificultăți cu materialul verbal complex.'
+        },
+        yourScore: {
+          high: 'Excel la raționamentul verbal și analiza textelor complexe.',
+          moderate: 'Ai abilități verbale solide cu potențial de dezvoltare.',
+          low: 'Ar fi util să practice citirea și analiza de texte complexe.'
+        }
+      },
+      numerical_reasoning: {
+        description: 'Capacitatea de a lucra cu numere și concepte matematice.',
+        interpretations: {
+          high: 'Ai abilități matematice foarte bune și înțelegi rapid conceptele numerice.',
+          low: 'Poți avea dificultăți cu calculele complexe și analiza numerică.'
+        },
+        yourScore: {
+          high: 'Excel la matematică și analiza numerică.',
+          moderate: 'Ai abilități numerice rezonabile cu potențial de îmbunătățire.',
+          low: 'Ar fi util să practice calculele și conceptele matematice.'
+        }
+      },
+      abstract_reasoning: {
+        description: 'Capacitatea de a înțelege pattern-uri și relații abstracte.',
+        interpretations: {
+          high: 'Ai o capacitate excelentă de a vedea pattern-uri și conexiuni abstracte.',
+          low: 'Poți avea dificultăți cu gândirea abstractă și pattern-urile complexe.'
+        },
+        yourScore: {
+          high: 'Excel la identificarea pattern-urilor și gândirea abstractă.',
+          moderate: 'Poți înțelege concepte abstracte cu efort.',
+          low: 'Preferi concepte concrete și ai nevoie de exemple tangibile.'
+        }
+      },
+      spatial_reasoning: {
+        description: 'Capacitatea de a vizualiza și manipula obiecte în spațiu.',
+        interpretations: {
+          high: 'Ai abilități spațiale excelente și poți vizualiza ușor obiecte 3D.',
+          low: 'Poți avea dificultăți cu vizualizarea spațială și orientarea.'
+        },
+        yourScore: {
+          high: 'Excel la vizualizarea spațială și manipularea mentală a obiectelor.',
+          moderate: 'Ai abilități spațiale rezonabile pentru majoritatea sarcinilor.',
+          low: 'Ar fi util să practice exerciții de vizualizare spațială.'
+        }
+      },
+      logical_reasoning: {
+        description: 'Capacitatea de a analiza argumente și de a trage concluzii logice.',
+        interpretations: {
+          high: 'Ai abilități logice excelente și poți analiza argumente complexe.',
+          low: 'Poți avea dificultăți cu raționamentul logic și analiza critică.'
+        },
+        yourScore: {
+          high: 'Excel la gândirea logică și analiza critică.',
+          moderate: 'Ai abilități logice solide cu potențial de dezvoltare.',
+          low: 'Ar fi util să practice exerciții de logică și argumentare.'
+        }
+      }
+    },
+
+    'Competențe Digitale': {
+      digital_literacy: {
+        description: 'Cunoștințele și abilitățile de bază pentru folosirea tehnologiei digitale.',
+        interpretations: {
+          high: 'Ai competențe digitale excelente și te adaptezi ușor la tehnologii noi.',
+          low: 'Ai nevoie să îți dezvolți competențele digitale de bază.'
+        },
+        yourScore: {
+          high: 'Ești foarte competent în folosirea tehnologiei digitale.',
+          moderate: 'Ai competențe digitale solide cu potențial de îmbunătățire.',
+          low: 'Ar fi util să urmezi cursuri de alfabetizare digitală.'
+        }
+      },
+      data_analysis: {
+        description: 'Capacitatea de a interpreta și analiza date și informații.',
+        interpretations: {
+          high: 'Ești foarte bun la analiza datelor și extragerea de insights.',
+          low: 'Ai nevoie să îți dezvolți abilitățile de analiză a datelor.'
+        },
+        yourScore: {
+          high: 'Excel la analiza datelor și interpretarea statisticilor.',
+          moderate: 'Poți analiza date simple dar ai nevoie de practică pentru cele complexe.',
+          low: 'Ar fi util să înveți concepte de bază de analiză a datelor.'
+        }
+      },
+      problem_solving_digital: {
+        description: 'Abilitatea de a rezolva probleme folosind instrumente digitale.',
+        interpretations: {
+          high: 'Ești foarte priceput la rezolvarea problemelor cu ajutorul tehnologiei.',
+          low: 'Ai dificultăți în utilizarea tehnologiei pentru rezolvarea problemelor.'
+        },
+        yourScore: {
+          high: 'Folosești foarte eficient tehnologia pentru a rezolva probleme.',
+          moderate: 'Poți rezolva probleme digitale comune cu succes.',
+          low: 'Ai nevoie să dezvolți abilitățile de problem-solving digital.'
+        }
+      },
+      digital_communication: {
+        description: 'Competențele de comunicare în mediile digitale.',
+        interpretations: {
+          high: 'Comunici foarte eficient în mediile digitale.',
+          low: 'Ai dificultăți cu comunicarea digitală efectivă.'
+        },
+        yourScore: {
+          high: 'Excel la comunicarea digitală și folosirea platformelor online.',
+          moderate: 'Comunici rezonabil în mediile digitale.',
+          low: 'Ar fi util să practice comunicarea digitală și eticheta online.'
+        }
+      },
+      digital_security: {
+        description: 'Cunoștințele despre securitatea și protecția datelor digitale.',
+        interpretations: {
+          high: 'Ești foarte conștient de securitatea digitală și îți protejezi datele.',
+          low: 'Ai nevoie să înveți mai multe despre securitatea digitală.'
+        },
+        yourScore: {
+          high: 'Ai cunoștințe excelente despre securitatea digitală.',
+          moderate: 'Înțelegi conceptele de bază de securitate digitală.',
+          low: 'Ar fi important să înveți despre protecția datelor și securitatea online.'
+        }
+      }
+    },
+
+    'Aptitudini Profesionale': {
+      leadership_aptitude: {
+        description: 'Potențialul natural pentru a conduce și influența echipe.',
+        interpretations: {
+          high: 'Ai un potențial natural puternic pentru leadership.',
+          low: 'Ai mai mult potențial ca membru al echipei decât ca lider.'
+        },
+        yourScore: {
+          high: 'Ai aptitudini naturale excelente pentru leadership.',
+          moderate: 'Ai potențial de leadership care poate fi dezvoltat.',
+          low: 'Contribui cel mai bine ca membru valoros al echipei.'
+        }
+      },
+      analytical_aptitude: {
+        description: 'Capacitatea naturală de a analiza probleme complexe și date.',
+        interpretations: {
+          high: 'Ai aptitudini analitice foarte puternice pentru probleme complexe.',
+          low: 'Preferi abordări mai puțin analitice și mai intuitive.'
+        },
+        yourScore: {
+          high: 'Excel la analiza detaliată și gândirea sistematică.',
+          moderate: 'Ai abilități analitice solide pentru majoritatea problemelor.',
+          low: 'Preferi abordări intuitive și creative decât analize detaliate.'
+        }
+      },
+      creative_aptitude: {
+        description: 'Potențialul pentru gândire creativă și soluții inovatoare.',
+        interpretations: {
+          high: 'Ai un potențial creativ foarte puternic și aduci soluții originale.',
+          low: 'Preferi abordări mai practice și mai puțin creative.'
+        },
+        yourScore: {
+          high: 'Ai un potențial creativ excepțional și gândire inovatoare.',
+          moderate: 'Poți fi creativ când situația o cere.',
+          low: 'Preferi soluții dovedite și abordări practice.'
+        }
+      },
+      technical_aptitude: {
+        description: 'Aptitudinea pentru înțelegerea și utilizarea tehnologiilor.',
+        interpretations: {
+          high: 'Ai aptitudini tehnice foarte puternice și înțelegi rapid tehnologiile.',
+          low: 'Ai dificultăți cu aspectele tehnice și preferi domeniile non-tehnice.'
+        },
+        yourScore: {
+          high: 'Ai aptitudini tehnice excelente și te adaptezi rapid la tehnologii noi.',
+          moderate: 'Poți învăța tehnologii cu efort și practică.',
+          low: 'Preferi domeniile care nu necesită aptitudini tehnice avansate.'
+        }
+      },
+      social_aptitude: {
+        description: 'Capacitatea naturală de a interacționa și conecta cu oamenii.',
+        interpretations: {
+          high: 'Ai aptitudini sociale excelente și conectezi ușor cu oamenii.',
+          low: 'Ai dificultăți cu interacțiunile sociale complexe.'
+        },
+        yourScore: {
+          high: 'Excel la construirea relațiilor și comunicarea cu diverse persoane.',
+          moderate: 'Te descurci bine în majoritatea situațiilor sociale.',
+          low: 'Preferi munca independentă și interacțiunile sociale limitate.'
+        }
+      }
+    },
+
+    'Test Percepție Senzorială': {
+      visual_perception: {
+        description: 'Acuitatea și eficiența procesării informațiilor vizuale.',
+        interpretations: {
+          high: 'Ai o percepție vizuală foarte ascuțită și procesezi rapid informația vizuală.',
+          low: 'Poți avea dificultăți cu procesarea rapidă a informațiilor vizuale complexe.'
+        },
+        yourScore: {
+          high: 'Ai o percepție vizuală excepțională și atenție la detalii vizuale.',
+          moderate: 'Percepția ta vizuală este bună pentru majoritatea sarcinilor.',
+          low: 'Ar fi util să practice exerciții de antrenament vizual.'
+        }
+      },
+      auditory_perception: {
+        description: 'Capacitatea de a procesa și înțelege informațiile auditive.',
+        interpretations: {
+          high: 'Ai o percepție auditivă excelentă și distingi subtilitățile sonore.',
+          low: 'Poți avea dificultăți cu procesarea informațiilor auditive complexe.'
+        },
+        yourScore: {
+          high: 'Ai o sensibilitate auditivă excepțională și procesezi bine sunetele.',
+          moderate: 'Percepția ta auditivă este adecvată pentru majoritatea situațiilor.',
+          low: 'Ar putea fi util să practice ascultarea activă și focusată.'
+        }
+      },
+      tactile_perception: {
+        description: 'Sensibilitatea și eficiența percepției prin atingere.',
+        interpretations: {
+          high: 'Ai o sensibilitate tactilă foarte dezvoltată și folosești eficient atingerea.',
+          low: 'Ai o sensibilitate tactilă mai redusă sau te bazezi mai puțin pe atingere.'
+        },
+        yourScore: {
+          high: 'Ai o sensibilitate tactilă excepțională și folosești bine atingerea.',
+          moderate: 'Percepția ta tactilă este normală pentru activitățile zilnice.',
+          low: 'Te bazezi mai puțin pe informațiile tactile și mai mult pe alte simțuri.'
+        }
+      },
+      spatial_perception: {
+        description: 'Capacitatea de a percepe și naviga în spațiul tridimensional.',
+        interpretations: {
+          high: 'Ai o orientare spațială excelentă și navighezi ușor în spații complexe.',
+          low: 'Poți avea dificultăți cu orientarea spațială și navigarea.'
+        },
+        yourScore: {
+          high: 'Ai o orientare spațială excepțională și simț excelent al direcției.',
+          moderate: 'Te orientezi bine în majoritatea spațiilor familiare.',
+          low: 'Ar fi util să practice exerciții de orientare spațială.'
         }
       }
     }
