@@ -61,7 +61,20 @@
     "wellness": "Wellness",
     "cognitive": "Cognitive",
     "digital": "Digital",
-    "sensory": "Sensory"
+    "sensory": "Sensory",
+    "mentalHealth": "Mental Health",
+    "cognitiveAbilities": "Cognitive Abilities",
+    "teamRoles": "Team Roles"
+  },
+  "testNames": {
+    "beckDepressionInventory": "Beck Depression Inventory",
+    "cognitiveAbilitiesTest": "Cognitive Abilities Test",
+    "belbinTeamRoles": "Belbin Team Roles"
+  },
+  "testDescriptions": {
+    "beckDepressionInventory": "Assess your emotional state and identify potential signs of depression through scientifically validated questions.",
+    "cognitiveAbilitiesTest": "Evaluate your cognitive skills including logical reasoning, problem-solving, and analytical thinking.",
+    "belbinTeamRoles": "Discover your preferred team role and how you contribute most effectively in group settings."
   },
   "plans": {
     "basic": {

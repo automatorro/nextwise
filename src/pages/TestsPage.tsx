@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -9,6 +8,7 @@ import { Loader2, Clock, Users, Brain, Target, Heart, AlertTriangle } from 'luci
 import { Link } from 'react-router-dom';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useLanguage } from '@/hooks/useLanguage';
+import { getCategoryTranslationKey, getTestNameTranslationKey, getTestDescriptionTranslationKey } from '@/utils/testTranslationMapping';
 
 interface TestType {
   id: string;
@@ -199,90 +199,99 @@ const TestsPage = () => {
           )}
         </div>
 
-        {Object.entries(groupedTests).map(([categoryName, categoryTests]) => (
-          <div key={categoryName} className="mb-12">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              {React.createElement(getIconComponent(categoryTests[0]?.test_categories.icon), {
-                className: "w-6 h-6 mr-2 text-blue-600"
-              })}
-              {categoryName}
-            </h2>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {categoryTests.map((test) => {
-                const userCanTake = canUserTakeTest(test);
-                
-                return (
-                  <Card key={test.id} className="hover:shadow-lg transition-shadow">
-                    <CardHeader>
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <CardTitle className="text-lg">{test.name}</CardTitle>
-                          <CardDescription className="mt-2">
-                            {test.description}
-                          </CardDescription>
+        {Object.entries(groupedTests).map(([categoryName, categoryTests]) => {
+          const categoryTranslationKey = getCategoryTranslationKey(categoryName);
+          const translatedCategoryName = t(categoryTranslationKey);
+          
+          return (
+            <div key={categoryName} className="mb-12">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+                {React.createElement(getIconComponent(categoryTests[0]?.test_categories.icon), {
+                  className: "w-6 h-6 mr-2 text-blue-600"
+                })}
+                {translatedCategoryName}
+              </h2>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {categoryTests.map((test) => {
+                  const userCanTake = canUserTakeTest(test);
+                  const testNameTranslationKey = getTestNameTranslationKey(test.name);
+                  const testDescriptionTranslationKey = getTestDescriptionTranslationKey(test.name);
+                  const translatedTestName = t(testNameTranslationKey);
+                  const translatedTestDescription = t(testDescriptionTranslationKey);
+                  
+                  return (
+                    <Card key={test.id} className="hover:shadow-lg transition-shadow">
+                      <CardHeader>
+                        <div className="flex items-start justify-between">
+                          <div className="flex-1">
+                            <CardTitle className="text-lg">{translatedTestName}</CardTitle>
+                            <CardDescription className="mt-2">
+                              {translatedTestDescription}
+                            </CardDescription>
+                          </div>
+                          <div className={`p-2 rounded-lg ${
+                            test.subscription_required === 'basic' ? 'bg-green-100' :
+                            test.subscription_required === 'professional' ? 'bg-blue-100' :
+                            'bg-purple-100'
+                          }`}>
+                            {React.createElement(getIconComponent(test.test_categories.icon), {
+                              className: `w-5 h-5 ${
+                                test.subscription_required === 'basic' ? 'text-green-600' :
+                                test.subscription_required === 'professional' ? 'text-blue-600' :
+                                'text-purple-600'
+                              }`
+                            })}
+                          </div>
                         </div>
-                        <div className={`p-2 rounded-lg ${
-                          test.subscription_required === 'basic' ? 'bg-green-100' :
-                          test.subscription_required === 'professional' ? 'bg-blue-100' :
-                          'bg-purple-100'
-                        }`}>
-                          {React.createElement(getIconComponent(test.test_categories.icon), {
-                            className: `w-5 h-5 ${
-                              test.subscription_required === 'basic' ? 'text-green-600' :
-                              test.subscription_required === 'professional' ? 'text-blue-600' :
-                              'text-purple-600'
-                            }`
-                          })}
+                      </CardHeader>
+                      
+                      <CardContent>
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="flex items-center text-sm text-gray-600">
+                            <Clock className="w-4 h-4 mr-1" />
+                            {test.estimated_duration} {t('tests.minutes')}
+                          </div>
+                          <Badge variant="secondary">
+                            {test.actual_questions_count} {t('tests.questions')}
+                          </Badge>
                         </div>
-                      </div>
-                    </CardHeader>
-                    
-                    <CardContent>
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex items-center text-sm text-gray-600">
-                          <Clock className="w-4 h-4 mr-1" />
-                          {test.estimated_duration} {t('tests.minutes')}
-                        </div>
-                        <Badge variant="secondary">
-                          {test.actual_questions_count} {t('tests.questions')}
-                        </Badge>
-                      </div>
 
-                      <div className="mb-4">
-                        <Badge 
-                          variant="outline" 
-                          className={getSubscriptionBadgeColor(test.subscription_required)}
-                        >
-                          {getSubscriptionLabel(test.subscription_required)}
-                        </Badge>
-                      </div>
+                        <div className="mb-4">
+                          <Badge 
+                            variant="outline" 
+                            className={getSubscriptionBadgeColor(test.subscription_required)}
+                          >
+                            {getSubscriptionLabel(test.subscription_required)}
+                          </Badge>
+                        </div>
 
-                      {userCanTake ? (
-                        <Link to={`/test/${test.id}`}>
-                          <Button className="w-full">
-                            {t('tests.takeTest')}
-                          </Button>
-                        </Link>
-                      ) : (
-                        <div className="space-y-2">
-                          <Button disabled className="w-full">
-                            {t('tests.upgradeRequired')}
-                          </Button>
-                          <Link to="/abonament">
-                            <Button variant="outline" size="sm" className="w-full">
-                              {t('subscription.upgradeSubscription')}
+                        {userCanTake ? (
+                          <Link to={`/test/${test.id}`}>
+                            <Button className="w-full">
+                              {t('tests.takeTest')}
                             </Button>
                           </Link>
-                        </div>
-                      )}
-                    </CardContent>
-                  </Card>
-                );
-              })}
+                        ) : (
+                          <div className="space-y-2">
+                            <Button disabled className="w-full">
+                              {t('tests.upgradeRequired')}
+                            </Button>
+                            <Link to="/abonament">
+                              <Button variant="outline" size="sm" className="w-full">
+                                {t('subscription.upgradeSubscription')}
+                              </Button>
+                            </Link>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
 
         {Object.keys(groupedTests).length === 0 && (
           <div className="text-center py-12">

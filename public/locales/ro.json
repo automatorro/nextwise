@@ -61,7 +61,20 @@
     "wellness": "Bunăstare",
     "cognitive": "Cognitiv",
     "digital": "Digital",
-    "sensory": "Senzorial"
+    "sensory": "Senzorial",
+    "mentalHealth": "Sănătate Mentală",
+    "cognitiveAbilities": "Aptitudini Cognitive",
+    "teamRoles": "Roluri în Echipă"
+  },
+  "testNames": {
+    "beckDepressionInventory": "Beck Depression Inventory",
+    "cognitiveAbilitiesTest": "Test de Aptitudini Cognitive",
+    "belbinTeamRoles": "Rolurile de Echipă Belbin"
+  },
+  "testDescriptions": {
+    "beckDepressionInventory": "Evaluează starea ta emoțională și identifică potențiale semne de depresie prin întrebări validate științific.",
+    "cognitiveAbilitiesTest": "Evaluează abilitățile tale cognitive incluzând gândirea logică, rezolvarea problemelor și gândirea analitică.",
+    "belbinTeamRoles": "Descoperă rolul tău preferat în echipă și cum contribui cel mai eficient în grupuri."
   },
   "plans": {
     "basic": {
