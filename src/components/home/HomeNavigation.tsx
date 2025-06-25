@@ -11,6 +11,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { User, LogOut, Menu, Globe, Settings } from 'lucide-react';
 
 const HomeNavigation = () => {
@@ -25,9 +32,9 @@ const HomeNavigation = () => {
     navigate('/auth');
   };
 
-  const toggleLanguage = () => {
-    const newLanguage = language === 'ro' ? 'en' : 'ro';
-    changeLanguage(newLanguage);
+  const handleLanguageChange = (newLanguage: string) => {
+    console.log('Changing language from', language, 'to', newLanguage);
+    changeLanguage(newLanguage as 'ro' | 'en');
   };
 
   return (
@@ -83,15 +90,28 @@ const HomeNavigation = () => {
                     )}
                   </div>
 
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={toggleLanguage}
-                    className="flex items-center gap-1"
-                  >
-                    <Globe className="w-4 h-4" />
-                    {language.toUpperCase()}
-                  </Button>
+                  <Select value={language} onValueChange={handleLanguageChange}>
+                    <SelectTrigger className="w-24 h-9 bg-white/60 hover:bg-white/80 border-gray-200">
+                      <div className="flex items-center gap-1">
+                        <Globe className="w-4 h-4" />
+                        <SelectValue />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border-gray-200 shadow-lg z-[60]">
+                      <SelectItem value="ro" className="hover:bg-gray-100">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">🇷🇴</span>
+                          <span>Română</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="en" className="hover:bg-gray-100">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">🇬🇧</span>
+                          <span>English</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
 
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -100,7 +120,7 @@ const HomeNavigation = () => {
                         <span className="sr-only">Open user menu</span>
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
+                    <DropdownMenuContent align="end" className="bg-white border-gray-200 shadow-lg z-[60]">
                       <DropdownMenuItem onClick={() => navigate('/abonament')}>
                         <Settings className="h-4 w-4 mr-2" />
                         {t('nav.subscriptionSettings')}
@@ -122,15 +142,28 @@ const HomeNavigation = () => {
                 </>
               ) : (
                 <>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={toggleLanguage}
-                    className="flex items-center gap-1"
-                  >
-                    <Globe className="w-4 h-4" />
-                    {language.toUpperCase()}
-                  </Button>
+                  <Select value={language} onValueChange={handleLanguageChange}>
+                    <SelectTrigger className="w-24 h-9 bg-white/60 hover:bg-white/80 border-gray-200">
+                      <div className="flex items-center gap-1">
+                        <Globe className="w-4 h-4" />
+                        <SelectValue />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent className="bg-white border-gray-200 shadow-lg z-[60]">
+                      <SelectItem value="ro" className="hover:bg-gray-100">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">🇷🇴</span>
+                          <span>Română</span>
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="en" className="hover:bg-gray-100">
+                        <div className="flex items-center gap-2">
+                          <span className="text-lg">🇬🇧</span>
+                          <span>English</span>
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                   
                   <Link to="/auth">
                     <Button variant="ghost" className="hover:bg-white/60 transition-colors">
