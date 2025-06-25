@@ -5,7 +5,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { calculateCognitiveAbilitiesScore, calculateCognitiveAbilitiesScoreFromDB } from '@/utils/testResultFormatters';
 import { calculateBeckDepressionScore } from '@/utils/beckDepressionInventoryCalculator';
-import { isCognitiveAbilitiesTest, isBeckDepressionInventory } from '@/utils/testLabels';
+import { calculateBelbinTeamRolesScore } from '@/utils/belbinTeamRolesCalculator';
+import { isCognitiveAbilitiesTest, isBeckDepressionInventory, isBelbinTeamRoles } from '@/utils/testLabels';
 
 export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,6 +57,9 @@ export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
       } else if (isBeckDepressionInventory(testType.name)) {
         console.log('Calculating Beck Depression Inventory score...');
         calculatedScore = calculateBeckDepressionScore(testData.answers);
+      } else if (isBelbinTeamRoles(testType.name)) {
+        console.log('Calculating Belbin Team Roles score...');
+        calculatedScore = calculateBelbinTeamRolesScore(testData.answers);
       } else {
         // Default scoring for other tests (placeholder)
         console.log('Using default scoring...');

@@ -1,3 +1,4 @@
+
 function getActualDimensionKey(key: string): string {
   const keyMap: { [key: string]: string } = {
     '0': 'verbal',
@@ -48,6 +49,31 @@ export function getDimensionLabel(testName: string, dimensionKey: string): strin
         return dimensionKey;
     }
   }
+
+  if (testKey === 'roluri în echipă belbin' || testKey.includes('belbin')) {
+    switch (dimensionKey) {
+      case 'plant':
+        return 'Plant (Creativul)';
+      case 'resource_investigator':
+        return 'Resource Investigator (Investigatorul)';
+      case 'coordinator':
+        return 'Coordinator (Coordonatorul)';
+      case 'shaper':
+        return 'Shaper (Modelatorul)';
+      case 'monitor_evaluator':
+        return 'Monitor Evaluator (Evaluatorul)';
+      case 'teamworker':
+        return 'Teamworker (Echipierul)';
+      case 'implementer':
+        return 'Implementer (Implementatorul)';
+      case 'completer_finisher':
+        return 'Completer Finisher (Finalizatorul)';
+      case 'specialist':
+        return 'Specialist (Specialistul)';
+      default:
+        return dimensionKey;
+    }
+  }
   
   return dimensionKey;
 }
@@ -68,6 +94,10 @@ export function getTestDimensions(testName: string): string[] {
   if (testKey === 'test aptitudini cognitive' || testKey.includes('aptitudini cognitive')) {
     return ['verbal', 'numeric', 'logic', 'spatial', 'abstract'];
   }
+
+  if (testKey === 'roluri în echipă belbin' || testKey.includes('belbin')) {
+    return ['plant', 'resource_investigator', 'coordinator', 'shaper', 'monitor_evaluator', 'teamworker', 'implementer', 'completer_finisher', 'specialist'];
+  }
   
   return [];
 }
@@ -76,4 +106,9 @@ export function isBeckDepressionInventory(testName: string): boolean {
   return testName.toLowerCase().includes('beck') || 
          testName.toLowerCase().includes('depression') ||
          testName.toLowerCase().includes('bdi');
+}
+
+export function isBelbinTeamRoles(testName: string): boolean {
+  return testName.toLowerCase().includes('belbin') ||
+         testName.toLowerCase().includes('roluri în echipă');
 }
