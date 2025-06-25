@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -14,6 +15,7 @@ import DetailedAnalysisSection from '@/components/test-result/DetailedAnalysisSe
 import DetailedInterpretations from '@/components/test-result/DetailedInterpretations';
 import ScoringExplanation from '@/components/test-result/ScoringExplanation';
 import DimensionExplanations from '@/components/test-result/DimensionExplanations';
+import CorrectAnswersSection from '@/components/test-result/CorrectAnswersSection';
 import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
 import { useCognitiveAbilitiesCalculation } from '@/hooks/useCognitiveAbilitiesCalculation';
 import { isCognitiveAbilitiesTest } from '@/utils/testLabels';
@@ -173,6 +175,14 @@ const TestResult = () => {
 
         {/* Overall Score */}
         <OverallScoreCard score={result.score} />
+
+        {/* Correct Answers Section - only for cognitive abilities tests */}
+        {isCognitiveTest && (
+          <CorrectAnswersSection 
+            testTypeId={result.test_type_id}
+            userAnswers={result.answers}
+          />
+        )}
 
         {/* Scoring Explanation */}
         <ScoringExplanation 
