@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -15,7 +16,7 @@ import {
   Users,
   Heart
 } from 'lucide-react';
-import Navbar from '@/components/layout/Navbar';
+import HomeNavigation from '@/components/home/HomeNavigation';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -81,8 +82,8 @@ const Dashboard = () => {
 
   return (
     <div>
-      <Navbar />
-      <div className="pt-20">
+      <HomeNavigation />
+      <div className="pt-28">
         <div className="min-h-screen bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {/* Welcome Section */}

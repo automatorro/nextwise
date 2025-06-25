@@ -5,7 +5,7 @@ import { Navigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, Languages, Settings } from 'lucide-react';
-import Navbar from '@/components/layout/Navbar';
+import HomeNavigation from '@/components/home/HomeNavigation';
 import TranslationManager from '@/components/admin/TranslationManager';
 
 const AdminPanel = () => {
@@ -14,8 +14,8 @@ const AdminPanel = () => {
   if (loading) {
     return (
       <div>
-        <Navbar />
-        <div className="pt-20">
+        <HomeNavigation />
+        <div className="pt-28">
           <div className="min-h-screen bg-gray-50 flex items-center justify-center">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
@@ -33,8 +33,8 @@ const AdminPanel = () => {
 
   return (
     <div>
-      <Navbar />
-      <div className="pt-20">
+      <HomeNavigation />
+      <div className="pt-28">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="mb-8">
             <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">

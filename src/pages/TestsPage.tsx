@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useLanguage } from '@/hooks/useLanguage';
 import { getCategoryTranslationKey, getTestNameTranslationKey, getTestDescriptionTranslationKey } from '@/utils/testTranslationMapping';
-import Navbar from '@/components/layout/Navbar';
+import HomeNavigation from '@/components/home/HomeNavigation';
 
 interface TestType {
   id: string;
@@ -156,8 +156,8 @@ const TestsPage = () => {
   if (isLoading) {
     return (
       <div>
-        <Navbar />
-        <div className="pt-20">
+        <HomeNavigation />
+        <div className="pt-28">
           <div className="min-h-screen bg-gray-50 flex items-center justify-center">
             <div className="text-center">
               <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
@@ -172,8 +172,8 @@ const TestsPage = () => {
   if (error) {
     return (
       <div>
-        <Navbar />
-        <div className="pt-20">
+        <HomeNavigation />
+        <div className="pt-28">
           <div className="min-h-screen bg-gray-50 flex items-center justify-center">
             <div className="text-center">
               <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
@@ -197,8 +197,8 @@ const TestsPage = () => {
 
   return (
     <div>
-      <Navbar />
-      <div className="pt-20">
+      <HomeNavigation />
+      <div className="pt-28">
         <div className="min-h-screen bg-gray-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="mb-8">
