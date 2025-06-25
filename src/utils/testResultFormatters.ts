@@ -1,5 +1,6 @@
 
 import { getScoreInterpretation } from './testScoring';
+import { supabase } from '@/integrations/supabase/client';
 
 export function formatTestResults(testResult: any) {
   const { score, test_types } = testResult;
@@ -24,9 +25,106 @@ export function formatTestResults(testResult: any) {
   };
 }
 
-// Funcție pentru calcularea scorului pentru Test Aptitudini Cognitive
+// Funcție pentru calcularea scorului pentru Test Aptitudini Cognitive folosind scoring_weights real
+export async function calculateCognitiveAbilitiesScoreFromDB(
+  testTypeId: string, 
+  answers: { [key: string]: number }
+) {
+  console.log('Calculating cognitive abilities score from database for:', testTypeId);
+  
+  try {
+    // Obține toate întrebările cu scoring_weights din baza de date
+    const { data: questions, error } = await supabase
+      .from('test_questions')
+      .select('*')
+      .eq('test_type_id', testTypeId)
+      .order('question_order');
+
+    if (error) {
+      console.error('Error fetching questions:', error);
+      throw error;
+    }
+
+    if (!questions || questions.length === 0) {
+      console.warn('No questions found for test type:', testTypeId);
+      return calculateCognitiveAbilitiesScore(answers); // fallback
+    }
+
+    console.log('Found questions:', questions.length);
+
+    // Calculează scorurile pe dimensiuni folosind scoring_weights real
+    const dimensionScores: { [key: string]: number } = {};
+    const dimensionMaxScores: { [key: string]: number } = {};
+    
+    let totalScore = 0;
+    let totalMaxScore = 0;
+
+    questions.forEach(question => {
+      const userAnswer = answers[question.id];
+      
+      if (userAnswer === undefined || !question.scoring_weights) {
+        console.warn('Missing answer or scoring weights for question:', question.id);
+        return;
+      }
+
+      // Procesează scoring_weights pentru această întrebare
+      Object.entries(question.scoring_weights).forEach(([dimension, weights]: [string, any]) => {
+        if (typeof weights === 'object' && weights !== null) {
+          // Inițializează dimensiunea dacă nu există
+          if (!dimensionScores[dimension]) {
+            dimensionScores[dimension] = 0;
+            dimensionMaxScores[dimension] = 0;
+          }
+
+          // Adaugă scorul pentru răspunsul utilizatorului
+          const userScore = weights[userAnswer.toString()] || 0;
+          dimensionScores[dimension] += userScore;
+          totalScore += userScore;
+
+          // Calculează scorul maxim pentru această dimensiune/întrebare
+          const maxScoreForQuestion = Math.max(...Object.values(weights).filter(v => typeof v === 'number'));
+          dimensionMaxScores[dimension] += maxScoreForQuestion;
+          totalMaxScore += maxScoreForQuestion;
+        }
+      });
+    });
+
+    // Convertește scorurile în procentaje
+    const dimensionPercentages: { [key: string]: number } = {};
+    Object.keys(dimensionScores).forEach(dimension => {
+      const maxForDimension = dimensionMaxScores[dimension];
+      dimensionPercentages[dimension] = maxForDimension > 0 
+        ? Math.round((dimensionScores[dimension] / maxForDimension) * 100) 
+        : 0;
+    });
+
+    const overallPercentage = totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100) : 0;
+
+    console.log('Calculated scores from DB:', {
+      overall: overallPercentage,
+      dimensions: dimensionPercentages,
+      raw: { totalScore, totalMaxScore },
+      dimensionScores,
+      dimensionMaxScores
+    });
+
+    return {
+      overall: overallPercentage,
+      raw_score: totalScore,
+      max_score: totalMaxScore,
+      dimensions: dimensionPercentages,
+      interpretation: getScoreInterpretation(overallPercentage, 'Test Aptitudini Cognitive').description
+    };
+
+  } catch (error) {
+    console.error('Error calculating score from database, using fallback:', error);
+    return calculateCognitiveAbilitiesScore(answers);
+  }
+}
+
+// Funcție pentru calcularea scorului pentru Test Aptitudini Cognitive (fallback)
 export function calculateCognitiveAbilitiesScore(answers: { [key: string]: number }) {
-  console.log('Calculating cognitive abilities score for answers:', answers);
+  console.log('Calculating cognitive abilities score (fallback) for answers:', answers);
   
   // Maparea dimensiunilor pentru Test Aptitudini Cognitive
   const dimensionScores = {
@@ -89,7 +187,7 @@ export function calculateCognitiveAbilitiesScore(answers: { [key: string]: numbe
   // Calculează scorul general
   const overallPercentage = maxPossibleScore > 0 ? Math.round((totalScore / maxPossibleScore) * 100) : 0;
   
-  console.log('Calculated cognitive scores:', {
+  console.log('Calculated cognitive scores (fallback):', {
     overall: overallPercentage,
     dimensions: dimensionPercentages,
     raw: { totalScore, maxPossibleScore }

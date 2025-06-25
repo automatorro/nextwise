@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
-import { calculateCognitiveAbilitiesScore } from '@/utils/testResultFormatters';
+import { calculateCognitiveAbilitiesScore, calculateCognitiveAbilitiesScoreFromDB } from '@/utils/testResultFormatters';
 import { isCognitiveAbilitiesTest } from '@/utils/testLabels';
 
 export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
@@ -45,8 +45,13 @@ export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
       let calculatedScore;
       
       if (isCognitiveAbilitiesTest(testType.name)) {
-        console.log('Calculating cognitive abilities score...');
-        calculatedScore = calculateCognitiveAbilitiesScore(testData.answers);
+        console.log('Calculating cognitive abilities score using database...');
+        try {
+          calculatedScore = await calculateCognitiveAbilitiesScoreFromDB(testData.test_type_id, testData.answers);
+        } catch (dbError) {
+          console.warn('Database calculation failed, using fallback:', dbError);
+          calculatedScore = calculateCognitiveAbilitiesScore(testData.answers);
+        }
       } else {
         // Default scoring for other tests (placeholder)
         console.log('Using default scoring...');
