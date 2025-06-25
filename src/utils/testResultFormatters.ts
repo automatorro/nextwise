@@ -1,4 +1,3 @@
-
 import { getScoreInterpretation } from './testScoring';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -67,35 +66,97 @@ export async function calculateCognitiveAbilitiesScoreFromDB(
         return;
       }
 
-      // Procesează scoring_weights pentru această întrebare
-      Object.entries(question.scoring_weights).forEach(([dimension, weights]: [string, any]) => {
-        if (typeof weights === 'object' && weights !== null) {
-          // Inițializează dimensiunea dacă nu există
-          if (!dimensionScores[dimension]) {
-            dimensionScores[dimension] = 0;
-            dimensionMaxScores[dimension] = 0;
-          }
+      console.log('Processing question:', question.id, 'scoring_weights:', question.scoring_weights);
 
-          // Adaugă scorul pentru răspunsul utilizatorului
-          const userScore = weights[userAnswer.toString()] || 0;
-          dimensionScores[dimension] += userScore;
-          totalScore += userScore;
+      // Procesează scoring_weights cu structura corectă: {option_value: {dimension: score}}
+      Object.entries(question.scoring_weights).forEach(([optionValue, dimensionScores_raw]: [string, any]) => {
+        if (typeof dimensionScores_raw === 'object' && dimensionScores_raw !== null) {
+          // Pentru fiecare opțiune, procesează dimensiunile
+          Object.entries(dimensionScores_raw).forEach(([dimension, score]: [string, any]) => {
+            // Inițializează dimensiunea dacă nu există
+            if (!dimensionScores[dimension]) {
+              dimensionScores[dimension] = 0;
+              dimensionMaxScores[dimension] = 0;
+            }
 
-          // Calculează scorul maxim pentru această dimensiune/întrebare
-          const maxScoreForQuestion = Math.max(...Object.values(weights).filter(v => typeof v === 'number'));
-          dimensionMaxScores[dimension] += maxScoreForQuestion;
-          totalMaxScore += maxScoreForQuestion;
+            const numericScore = typeof score === 'number' ? score : 0;
+            
+            // Dacă opțiunea curentă este răspunsul utilizatorului, adaugă scorul
+            if (optionValue === userAnswer.toString()) {
+              dimensionScores[dimension] += numericScore;
+              totalScore += numericScore;
+            }
+
+            // Ține evidența scorului maxim pentru această dimensiune
+            if (numericScore > 0) {
+              // Găsește scorul maxim pentru această întrebare și dimensiune
+              const currentMaxForDimension = dimensionMaxScores[dimension] || 0;
+              const maxScoreForThisQuestionDimension = numericScore;
+              
+              // Actualizează doar dacă acest scor este mai mare decât ce avem deja pentru această întrebare
+              if (optionValue === '1') { // Prima iterație pentru această întrebare
+                dimensionMaxScores[dimension] = currentMaxForDimension + maxScoreForThisQuestionDimension;
+              } else {
+                // Găsește maximul dintre toate opțiunile pentru această dimensiune
+                const existingMax = Math.floor(dimensionMaxScores[dimension] / questions.length) || 0;
+                if (maxScoreForThisQuestionDimension > existingMax) {
+                  dimensionMaxScores[dimension] = dimensionMaxScores[dimension] - existingMax + maxScoreForThisQuestionDimension;
+                }
+              }
+            }
+          });
         }
       });
+
+      // Calculează scorul maxim pentru această întrebare
+      let maxScoreForQuestion = 0;
+      Object.values(question.scoring_weights).forEach((dimensionScores_raw: any) => {
+        if (typeof dimensionScores_raw === 'object' && dimensionScores_raw !== null) {
+          let totalScoreForOption = 0;
+          Object.values(dimensionScores_raw).forEach((score: any) => {
+            if (typeof score === 'number') {
+              totalScoreForOption += score;
+            }
+          });
+          if (totalScoreForOption > maxScoreForQuestion) {
+            maxScoreForQuestion = totalScoreForOption;
+          }
+        }
+      });
+      
+      totalMaxScore += maxScoreForQuestion;
+    });
+
+    // Recalculează dimensionMaxScores corect
+    const correctDimensionMaxScores: { [key: string]: number } = {};
+    questions.forEach(question => {
+      if (question.scoring_weights) {
+        Object.values(question.scoring_weights).forEach((dimensionScores_raw: any) => {
+          if (typeof dimensionScores_raw === 'object' && dimensionScores_raw !== null) {
+            Object.entries(dimensionScores_raw).forEach(([dimension, score]: [string, any]) => {
+              if (!correctDimensionMaxScores[dimension]) {
+                correctDimensionMaxScores[dimension] = 0;
+              }
+              const numericScore = typeof score === 'number' ? score : 0;
+              if (numericScore > correctDimensionMaxScores[dimension]) {
+                correctDimensionMaxScores[dimension] = numericScore;
+              }
+            });
+          }
+        });
+      }
+    });
+
+    // Multiplică cu numărul de întrebări pentru fiecare dimensiune
+    Object.keys(correctDimensionMaxScores).forEach(dimension => {
+      correctDimensionMaxScores[dimension] *= questions.length / 5; // presupunând 5 dimensiuni
     });
 
     // Convertește scorurile în procentaje
     const dimensionPercentages: { [key: string]: number } = {};
     Object.keys(dimensionScores).forEach(dimension => {
-      const maxForDimension = dimensionMaxScores[dimension];
-      dimensionPercentages[dimension] = maxForDimension > 0 
-        ? Math.round((dimensionScores[dimension] / maxForDimension) * 100) 
-        : 0;
+      const maxForDimension = correctDimensionMaxScores[dimension] || 1;
+      dimensionPercentages[dimension] = Math.round((dimensionScores[dimension] / maxForDimension) * 100);
     });
 
     const overallPercentage = totalMaxScore > 0 ? Math.round((totalScore / totalMaxScore) * 100) : 0;
@@ -105,7 +166,7 @@ export async function calculateCognitiveAbilitiesScoreFromDB(
       dimensions: dimensionPercentages,
       raw: { totalScore, totalMaxScore },
       dimensionScores,
-      dimensionMaxScores
+      correctDimensionMaxScores
     });
 
     return {
@@ -176,12 +237,12 @@ export function calculateCognitiveAbilitiesScore(answers: { [key: string]: numbe
   });
   
   // Calculează procentajele pentru fiecare dimensiune
-  const dimensionPercentages: { [key: string]: number } = {};
+  const dimensionPercentajes: { [key: string]: number } = {};
   Object.keys(dimensionScores).forEach(dimension => {
     const score = dimensionScores[dimension as keyof typeof dimensionScores];
     const count = dimensionCounts[dimension as keyof typeof dimensionCounts];
     const maxForDimension = count * 4;
-    dimensionPercentages[dimension] = maxForDimension > 0 ? Math.round((score / maxForDimension) * 100) : 0;
+    dimensionPercentajes[dimension] = maxForDimension > 0 ? Math.round((score / maxForDimension) * 100) : 0;
   });
   
   // Calculează scorul general
@@ -189,7 +250,7 @@ export function calculateCognitiveAbilitiesScore(answers: { [key: string]: numbe
   
   console.log('Calculated cognitive scores (fallback):', {
     overall: overallPercentage,
-    dimensions: dimensionPercentages,
+    dimensions: dimensionPercentajes,
     raw: { totalScore, maxPossibleScore }
   });
   
@@ -197,7 +258,7 @@ export function calculateCognitiveAbilitiesScore(answers: { [key: string]: numbe
     overall: overallPercentage,
     raw_score: totalScore,
     max_score: maxPossibleScore,
-    dimensions: dimensionPercentages,
+    dimensions: dimensionPercentajes,
     interpretation: getScoreInterpretation(overallPercentage, 'Test Aptitudini Cognitive').description
   };
 }

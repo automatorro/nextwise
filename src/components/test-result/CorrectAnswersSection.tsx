@@ -43,38 +43,43 @@ const CorrectAnswersSection = ({ testTypeId, userAnswers }: CorrectAnswersSectio
     let maxScore = -1;
     let bestOptionValue = null;
     
-    // Parcurge toate dimensiunile din scoring_weights
-    Object.values(question.scoring_weights).forEach((dimensionWeights: any) => {
-      if (typeof dimensionWeights === 'object' && dimensionWeights !== null) {
-        // Pentru fiecare dimensiune, găsește opțiunea cu cel mai mare punctaj
-        Object.entries(dimensionWeights).forEach(([optionValue, score]: [string, any]) => {
-          const numericScore = typeof score === 'number' ? score : 0;
-          if (numericScore > maxScore) {
-            maxScore = numericScore;
-            bestOptionValue = parseInt(optionValue);
+    // Parcurge scoring_weights cu structura {option_value: {dimension: score}}
+    Object.entries(question.scoring_weights).forEach(([optionValue, dimensionScores]: [string, any]) => {
+      if (typeof dimensionScores === 'object' && dimensionScores !== null) {
+        // Calculează scorul total pentru această opțiune pe toate dimensiunile
+        let totalScore = 0;
+        Object.values(dimensionScores).forEach((score: any) => {
+          if (typeof score === 'number') {
+            totalScore += score;
           }
         });
+        
+        if (totalScore > maxScore) {
+          maxScore = totalScore;
+          bestOptionValue = parseInt(optionValue);
+        }
       }
     });
     
-    console.log('Best option for question', question.question_order, ':', bestOptionValue, 'with score:', maxScore);
+    console.log('Best option for question', question.question_order, ':', bestOptionValue, 'with total score:', maxScore);
     return bestOptionValue;
   };
 
   const getUserScore = (question: Question, userAnswer: number) => {
     if (!question.scoring_weights || userAnswer === undefined) return 0;
     
-    let totalScore = 0;
+    // Găsește scorul pentru răspunsul utilizatorului
+    const userAnswerScores = question.scoring_weights[userAnswer.toString()];
+    if (!userAnswerScores) return 0;
     
-    // Calculează scorul pentru răspunsul utilizatorului pe toate dimensiunile
-    Object.values(question.scoring_weights).forEach((dimensionWeights: any) => {
-      if (typeof dimensionWeights === 'object' && dimensionWeights !== null) {
-        const score = dimensionWeights[userAnswer.toString()];
+    let totalScore = 0;
+    if (typeof userAnswerScores === 'object' && userAnswerScores !== null) {
+      Object.values(userAnswerScores).forEach((score: any) => {
         if (typeof score === 'number') {
           totalScore += score;
         }
-      }
-    });
+      });
+    }
     
     return totalScore;
   };
@@ -85,13 +90,17 @@ const CorrectAnswersSection = ({ testTypeId, userAnswers }: CorrectAnswersSectio
     let maxScore = 0;
     
     // Găsește scorul maxim posibil pentru această întrebare
-    Object.values(question.scoring_weights).forEach((dimensionWeights: any) => {
-      if (typeof dimensionWeights === 'object' && dimensionWeights !== null) {
-        Object.values(dimensionWeights).forEach((score: any) => {
-          if (typeof score === 'number' && score > maxScore) {
-            maxScore = score;
+    Object.values(question.scoring_weights).forEach((dimensionScores: any) => {
+      if (typeof dimensionScores === 'object' && dimensionScores !== null) {
+        let totalScoreForOption = 0;
+        Object.values(dimensionScores).forEach((score: any) => {
+          if (typeof score === 'number') {
+            totalScoreForOption += score;
           }
         });
+        if (totalScoreForOption > maxScore) {
+          maxScore = totalScoreForOption;
+        }
       }
     });
     
@@ -179,7 +188,7 @@ const CorrectAnswersSection = ({ testTypeId, userAnswers }: CorrectAnswersSectio
                 {bestOption !== null && (
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary" className="bg-green-100 text-green-800">
-                      Răspuns optim
+                      Răspuns corect
                     </Badge>
                     <span className="text-sm font-medium text-green-700">
                       {getOptionLabel(question, bestOption)}
