@@ -34,68 +34,42 @@ export function calculateBelbinTeamRolesScore(answers: { [key: string]: number }
   Object.entries(answers).forEach(([questionId, selectedOption]) => {
     const questionNumber = parseInt(questionId.replace(/\D/g, ''));
     
-    // Each answer contributes differently to each role
-    // This is a simplified scoring - in reality, each question option would have different weights
-    switch (selectedOption) {
-      case 0: // First option
-        if (questionNumber % 9 === 1) roles.plant += 3;
-        else if (questionNumber % 9 === 2) roles.teamworker += 3;
-        else if (questionNumber % 9 === 3) roles.resource_investigator += 3;
-        else if (questionNumber % 9 === 4) roles.implementer += 3;
-        else if (questionNumber % 9 === 5) roles.teamworker += 3;
-        else if (questionNumber % 9 === 6) roles.shaper += 3;
-        else if (questionNumber % 9 === 7) roles.plant += 3;
-        else if (questionNumber % 9 === 8) roles.completer_finisher += 3;
-        else roles.teamworker += 3;
-        break;
-        
-      case 1: // Second option
-        if (questionNumber % 9 === 1) roles.resource_investigator += 3;
-        else if (questionNumber % 9 === 2) roles.implementer += 3;
-        else if (questionNumber % 9 === 3) roles.coordinator += 3;
-        else if (questionNumber % 9 === 4) roles.completer_finisher += 3;
-        else if (questionNumber % 9 === 5) roles.implementer += 3;
-        else if (questionNumber % 9 === 6) roles.monitor_evaluator += 3;
-        else if (questionNumber % 9 === 7) roles.resource_investigator += 3;
-        else if (questionNumber % 9 === 8) roles.specialist += 3;
-        else roles.monitor_evaluator += 3;
-        break;
-        
-      case 2: // Third option
-        if (questionNumber % 9 === 1) roles.coordinator += 3;
-        else if (questionNumber % 9 === 2) roles.completer_finisher += 3;
-        else if (questionNumber % 9 === 3) roles.shaper += 3;
-        else if (questionNumber % 9 === 4) roles.specialist += 3;
-        else if (questionNumber % 9 === 5) roles.monitor_evaluator += 3;
-        else if (questionNumber % 9 === 6) roles.teamworker += 3;
-        else if (questionNumber % 9 === 7) roles.coordinator += 3;
-        else if (questionNumber % 9 === 8) roles.plant += 3;
-        else roles.coordinator += 3;
-        break;
-        
-      case 3: // Fourth option
-        if (questionNumber % 9 === 1) roles.shaper += 3;
-        else if (questionNumber % 9 === 2) roles.specialist += 3;
-        else if (questionNumber % 9 === 3) roles.monitor_evaluator += 3;
-        else if (questionNumber % 9 === 4) roles.plant += 3;
-        else if (questionNumber % 9 === 5) roles.shaper += 3;
-        else if (questionNumber % 9 === 6) roles.implementer += 3;
-        else if (questionNumber % 9 === 7) roles.monitor_evaluator += 3;
-        else if (questionNumber % 9 === 8) roles.shaper += 3;
-        else roles.shaper += 3;
-        break;
-        
-      case 4: // Fifth option
-        if (questionNumber % 9 === 1) roles.monitor_evaluator += 3;
-        else if (questionNumber % 9 === 2) roles.plant += 3;
-        else if (questionNumber % 9 === 3) roles.teamworker += 3;
-        else if (questionNumber % 9 === 4) roles.resource_investigator += 3;
-        else if (questionNumber % 9 === 5) roles.coordinator += 3;
-        else if (questionNumber % 9 === 6) roles.completer_finisher += 3;
-        else if (questionNumber % 9 === 7) roles.implementer += 3;
-        else if (questionNumber % 9 === 8) roles.resource_investigator += 3;
-        else roles.specialist += 3;
-        break;
+    // Map each question and option to the appropriate roles
+    // The scoring system uses a direct mapping based on the question content
+    const scoreMapping = {
+      1: { 0: 'plant', 1: 'resource_investigator', 2: 'coordinator', 3: 'shaper', 4: 'monitor_evaluator' },
+      2: { 0: 'teamworker', 1: 'implementer', 2: 'completer_finisher', 3: 'specialist', 4: 'plant' },
+      3: { 0: 'resource_investigator', 1: 'coordinator', 2: 'shaper', 3: 'monitor_evaluator', 4: 'teamworker' },
+      4: { 0: 'implementer', 1: 'completer_finisher', 2: 'specialist', 3: 'plant', 4: 'resource_investigator' },
+      5: { 0: 'teamworker', 1: 'implementer', 2: 'monitor_evaluator', 3: 'shaper', 4: 'coordinator' },
+      6: { 0: 'shaper', 1: 'monitor_evaluator', 2: 'teamworker', 3: 'implementer', 4: 'completer_finisher' },
+      7: { 0: 'plant', 1: 'resource_investigator', 2: 'coordinator', 3: 'monitor_evaluator', 4: 'implementer' },
+      8: { 0: 'completer_finisher', 1: 'specialist', 2: 'plant', 3: 'shaper', 4: 'resource_investigator' },
+      9: { 0: 'teamworker', 1: 'implementer', 2: 'completer_finisher', 3: 'specialist', 4: 'coordinator' },
+      10: { 0: 'monitor_evaluator', 1: 'implementer', 2: 'completer_finisher', 3: 'plant', 4: 'resource_investigator' },
+      11: { 0: 'coordinator', 1: 'shaper', 2: 'specialist', 3: 'plant', 4: 'resource_investigator' },
+      12: { 0: 'monitor_evaluator', 1: 'implementer', 2: 'completer_finisher', 3: 'shaper', 4: 'plant' },
+      13: { 0: 'teamworker', 1: 'implementer', 2: 'completer_finisher', 3: 'specialist', 4: 'plant' },
+      14: { 0: 'coordinator', 1: 'shaper', 2: 'completer_finisher', 3: 'specialist', 4: 'plant' },
+      15: { 0: 'plant', 1: 'resource_investigator', 2: 'coordinator', 3: 'shaper', 4: 'completer_finisher' },
+      16: { 0: 'specialist', 1: 'plant', 2: 'implementer', 3: 'shaper', 4: 'monitor_evaluator' },
+      17: { 0: 'teamworker', 1: 'implementer', 2: 'completer_finisher', 3: 'specialist', 4: 'plant' },
+      18: { 0: 'monitor_evaluator', 1: 'resource_investigator', 2: 'coordinator', 3: 'shaper', 4: 'implementer' },
+      19: { 0: 'teamworker', 1: 'monitor_evaluator', 2: 'implementer', 3: 'completer_finisher', 4: 'plant' },
+      20: { 0: 'specialist', 1: 'plant', 2: 'resource_investigator', 3: 'coordinator', 4: 'shaper' },
+      21: { 0: 'monitor_evaluator', 1: 'implementer', 2: 'completer_finisher', 3: 'specialist', 4: 'plant' },
+      22: { 0: 'coordinator', 1: 'specialist', 2: 'resource_investigator', 3: 'completer_finisher', 4: 'shaper' },
+      23: { 0: 'teamworker', 1: 'implementer', 2: 'completer_finisher', 3: 'specialist', 4: 'plant' },
+      24: { 0: 'monitor_evaluator', 1: 'implementer', 2: 'completer_finisher', 3: 'specialist', 4: 'plant' },
+      25: { 0: 'teamworker', 1: 'implementer', 2: 'completer_finisher', 3: 'specialist', 4: 'coordinator' },
+      26: { 0: 'plant', 1: 'resource_investigator', 2: 'coordinator', 3: 'shaper', 4: 'monitor_evaluator' },
+      27: { 0: 'teamworker', 1: 'implementer', 2: 'completer_finisher', 3: 'specialist', 4: 'plant' }
+    };
+
+    const mapping = scoreMapping[questionNumber as keyof typeof scoreMapping];
+    if (mapping && mapping[selectedOption as keyof typeof mapping]) {
+      const roleKey = mapping[selectedOption as keyof typeof mapping] as keyof typeof roles;
+      roles[roleKey] += 3; // Each answer contributes 3 points to the selected role
     }
     
     totalScore += selectedOption;
