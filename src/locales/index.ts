@@ -1,2 +1,2 @@
 
-export type Language = 'ro' | 'en';
+export type { Language } from '@/types/language';
