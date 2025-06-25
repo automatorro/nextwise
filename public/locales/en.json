@@ -1,0 +1,125 @@
+
+{
+  "common": {
+    "poweredByAI": "Powered by AI"
+  },
+  "nav": {
+    "login": "Login",
+    "startFree": "Start Free",
+    "tests": "Tests",
+    "career": "Career",
+    "profile": "Profile",
+    "subscription": "Subscription",
+    "logout": "Logout"
+  },
+  "home": {
+    "title": "Discover Your Potential and Grow Your Career",
+    "subtitle": "The AI platform that helps you understand your personality, identify your strengths, and build your ideal career path through advanced psychological assessments.",
+    "ctaButton": "Start Free Assessment",
+    "demoButton": "View Demo",
+    "featuresTitle": "Why Choose EmpowerCareer?",
+    "featuresSubtitle": "Discover how AI technology can transform the way you understand your personality and plan your career.",
+    "categoriesTitle": "Available Test Categories",
+    "categoriesSubtitle": "Explore a diverse range of psychological assessments and personality tests to better understand your strengths and preferences.",
+    "pricingTitle": "Subscription Plans",
+    "pricingSubtitle": "Choose the plan that best fits your professional development needs.",
+    "ctaFinalTitle": "Ready to transform your career?",
+    "ctaFinalSubtitle": "Start today with a free assessment and discover your true potential.",
+    "ctaFinalButton": "Start Now",
+    "footerText": "The AI platform that helps you discover your potential and build your ideal career.",
+    "footerCopyright": "© 2024 EmpowerCareer. All rights reserved."
+  },
+  "features": {
+    "psychologicalEvaluations": "AI Psychological Evaluations",
+    "psychologicalEvaluationsDesc": "Advanced personality and emotional intelligence tests analyzed by AI algorithms",
+    "personalizedCareerPlans": "Personalized Career Plans",
+    "personalizedCareerPlansDesc": "Career recommendations based on your test results and preferences",
+    "advancedAnalytics": "Advanced Analytics",
+    "advancedAnalyticsDesc": "Detailed visualizations and interpretations for your test results",
+    "aiMentoring": "AI Mentoring",
+    "aiMentoringDesc": "Intelligent counseling and guidance for your career development"
+  },
+  "testCategories": {
+    "emotionalIntelligence": "Emotional Intelligence",
+    "personality": "Personality",
+    "leadership": "Leadership",
+    "technicalSkills": "Technical Skills",
+    "wellness": "Wellness",
+    "cognitive": "Cognitive",
+    "digital": "Digital",
+    "sensory": "Sensory"
+  },
+  "plans": {
+    "basic": {
+      "name": "Basic Plan",
+      "price": "Free",
+      "description": "Perfect for beginners",
+      "features": [
+        "3 free tests per month",
+        "Basic results",
+        "Email support"
+      ],
+      "button": "Start Free"
+    },
+    "professional": {
+      "name": "Professional Plan",
+      "price": "$7/month",
+      "description": "Ideal for professionals",
+      "features": [
+        "Unlimited tests",
+        "Detailed AI analysis",
+        "Personalized career plans",
+        "AI mentoring",
+        "Priority support"
+      ],
+      "button": "Start Trial"
+    },
+    "premium": {
+      "name": "Premium Plan",
+      "price": "$12/month",
+      "description": "For organizations and teams",
+      "features": [
+        "All Professional benefits",
+        "Team reports",
+        "Comparative analysis",
+        "Manager dashboard",
+        "Specialized consulting"
+      ],
+      "button": "Contact Us"
+    },
+    "mostPopular": "Most Popular"
+  },
+  "dashboard": {
+    "welcome": "Welcome",
+    "welcomeSubtext": "Start your personal and professional development journey with our AI tests.",
+    "stats": {
+      "testsCompleted": "Tests Completed",
+      "careerPlans": "Career Plans",
+      "timeSaved": "Time Saved",
+      "careerProgress": "Career Progress"
+    },
+    "actions": {
+      "startFirstTest": "Start Your First Test",
+      "startFirstTestDesc": "Discover your personality and strengths with our first AI test.",
+      "exploreTests": "Explore Tests",
+      "planCareer": "Plan Your Career",
+      "planCareerDesc": "Create a personalized career plan based on your test results.",
+      "startCareerPlan": "Start Career Plan"
+    },
+    "categories": {
+      "title": "Popular Test Categories",
+      "subtitle": "Explore the most popular test categories for your professional development.",
+      "emotionalIntelligence": "Emotional Intelligence",
+      "emotionalIntelligenceDesc": "Assess your ability to understand and manage emotions",
+      "personality": "Personality Tests",
+      "personalityDesc": "Discover your personality traits and work style",
+      "leadership": "Leadership Skills",
+      "leadershipDesc": "Evaluate your leadership potential and management style",
+      "wellness": "Wellness and Stress",
+      "wellnessDesc": "Analyze stress levels and coping strategies",
+      "test": "test",
+      "tests": "tests",
+      "viewAllTests": "View All Tests"
+    }
+  }
+}
