@@ -61,19 +61,19 @@ const HomeNavigation = () => {
                       to="/dashboard"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      {t('navbar.dashboard')}
+                      Dashboard
                     </Link>
                     <Link
                       to="/teste"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      {t('navbar.tests')}
+                      {t('nav.tests')}
                     </Link>
                     <Link
                       to="/cariere"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      {t('navbar.career')}
+                      {t('nav.career')}
                     </Link>
                     {isAdmin && (
                       <Link
@@ -96,11 +96,11 @@ const HomeNavigation = () => {
                     <DropdownMenuContent align="end">
                       <DropdownMenuItem onClick={() => navigate('/profilul-meu')}>
                         <User className="h-4 w-4 mr-2" />
-                        {t('navbar.myProfile')}
+                        {t('nav.profile')}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleSignOut}>
                         <LogOut className="h-4 w-4 mr-2" />
-                        {t('navbar.signOut')}
+                        {t('nav.logout')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -140,28 +140,28 @@ const HomeNavigation = () => {
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('navbar.dashboard')}
+                Dashboard
               </Link>
               <Link
                 to="/teste"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('navbar.tests')}
+                {t('nav.tests')}
               </Link>
               <Link
                 to="/cariere"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('navbar.career')}
+                {t('nav.career')}
               </Link>
               <Link
                 to="/profilul-meu"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('navbar.myProfile')}
+                {t('nav.profile')}
               </Link>
               {isAdmin && (
                 <Link
@@ -176,7 +176,7 @@ const HomeNavigation = () => {
                 onClick={handleSignOut}
                 className="text-gray-700 hover:text-gray-900 block w-full text-left px-3 py-2 rounded-md text-base font-medium"
               >
-                {t('navbar.signOut')}
+                {t('nav.logout')}
               </button>
             </div>
           </div>
