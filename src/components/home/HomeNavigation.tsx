@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -21,11 +21,16 @@ import {
 import { User, LogOut, Menu, Globe, Settings } from 'lucide-react';
 
 const HomeNavigation = () => {
-  const { t, language, changeLanguage } = useLanguage();
+  const { t, language, changeLanguage, loading } = useLanguage();
   const { user, signOut } = useAuth();
   const { isAdmin } = useUserRole();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Force re-render when translations load
+  useEffect(() => {
+    console.log('Language or loading state changed:', { language, loading });
+  }, [language, loading]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -91,24 +96,17 @@ const HomeNavigation = () => {
                   </div>
 
                   <Select value={language} onValueChange={handleLanguageChange}>
-                    <SelectTrigger className="w-24 h-9 bg-white/60 hover:bg-white/80 border-gray-200">
-                      <div className="flex items-center gap-1">
-                        <Globe className="w-4 h-4" />
-                        <SelectValue />
-                      </div>
+                    <SelectTrigger className="w-20 h-9 bg-white/60 hover:bg-white/80 border-gray-200">
+                      <SelectValue>
+                        {language.toUpperCase()}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent className="bg-white border-gray-200 shadow-lg z-[60]">
                       <SelectItem value="ro" className="hover:bg-gray-100">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">🇷🇴</span>
-                          <span>Română</span>
-                        </div>
+                        RO
                       </SelectItem>
                       <SelectItem value="en" className="hover:bg-gray-100">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">🇬🇧</span>
-                          <span>English</span>
-                        </div>
+                        EN
                       </SelectItem>
                     </SelectContent>
                   </Select>
@@ -143,24 +141,17 @@ const HomeNavigation = () => {
               ) : (
                 <>
                   <Select value={language} onValueChange={handleLanguageChange}>
-                    <SelectTrigger className="w-24 h-9 bg-white/60 hover:bg-white/80 border-gray-200">
-                      <div className="flex items-center gap-1">
-                        <Globe className="w-4 h-4" />
-                        <SelectValue />
-                      </div>
+                    <SelectTrigger className="w-20 h-9 bg-white/60 hover:bg-white/80 border-gray-200">
+                      <SelectValue>
+                        {language.toUpperCase()}
+                      </SelectValue>
                     </SelectTrigger>
                     <SelectContent className="bg-white border-gray-200 shadow-lg z-[60]">
                       <SelectItem value="ro" className="hover:bg-gray-100">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">🇷🇴</span>
-                          <span>Română</span>
-                        </div>
+                        RO
                       </SelectItem>
                       <SelectItem value="en" className="hover:bg-gray-100">
-                        <div className="flex items-center gap-2">
-                          <span className="text-lg">🇬🇧</span>
-                          <span>English</span>
-                        </div>
+                        EN
                       </SelectItem>
                     </SelectContent>
                   </Select>
