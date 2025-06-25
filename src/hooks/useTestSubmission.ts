@@ -4,7 +4,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { calculateCognitiveAbilitiesScore, calculateCognitiveAbilitiesScoreFromDB } from '@/utils/testResultFormatters';
-import { isCognitiveAbilitiesTest } from '@/utils/testLabels';
+import { calculateBeckDepressionScore } from '@/utils/beckDepressionInventoryCalculator';
+import { isCognitiveAbilitiesTest, isBeckDepressionInventory } from '@/utils/testLabels';
 
 export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,6 +53,9 @@ export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
           console.warn('Database calculation failed, using fallback:', dbError);
           calculatedScore = calculateCognitiveAbilitiesScore(testData.answers);
         }
+      } else if (isBeckDepressionInventory(testType.name)) {
+        console.log('Calculating Beck Depression Inventory score...');
+        calculatedScore = calculateBeckDepressionScore(testData.answers);
       } else {
         // Default scoring for other tests (placeholder)
         console.log('Using default scoring...');

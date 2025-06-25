@@ -1,15 +1,18 @@
 
 import { getScoreInterpretation } from './testScoring';
+import { calculateBeckDepressionScore } from '@/utils/beckDepressionInventoryCalculator';
+import { isBeckDepressionInventory } from '@/utils/testLabels';
 
 export interface FormattedTestResult {
   overall: number;
   dimensions: { [key: string]: number };
   interpretation: string;
   testName: string;
+  severity_level?: string;
 }
 
 export function formatTestResults(testResult: any): FormattedTestResult {
-  const { score, test_types } = testResult;
+  const { score, test_types, answers } = testResult;
   
   if (!score || typeof score !== 'object') {
     return {
@@ -21,6 +24,20 @@ export function formatTestResults(testResult: any): FormattedTestResult {
   }
 
   const testName = test_types?.name || '';
+  
+  // For Beck Depression Inventory, recalculate if needed to ensure proper formatting
+  if (isBeckDepressionInventory(testName) && answers) {
+    const beckScore = calculateBeckDepressionScore(answers);
+    return {
+      overall: beckScore.overall,
+      dimensions: beckScore.dimensions,
+      interpretation: beckScore.interpretation,
+      testName,
+      severity_level: beckScore.severity_level
+    };
+  }
+  
+  // Default formatting for other tests
   const overall = score.overall || 0;
   const dimensions = score.dimensions || {};
   
@@ -28,6 +45,7 @@ export function formatTestResults(testResult: any): FormattedTestResult {
     overall,
     dimensions,
     interpretation: getScoreInterpretation(overall, testName).description,
-    testName
+    testName,
+    severity_level: score.severity_level
   };
 }

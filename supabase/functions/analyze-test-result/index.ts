@@ -1,4 +1,3 @@
-
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.7.1';
 
@@ -74,12 +73,16 @@ serve(async (req) => {
 
     console.log('Found questions:', questions?.length);
 
-    // Check if this is a Cattell 16PF test
+    // Check test type for specific scoring
     const isCattell16PF = testType.name.includes('16PF') || testType.name.includes('Cattell');
+    const isBeckDepression = testType.name.includes('Beck') || testType.name.includes('Depression') || testType.name.includes('BDI');
 
     if (isCattell16PF) {
       console.log('Running Cattell 16PF analysis');
       return await analyzeCattell16PF(answers, questions);
+    } else if (isBeckDepression) {
+      console.log('Running Beck Depression Inventory analysis');
+      return await analyzeBeckDepressionInventory(answers);
     } else {
       console.log('Running generic test analysis for:', test_type_id);
       return await analyzeGenericTest(answers, questions, testType.name);
@@ -96,6 +99,106 @@ serve(async (req) => {
     );
   }
 });
+
+async function analyzeBeckDepressionInventory(answers: { [key: string]: number }) {
+  console.log('Calculating Beck Depression Inventory scores...');
+  
+  let totalScore = 0;
+  const maxPossibleScore = Object.keys(answers).length * 3;
+  
+  // Calculate total raw score
+  Object.values(answers).forEach(value => {
+    totalScore += value;
+  });
+  
+  // Determine severity level based on BDI-II scoring guidelines
+  let severityLevel = '';
+  let interpretation = '';
+  
+  if (totalScore <= 13) {
+    severityLevel = 'Minimal';
+    interpretation = 'Simptome minime de depresie. Nivelul tău de tristețe este în intervalul normal.';
+  } else if (totalScore <= 19) {
+    severityLevel = 'Ușoară';
+    interpretation = 'Depresie ușoară. Poți experimenta unele simptome de depresie care ar putea beneficia de atenție.';
+  } else if (totalScore <= 28) {
+    severityLevel = 'Moderată';
+    interpretation = 'Depresie moderată. Simptomele tale sugerează prezența unei depresii moderate care ar trebui să fie evaluată de un profesionist.';
+  } else {
+    severityLevel = 'Severă';
+    interpretation = 'Depresie severă. Simptomele tale indică o depresie severă. Este recomandat să cauți ajutor profesional imediat.';
+  }
+  
+  // Calculate dimensions based on BDI-II factor structure
+  const dimensions = {
+    'Afectiv': 0,
+    'Cognitiv': 0,
+    'Somatic': 0,
+    'Suicidalitate': 0
+  };
+  
+  // Get ordered question values
+  const orderedAnswers = Object.keys(answers)
+    .sort((a, b) => {
+      const orderA = parseInt(a.split('-').pop() || '0');
+      const orderB = parseInt(b.split('-').pop() || '0');
+      return orderA - orderB;
+    })
+    .map(key => answers[key]);
+  
+  // Group questions by dimension
+  const affectiveQuestions = [0, 1, 4, 5, 6, 8, 9]; // indices: sadness, pessimism, guilt, punishment, self-dislike, suicidal thoughts, crying
+  const cognitiveQuestions = [2, 7, 12, 13]; // indices: past failure, self-criticism, indecisiveness, worthlessness
+  const somaticQuestions = [3, 10, 11, 14, 15, 16, 17, 18, 19, 20]; // anhedonia, agitation, interest loss, energy loss, sleep, irritability, appetite, concentration, fatigue, sexual interest
+  const suicidalQuestions = [8]; // suicidal ideation
+  
+  // Calculate dimension scores
+  affectiveQuestions.forEach(index => {
+    if (orderedAnswers[index] !== undefined) dimensions['Afectiv'] += orderedAnswers[index];
+  });
+  
+  cognitiveQuestions.forEach(index => {
+    if (orderedAnswers[index] !== undefined) dimensions['Cognitiv'] += orderedAnswers[index];
+  });
+  
+  somaticQuestions.forEach(index => {
+    if (orderedAnswers[index] !== undefined) dimensions['Somatic'] += orderedAnswers[index];
+  });
+  
+  suicidalQuestions.forEach(index => {
+    if (orderedAnswers[index] !== undefined) dimensions['Suicidalitate'] += orderedAnswers[index];
+  });
+  
+  // Convert to percentages
+  const dimensionPercentages: { [key: string]: number } = {};
+  dimensionPercentages['Afectiv'] = Math.round((dimensions['Afectiv'] / (affectiveQuestions.length * 3)) * 100);
+  dimensionPercentages['Cognitiv'] = Math.round((dimensions['Cognitiv'] / (cognitiveQuestions.length * 3)) * 100);
+  dimensionPercentages['Somatic'] = Math.round((dimensions['Somatic'] / (somaticQuestions.length * 3)) * 100);
+  dimensionPercentages['Suicidalitate'] = Math.round((dimensions['Suicidalitate'] / (suicidalQuestions.length * 3)) * 100);
+  
+  const overallPercentage = Math.round((totalScore / maxPossibleScore) * 100);
+
+  console.log('Beck Depression Inventory calculated scores:', {
+    totalScore,
+    maxPossibleScore,
+    overallPercentage,
+    severityLevel,
+    dimensions: dimensionPercentages
+  });
+
+  const result = {
+    overall: overallPercentage,
+    raw_score: totalScore,
+    max_score: maxPossibleScore,
+    interpretation: interpretation,
+    dimensions: dimensionPercentages,
+    severity_level: severityLevel
+  };
+
+  return new Response(JSON.stringify(result), {
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+  });
+}
 
 async function analyzeCattell16PF(answers: { [key: string]: number }, questions: any[]) {
   console.log('Calculating 16PF factor scores...');

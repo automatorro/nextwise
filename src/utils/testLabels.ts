@@ -1,4 +1,3 @@
-
 function getActualDimensionKey(key: string): string {
   const keyMap: { [key: string]: string } = {
     '0': 'verbal',
@@ -71,4 +70,10 @@ export function getTestDimensions(testName: string): string[] {
   }
   
   return [];
+}
+
+export function isBeckDepressionInventory(testName: string): boolean {
+  return testName.toLowerCase().includes('beck') || 
+         testName.toLowerCase().includes('depression') ||
+         testName.toLowerCase().includes('bdi');
 }
