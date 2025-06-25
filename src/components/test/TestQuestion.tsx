@@ -19,6 +19,8 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useNavigate } from 'react-router-dom';
 import { parseQuestionOptions } from './QuestionOptionsParser';
+import { translateOptions } from '@/utils/testOptionsTranslations';
+import { useLanguage } from '@/hooks/useLanguage';
 import type { Json } from '@/integrations/supabase/types';
 
 interface Question {
@@ -26,6 +28,7 @@ interface Question {
   question_text: string;
   question_order: number;
   options: Json;
+  options_en?: Json;
   scoring_weights?: Json;
 }
 
@@ -61,10 +64,28 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
   onPrevious
 }) => {
   const navigate = useNavigate();
+  const { language, t } = useLanguage();
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
-  // Parse options safely from JSON using the dedicated parser
-  const questionOptions = parseQuestionOptions(currentQuestion.options);
+  // Get options based on language with fallback
+  const getLocalizedOptions = () => {
+    if (language === 'en' && currentQuestion.options_en) {
+      return parseQuestionOptions(currentQuestion.options_en);
+    }
+    
+    // Fallback to Romanian options and translate common ones
+    const roOptions = parseQuestionOptions(currentQuestion.options);
+    if (language === 'en') {
+      return roOptions.map(option => ({
+        ...option,
+        label: translateOptions([option.label], 'en')[0]
+      }));
+    }
+    
+    return roOptions;
+  };
+
+  const questionOptions = getLocalizedOptions();
   console.log('Final parsed options for question:', currentQuestion.id, questionOptions);
 
   const isCurrentQuestionAnswered = answers[currentQuestion.id] !== undefined;
@@ -86,26 +107,30 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
             <h1 className="text-2xl font-bold text-gray-900">{testType.name}</h1>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-500">
-                {currentQuestionIndex + 1} din {totalQuestions}
+                {currentQuestionIndex + 1} {language === 'en' ? 'of' : 'din'} {totalQuestions}
               </span>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button variant="outline" size="sm" className="text-red-600 hover:text-red-800">
                     <X className="w-4 h-4 mr-1" />
-                    Ieși din test
+                    {language === 'en' ? 'Exit test' : 'Ieși din test'}
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                   <AlertDialogHeader>
-                    <AlertDialogTitle>Confirmi ieșirea din test?</AlertDialogTitle>
+                    <AlertDialogTitle>
+                      {language === 'en' ? 'Confirm exit from test?' : 'Confirmi ieșirea din test?'}
+                    </AlertDialogTitle>
                     <AlertDialogDescription>
-                      Dacă ieși acum, tot progresul din acest test se va pierde și va trebui să îl reiei de la început.
+                      {language === 'en' 
+                        ? 'If you exit now, all progress in this test will be lost and you will have to restart from the beginning.'
+                        : 'Dacă ieși acum, tot progresul din acest test se va pierde și va trebui să îl reiei de la început.'}
                     </AlertDialogDescription>
                   </AlertDialogHeader>
                   <AlertDialogFooter>
-                    <AlertDialogCancel>Anulează</AlertDialogCancel>
+                    <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
                     <AlertDialogAction onClick={handleExitTest} className="bg-red-600 hover:bg-red-700">
-                      Da, ieși din test
+                      {language === 'en' ? 'Yes, exit test' : 'Da, ieși din test'}
                     </AlertDialogAction>
                   </AlertDialogFooter>
                 </AlertDialogContent>
@@ -118,7 +143,7 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
         <Card className="shadow-sm">
           <CardHeader className="pb-4">
             <CardTitle className="text-lg">
-              Întrebarea {currentQuestionIndex + 1}
+              {language === 'en' ? `Question ${currentQuestionIndex + 1}` : `Întrebarea ${currentQuestionIndex + 1}`}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -151,10 +176,18 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
                 </RadioGroup>
               ) : (
                 <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-200 rounded-lg">
-                  <p className="text-lg font-medium mb-2">Opțiuni indisponibile</p>
-                  <p className="text-sm">Nu s-au putut încărca opțiunile pentru această întrebare.</p>
+                  <p className="text-lg font-medium mb-2">
+                    {language === 'en' ? 'Options unavailable' : 'Opțiuni indisponibile'}
+                  </p>
+                  <p className="text-sm">
+                    {language === 'en' 
+                      ? 'Could not load options for this question.'
+                      : 'Nu s-au putut încărca opțiunile pentru această întrebare.'}
+                  </p>
                   <p className="text-xs mt-2 text-gray-400">
-                    Te rugăm să contactezi suportul sau să încerci din nou mai târziu.
+                    {language === 'en'
+                      ? 'Please contact support or try again later.'
+                      : 'Te rugăm să contactezi suportul sau să încerci din nou mai târziu.'}
                   </p>
                 </div>
               )}
@@ -167,7 +200,7 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
                 disabled={currentQuestionIndex === 0}
                 className="px-6"
               >
-                Înapoi
+                {language === 'en' ? 'Back' : 'Înapoi'}
               </Button>
               
               <Button
@@ -178,12 +211,12 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
                 {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Se salvează...
+                    {language === 'en' ? 'Saving...' : 'Se salvează...'}
                   </>
                 ) : isLastQuestion ? (
-                  'Finalizează testul'
+                  language === 'en' ? 'Finish test' : 'Finalizează testul'
                 ) : (
-                  'Următoarea'
+                  language === 'en' ? 'Next' : 'Următoarea'
                 )}
               </Button>
             </div>

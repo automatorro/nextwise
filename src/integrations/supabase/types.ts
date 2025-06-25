@@ -215,6 +215,7 @@ export type Database = {
           created_at: string | null
           id: string
           options: Json
+          options_en: Json | null
           question_order: number
           question_text_en: string | null
           question_text_ro: string
@@ -226,6 +227,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           options: Json
+          options_en?: Json | null
           question_order: number
           question_text_en?: string | null
           question_text_ro: string
@@ -237,6 +239,7 @@ export type Database = {
           created_at?: string | null
           id?: string
           options?: Json
+          options_en?: Json | null
           question_order?: number
           question_text_en?: string | null
           question_text_ro?: string

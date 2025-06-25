@@ -21,6 +21,7 @@ interface Question {
   question_text: string;
   question_order: number;
   options: Json;
+  options_en?: Json;
   scoring_weights?: Json;
 }
 
@@ -82,7 +83,7 @@ const TestRunner = () => {
     enabled: !!testId
   });
 
-  // Fetch questions with language-specific text
+  // Fetch questions with language-specific text and both option sets
   const { data: questions, isLoading: questionsLoading, error: questionsError } = useQuery({
     queryKey: ['questions', testId, language],
     queryFn: async () => {
@@ -93,7 +94,7 @@ const TestRunner = () => {
       
       const { data, error } = await supabase
         .from('test_questions')
-        .select(`id, ${questionTextColumn}, question_order, options, scoring_weights`)
+        .select(`id, ${questionTextColumn}, question_order, options, options_en, scoring_weights`)
         .eq('test_type_id', testId)
         .order('question_order');
       
@@ -105,9 +106,10 @@ const TestRunner = () => {
       // Map the response to use consistent property names
       const mappedData = data.map(item => ({
         id: item.id,
-        question_text: item[questionTextColumn] as string,
+        question_text: item[questionTextColumn] as string || item.question_text_ro, // Fallback to Romanian if English not available
         question_order: item.question_order,
         options: item.options,
+        options_en: item.options_en,
         scoring_weights: item.scoring_weights
       }));
       
