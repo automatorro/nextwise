@@ -1,9 +1,11 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useTestProgress } from '@/hooks/useTestProgress';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTestSubmission } from '@/hooks/useTestSubmission';
@@ -11,6 +13,7 @@ import Navbar from '@/components/layout/Navbar';
 import TestStartScreen from '@/components/test/TestStartScreen';
 import TestQuestion from '@/components/test/TestQuestion';
 import TestErrorScreen from '@/components/test/TestErrorScreen';
+import TestProgressRestoreDialog from '@/components/test/TestProgressRestoreDialog';
 import type { Json } from '@/integrations/supabase/types';
 
 interface Question {
@@ -38,9 +41,21 @@ const TestRunner = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{ [questionId: string]: number }>({});
   const [isStarted, setIsStarted] = useState(false);
+  const [showProgressDialog, setShowProgressDialog] = useState(false);
+
+  // Initialize progress management
+  const {
+    hasSavedProgress,
+    savedProgress,
+    saveProgress,
+    clearProgress,
+    restoreProgress
+  } = useTestProgress(testId || '');
 
   // Initialize test submission hook with navigation callback
   const { submitTest, isSubmitting, error } = useTestSubmission((resultId: string) => {
+    // Clear progress when test is successfully submitted
+    clearProgress();
     navigate(`/test-result/${resultId}`);
   });
 
@@ -100,6 +115,47 @@ const TestRunner = () => {
       navigate('/abonament');
     }
   }, [canTakeTest, navigate, toast]);
+
+  // Check for saved progress when questions are loaded
+  useEffect(() => {
+    if (questions && hasSavedProgress && !isStarted) {
+      setShowProgressDialog(true);
+    }
+  }, [questions, hasSavedProgress, isStarted]);
+
+  // Save progress whenever answers or current question changes
+  useEffect(() => {
+    if (isStarted && testId) {
+      saveProgress(currentQuestionIndex, answers);
+    }
+  }, [currentQuestionIndex, answers, isStarted, testId, saveProgress]);
+
+  const handleRestoreProgress = () => {
+    const progress = restoreProgress();
+    if (progress) {
+      setCurrentQuestionIndex(progress.currentQuestionIndex);
+      setAnswers(progress.answers);
+      setIsStarted(true);
+      setShowProgressDialog(false);
+      
+      toast({
+        title: "Progres restaurat",
+        description: `Continui de la întrebarea ${progress.currentQuestionIndex + 1}`
+      });
+    }
+  };
+
+  const handleStartFresh = () => {
+    clearProgress();
+    setCurrentQuestionIndex(0);
+    setAnswers({});
+    setShowProgressDialog(false);
+    
+    toast({
+      title: "Test reînceput",
+      description: "Începi testul de la prima întrebare"
+    });
+  };
 
   const handleAnswerChange = (value: string) => {
     const currentQuestion = questions![currentQuestionIndex];
@@ -171,7 +227,7 @@ const TestRunner = () => {
   }
 
   // Show test start screen
-  if (!isStarted) {
+  if (!isStarted && !showProgressDialog) {
     return (
       <div>
         <Navbar />
@@ -192,17 +248,28 @@ const TestRunner = () => {
     <div>
       <Navbar />
       <div className="pt-20">
-        <TestQuestion
-          testType={testType}
-          currentQuestion={currentQuestion}
-          currentQuestionIndex={currentQuestionIndex}
+        <TestProgressRestoreDialog
+          open={showProgressDialog}
+          testName={testType.name}
+          questionNumber={savedProgress?.currentQuestionIndex || 0}
           totalQuestions={questions.length}
-          answers={answers}
-          isSubmitting={isSubmitting}
-          onAnswerChange={handleAnswerChange}
-          onNext={handleNext}
-          onPrevious={handlePrevious}
+          onRestore={handleRestoreProgress}
+          onStartFresh={handleStartFresh}
         />
+        
+        {isStarted && (
+          <TestQuestion
+            testType={testType}
+            currentQuestion={currentQuestion}
+            currentQuestionIndex={currentQuestionIndex}
+            totalQuestions={questions.length}
+            answers={answers}
+            isSubmitting={isSubmitting}
+            onAnswerChange={handleAnswerChange}
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+          />
+        )}
       </div>
     </div>
   );
