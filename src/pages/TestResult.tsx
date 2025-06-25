@@ -4,12 +4,9 @@ import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, ArrowLeft } from 'lucide-react';
+import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
-import BigFiveRadarChart from '@/components/charts/BigFiveRadarChart';
-import BigFiveExplanations from '@/components/charts/BigFiveExplanations';
-import BelbinRadarChart from '@/components/charts/BelbinRadarChart';
 import BelbinRoleResults from '@/components/test-result/BelbinRoleResults';
 import OverallScoreCard from '@/components/test-result/OverallScoreCard';
 import DimensionsAnalysis from '@/components/test-result/DimensionsAnalysis';
@@ -18,6 +15,9 @@ import DetailedInterpretations from '@/components/test-result/DetailedInterpreta
 import ScoringExplanation from '@/components/test-result/ScoringExplanation';
 import DimensionExplanations from '@/components/test-result/DimensionExplanations';
 import CorrectAnswersSection from '@/components/test-result/CorrectAnswersSection';
+import TestResultHeader from '@/components/test-result/TestResultHeader';
+import TestResultCharts from '@/components/test-result/TestResultCharts';
+import TestResultActions from '@/components/test-result/TestResultActions';
 import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
 import { useCognitiveAbilitiesCalculation } from '@/hooks/useCognitiveAbilitiesCalculation';
 import { isCognitiveAbilitiesTest, isBelbinTeamRoles } from '@/utils/testLabels';
@@ -166,23 +166,10 @@ const TestResult = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
-        <div className="mb-8">
-          <Button 
-            variant="ghost" 
-            onClick={() => navigate('/teste')}
-            className="flex items-center mb-4"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Înapoi la teste
-          </Button>
-          
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Rezultatul testului: {result.test_types.name}
-          </h1>
-          <p className="text-gray-600">
-            Completat pe {new Date(result.completed_at).toLocaleDateString('ro-RO')}
-          </p>
-        </div>
+        <TestResultHeader 
+          testName={result.test_types.name}
+          completedAt={result.completed_at}
+        />
 
         {/* Belbin Test Results - Special handling */}
         {isBelbinTest ? (
@@ -234,73 +221,14 @@ const TestResult = () => {
           </>
         )}
 
-        {/* Belbin Radar Chart - only for Belbin tests */}
-        {isBelbinTest && hasValidTestSpecificDimensions && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Vizualizare Radar - Rolurile Belbin</CardTitle>
-              <p className="text-sm text-gray-600">
-                Graficul radar arată profilul tău pe cele 9 roluri Belbin. 
-                Fiecare axă reprezintă un rol, iar scorul este afișat în puncte (0-18).
-              </p>
-            </CardHeader>
-            <CardContent>
-              <BelbinRadarChart roleScores={testSpecificDimensions} />
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Big Five Radar Chart - only for Big Five tests */}
-        {isBigFiveTest && hasValidTestSpecificDimensions && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Vizualizare Radar - Dimensiunile Big Five</CardTitle>
-              <p className="text-sm text-gray-600">
-                Graficul radar arată profilul tău de personalitate pe cele 5 dimensiuni principale. 
-                Fiecare axă reprezintă o dimensiune, iar scorul este afișat ca procent.
-              </p>
-            </CardHeader>
-            <CardContent>
-              <BigFiveRadarChart dimensions={testSpecificDimensions as any} />
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Cognitive Abilities Visualization - only for cognitive tests */}
-        {isCognitiveTest && hasValidTestSpecificDimensions && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Vizualizare Aptitudini Cognitive</CardTitle>
-              <p className="text-sm text-gray-600">
-                Graficul arată performanța ta pe cele 5 dimensiuni cognitive principale.
-                Fiecare dimensiune este evaluată separat și afișată ca procent.
-              </p>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                <div className="text-sm text-gray-600 mb-4">
-                  <p><strong>Interpretare scoruri:</strong></p>
-                  <p>• 0-40%: Sub medie</p>
-                  <p>• 41-60%: Medie</p>
-                  <p>• 61-80%: Peste medie</p>
-                  <p>• 81-100%: Excelent</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Big Five Explanations - only for Big Five tests */}
-        {isBigFiveTest && hasValidTestSpecificDimensions && (
-          <Card className="mb-8">
-            <CardHeader>
-              <CardTitle>Ghid de Interpretare</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <BigFiveExplanations dimensions={testSpecificDimensions as any} />
-            </CardContent>
-          </Card>
-        )}
+        {/* Charts Section */}
+        <TestResultCharts
+          isBigFiveTest={isBigFiveTest}
+          isCognitiveTest={isCognitiveTest}
+          isBelbinTest={isBelbinTest}
+          hasValidTestSpecificDimensions={hasValidTestSpecificDimensions}
+          testSpecificDimensions={testSpecificDimensions}
+        />
 
         {/* Detailed Analysis Section - AVAILABLE FOR ALL TESTS */}
         <Card className="mb-8">
@@ -321,14 +249,7 @@ const TestResult = () => {
         </Card>
 
         {/* Actions */}
-        <div className="flex gap-4">
-          <Button onClick={() => navigate('/teste')} className="flex-1">
-            Încearcă un alt test
-          </Button>
-          <Button variant="outline" onClick={() => navigate('/dashboard')} className="flex-1">
-            Mergi la Dashboard
-          </Button>
-        </div>
+        <TestResultActions />
       </div>
     </div>
   );
