@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -10,7 +9,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTestSubmission } from '@/hooks/useTestSubmission';
-import Navbar from '@/components/layout/Navbar';
+import HomeNavigation from '@/components/home/HomeNavigation';
 import TestStartScreen from '@/components/test/TestStartScreen';
 import TestQuestion from '@/components/test/TestQuestion';
 import TestErrorScreen from '@/components/test/TestErrorScreen';
@@ -246,7 +245,7 @@ const TestRunner = () => {
   if (!isStarted && !showProgressDialog) {
     return (
       <div>
-        <Navbar />
+        <HomeNavigation />
         <div className="pt-20">
           <TestStartScreen
             testType={testType}
@@ -262,7 +261,7 @@ const TestRunner = () => {
 
   return (
     <div>
-      <Navbar />
+      <HomeNavigation />
       <div className="pt-20">
         <TestProgressRestoreDialog
           open={showProgressDialog}
