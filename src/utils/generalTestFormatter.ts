@@ -1,15 +1,22 @@
 
 import { getScoreInterpretation } from './testScoring';
-import { calculateCognitiveAbilitiesScoreFromDB, calculateCognitiveAbilitiesScoreFallback } from './cognitiveAbilitiesCalculator';
 
-export function formatTestResults(testResult: any) {
+export interface FormattedTestResult {
+  overall: number;
+  dimensions: { [key: string]: number };
+  interpretation: string;
+  testName: string;
+}
+
+export function formatTestResults(testResult: any): FormattedTestResult {
   const { score, test_types } = testResult;
   
   if (!score || typeof score !== 'object') {
     return {
       overall: 0,
       dimensions: {},
-      interpretation: 'Rezultate indisponibile'
+      interpretation: 'Rezultate indisponibile',
+      testName: ''
     };
   }
 
@@ -24,6 +31,3 @@ export function formatTestResults(testResult: any) {
     testName
   };
 }
-
-// Re-export for backward compatibility
-export { calculateCognitiveAbilitiesScoreFromDB, calculateCognitiveAbilitiesScoreFallback as calculateCognitiveAbilitiesScore } from './cognitiveAbilitiesCalculator';
