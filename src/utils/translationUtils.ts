@@ -1,7 +1,7 @@
 
 import type { Translations } from '@/types/language';
 
-export const translateKey = (translations: Translations, key: string): string => {
+export const translateKey = (translations: Translations, key: string): any => {
   const keys = key.split('.');
   let value: any = translations;
   
@@ -9,8 +9,8 @@ export const translateKey = (translations: Translations, key: string): string =>
     value = value?.[k];
   }
   
-  // Return the value if found, otherwise return the key as fallback
-  return value || key;
+  // Return the value if found (preserving arrays, objects, etc.), otherwise return the key as fallback
+  return value !== undefined ? value : key;
 };
 
 export const getStoredLanguage = (): string | null => {
