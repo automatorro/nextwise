@@ -2,7 +2,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { getDimensionLabel, getScoreColor } from '@/utils/testResultHelpers';
+import { getDimensionLabel } from '@/utils/testLabels';
+import { getScoreColor } from '@/utils/testScoring';
 
 interface DimensionsAnalysisProps {
   dimensions: { [key: string]: number };

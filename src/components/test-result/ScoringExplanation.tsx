@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Info, TrendingUp } from 'lucide-react';
-import { getTestScoringExplanation, getScoreInterpretation } from '@/utils/testResultHelpers';
+import { getTestScoringExplanation, getScoreInterpretation } from '@/utils/testScoring';
 
 interface ScoringExplanationProps {
   testName: string;

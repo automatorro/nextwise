@@ -1,10 +1,11 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { BookOpen } from 'lucide-react';
-import { getDimensionExplanation, getScoreColor, getDimensionLabel } from '@/utils/testResultHelpers';
+import { getDimensionExplanation } from '@/utils/testExplanations';
+import { getScoreColor } from '@/utils/testScoring';
+import { getDimensionLabel } from '@/utils/testLabels';
 
 interface DimensionExplanationsProps {
   testName: string;

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getDimensionLabel } from '@/utils/testResultHelpers';
+import { getDimensionLabel } from '@/utils/testLabels';
 
 interface DetailedInterpretationsProps {
   interpretations: {
