@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { TrendingUp } from 'lucide-react';
-import { getScoreColor, getScoreBadgeVariant } from '@/utils/testResultHelpers';
+import { getScoreColor, getScoreBadgeVariant } from '@/utils/testScoring';
 
 interface OverallScoreCardProps {
   score: {
