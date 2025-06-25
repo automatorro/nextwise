@@ -37,6 +37,7 @@ interface ScoreData {
 
 interface TestResultData {
   id: string;
+  test_type_id: string;
   score: ScoreData;
   answers: { [key: string]: number };
   completed_at: string;
