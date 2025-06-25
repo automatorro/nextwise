@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAuth } from '@/contexts/AuthContext';
@@ -26,7 +25,8 @@ const HomeNavigation = () => {
   };
 
   const toggleLanguage = () => {
-    changeLanguage(language === 'ro' ? 'en' : 'ro');
+    const newLanguage = language === 'ro' ? 'en' : 'ro';
+    changeLanguage(newLanguage);
   };
 
   return (
