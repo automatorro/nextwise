@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -83,18 +84,16 @@ const TestRunner = () => {
     enabled: !!testId
   });
 
-  // Fetch questions with language-specific text and both option sets
+  // Fetch questions with both Romanian and English text columns
   const { data: questions, isLoading: questionsLoading, error: questionsError } = useQuery({
     queryKey: ['questions', testId, language],
     queryFn: async () => {
       if (!testId) throw new Error('Test ID is required');
       
-      // Select the appropriate question text column based on language
-      const questionTextColumn = language === 'en' ? 'question_text_en' : 'question_text_ro';
-      
+      // Always select both language columns so we can handle fallbacks properly
       const { data, error } = await supabase
         .from('test_questions')
-        .select(`id, ${questionTextColumn}, question_order, options, options_en, scoring_weights`)
+        .select('id, question_text_ro, question_text_en, question_order, options, options_en, scoring_weights')
         .eq('test_type_id', testId)
         .order('question_order');
       
@@ -103,10 +102,12 @@ const TestRunner = () => {
         throw error;
       }
       
-      // Map the response to use consistent property names
+      // Map the response to use the appropriate language with fallback
       const mappedData = data.map(item => ({
         id: item.id,
-        question_text: item[questionTextColumn] as string || item.question_text_ro, // Fallback to Romanian if English not available
+        question_text: language === 'en' && item.question_text_en 
+          ? item.question_text_en 
+          : item.question_text_ro, // Fallback to Romanian
         question_order: item.question_order,
         options: item.options,
         options_en: item.options_en,
