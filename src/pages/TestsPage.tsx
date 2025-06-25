@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Loader2, Clock, Users, Brain, Target, Heart, AlertTriangle } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useSubscription } from '@/hooks/useSubscription';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface TestType {
   id: string;
@@ -25,6 +26,7 @@ interface TestType {
 
 const TestsPage = () => {
   const { subscription, canTakeTest } = useSubscription();
+  const { t } = useLanguage();
 
   const { data: tests, isLoading, error } = useQuery({
     queryKey: ['tests'],
@@ -137,12 +139,25 @@ const TestsPage = () => {
     }
   }
 
+  function getSubscriptionLabel(required: string) {
+    switch (required) {
+      case 'basic':
+        return t('plans.basic.price');
+      case 'professional':
+        return t('plans.professional.name');
+      case 'premium':
+        return t('plans.premium.name');
+      default:
+        return required;
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
-          <p>Se încarcă testele...</p>
+          <p>{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -153,8 +168,8 @@ const TestsPage = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <AlertTriangle className="w-12 h-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Eroare la încărcarea testelor</h2>
-          <p className="text-gray-600">Vă rugăm să încercați din nou mai târziu.</p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('common.error')}</h2>
+          <p className="text-gray-600">{t('tests.noTests')}</p>
         </div>
       </div>
     );
@@ -173,13 +188,13 @@ const TestsPage = () => {
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Teste Psihologice</h1>
+          <h1 className="text-3xl font-bold text-gray-900">{t('tests.title')}</h1>
           <p className="text-gray-600 mt-2">
-            Descoperă-ți personalitatea și abilitățile prin testele noastre validate științific
+            {t('tests.subtitle')}
           </p>
           {tests && (
             <p className="text-sm text-gray-500 mt-2">
-              {tests.length} teste disponibile
+              {tests.length} {tests.length === 1 ? t('dashboard.categories.test') : t('dashboard.categories.tests')}
             </p>
           )}
         </div>
@@ -227,10 +242,10 @@ const TestsPage = () => {
                       <div className="flex items-center justify-between mb-4">
                         <div className="flex items-center text-sm text-gray-600">
                           <Clock className="w-4 h-4 mr-1" />
-                          {test.estimated_duration} min
+                          {test.estimated_duration} {t('tests.minutes')}
                         </div>
                         <Badge variant="secondary">
-                          {test.actual_questions_count} întrebări
+                          {test.actual_questions_count} {t('tests.questions')}
                         </Badge>
                       </div>
 
@@ -239,26 +254,24 @@ const TestsPage = () => {
                           variant="outline" 
                           className={getSubscriptionBadgeColor(test.subscription_required)}
                         >
-                          {test.subscription_required === 'basic' && 'Gratuit'}
-                          {test.subscription_required === 'professional' && 'Professional'}
-                          {test.subscription_required === 'premium' && 'Premium'}
+                          {getSubscriptionLabel(test.subscription_required)}
                         </Badge>
                       </div>
 
                       {userCanTake ? (
                         <Link to={`/test/${test.id}`}>
                           <Button className="w-full">
-                            Începe Testul
+                            {t('tests.takeTest')}
                           </Button>
                         </Link>
                       ) : (
                         <div className="space-y-2">
                           <Button disabled className="w-full">
-                            Necesită {test.subscription_required}
+                            {t('tests.upgradeRequired')}
                           </Button>
                           <Link to="/abonament">
                             <Button variant="outline" size="sm" className="w-full">
-                              Upgrade abonament
+                              {t('subscription.upgradeSubscription')}
                             </Button>
                           </Link>
                         </div>
@@ -275,10 +288,10 @@ const TestsPage = () => {
           <div className="text-center py-12">
             <Brain className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              Nu sunt teste disponibile încă
+              {t('tests.noTests')}
             </h3>
             <p className="text-gray-600">
-              Testele vor fi adăugate în curând. Vă mulțumim pentru răbdare!
+              {t('tests.noTestsDescription')}
             </p>
           </div>
         )}

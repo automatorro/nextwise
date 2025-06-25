@@ -141,6 +141,7 @@
     "subtitle": "Discover your personality and strengths through advanced psychological assessments analyzed by artificial intelligence.",
     "allCategories": "All Categories",
     "noTests": "No tests available in this category",
+    "noTestsDescription": "Tests will be added soon. Thank you for your patience!",
     "minutes": "minutes",
     "questions": "questions",
     "takeTest": "Take Test",
@@ -179,7 +180,8 @@
     "testsThisMonth": "Tests Taken This Month",
     "administrator": "Administrator",
     "unlimitedAccess": "Administrator (Unlimited Access)",
-    "active": "Active"
+    "active": "Active",
+    "upgradeSubscription": "Upgrade subscription"
   },
   "testRunner": {
     "notFound": "Test not found",

@@ -141,6 +141,7 @@
     "subtitle": "Descoperă-ți personalitatea și punctele forte prin evaluări psihologice avansate analizate de inteligența artificială.",
     "allCategories": "Toate Categoriile",
     "noTests": "Nu sunt teste disponibile în această categorie",
+    "noTestsDescription": "Testele vor fi adăugate în curând. Vă mulțumim pentru răbdare!",
     "minutes": "minute",
     "questions": "întrebări",
     "takeTest": "Începe Testul",
@@ -179,7 +180,8 @@
     "testsThisMonth": "Teste Efectuate Luna Aceasta",
     "administrator": "Administrator",
     "unlimitedAccess": "Administrator (Acces Nelimitat)",
-    "active": "Activ"
+    "active": "Activ",
+    "upgradeSubscription": "Upgrade abonament"
   },
   "testRunner": {
     "notFound": "Test nu a fost găsit",
