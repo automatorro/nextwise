@@ -93,7 +93,7 @@ const TestRunner = () => {
       
       const { data, error } = await supabase
         .from('test_questions')
-        .select(`id, ${questionTextColumn} as question_text, question_order, options, scoring_weights`)
+        .select(`id, ${questionTextColumn}, question_order, options, scoring_weights`)
         .eq('test_type_id', testId)
         .order('question_order');
       
@@ -102,8 +102,17 @@ const TestRunner = () => {
         throw error;
       }
       
-      console.log('Fetched questions for language:', language, data);
-      return data as Question[];
+      // Map the response to use consistent property names
+      const mappedData = data.map(item => ({
+        id: item.id,
+        question_text: item[questionTextColumn] as string,
+        question_order: item.question_order,
+        options: item.options,
+        scoring_weights: item.scoring_weights
+      }));
+      
+      console.log('Fetched questions for language:', language, mappedData);
+      return mappedData as Question[];
     },
     enabled: !!testId && !!testType
   });
