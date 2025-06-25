@@ -15,6 +15,8 @@ import DetailedInterpretations from '@/components/test-result/DetailedInterpreta
 import ScoringExplanation from '@/components/test-result/ScoringExplanation';
 import DimensionExplanations from '@/components/test-result/DimensionExplanations';
 import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
+import { useCognitiveAbilitiesCalculation } from '@/hooks/useCognitiveAbilitiesCalculation';
+import { isCognitiveAbilitiesTest } from '@/utils/testLabels';
 
 interface ScoreData {
   overall: number;
@@ -93,29 +95,30 @@ const TestResult = () => {
     enabled: !!resultId
   });
 
-  // Calculate Big Five dimensions from answers if it's a Big Five test
+  // Calculate dimensions based on test type
   const isBigFiveTest = result?.test_types.name.includes('Big Five');
-  const calculatedDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
+  const isCognitiveTest = result ? isCognitiveAbilitiesTest(result.test_types.name) : false;
+  
+  const calculatedBigFiveDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
+  const calculatedCognitiveDimensions = useCognitiveAbilitiesCalculation(isCognitiveTest ? result?.answers : undefined);
 
-  // Get properly typed Big Five dimensions
-  const bigFiveDimensions: BigFiveDimensions = React.useMemo(() => {
-    if (isBigFiveTest && calculatedDimensions) {
-      return calculatedDimensions;
+  // Get properly typed dimensions based on test type
+  const testSpecificDimensions = React.useMemo(() => {
+    if (isBigFiveTest && calculatedBigFiveDimensions) {
+      return calculatedBigFiveDimensions;
     }
     
-    return {
-      openness: 0,
-      conscientiousness: 0,
-      extraversion: 0,
-      agreeableness: 0,
-      neuroticism: 0
-    };
-  }, [isBigFiveTest, calculatedDimensions]);
+    if (isCognitiveTest && calculatedCognitiveDimensions) {
+      return calculatedCognitiveDimensions;
+    }
+    
+    return result?.score.dimensions || {};
+  }, [isBigFiveTest, isCognitiveTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, result?.score.dimensions]);
 
-  const hasValidBigFive = isBigFiveTest && Object.values(bigFiveDimensions).some(value => value > 0);
+  const hasValidTestSpecificDimensions = Object.values(testSpecificDimensions).some(value => value > 0);
 
-  // Use different dimensions for general display vs Big Five specific components
-  const generalDisplayDimensions = result?.score.dimensions || {};
+  // Use different dimensions for general display
+  const generalDisplayDimensions = testSpecificDimensions;
 
   if (isLoading) {
     return (
@@ -171,7 +174,7 @@ const TestResult = () => {
         {/* Overall Score */}
         <OverallScoreCard score={result.score} />
 
-        {/* NEW: Scoring Explanation */}
+        {/* Scoring Explanation */}
         <ScoringExplanation 
           testName={result.test_types.name}
           overallScore={result.score.overall}
@@ -179,7 +182,7 @@ const TestResult = () => {
         />
 
         {/* Big Five Radar Chart - only for Big Five tests */}
-        {isBigFiveTest && hasValidBigFive && (
+        {isBigFiveTest && hasValidTestSpecificDimensions && (
           <Card className="mb-8">
             <CardHeader>
               <CardTitle>Vizualizare Radar - Dimensiunile Big Five</CardTitle>
@@ -189,31 +192,55 @@ const TestResult = () => {
               </p>
             </CardHeader>
             <CardContent>
-              <BigFiveRadarChart dimensions={bigFiveDimensions} />
+              <BigFiveRadarChart dimensions={testSpecificDimensions as any} />
             </CardContent>
           </Card>
         )}
 
-        {/* Dimensions - use Big Five dimensions for Big Five tests, otherwise use general dimensions */}
+        {/* Cognitive Abilities Visualization - only for cognitive tests */}
+        {isCognitiveTest && hasValidTestSpecificDimensions && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Vizualizare Aptitudini Cognitive</CardTitle>
+              <p className="text-sm text-gray-600">
+                Graficul arată performanța ta pe cele 5 dimensiuni cognitive principale.
+                Fiecare dimensiune este evaluată separat și afișată ca procent.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="text-sm text-gray-600 mb-4">
+                  <p><strong>Interpretare scoruri:</strong></p>
+                  <p>• 0-40%: Sub medie</p>
+                  <p>• 41-60%: Medie</p>
+                  <p>• 61-80%: Peste medie</p>
+                  <p>• 81-100%: Excelent</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Dimensions Analysis */}
         <DimensionsAnalysis 
-          dimensions={isBigFiveTest ? convertToBigFiveDimensions(bigFiveDimensions) : generalDisplayDimensions}
+          dimensions={generalDisplayDimensions}
           testName={result.test_types.name}
         />
 
-        {/* NEW: Dimension Explanations */}
+        {/* Dimension Explanations */}
         <DimensionExplanations 
           testName={result.test_types.name}
-          dimensions={isBigFiveTest ? convertToBigFiveDimensions(bigFiveDimensions) : generalDisplayDimensions}
+          dimensions={generalDisplayDimensions}
         />
 
         {/* Big Five Explanations - only for Big Five tests */}
-        {isBigFiveTest && hasValidBigFive && (
+        {isBigFiveTest && hasValidTestSpecificDimensions && (
           <Card className="mb-8">
             <CardHeader>
               <CardTitle>Ghid de Interpretare</CardTitle>
             </CardHeader>
             <CardContent>
-              <BigFiveExplanations dimensions={bigFiveDimensions} />
+              <BigFiveExplanations dimensions={testSpecificDimensions as any} />
             </CardContent>
           </Card>
         )}
@@ -226,7 +253,7 @@ const TestResult = () => {
           />
         )}
 
-        {/* Detailed Analysis Section - NOW AVAILABLE FOR ALL TESTS */}
+        {/* Detailed Analysis Section - AVAILABLE FOR ALL TESTS */}
         <Card className="mb-8">
           <CardHeader>
             <CardTitle>Analiză Detaliată cu AI</CardTitle>
@@ -236,7 +263,7 @@ const TestResult = () => {
           </CardHeader>
           <CardContent>
             <DetailedAnalysisSection 
-              dimensions={isBigFiveTest ? convertToBigFiveDimensions(bigFiveDimensions) : generalDisplayDimensions} 
+              dimensions={generalDisplayDimensions} 
               resultId={resultId!}
               testType={result.test_types.name}
               score={result.score}

@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -82,6 +83,12 @@ const TestsPage = () => {
       
       console.log('Valid tests with questions:', validTests);
       console.log('Tests without questions:', testsWithQuestionCounts.filter(test => test.actual_questions_count === 0));
+      
+      // Special check for cognitive abilities test
+      const cognitiveTestInValid = validTests.find(test => 
+        test.name.toLowerCase().includes('aptitudini cognitive')
+      );
+      console.log('Cognitive abilities test in valid tests:', cognitiveTestInValid);
       
       return validTests as TestType[];
     }

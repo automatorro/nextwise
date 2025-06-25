@@ -31,7 +31,7 @@ export function getDimensionLabel(testName: string, dimensionKey: string): strin
     }
   }
   
-  if (testKey === 'test aptitudini cognitive') {
+  if (testKey === 'test aptitudini cognitive' || testKey.includes('aptitudini cognitive')) {
     const actualKey = getActualDimensionKey(dimensionKey);
     
     switch (actualKey) {
@@ -51,4 +51,24 @@ export function getDimensionLabel(testName: string, dimensionKey: string): strin
   }
   
   return dimensionKey;
+}
+
+// Funcție helper pentru a determina dacă un test este de tip cognitive abilities
+export function isCognitiveAbilitiesTest(testName: string): boolean {
+  return testName.toLowerCase().includes('aptitudini cognitive');
+}
+
+// Funcție helper pentru a obține dimensiunile pentru un anumit tip de test
+export function getTestDimensions(testName: string): string[] {
+  const testKey = testName.toLowerCase();
+  
+  if (testKey === 'big five personalitate') {
+    return ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'neuroticism'];
+  }
+  
+  if (testKey === 'test aptitudini cognitive' || testKey.includes('aptitudini cognitive')) {
+    return ['verbal', 'numeric', 'logic', 'spatial', 'abstract'];
+  }
+  
+  return [];
 }

@@ -1,99 +1,122 @@
 
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { toast } from 'sonner';
-
-interface TestSubmissionData {
-  test_type_id: string;
-  answers: { [key: string]: number };
-}
+import { useToast } from '@/hooks/use-toast';
+import { calculateCognitiveAbilitiesScore } from '@/utils/testResultFormatters';
+import { isCognitiveAbilitiesTest } from '@/utils/testLabels';
 
 export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
-  const queryClient = useQueryClient();
+  const { toast } = useToast();
 
-  const submitTest = useMutation({
-    mutationFn: async (data: TestSubmissionData) => {
-      if (!user) throw new Error('User not authenticated');
+  const submitTest = async (testData: {
+    test_type_id: string;
+    answers: { [questionId: string]: number };
+  }) => {
+    if (!user?.id) {
+      setError('User not authenticated');
+      return;
+    }
 
-      console.log('Submitting test with data:', data);
+    setIsSubmitting(true);
+    setError(null);
 
-      // Call the analyze function - this works for ALL test types now
-      const { data: analysisResult, error: analysisError } = await supabase.functions.invoke('analyze-test-result', {
-        body: data
-      });
+    try {
+      console.log('Submitting test with data:', testData);
 
-      if (analysisError) {
-        console.error('Analysis error:', analysisError);
-        throw analysisError;
+      // Get test type to determine scoring method
+      const { data: testType, error: testTypeError } = await supabase
+        .from('test_types')
+        .select('name')
+        .eq('id', testData.test_type_id)
+        .single();
+
+      if (testTypeError) {
+        console.error('Error fetching test type:', testTypeError);
+        throw new Error('Nu s-a putut determina tipul testului');
       }
 
-      console.log('Analysis result:', analysisResult);
+      console.log('Test type:', testType);
 
-      // Save the test result with the complete analysis structure
-      // This is now uniform for all test types
-      const { data: testResult, error: saveError } = await supabase
+      // Calculate score based on test type
+      let calculatedScore;
+      
+      if (isCognitiveAbilitiesTest(testType.name)) {
+        console.log('Calculating cognitive abilities score...');
+        calculatedScore = calculateCognitiveAbilitiesScore(testData.answers);
+      } else {
+        // Default scoring for other tests (placeholder)
+        console.log('Using default scoring...');
+        const totalAnswers = Object.keys(testData.answers).length;
+        const totalScore = Object.values(testData.answers).reduce((sum, value) => sum + value, 0);
+        const maxPossibleScore = totalAnswers * 4; // Assuming max score per question is 4
+        
+        calculatedScore = {
+          overall: Math.round((totalScore / maxPossibleScore) * 100),
+          raw_score: totalScore,
+          max_score: maxPossibleScore,
+          dimensions: {},
+          interpretation: 'Rezultat calculat'
+        };
+      }
+
+      console.log('Calculated score:', calculatedScore);
+
+      // Submit to database
+      const { data: result, error: submitError } = await supabase
         .from('test_results')
         .insert({
           user_id: user.id,
-          test_type_id: data.test_type_id,
-          answers: data.answers,
-          score: analysisResult, // Save the complete analysis result for any test type
+          test_type_id: testData.test_type_id,
+          answers: testData.answers,
+          score: calculatedScore
         })
         .select()
         .single();
 
-      if (saveError) {
-        console.error('Save error:', saveError);
-        throw saveError;
+      if (submitError) {
+        console.error('Error submitting test:', submitError);
+        throw new Error('Nu s-a putut salva rezultatul testului');
       }
 
-      console.log('Test result saved:', testResult);
+      console.log('Test submitted successfully:', result);
 
-      // Update subscription usage - uniform for all tests
-      const { data: currentSub } = await supabase
-        .from('subscriptions')
-        .select('tests_taken_this_month')
-        .eq('user_id', user.id)
-        .single();
-
-      const currentCount = currentSub?.tests_taken_this_month || 0;
+      // Update subscription test count
+      const { error: updateError } = await supabase.rpc('increment_tests_taken');
       
-      const { error: usageError } = await supabase
-        .from('subscriptions')
-        .update({ 
-          tests_taken_this_month: currentCount + 1
-        })
-        .eq('user_id', user.id);
-
-      if (usageError) {
-        console.error('Usage update error:', usageError);
-        // Don't throw here as the test was already saved successfully
+      if (updateError) {
+        console.warn('Could not update test count:', updateError);
       }
 
-      return testResult;
-    },
-    onSuccess: (testResult) => {
-      // Invalidate queries - uniform for all tests
-      queryClient.invalidateQueries({ queryKey: ['test-results'] });
-      queryClient.invalidateQueries({ queryKey: ['subscription'] });
-      toast.success('Test completat cu succes!');
-      
-      // Call the navigation callback if provided - uniform navigation for all tests
+      toast({
+        title: "Test completat!",
+        description: "Rezultatul tău a fost salvat cu succes."
+      });
+
       if (onSuccess) {
-        onSuccess(testResult.id);
+        onSuccess(result.id);
       }
-    },
-    onError: (error: any) => {
-      console.error('Test submission error:', error);
-      toast.error('Eroare la salvarea testului: ' + (error?.message || 'Eroare necunoscută'));
+
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'A apărut o eroare neașteptată';
+      setError(errorMessage);
+      
+      toast({
+        title: "Eroare",
+        description: errorMessage,
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
     }
-  });
+  };
 
   return {
-    submitTest: submitTest.mutate,
-    isSubmitting: submitTest.isPending,
-    error: submitTest.error
+    submitTest,
+    isSubmitting,
+    error
   };
 };
