@@ -19,10 +19,12 @@
   "nav": {
     "login": "Autentificare",
     "startFree": "Începe Gratuit",
+    "dashboard": "Dashboard",
     "tests": "Teste",
     "career": "Carieră",
     "profile": "Profil",
     "subscription": "Abonament",
+    "subscriptionSettings": "Abonament și Setări",
     "logout": "Deconectare"
   },
   "home": {

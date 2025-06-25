@@ -19,10 +19,12 @@
   "nav": {
     "login": "Login",
     "startFree": "Start Free",
+    "dashboard": "Dashboard",
     "tests": "Tests",
     "career": "Career",
     "profile": "Profile",
     "subscription": "Subscription",
+    "subscriptionSettings": "Subscription & Settings",
     "logout": "Logout"
   },
   "home": {

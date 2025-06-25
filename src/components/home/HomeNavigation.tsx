@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAuth } from '@/contexts/AuthContext';
@@ -10,7 +11,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { User, LogOut, Menu, Globe } from 'lucide-react';
+import { User, LogOut, Menu, Globe, Settings } from 'lucide-react';
 
 const HomeNavigation = () => {
   const { t, language, changeLanguage } = useLanguage();
@@ -44,16 +45,6 @@ const HomeNavigation = () => {
             </div>
             
             <div className="flex items-center space-x-4">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={toggleLanguage}
-                className="flex items-center gap-1"
-              >
-                <Globe className="w-4 h-4" />
-                {language.toUpperCase()}
-              </Button>
-
               {user ? (
                 <>
                   <div className="hidden md:flex items-center space-x-4">
@@ -61,7 +52,7 @@ const HomeNavigation = () => {
                       to="/dashboard"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      Dashboard
+                      {t('nav.dashboard')}
                     </Link>
                     <Link
                       to="/teste"
@@ -75,6 +66,12 @@ const HomeNavigation = () => {
                     >
                       {t('nav.career')}
                     </Link>
+                    <Link
+                      to="/profilul-meu"
+                      className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
+                    >
+                      {t('nav.profile')}
+                    </Link>
                     {isAdmin && (
                       <Link
                         to="/admin"
@@ -86,6 +83,16 @@ const HomeNavigation = () => {
                     )}
                   </div>
 
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleLanguage}
+                    className="flex items-center gap-1"
+                  >
+                    <Globe className="w-4 h-4" />
+                    {language.toUpperCase()}
+                  </Button>
+
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" className="rounded-full h-8 w-8 p-0">
@@ -94,9 +101,9 @@ const HomeNavigation = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => navigate('/profilul-meu')}>
-                        <User className="h-4 w-4 mr-2" />
-                        {t('nav.profile')}
+                      <DropdownMenuItem onClick={() => navigate('/abonament')}>
+                        <Settings className="h-4 w-4 mr-2" />
+                        {t('nav.subscriptionSettings')}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleSignOut}>
                         <LogOut className="h-4 w-4 mr-2" />
@@ -115,6 +122,16 @@ const HomeNavigation = () => {
                 </>
               ) : (
                 <>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={toggleLanguage}
+                    className="flex items-center gap-1"
+                  >
+                    <Globe className="w-4 h-4" />
+                    {language.toUpperCase()}
+                  </Button>
+                  
                   <Link to="/auth">
                     <Button variant="ghost" className="hover:bg-white/60 transition-colors">
                       {t('nav.login')}
@@ -140,7 +157,7 @@ const HomeNavigation = () => {
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Dashboard
+                {t('nav.dashboard')}
               </Link>
               <Link
                 to="/teste"
@@ -162,6 +179,13 @@ const HomeNavigation = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('nav.profile')}
+              </Link>
+              <Link
+                to="/abonament"
+                className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {t('nav.subscriptionSettings')}
               </Link>
               {isAdmin && (
                 <Link
