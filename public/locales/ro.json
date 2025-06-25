@@ -1,4 +1,3 @@
-
 {
   "common": {
     "poweredByAI": "Alimentat de AI",
@@ -76,7 +75,8 @@
     "leadershipTest": "Test de Leadership",
     "maslachBurnoutTest": "Test de Burnout Maslach",
     "perceivedStressTest": "Test de Stres Perceput",
-    "resilienceTest": "Test de Reziliență"
+    "resilienceTest": "Test de Reziliență",
+    "gad7AnxietyAssessment": "Evaluare Anxietate GAD-7"
   },
   "testDescriptions": {
     "beckDepressionInventory": "Evaluează starea ta emoțională și identifică potențiale semne de depresie prin întrebări validate științific.",
@@ -87,7 +87,8 @@
     "leadershipTest": "Evaluează stilul tău de leadership, punctele forte și domeniile de dezvoltare în managementul și inspirarea echipelor.",
     "maslachBurnoutTest": "Evaluează nivelul tău de burnout legat de muncă prin epuizare emoțională, depersonalizare și realizări personale.",
     "perceivedStressTest": "Măsoară cât de stresante percepi situațiile din viața ta și capacitatea ta de a face față stresului.",
-    "resilienceTest": "Evaluează reziliența ta psihologică și capacitatea de a te recupera după provocări și adversități."
+    "resilienceTest": "Evaluează reziliența ta psihologică și capacitatea de a te recupera după provocări și adversități.",
+    "gad7AnxietyAssessment": "Evaluează nivelul de anxietate folosind scala standardizată GAD-7 pentru a identifica simptomele și severitatea tulburării de anxietate generalizată."
   },
   "plans": {
     "basic": {

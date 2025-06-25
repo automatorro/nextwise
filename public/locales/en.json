@@ -1,4 +1,3 @@
-
 {
   "common": {
     "poweredByAI": "Powered by AI",
@@ -76,7 +75,8 @@
     "leadershipTest": "Leadership Test",
     "maslachBurnoutTest": "Maslach Burnout Test",
     "perceivedStressTest": "Perceived Stress Test",
-    "resilienceTest": "Resilience Test"
+    "resilienceTest": "Resilience Test",
+    "gad7AnxietyAssessment": "GAD-7 Anxiety Assessment"
   },
   "testDescriptions": {
     "beckDepressionInventory": "Assess your emotional state and identify potential signs of depression through scientifically validated questions.",
@@ -87,7 +87,8 @@
     "leadershipTest": "Assess your leadership style, strengths, and areas for development in managing and inspiring teams.",
     "maslachBurnoutTest": "Evaluate your level of work-related burnout across emotional exhaustion, depersonalization, and personal accomplishment.",
     "perceivedStressTest": "Measure how stressful you perceive situations in your life and your ability to cope with stress.",
-    "resilienceTest": "Assess your psychological resilience and ability to bounce back from challenges and adversity."
+    "resilienceTest": "Assess your psychological resilience and ability to bounce back from challenges and adversity.",
+    "gad7AnxietyAssessment": "Evaluate your anxiety levels using the standardized GAD-7 scale to identify symptoms and severity of generalized anxiety disorder."
   },
   "plans": {
     "basic": {

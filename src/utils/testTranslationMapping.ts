@@ -48,7 +48,9 @@ export const getTestNameTranslationKey = (testName: string): string => {
     'Test de Stres Perceput': 'testNames.perceivedStressTest',
     'Perceived Stress Test': 'testNames.perceivedStressTest',
     'Test de Reziliență': 'testNames.resilienceTest',
-    'Resilience Test': 'testNames.resilienceTest'
+    'Resilience Test': 'testNames.resilienceTest',
+    'Evaluare Anxietate GAD-7': 'testNames.gad7AnxietyAssessment',
+    'GAD-7 Anxiety Assessment': 'testNames.gad7AnxietyAssessment'
   };
 
   return testNameMap[testName] || testName;
@@ -72,7 +74,9 @@ export const getTestDescriptionTranslationKey = (testName: string): string => {
     'Test de Stres Perceput': 'testDescriptions.perceivedStressTest',
     'Perceived Stress Test': 'testDescriptions.perceivedStressTest',
     'Test de Reziliență': 'testDescriptions.resilienceTest',
-    'Resilience Test': 'testDescriptions.resilienceTest'
+    'Resilience Test': 'testDescriptions.resilienceTest',
+    'Evaluare Anxietate GAD-7': 'testDescriptions.gad7AnxietyAssessment',
+    'GAD-7 Anxiety Assessment': 'testDescriptions.gad7AnxietyAssessment'
   };
 
   return descriptionMap[testName] || testName;
