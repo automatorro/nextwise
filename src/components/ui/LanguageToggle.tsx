@@ -5,10 +5,10 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Globe } from 'lucide-react';
 
 const LanguageToggle = () => {
-  const { language, setLanguage } = useLanguage();
+  const { language, changeLanguage } = useLanguage();
 
   const toggleLanguage = () => {
-    setLanguage(language === 'ro' ? 'en' : 'ro');
+    changeLanguage(language === 'ro' ? 'en' : 'ro');
   };
 
   return (
