@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { calculateCognitiveAbilitiesScore, calculateCognitiveAbilitiesScoreFromDB } from '@/utils/testResultFormatters';
 import { calculateBeckDepressionScore } from '@/utils/beckDepressionInventoryCalculator';
-import { calculateBelbinTeamRolesScore } from '@/utils/belbinTeamRolesCalculator';
+import { calculateBelbinTeamRolesScore, calculateBelbinTeamRolesScoreFromDB } from '@/utils/belbinTeamRolesCalculator';
 import { isCognitiveAbilitiesTest, isBeckDepressionInventory, isBelbinTeamRoles } from '@/utils/testLabels';
 
 export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
@@ -58,8 +58,13 @@ export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
         console.log('Calculating Beck Depression Inventory score...');
         calculatedScore = calculateBeckDepressionScore(testData.answers);
       } else if (isBelbinTeamRoles(testType.name)) {
-        console.log('Calculating Belbin Team Roles score...');
-        calculatedScore = calculateBelbinTeamRolesScore(testData.answers);
+        console.log('Calculating Belbin Team Roles score using database...');
+        try {
+          calculatedScore = await calculateBelbinTeamRolesScoreFromDB(testData.test_type_id, testData.answers);
+        } catch (dbError) {
+          console.warn('Database calculation failed, using fallback:', dbError);
+          calculatedScore = calculateBelbinTeamRolesScore(testData.answers);
+        }
       } else {
         // Default scoring for other tests (placeholder)
         console.log('Using default scoring...');

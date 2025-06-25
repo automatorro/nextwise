@@ -1,7 +1,7 @@
 
 import { getScoreInterpretation } from './testScoring';
 import { calculateBeckDepressionScore } from '@/utils/beckDepressionInventoryCalculator';
-import { calculateBelbinTeamRolesScore } from '@/utils/belbinTeamRolesCalculator';
+import { calculateBelbinTeamRolesScore, calculateBelbinTeamRolesScoreFromDB } from '@/utils/belbinTeamRolesCalculator';
 import { isBeckDepressionInventory, isBelbinTeamRoles } from '@/utils/testLabels';
 
 export interface FormattedTestResult {
@@ -12,6 +12,8 @@ export interface FormattedTestResult {
   severity_level?: string;
   primary_roles?: string[];
   secondary_roles?: string[];
+  role_scores?: { [key: string]: number };
+  is_belbin?: boolean;
 }
 
 export function formatTestResults(testResult: any): FormattedTestResult {
@@ -40,16 +42,17 @@ export function formatTestResults(testResult: any): FormattedTestResult {
     };
   }
 
-  // For Belbin Team Roles, recalculate if needed to ensure proper formatting
-  if (isBelbinTeamRoles(testName) && answers) {
-    const belbinScore = calculateBelbinTeamRolesScore(answers);
+  // For Belbin Team Roles, use the score data with special handling
+  if (isBelbinTeamRoles(testName)) {
     return {
-      overall: belbinScore.overall,
-      dimensions: belbinScore.dimensions,
-      interpretation: belbinScore.interpretation,
+      overall: score.overall || 0,
+      dimensions: score.role_scores || score.dimensions || {},
+      interpretation: score.interpretation || 'Rezultat Belbin',
       testName,
-      primary_roles: belbinScore.primary_roles,
-      secondary_roles: belbinScore.secondary_roles
+      primary_roles: score.primary_roles || [],
+      secondary_roles: score.secondary_roles || [],
+      role_scores: score.role_scores || score.dimensions || {},
+      is_belbin: true
     };
   }
   

@@ -9,6 +9,8 @@ import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import BigFiveRadarChart from '@/components/charts/BigFiveRadarChart';
 import BigFiveExplanations from '@/components/charts/BigFiveExplanations';
+import BelbinRadarChart from '@/components/charts/BelbinRadarChart';
+import BelbinRoleResults from '@/components/test-result/BelbinRoleResults';
 import OverallScoreCard from '@/components/test-result/OverallScoreCard';
 import DimensionsAnalysis from '@/components/test-result/DimensionsAnalysis';
 import DetailedAnalysisSection from '@/components/test-result/DetailedAnalysisSection';
@@ -18,7 +20,7 @@ import DimensionExplanations from '@/components/test-result/DimensionExplanation
 import CorrectAnswersSection from '@/components/test-result/CorrectAnswersSection';
 import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
 import { useCognitiveAbilitiesCalculation } from '@/hooks/useCognitiveAbilitiesCalculation';
-import { isCognitiveAbilitiesTest } from '@/utils/testLabels';
+import { isCognitiveAbilitiesTest, isBelbinTeamRoles } from '@/utils/testLabels';
 
 interface ScoreData {
   overall: number;
@@ -33,6 +35,9 @@ interface ScoreData {
     agreeableness?: string;
     neuroticism?: string;
   };
+  primary_roles?: string[];
+  secondary_roles?: string[];
+  role_scores?: { [key: string]: number };
 }
 
 interface TestResultData {
@@ -101,6 +106,7 @@ const TestResult = () => {
   // Calculate dimensions based on test type
   const isBigFiveTest = result?.test_types.name.includes('Big Five');
   const isCognitiveTest = result ? isCognitiveAbilitiesTest(result.test_types.name) : false;
+  const isBelbinTest = result ? isBelbinTeamRoles(result.test_types.name) : false;
   
   const calculatedBigFiveDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
   const calculatedCognitiveDimensions = useCognitiveAbilitiesCalculation(isCognitiveTest ? result?.answers : undefined);
@@ -114,9 +120,13 @@ const TestResult = () => {
     if (isCognitiveTest && calculatedCognitiveDimensions) {
       return calculatedCognitiveDimensions;
     }
+
+    if (isBelbinTest) {
+      return result?.score.role_scores || result?.score.dimensions || {};
+    }
     
     return result?.score.dimensions || {};
-  }, [isBigFiveTest, isCognitiveTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, result?.score.dimensions]);
+  }, [isBigFiveTest, isCognitiveTest, isBelbinTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, result?.score]);
 
   const hasValidTestSpecificDimensions = Object.values(testSpecificDimensions).some(value => value > 0);
 
@@ -174,23 +184,71 @@ const TestResult = () => {
           </p>
         </div>
 
-        {/* Overall Score */}
-        <OverallScoreCard score={result.score} />
-
-        {/* Correct Answers Section - only for cognitive abilities tests */}
-        {isCognitiveTest && (
-          <CorrectAnswersSection 
-            testTypeId={result.test_type_id}
-            userAnswers={result.answers}
+        {/* Belbin Test Results - Special handling */}
+        {isBelbinTest ? (
+          <BelbinRoleResults
+            roleScores={result.score.role_scores || result.score.dimensions || {}}
+            primaryRoles={result.score.primary_roles || []}
+            secondaryRoles={result.score.secondary_roles || []}
+            interpretation={result.score.interpretation}
           />
+        ) : (
+          <>
+            {/* Overall Score - only for non-Belbin tests */}
+            <OverallScoreCard score={result.score} />
+
+            {/* Correct Answers Section - only for cognitive abilities tests */}
+            {isCognitiveTest && (
+              <CorrectAnswersSection 
+                testTypeId={result.test_type_id}
+                userAnswers={result.answers}
+              />
+            )}
+
+            {/* Scoring Explanation */}
+            <ScoringExplanation 
+              testName={result.test_types.name}
+              overallScore={result.score.overall}
+              scoreType={scoreType}
+            />
+
+            {/* Dimensions Analysis */}
+            <DimensionsAnalysis 
+              dimensions={generalDisplayDimensions}
+              testName={result.test_types.name}
+            />
+
+            {/* Dimension Explanations */}
+            <DimensionExplanations 
+              testName={result.test_types.name}
+              dimensions={generalDisplayDimensions}
+            />
+
+            {/* Detailed Interpretations for Big Five */}
+            {isBigFiveTest && result.score.detailed_interpretations && (
+              <DetailedInterpretations 
+                interpretations={result.score.detailed_interpretations}
+                testName={result.test_types.name}
+              />
+            )}
+          </>
         )}
 
-        {/* Scoring Explanation */}
-        <ScoringExplanation 
-          testName={result.test_types.name}
-          overallScore={result.score.overall}
-          scoreType={scoreType}
-        />
+        {/* Belbin Radar Chart - only for Belbin tests */}
+        {isBelbinTest && hasValidTestSpecificDimensions && (
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Vizualizare Radar - Rolurile Belbin</CardTitle>
+              <p className="text-sm text-gray-600">
+                Graficul radar arată profilul tău pe cele 9 roluri Belbin. 
+                Fiecare axă reprezintă un rol, iar scorul este afișat în puncte (0-18).
+              </p>
+            </CardHeader>
+            <CardContent>
+              <BelbinRadarChart roleScores={testSpecificDimensions} />
+            </CardContent>
+          </Card>
+        )}
 
         {/* Big Five Radar Chart - only for Big Five tests */}
         {isBigFiveTest && hasValidTestSpecificDimensions && (
@@ -232,18 +290,6 @@ const TestResult = () => {
           </Card>
         )}
 
-        {/* Dimensions Analysis */}
-        <DimensionsAnalysis 
-          dimensions={generalDisplayDimensions}
-          testName={result.test_types.name}
-        />
-
-        {/* Dimension Explanations */}
-        <DimensionExplanations 
-          testName={result.test_types.name}
-          dimensions={generalDisplayDimensions}
-        />
-
         {/* Big Five Explanations - only for Big Five tests */}
         {isBigFiveTest && hasValidTestSpecificDimensions && (
           <Card className="mb-8">
@@ -254,14 +300,6 @@ const TestResult = () => {
               <BigFiveExplanations dimensions={testSpecificDimensions as any} />
             </CardContent>
           </Card>
-        )}
-
-        {/* Detailed Interpretations for Big Five */}
-        {isBigFiveTest && result.score.detailed_interpretations && (
-          <DetailedInterpretations 
-            interpretations={result.score.detailed_interpretations}
-            testName={result.test_types.name}
-          />
         )}
 
         {/* Detailed Analysis Section - AVAILABLE FOR ALL TESTS */}

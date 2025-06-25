@@ -1,5 +1,4 @@
-
-import { getScoreInterpretation } from './testScoring';
+import { supabase } from '@/integrations/supabase/client';
 
 export interface BelbinTeamRolesScore {
   overall: number;
@@ -9,11 +8,115 @@ export interface BelbinTeamRolesScore {
   interpretation: string;
   primary_roles: string[];
   secondary_roles: string[];
+  role_scores: { [key: string]: number }; // Raw scores 0-18 for each role
 }
 
-// Belbin Team Roles scoring function
+// Belbin Team Roles scoring function using database weights
+export async function calculateBelbinTeamRolesScoreFromDB(testTypeId: string, answers: { [key: string]: number }): Promise<BelbinTeamRolesScore> {
+  console.log('Calculating Belbin Team Roles score using database weights for answers:', answers);
+  
+  try {
+    // Fetch questions with scoring weights from database
+    const { data: questions, error } = await supabase
+      .from('test_questions')
+      .select('id, question_order, scoring_weights')
+      .eq('test_type_id', testTypeId)
+      .order('question_order');
+
+    if (error) {
+      console.error('Error fetching questions:', error);
+      throw error;
+    }
+
+    if (!questions || questions.length === 0) {
+      throw new Error('No questions found for this test');
+    }
+
+    const roles = {
+      plant: 0,
+      resource_investigator: 0,
+      coordinator: 0,
+      shaper: 0,
+      monitor_evaluator: 0,
+      teamworker: 0,
+      implementer: 0,
+      completer_finisher: 0,
+      specialist: 0
+    };
+
+    // Calculate scores using database weights
+    questions.forEach(question => {
+      const questionId = question.id;
+      const userAnswer = answers[questionId];
+      
+      if (userAnswer !== undefined && question.scoring_weights) {
+        const weights = question.scoring_weights as any;
+        const answerWeights = weights[userAnswer.toString()];
+        
+        if (answerWeights && typeof answerWeights === 'object') {
+          Object.entries(answerWeights).forEach(([role, score]) => {
+            if (roles.hasOwnProperty(role) && typeof score === 'number') {
+              roles[role as keyof typeof roles] += score;
+            }
+          });
+        }
+      }
+    });
+
+    console.log('Calculated role scores:', roles);
+
+    // Find primary and secondary roles based on scores
+    const sortedRoles = Object.entries(roles)
+      .sort(([,a], [,b]) => b - a)
+      .map(([role, score]) => ({ role, score }));
+
+    const primaryRoles = sortedRoles.slice(0, 2).map(r => r.role);
+    const secondaryRoles = sortedRoles.slice(2, 4).map(r => r.role);
+
+    // Generate role-specific interpretation
+    const roleDescriptions: { [key: string]: string } = {
+      plant: 'Plant (Creativul) - Aduce idei creative și inovatoare echipei',
+      resource_investigator: 'Resource Investigator (Investigatorul) - Explorează oportunități și dezvoltă contacte',
+      coordinator: 'Coordinator (Coordonatorul) - Clarifică obiectivele și promovează luarea deciziilor',
+      shaper: 'Shaper (Modelatorul) - Provocă echipa să depășească obstacolele',
+      monitor_evaluator: 'Monitor Evaluator (Evaluatorul) - Analizează opțiunile și judecă cu acuratețe',
+      teamworker: 'Teamworker (Echipierul) - Cooperează și evită conflictele',
+      implementer: 'Implementer (Implementatorul) - Transformă ideile în acțiuni practice',
+      completer_finisher: 'Completer Finisher (Finalizatorul) - Caută erorile și respectă termenele',
+      specialist: 'Specialist (Specialistul) - Aduce cunoștințe specializate'
+    };
+
+    const topRole = sortedRoles[0];
+    const secondRole = sortedRoles[1];
+    
+    const interpretation = `Rolul tău dominant în echipă este ${roleDescriptions[topRole.role]} cu ${topRole.score} puncte, ` +
+      `urmat de ${roleDescriptions[secondRole.role]} cu ${secondRole.score} puncte. ` +
+      `Aceste roluri definesc modul în care contribui cel mai eficient la succesul echipei.`;
+
+    // For compatibility, calculate a percentage based on highest possible score
+    const maxPossiblePerRole = 18; // Maximum score per role in Belbin
+    const topScorePercentage = Math.round((topRole.score / maxPossiblePerRole) * 100);
+
+    return {
+      overall: topScorePercentage, // Keep for compatibility but not used in UI
+      raw_score: Object.values(roles).reduce((sum, score) => sum + score, 0),
+      max_score: Object.keys(roles).length * maxPossiblePerRole,
+      dimensions: roles, // Raw scores for each role
+      interpretation,
+      primary_roles: primaryRoles,
+      secondary_roles: secondaryRoles,
+      role_scores: roles // Explicit raw scores
+    };
+
+  } catch (error) {
+    console.error('Database calculation failed, using fallback:', error);
+    return calculateBelbinTeamRolesScore(answers);
+  }
+}
+
+// Fallback calculation method (existing implementation)
 export function calculateBelbinTeamRolesScore(answers: { [key: string]: number }): BelbinTeamRolesScore {
-  console.log('Calculating Belbin Team Roles score for answers:', answers);
+  console.log('Using fallback Belbin calculation for answers:', answers);
   
   const roles = {
     plant: 0,
@@ -75,16 +178,8 @@ export function calculateBelbinTeamRolesScore(answers: { [key: string]: number }
     totalScore += selectedOption;
   });
 
-  // Convert to percentages and find dominant roles
-  const rolePercentages: { [key: string]: number } = {};
-  const maxRoleScore = Math.max(...Object.values(roles));
-  
-  Object.entries(roles).forEach(([role, score]) => {
-    rolePercentages[role] = Math.round((score / (maxRoleScore || 1)) * 100);
-  });
-
-  // Identify primary and secondary roles
-  const sortedRoles = Object.entries(rolePercentages)
+  // Find primary and secondary roles
+  const sortedRoles = Object.entries(roles)
     .sort(([,a], [,b]) => b - a)
     .map(([role]) => role);
 
@@ -116,7 +211,7 @@ export function calculateBelbinTeamRolesScore(answers: { [key: string]: number }
     totalScore,
     maxPossibleScore,
     overallPercentage,
-    roles: rolePercentages,
+    roles,
     primaryRoles,
     secondaryRoles
   });
@@ -125,9 +220,10 @@ export function calculateBelbinTeamRolesScore(answers: { [key: string]: number }
     overall: overallPercentage,
     raw_score: totalScore,
     max_score: maxPossibleScore,
-    dimensions: rolePercentages,
+    dimensions: roles,
     interpretation,
     primary_roles: primaryRoles,
-    secondary_roles: secondaryRoles
+    secondary_roles: secondaryRoles,
+    role_scores: roles
   };
 }
