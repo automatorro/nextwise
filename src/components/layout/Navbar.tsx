@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -10,10 +11,18 @@ import {
   DropdownMenuItem, 
   DropdownMenuTrigger 
 } from '@/components/ui/dropdown-menu';
-import { User, LogOut, Settings, BarChart3, Target } from 'lucide-react';
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { User, LogOut, Settings, BarChart3, Target, Globe } from 'lucide-react';
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
+  const { language, changeLanguage } = useLanguage();
 
   const getInitials = (name: string | null) => {
     if (!name) return 'U';
@@ -55,6 +64,16 @@ const Navbar = () => {
                       <span>Profil</span>
                     </Button>
                   </Link>
+
+                  <Select value={language} onValueChange={changeLanguage}>
+                    <SelectTrigger className="w-20 h-8 bg-white/60 border-white/30">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="ro">RO</SelectItem>
+                      <SelectItem value="en">EN</SelectItem>
+                    </SelectContent>
+                  </Select>
                   
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
