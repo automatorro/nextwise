@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
@@ -10,8 +11,7 @@ import {
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useUserRole } from '@/hooks/useUserRole';
-import { Brain, User, LogOut, Menu, X } from 'lucide-react';
-import LanguageToggle from '@/components/ui/LanguageToggle';
+import { Brain, User, LogOut, Menu, X, Globe } from 'lucide-react';
 
 interface MenuItem {
   label: string;
@@ -20,7 +20,7 @@ interface MenuItem {
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
-  const { t, language } = useLanguage();
+  const { t, language, changeLanguage } = useLanguage();
   const { isAdmin } = useUserRole();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,6 +28,10 @@ const Navbar = () => {
   const handleSignOut = async () => {
     await signOut();
     navigate('/auth');
+  };
+
+  const toggleLanguage = () => {
+    changeLanguage(language === 'ro' ? 'en' : 'ro');
   };
 
   const menuItems: MenuItem[] = [
@@ -52,7 +56,15 @@ const Navbar = () => {
 
           {user ? (
             <div className="flex items-center space-x-4">
-              <LanguageToggle />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={toggleLanguage}
+                className="flex items-center gap-1"
+              >
+                <Globe className="w-4 h-4" />
+                {language.toUpperCase()}
+              </Button>
               
               <div className="hidden md:flex items-center space-x-4">
                 <Link
