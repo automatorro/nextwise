@@ -19,8 +19,7 @@ import type { Json } from '@/integrations/supabase/types';
 
 interface Question {
   id: string;
-  question_text_ro: string;
-  question_text_en: string | null;
+  question_text: string;
   question_order: number;
   options: Json;
   scoring_weights?: Json;
@@ -84,15 +83,24 @@ const TestRunner = () => {
     enabled: !!testId
   });
 
-  // Fetch questions
+  // Fetch questions with language-specific text
   const { data: questions, isLoading: questionsLoading, error: questionsError } = useQuery({
-    queryKey: ['questions', testId],
+    queryKey: ['questions', testId, language],
     queryFn: async () => {
       if (!testId) throw new Error('Test ID is required');
       
+      // Select the appropriate question text column based on language
+      const questionTextColumn = language === 'en' ? 'question_text_en' : 'question_text_ro';
+      
       const { data, error } = await supabase
         .from('test_questions')
-        .select('*')
+        .select(`
+          id,
+          ${questionTextColumn} as question_text,
+          question_order,
+          options,
+          scoring_weights
+        `)
         .eq('test_type_id', testId)
         .order('question_order');
       
@@ -101,7 +109,7 @@ const TestRunner = () => {
         throw error;
       }
       
-      console.log('Fetched questions:', data);
+      console.log('Fetched questions for language:', language, data);
       return data as Question[];
     },
     enabled: !!testId && !!testType
@@ -189,14 +197,6 @@ const TestRunner = () => {
     });
   };
 
-  // Get question text based on current language
-  const getQuestionText = (question: Question) => {
-    if (language === 'en' && question.question_text_en) {
-      return question.question_text_en;
-    }
-    return question.question_text_ro;
-  };
-
   // Handle loading states and errors
   if (testTypeLoading) {
     return (
@@ -254,11 +254,6 @@ const TestRunner = () => {
   }
 
   const currentQuestion = questions[currentQuestionIndex];
-  // Create a version of the question with the correct text for the current language
-  const currentQuestionWithText = {
-    ...currentQuestion,
-    question_text: getQuestionText(currentQuestion)
-  };
 
   return (
     <div>
@@ -276,7 +271,7 @@ const TestRunner = () => {
         {isStarted && (
           <TestQuestion
             testType={testType}
-            currentQuestion={currentQuestionWithText}
+            currentQuestion={currentQuestion}
             currentQuestionIndex={currentQuestionIndex}
             totalQuestions={questions.length}
             answers={answers}
