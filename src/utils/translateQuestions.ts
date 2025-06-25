@@ -45,7 +45,7 @@ export const getUntranslatedQuestions = async (testTypeId?: string): Promise<Que
   return data?.map(q => ({
     id: q.id,
     question_text_ro: q.question_text_ro,
-    options: Array.isArray(q.options) ? q.options : []
+    options: Array.isArray(q.options) ? q.options.map(opt => String(opt)) : []
   })) || [];
 };
 
