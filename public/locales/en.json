@@ -1,7 +1,21 @@
 
 {
   "common": {
-    "poweredByAI": "Powered by AI"
+    "poweredByAI": "Powered by AI",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "start": "Start",
+    "finish": "Finish",
+    "continue": "Continue"
   },
   "nav": {
     "login": "Login",
@@ -121,5 +135,74 @@
       "tests": "tests",
       "viewAllTests": "View All Tests"
     }
+  },
+  "tests": {
+    "title": "AI Psychological Tests",
+    "subtitle": "Discover your personality and strengths through advanced psychological assessments analyzed by artificial intelligence.",
+    "allCategories": "All Categories",
+    "noTests": "No tests available in this category",
+    "minutes": "minutes",
+    "questions": "questions",
+    "takeTest": "Take Test",
+    "upgradeRequired": "Upgrade Required",
+    "categories": {
+      "all": "All",
+      "personality": "Personality",
+      "cognitive": "Cognitive",
+      "emotional": "Emotional",
+      "leadership": "Leadership",
+      "wellness": "Wellness",
+      "technical": "Technical"
+    }
+  },
+  "careerPaths": {
+    "title": "Your personalized career plans",
+    "subtitle": "Artificial intelligence creates career plans based on your test results, giving you a clear path to your professional goals.",
+    "poweredByAI": "AI-Powered Plans",
+    "tabs": {
+      "dashboard": "Dashboard",
+      "create": "New Plan",
+      "mentoring": "AI Mentoring"
+    },
+    "noPlans": "You don't have any career plans yet",
+    "createFirst": "Create your first career plan",
+    "createPlan": "Create Plan",
+    "viewPlan": "View Plan"
+  },
+  "subscription": {
+    "title": "Subscription & Settings",
+    "subtitle": "Manage your subscription and update your personal information.",
+    "profileSettings": "Profile Settings",
+    "currentSubscription": "Current Subscription",
+    "subscriptionType": "Subscription Type",
+    "status": "Status",
+    "testsThisMonth": "Tests Taken This Month",
+    "administrator": "Administrator",
+    "unlimitedAccess": "Administrator (Unlimited Access)",
+    "active": "Active"
+  },
+  "testRunner": {
+    "notFound": "Test not found",
+    "testNotExists": "The requested test does not exist or is not available.",
+    "returnToTests": "Return to Tests",
+    "unavailable": "Test unavailable",
+    "noQuestions": "has no configured questions at the moment. Please try again later or choose another test.",
+    "loadingQuestions": "Loading questions...",
+    "limitReached": "Limit reached",
+    "limitMessage": "You have reached the test limit for this month.",
+    "progressRestored": "Progress restored",
+    "continueFrom": "Continue from question",
+    "testRestarted": "Test restarted",
+    "startFromFirst": "Starting test from the first question"
+  },
+  "testResult": {
+    "results": "Test Results",
+    "analysis": "Analysis",
+    "recommendations": "Recommendations",
+    "score": "Score",
+    "interpretation": "Interpretation",
+    "backToTests": "Back to Tests",
+    "downloadResults": "Download Results",
+    "shareResults": "Share Results"
   }
 }

@@ -1,7 +1,21 @@
 
 {
   "common": {
-    "poweredByAI": "Alimentat de AI"
+    "poweredByAI": "Alimentat de AI",
+    "loading": "Se încarcă...",
+    "error": "Eroare",
+    "success": "Succes",
+    "cancel": "Anulează",
+    "save": "Salvează",
+    "edit": "Editează",
+    "delete": "Șterge",
+    "back": "Înapoi",
+    "next": "Următorul",
+    "previous": "Precedentul",
+    "submit": "Trimite",
+    "start": "Începe",
+    "finish": "Finalizează",
+    "continue": "Continuă"
   },
   "nav": {
     "login": "Autentificare",
@@ -121,5 +135,74 @@
       "tests": "teste",
       "viewAllTests": "Vezi Toate Testele"
     }
+  },
+  "tests": {
+    "title": "Teste Psihologice AI",
+    "subtitle": "Descoperă-ți personalitatea și punctele forte prin evaluări psihologice avansate analizate de inteligența artificială.",
+    "allCategories": "Toate Categoriile",
+    "noTests": "Nu sunt teste disponibile în această categorie",
+    "minutes": "minute",
+    "questions": "întrebări",
+    "takeTest": "Începe Testul",
+    "upgradeRequired": "Necesită Upgrade",
+    "categories": {
+      "all": "Toate",
+      "personality": "Personalitate",
+      "cognitive": "Cognitiv",
+      "emotional": "Emoțional",
+      "leadership": "Leadership",
+      "wellness": "Bunăstare",
+      "technical": "Tehnic"
+    }
+  },
+  "careerPaths": {
+    "title": "Planurile tale de carieră personalizate",
+    "subtitle": "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale, oferindu-ți un drumul clar către obiectivele profesionale.",
+    "poweredByAI": "Planuri Personalizate AI",
+    "tabs": {
+      "dashboard": "Dashboard",
+      "create": "Plan Nou",
+      "mentoring": "Mentoring AI"
+    },
+    "noPlans": "Nu ai încă planuri de carieră",
+    "createFirst": "Creează primul tău plan de carieră",
+    "createPlan": "Creează Plan",
+    "viewPlan": "Vezi Planul"
+  },
+  "subscription": {
+    "title": "Abonament & Setări",
+    "subtitle": "Gestionează abonamentul tău și actualizează informațiile personale.",
+    "profileSettings": "Setări Profil",
+    "currentSubscription": "Abonamentul Curent",
+    "subscriptionType": "Tip Abonament",
+    "status": "Status",
+    "testsThisMonth": "Teste Efectuate Luna Aceasta",
+    "administrator": "Administrator",
+    "unlimitedAccess": "Administrator (Acces Nelimitat)",
+    "active": "Activ"
+  },
+  "testRunner": {
+    "notFound": "Test nu a fost găsit",
+    "testNotExists": "Testul solicitat nu există sau nu este disponibil.",
+    "returnToTests": "Înapoi la Teste",
+    "unavailable": "Test indisponibil",
+    "noQuestions": "nu are întrebări configurate momentan. Vă rugăm să încercați mai târziu sau să alegeți un alt test.",
+    "loadingQuestions": "Se încarcă întrebările...",
+    "limitReached": "Limită atinsă",
+    "limitMessage": "Ai atins limita de teste pentru această lună.",
+    "progressRestored": "Progres restaurat",
+    "continueFrom": "Continui de la întrebarea",
+    "testRestarted": "Test reînceput",
+    "startFromFirst": "Începi testul de la prima întrebare"
+  },
+  "testResult": {
+    "results": "Rezultatele Testului",
+    "analysis": "Analiză",
+    "recommendations": "Recomandări",
+    "score": "Scor",
+    "interpretation": "Interpretare",
+    "backToTests": "Înapoi la Teste",
+    "downloadResults": "Descarcă Rezultatele",
+    "shareResults": "Distribuie Rezultatele"
   }
 }

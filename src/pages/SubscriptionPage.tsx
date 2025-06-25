@@ -3,6 +3,7 @@ import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -13,6 +14,7 @@ import PasswordChangeForm from '@/components/profile/PasswordChangeForm';
 
 const SubscriptionPage = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const { isAdmin, loading: roleLoading } = useUserRole();
 
   // Fetch user profile
@@ -60,7 +62,7 @@ const SubscriptionPage = () => {
       return (
         <Badge variant="destructive" className="flex items-center space-x-1">
           <Shield className="w-3 h-3" />
-          <span>Administrator</span>
+          <span>{t('subscription.administrator')}</span>
         </Badge>
       );
     }
@@ -87,11 +89,11 @@ const SubscriptionPage = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-3 mb-2">
-            <h1 className="text-3xl font-bold text-gray-900">Abonament & Setări</h1>
+            <h1 className="text-3xl font-bold text-gray-900">{t('subscription.title')}</h1>
             {getSubscriptionBadge()}
           </div>
           <p className="text-gray-600">
-            Gestionează abonamentul tău și actualizează informațiile personale.
+            {t('subscription.subtitle')}
           </p>
         </div>
 
@@ -100,7 +102,7 @@ const SubscriptionPage = () => {
           <div className="space-y-6">
             <div className="flex items-center space-x-2 mb-4">
               <User className="w-5 h-5 text-blue-600" />
-              <h2 className="text-xl font-semibold text-gray-900">Setări Profil</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{t('subscription.profileSettings')}</h2>
             </div>
             
             <ProfileEditForm 
@@ -117,34 +119,34 @@ const SubscriptionPage = () => {
           <div className="space-y-6">
             <div className="flex items-center space-x-2 mb-4">
               <CreditCard className="w-5 h-5 text-green-600" />
-              <h2 className="text-xl font-semibold text-gray-900">Abonament</h2>
+              <h2 className="text-xl font-semibold text-gray-900">{t('nav.subscription')}</h2>
             </div>
 
             {/* Current Subscription Info */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
-                  <span>Abonamentul Curent</span>
+                  <span>{t('subscription.currentSubscription')}</span>
                   {getSubscriptionBadge()}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Tip Abonament</label>
+                    <label className="text-sm font-medium text-gray-600">{t('subscription.subscriptionType')}</label>
                     <p className="text-gray-900 capitalize">
-                      {isAdmin() ? 'Administrator (Acces Nelimitat)' : subscription?.subscription_type || 'Basic'}
+                      {isAdmin() ? t('subscription.unlimitedAccess') : subscription?.subscription_type || 'Basic'}
                     </p>
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600">Status</label>
+                    <label className="text-sm font-medium text-gray-600">{t('subscription.status')}</label>
                     <p className="text-gray-900 capitalize">
-                      {subscription?.status === 'active' ? 'Activ' : subscription?.status || 'Activ'}
+                      {subscription?.status === 'active' ? t('subscription.active') : subscription?.status || t('subscription.active')}
                     </p>
                   </div>
                   {!isAdmin() && (
                     <div>
-                      <label className="text-sm font-medium text-gray-600">Teste Efectuate Luna Aceasta</label>
+                      <label className="text-sm font-medium text-gray-600">{t('subscription.testsThisMonth')}</label>
                       <p className="text-gray-900">
                         {subscription?.tests_taken_this_month || 0}
                       </p>

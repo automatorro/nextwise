@@ -38,7 +38,7 @@ const TestRunner = () => {
   const { user } = useAuth();
   const { canTakeTest } = useSubscription();
   const { toast } = useToast();
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{ [questionId: string]: number }>({});
   const [isStarted, setIsStarted] = useState(false);
@@ -121,13 +121,13 @@ const TestRunner = () => {
   useEffect(() => {
     if (!canTakeTest()) {
       toast({
-        title: "Limită atinsă",
-        description: "Ai atins limita de teste pentru această lună.",
+        title: t('testRunner.limitReached'),
+        description: t('testRunner.limitMessage'),
         variant: "destructive"
       });
       navigate('/abonament');
     }
-  }, [canTakeTest, navigate, toast]);
+  }, [canTakeTest, navigate, toast, t]);
 
   // Check for saved progress when questions are loaded
   useEffect(() => {
@@ -152,8 +152,8 @@ const TestRunner = () => {
       setShowProgressDialog(false);
       
       toast({
-        title: "Progres restaurat",
-        description: `Continui de la întrebarea ${progress.currentQuestionIndex + 1}`
+        title: t('testRunner.progressRestored'),
+        description: `${t('testRunner.continueFrom')} ${progress.currentQuestionIndex + 1}`
       });
     }
   };
@@ -165,8 +165,8 @@ const TestRunner = () => {
     setShowProgressDialog(false);
     
     toast({
-      title: "Test reînceput",
-      description: "Începi testul de la prima întrebare"
+      title: t('testRunner.testRestarted'),
+      description: t('testRunner.startFromFirst')
     });
   };
 
@@ -211,8 +211,8 @@ const TestRunner = () => {
   if (testTypeError || !testType) {
     return (
       <TestErrorScreen
-        title="Test nu a fost găsit"
-        message="Testul solicitat nu există sau nu este disponibil."
+        title={t('testRunner.notFound')}
+        message={t('testRunner.testNotExists')}
         onReturnToTests={() => navigate('/teste')}
       />
     );
@@ -223,7 +223,7 @@ const TestRunner = () => {
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
-          <p>Se încarcă întrebările...</p>
+          <p>{t('testRunner.loadingQuestions')}</p>
         </div>
       </div>
     );
@@ -232,8 +232,8 @@ const TestRunner = () => {
   if (questionsError || !questions || questions.length === 0) {
     return (
       <TestErrorScreen
-        title="Test indisponibil"
-        message={`Testul "${testType.name}" nu are întrebări configurate momentan. Vă rugăm să încercați mai târziu sau să alegeți un alt test.`}
+        title={t('testRunner.unavailable')}
+        message={`${testType.name} ${t('testRunner.noQuestions')}`}
         onReturnToTests={() => navigate('/teste')}
       />
     );

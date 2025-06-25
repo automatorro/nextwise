@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useCareerPlans } from '@/hooks/useCareerPlans';
 import { Button } from '@/components/ui/button';
@@ -17,6 +18,7 @@ import AIMentoring from '@/components/career/AIMentoring';
 
 const CareerPaths = () => {
   const { user } = useAuth();
+  const { t } = useLanguage();
   const { subscription } = useSubscription();
   const { careerPlans } = useCareerPlans();
   const [activeTab, setActiveTab] = React.useState('dashboard');
@@ -44,14 +46,13 @@ const CareerPaths = () => {
           <div className="text-center mb-8">
             <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-200">
               <Sparkles className="w-3 h-3 mr-1" />
-              Planuri Personalizate AI
+              {t('careerPaths.poweredByAI')}
             </Badge>
             <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              Planurile tale de <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">carieră personalizate</span>
+              {t('careerPaths.title')}
             </h1>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-              Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale, 
-              oferindu-ți un drumul clar către obiectivele profesionale.
+              {t('careerPaths.subtitle')}
             </p>
           </div>
 
@@ -64,7 +65,7 @@ const CareerPaths = () => {
                 className="flex items-center space-x-2"
               >
                 <BarChart3 className="w-4 h-4" />
-                <span>Dashboard</span>
+                <span>{t('careerPaths.tabs.dashboard')}</span>
               </Button>
               <Button
                 variant={activeTab === 'create' ? 'default' : 'ghost'}
@@ -72,7 +73,7 @@ const CareerPaths = () => {
                 className="flex items-center space-x-2"
               >
                 <Target className="w-4 h-4" />
-                <span>Plan Nou</span>
+                <span>{t('careerPaths.tabs.create')}</span>
               </Button>
               {features.hasAI && (
                 <Button
@@ -81,7 +82,7 @@ const CareerPaths = () => {
                   className="flex items-center space-x-2"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  <span>Mentoring AI</span>
+                  <span>{t('careerPaths.tabs.mentoring')}</span>
                 </Button>
               )}
             </div>
