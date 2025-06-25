@@ -76,7 +76,9 @@
     "maslachBurnoutTest": "Maslach Burnout Test",
     "perceivedStressTest": "Perceived Stress Test",
     "resilienceTest": "Resilience Test",
-    "gad7AnxietyAssessment": "GAD-7 Anxiety Assessment"
+    "gad7AnxietyAssessment": "GAD-7 Anxiety Assessment",
+    "discBehavioralStyles": "DISC Behavioral Styles Test",
+    "cattell16PF": "Cattell 16PF Personality Test"
   },
   "testDescriptions": {
     "beckDepressionInventory": "Assess your emotional state and identify potential signs of depression through scientifically validated questions.",
@@ -88,7 +90,9 @@
     "maslachBurnoutTest": "Evaluate your level of work-related burnout across emotional exhaustion, depersonalization, and personal accomplishment.",
     "perceivedStressTest": "Measure how stressful you perceive situations in your life and your ability to cope with stress.",
     "resilienceTest": "Assess your psychological resilience and ability to bounce back from challenges and adversity.",
-    "gad7AnxietyAssessment": "Evaluate your anxiety levels using the standardized GAD-7 scale to identify symptoms and severity of generalized anxiety disorder."
+    "gad7AnxietyAssessment": "Evaluate your anxiety levels using the standardized GAD-7 scale to identify symptoms and severity of generalized anxiety disorder.",
+    "discBehavioralStyles": "Discover your behavioral style and communication preferences using the DISC assessment model to improve workplace relationships.",
+    "cattell16PF": "Comprehensive personality assessment measuring 16 primary personality factors to provide detailed insights into your character traits and behavioral patterns."
   },
   "plans": {
     "basic": {

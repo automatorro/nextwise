@@ -76,7 +76,9 @@
     "maslachBurnoutTest": "Test de Burnout Maslach",
     "perceivedStressTest": "Test de Stres Perceput",
     "resilienceTest": "Test de Reziliență",
-    "gad7AnxietyAssessment": "Evaluare Anxietate GAD-7"
+    "gad7AnxietyAssessment": "Evaluare Anxietate GAD-7",
+    "discBehavioralStyles": "Test DISC - Stiluri de Comportament",
+    "cattell16PF": "Cattell 16PF"
   },
   "testDescriptions": {
     "beckDepressionInventory": "Evaluează starea ta emoțională și identifică potențiale semne de depresie prin întrebări validate științific.",
@@ -88,7 +90,9 @@
     "maslachBurnoutTest": "Evaluează nivelul tău de burnout legat de muncă prin epuizare emoțională, depersonalizare și realizări personale.",
     "perceivedStressTest": "Măsoară cât de stresante percepi situațiile din viața ta și capacitatea ta de a face față stresului.",
     "resilienceTest": "Evaluează reziliența ta psihologică și capacitatea de a te recupera după provocări și adversități.",
-    "gad7AnxietyAssessment": "Evaluează nivelul de anxietate folosind scala standardizată GAD-7 pentru a identifica simptomele și severitatea tulburării de anxietate generalizată."
+    "gad7AnxietyAssessment": "Evaluează nivelul de anxietate folosind scala standardizată GAD-7 pentru a identifica simptomele și severitatea tulburării de anxietate generalizată.",
+    "discBehavioralStyles": "Descoperă stilul tău comportamental și preferințele de comunicare folosind modelul de evaluare DISC pentru îmbunătățirea relațiilor de la locul de muncă.",
+    "cattell16PF": "Evaluare comprehensivă a personalității care măsoară 16 factori primari ai personalității pentru a oferi informații detaliate despre trăsăturile tale de caracter și tiparele comportamentale."
   },
   "plans": {
     "basic": {
