@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useTestProgress } from '@/hooks/useTestProgress';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTestSubmission } from '@/hooks/useTestSubmission';
@@ -18,7 +19,8 @@ import type { Json } from '@/integrations/supabase/types';
 
 interface Question {
   id: string;
-  question_text: string;
+  question_text_ro: string;
+  question_text_en: string | null;
   question_order: number;
   options: Json;
   scoring_weights?: Json;
@@ -38,6 +40,7 @@ const TestRunner = () => {
   const { user } = useAuth();
   const { canTakeTest } = useSubscription();
   const { toast } = useToast();
+  const { language } = useLanguage();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{ [questionId: string]: number }>({});
   const [isStarted, setIsStarted] = useState(false);
@@ -186,6 +189,14 @@ const TestRunner = () => {
     });
   };
 
+  // Get question text based on current language
+  const getQuestionText = (question: Question) => {
+    if (language === 'en' && question.question_text_en) {
+      return question.question_text_en;
+    }
+    return question.question_text_ro;
+  };
+
   // Handle loading states and errors
   if (testTypeLoading) {
     return (
@@ -243,6 +254,11 @@ const TestRunner = () => {
   }
 
   const currentQuestion = questions[currentQuestionIndex];
+  // Create a version of the question with the correct text for the current language
+  const currentQuestionWithText = {
+    ...currentQuestion,
+    question_text: getQuestionText(currentQuestion)
+  };
 
   return (
     <div>
@@ -260,7 +276,7 @@ const TestRunner = () => {
         {isStarted && (
           <TestQuestion
             testType={testType}
-            currentQuestion={currentQuestion}
+            currentQuestion={currentQuestionWithText}
             currentQuestionIndex={currentQuestionIndex}
             totalQuestions={questions.length}
             answers={answers}

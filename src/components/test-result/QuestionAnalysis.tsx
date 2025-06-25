@@ -2,6 +2,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, XCircle, HelpCircle } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Question, getBestAnswerOption, getUserScore, getMaxPossibleScore, getOptionLabel } from '@/utils/scoringUtils';
 
 interface QuestionAnalysisProps {
@@ -10,16 +11,25 @@ interface QuestionAnalysisProps {
 }
 
 const QuestionAnalysis = ({ question, userAnswer }: QuestionAnalysisProps) => {
+  const { language } = useLanguage();
   const bestOption = getBestAnswerOption(question);
   const userScore = getUserScore(question, userAnswer);
   const maxScore = getMaxPossibleScore(question);
   const isMaxScore = userScore === maxScore && maxScore > 0;
   
+  // Get question text based on current language
+  const getQuestionText = () => {
+    if (language === 'en' && question.question_text_en) {
+      return question.question_text_en;
+    }
+    return question.question_text_ro;
+  };
+  
   return (
     <div className="border rounded-lg p-4 bg-gray-50">
       <div className="flex items-start justify-between mb-3">
         <h4 className="font-medium text-gray-900 flex-1 pr-2">
-          {question.question_order}. {question.question_text}
+          {question.question_order}. {getQuestionText()}
         </h4>
         {isMaxScore && <CheckCircle className="w-5 h-5 text-green-500 mt-1" />}
         {!isMaxScore && userScore > 0 && <HelpCircle className="w-5 h-5 text-yellow-500 mt-1" />}

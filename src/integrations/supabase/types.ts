@@ -216,7 +216,8 @@ export type Database = {
           id: string
           options: Json
           question_order: number
-          question_text: string
+          question_text_en: string | null
+          question_text_ro: string
           question_type: string
           scoring_weights: Json | null
           test_type_id: string
@@ -226,7 +227,8 @@ export type Database = {
           id?: string
           options: Json
           question_order: number
-          question_text: string
+          question_text_en?: string | null
+          question_text_ro: string
           question_type?: string
           scoring_weights?: Json | null
           test_type_id: string
@@ -236,7 +238,8 @@ export type Database = {
           id?: string
           options?: Json
           question_order?: number
-          question_text?: string
+          question_text_en?: string | null
+          question_text_ro?: string
           question_type?: string
           scoring_weights?: Json | null
           test_type_id?: string
