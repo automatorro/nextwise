@@ -84,29 +84,22 @@ export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
 
       console.log('Test submitted successfully:', result);
 
-      // Update subscription test count using direct database update
-      const { error: updateError } = await supabase
+      // Update subscription test count - get current count and increment
+      const { data: currentSub } = await supabase
         .from('subscriptions')
-        .update({ 
-          tests_taken_this_month: supabase.rpc('coalesce', { value: 'tests_taken_this_month', default_value: 0 }) + 1 
-        })
-        .eq('user_id', user.id);
+        .select('tests_taken_this_month')
+        .eq('user_id', user.id)
+        .single();
       
-      if (updateError) {
-        console.warn('Could not update test count:', updateError);
-        // Try alternative approach - get current count and increment
-        const { data: currentSub } = await supabase
+      if (currentSub) {
+        const newCount = (currentSub.tests_taken_this_month || 0) + 1;
+        const { error: updateError } = await supabase
           .from('subscriptions')
-          .select('tests_taken_this_month')
-          .eq('user_id', user.id)
-          .single();
+          .update({ tests_taken_this_month: newCount })
+          .eq('user_id', user.id);
         
-        if (currentSub) {
-          const newCount = (currentSub.tests_taken_this_month || 0) + 1;
-          await supabase
-            .from('subscriptions')
-            .update({ tests_taken_this_month: newCount })
-            .eq('user_id', user.id);
+        if (updateError) {
+          console.warn('Could not update test count:', updateError);
         }
       }
 
