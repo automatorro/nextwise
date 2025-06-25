@@ -22,7 +22,7 @@ import { User, LogOut, Settings, BarChart3, Target, Globe } from 'lucide-react';
 
 const Navbar = () => {
   const { user, signOut } = useAuth();
-  const { language, changeLanguage } = useLanguage();
+  const { language, changeLanguage, t } = useLanguage();
 
   const getInitials = (name: string | null) => {
     if (!name) return 'U';
@@ -44,24 +44,24 @@ const Navbar = () => {
             </div>
 
             <div className="flex items-center space-x-4">
-              {user && (
+              {user ? (
                 <>
                   <Link to="/teste">
                     <Button variant="ghost" className="flex items-center space-x-2 hover:bg-white/60 transition-colors">
                       <BarChart3 className="w-4 h-4" />
-                      <span>Teste</span>
+                      <span>{t('nav.tests')}</span>
                     </Button>
                   </Link>
                   <Link to="/career-paths">
                     <Button variant="ghost" className="flex items-center space-x-2 hover:bg-white/60 transition-colors">
                       <Target className="w-4 h-4" />
-                      <span>Carieră</span>
+                      <span>{t('nav.career')}</span>
                     </Button>
                   </Link>
                   <Link to="/profil">
                     <Button variant="ghost" className="flex items-center space-x-2 hover:bg-white/60 transition-colors">
                       <User className="w-4 h-4" />
-                      <span>Profil</span>
+                      <span>{t('nav.profile')}</span>
                     </Button>
                   </Link>
 
@@ -99,15 +99,28 @@ const Navbar = () => {
                       <DropdownMenuItem asChild>
                         <Link to="/abonament" className="flex items-center">
                           <Settings className="mr-2 h-4 w-4" />
-                          Abonament & Setări
+                          {t('nav.subscription')}
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={signOut}>
                         <LogOut className="mr-2 h-4 w-4" />
-                        Deconectare
+                        {t('nav.logout')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
+                </>
+              ) : (
+                <>
+                  <Link to="/auth">
+                    <Button variant="ghost" className="hover:bg-white/60 transition-colors">
+                      {t('nav.login')}
+                    </Button>
+                  </Link>
+                  <Link to="/auth">
+                    <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
+                      {t('nav.startFree')}
+                    </Button>
+                  </Link>
                 </>
               )}
             </div>
