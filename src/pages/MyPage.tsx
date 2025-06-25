@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -134,7 +133,7 @@ const MyPage = () => {
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center space-x-3">
-            <h1 className="text-3xl font-bold text-gray-900">Pagina Mea</h1>
+            <h1 className="text-3xl font-bold text-gray-900">Profil</h1>
             {isAdmin() && (
               <Badge variant="destructive" className="flex items-center space-x-1">
                 <Shield className="w-3 h-3" />

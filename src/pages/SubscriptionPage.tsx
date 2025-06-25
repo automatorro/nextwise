@@ -1,238 +1,163 @@
 
-import React, { useEffect } from 'react';
+import React from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
+import { useUserRole } from '@/hooks/useUserRole';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { useSubscription } from '@/hooks/useSubscription';
-import { useSearchParams } from 'react-router-dom';
-import { CheckCircle, XCircle, Calendar, CreditCard, RefreshCw } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Loader2, Shield, CreditCard, User, Settings } from 'lucide-react';
 import SubscriptionPlans from '@/components/subscription/SubscriptionPlans';
+import ProfileEditForm from '@/components/profile/ProfileEditForm';
+import PasswordChangeForm from '@/components/profile/PasswordChangeForm';
 
 const SubscriptionPage = () => {
-  const { subscription, loading, checkSubscription, openCustomerPortal, getTestsLimit, getRemainingTests } = useSubscription();
-  const [searchParams] = useSearchParams();
-  const { toast } = useToast();
+  const { user } = useAuth();
+  const { isAdmin, loading: roleLoading } = useUserRole();
 
-  useEffect(() => {
-    const success = searchParams.get('success');
-    const canceled = searchParams.get('canceled');
+  // Fetch user profile
+  const { data: profile, isLoading: profileLoading } = useQuery({
+    queryKey: ['user-profile', user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('id', user?.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id
+  });
 
-    if (success) {
-      toast({
-        title: "Abonament activat!",
-        description: "Plata a fost procesată cu succes. Abonamentul tău este acum activ."
-      });
-      // Refresh subscription data
-      setTimeout(checkSubscription, 2000);
-    }
+  // Fetch subscription info
+  const { data: subscription, isLoading: subscriptionLoading } = useQuery({
+    queryKey: ['user-subscription', user?.id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('user_id', user?.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id
+  });
 
-    if (canceled) {
-      toast({
-        title: "Plata anulată",
-        description: "Procesul de plată a fost anulat. Poți încerca din nou oricând.",
-        variant: "destructive"
-      });
-    }
-  }, [searchParams, toast, checkSubscription]);
-
-  const formatDate = (dateString: string | null) => {
-    if (!dateString) return 'N/A';
-    return new Date(dateString).toLocaleDateString('ro-RO');
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'bg-green-500';
-      case 'inactive':
-        return 'bg-red-500';
-      case 'cancelled':
-        return 'bg-gray-500';
-      case 'past_due':
-        return 'bg-yellow-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
-
-  const getStatusText = (status: string) => {
-    switch (status) {
-      case 'active':
-        return 'Activ';
-      case 'inactive':
-        return 'Inactiv';
-      case 'cancelled':
-        return 'Anulat';
-      case 'past_due':
-        return 'Întârziat';
-      default:
-        return 'Necunoscut';
-    }
-  };
-
-  if (loading) {
+  if (profileLoading || subscriptionLoading || roleLoading) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4" />
-          <p>Se încarcă informațiile despre abonament...</p>
-        </div>
+        <Loader2 className="w-8 h-8 animate-spin" />
       </div>
     );
   }
 
+  const getSubscriptionBadge = () => {
+    if (isAdmin()) {
+      return (
+        <Badge variant="destructive" className="flex items-center space-x-1">
+          <Shield className="w-3 h-3" />
+          <span>Administrator</span>
+        </Badge>
+      );
+    }
+    
+    const typeMap = {
+      basic: { label: 'Basic', variant: 'secondary' as const },
+      professional: { label: 'Professional', variant: 'default' as const },
+      premium: { label: 'Premium', variant: 'default' as const }
+    };
+    
+    const subscriptionInfo = typeMap[subscription?.subscription_type as keyof typeof typeMap] || typeMap.basic;
+    
+    return (
+      <Badge variant={subscriptionInfo.variant} className="flex items-center space-x-1">
+        <CreditCard className="w-3 h-3" />
+        <span>{subscriptionInfo.label}</span>
+      </Badge>
+    );
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Management Abonament
-          </h1>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center space-x-3 mb-2">
+            <h1 className="text-3xl font-bold text-gray-900">Abonament & Setări</h1>
+            {getSubscriptionBadge()}
+          </div>
           <p className="text-gray-600">
-            Gestionează-ți abonamentul și accesul la teste psihologice
+            Gestionează abonamentul tău și actualizează informațiile personale.
           </p>
         </div>
 
-        {/* Current Subscription Status */}
-        {subscription && (
-          <Card className="mb-8 max-w-4xl mx-auto">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CreditCard className="w-5 h-5" />
-                Abonamentul Curent
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid md:grid-cols-2 gap-6">
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">Plan:</span>
-                    <Badge variant="outline" className="capitalize">
-                      {subscription.subscription_type}
-                    </Badge>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">Status:</span>
-                    <Badge className={getStatusColor(subscription.status)}>
-                      {getStatusText(subscription.status)}
-                    </Badge>
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <span className="font-medium">Testele disponibile:</span>
-                    <span className="font-semibold">
-                      {getRemainingTests()} / {getTestsLimit()} această lună
-                    </span>
-                  </div>
-                </div>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          {/* Profile Settings Section */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-2 mb-4">
+              <User className="w-5 h-5 text-blue-600" />
+              <h2 className="text-xl font-semibold text-gray-900">Setări Profil</h2>
+            </div>
+            
+            <ProfileEditForm 
+              initialData={{
+                fullName: profile?.full_name || user?.user_metadata?.full_name || '',
+                email: user?.email || '',
+              }}
+            />
+            
+            <PasswordChangeForm />
+          </div>
 
-                <div className="space-y-4">
-                  {subscription.current_period_end && (
-                    <div className="flex items-center justify-between">
-                      <span className="font-medium">Reînnoire următoare:</span>
-                      <span className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        {formatDate(subscription.current_period_end)}
-                      </span>
+          {/* Subscription Section */}
+          <div className="space-y-6">
+            <div className="flex items-center space-x-2 mb-4">
+              <CreditCard className="w-5 h-5 text-green-600" />
+              <h2 className="text-xl font-semibold text-gray-900">Abonament</h2>
+            </div>
+
+            {/* Current Subscription Info */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <span>Abonamentul Curent</span>
+                  {getSubscriptionBadge()}
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Tip Abonament</label>
+                    <p className="text-gray-900 capitalize">
+                      {isAdmin() ? 'Administrator (Acces Nelimitat)' : subscription?.subscription_type || 'Basic'}
+                    </p>
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600">Status</label>
+                    <p className="text-gray-900 capitalize">
+                      {subscription?.status === 'active' ? 'Activ' : subscription?.status || 'Activ'}
+                    </p>
+                  </div>
+                  {!isAdmin() && (
+                    <div>
+                      <label className="text-sm font-medium text-gray-600">Teste Efectuate Luna Aceasta</label>
+                      <p className="text-gray-900">
+                        {subscription?.tests_taken_this_month || 0}
+                      </p>
                     </div>
                   )}
-                  
-                  <div className="flex gap-2">
-                    <Button
-                      onClick={checkSubscription}
-                      variant="outline"
-                      size="sm"
-                      className="flex items-center gap-2"
-                    >
-                      <RefreshCw className="w-4 h-4" />
-                      Actualizează
-                    </Button>
-                    
-                    {subscription.subscription_type !== 'basic' && (
-                      <Button
-                        onClick={openCustomerPortal}
-                        variant="outline"
-                        size="sm"
-                      >
-                        Gestionează Abonamentul
-                      </Button>
-                    )}
-                  </div>
                 </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+              </CardContent>
+            </Card>
 
-        {/* Usage Alert */}
-        {subscription && getRemainingTests() <= 1 && (
-          <Alert className="mb-8 max-w-4xl mx-auto">
-            <XCircle className="h-4 w-4" />
-            <AlertDescription>
-              {getRemainingTests() === 0 
-                ? "Ai epuizat toate testele pentru această lună. Consideră upgrade-ul la un plan superior."
-                : "Mai ai doar 1 test disponibil pentru această lună."
-              }
-            </AlertDescription>
-          </Alert>
-        )}
-
-        {/* Subscription Plans */}
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-center text-gray-900 mb-6">
-            Alege Planul Potrivit Pentru Tine
-          </h2>
-          <SubscriptionPlans />
+            {/* Subscription Plans */}
+            {!isAdmin() && <SubscriptionPlans />}
+          </div>
         </div>
-
-        {/* Benefits Section */}
-        <Card className="max-w-4xl mx-auto">
-          <CardHeader>
-            <CardTitle>De Ce Să Alegi Un Abonament Premium?</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid md:grid-cols-2 gap-6">
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium">Teste Psihologice Avansate</h4>
-                    <p className="text-sm text-gray-600">Acces la teste validate științific pentru dezvoltare personală</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium">Analize AI Personalizate</h4>
-                    <p className="text-sm text-gray-600">Rezultate detaliate și recomandări bazate pe inteligența artificială</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-3">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium">Planuri de Carieră</h4>
-                    <p className="text-sm text-gray-600">Ghiduri personalizate pentru dezvoltarea carierei tale</p>
-                  </div>
-                </div>
-                
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-500 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium">Suport Specializat</h4>
-                    <p className="text-sm text-gray-600">Acces la consiliere și suport pentru dezvoltare personală</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

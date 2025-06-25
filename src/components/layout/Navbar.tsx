@@ -49,6 +49,12 @@ const Navbar = () => {
                       <span>Carieră</span>
                     </Button>
                   </Link>
+                  <Link to="/profil">
+                    <Button variant="ghost" className="flex items-center space-x-2 hover:bg-white/60 transition-colors">
+                      <User className="w-4 h-4" />
+                      <span>Profil</span>
+                    </Button>
+                  </Link>
                   
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -72,15 +78,9 @@ const Navbar = () => {
                         </div>
                       </div>
                       <DropdownMenuItem asChild>
-                        <Link to="/profil" className="flex items-center">
-                          <User className="mr-2 h-4 w-4" />
-                          Profil
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
                         <Link to="/abonament" className="flex items-center">
                           <Settings className="mr-2 h-4 w-4" />
-                          Abonament
+                          Abonament & Setări
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={signOut}>
