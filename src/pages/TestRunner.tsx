@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -94,13 +93,7 @@ const TestRunner = () => {
       
       const { data, error } = await supabase
         .from('test_questions')
-        .select(`
-          id,
-          ${questionTextColumn} as question_text,
-          question_order,
-          options,
-          scoring_weights
-        `)
+        .select(`id, ${questionTextColumn} as question_text, question_order, options, scoring_weights`)
         .eq('test_type_id', testId)
         .order('question_order');
       
