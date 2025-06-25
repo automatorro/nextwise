@@ -59,6 +59,7 @@
     "leadership": "Leadership",
     "technicalSkills": "Technical Skills",
     "wellness": "Wellness",
+    "psychologicalWellness": "Psychological Wellness",
     "cognitive": "Cognitive",
     "digital": "Digital",
     "sensory": "Sensory",
@@ -69,12 +70,24 @@
   "testNames": {
     "beckDepressionInventory": "Beck Depression Inventory",
     "cognitiveAbilitiesTest": "Cognitive Abilities Test",
-    "belbinTeamRoles": "Belbin Team Roles"
+    "belbinTeamRoles": "Belbin Team Roles",
+    "bigFivePersonality": "Big Five Personality Test",
+    "emotionalIntelligenceTest": "Emotional Intelligence Test",
+    "leadershipTest": "Leadership Test",
+    "maslachBurnoutTest": "Maslach Burnout Test",
+    "perceivedStressTest": "Perceived Stress Test",
+    "resilienceTest": "Resilience Test"
   },
   "testDescriptions": {
     "beckDepressionInventory": "Assess your emotional state and identify potential signs of depression through scientifically validated questions.",
     "cognitiveAbilitiesTest": "Evaluate your cognitive skills including logical reasoning, problem-solving, and analytical thinking.",
-    "belbinTeamRoles": "Discover your preferred team role and how you contribute most effectively in group settings."
+    "belbinTeamRoles": "Discover your preferred team role and how you contribute most effectively in group settings.",
+    "bigFivePersonality": "Explore the five major dimensions of personality: openness, conscientiousness, extraversion, agreeableness, and neuroticism.",
+    "emotionalIntelligenceTest": "Measure your ability to understand and manage your own emotions and those of others in various situations.",
+    "leadershipTest": "Assess your leadership style, strengths, and areas for development in managing and inspiring teams.",
+    "maslachBurnoutTest": "Evaluate your level of work-related burnout across emotional exhaustion, depersonalization, and personal accomplishment.",
+    "perceivedStressTest": "Measure how stressful you perceive situations in your life and your ability to cope with stress.",
+    "resilienceTest": "Assess your psychological resilience and ability to bounce back from challenges and adversity."
   },
   "plans": {
     "basic": {

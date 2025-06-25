@@ -16,6 +16,8 @@ export const getCategoryTranslationKey = (categoryName: string): string => {
     'Emotional Intelligence': 'testCategories.emotionalIntelligence',
     'Bunăstare': 'testCategories.wellness',
     'Wellness': 'testCategories.wellness',
+    'Wellness Psihologic': 'testCategories.psychologicalWellness',
+    'Psychological Wellness': 'testCategories.psychologicalWellness',
     'Cognitiv': 'testCategories.cognitive',
     'Cognitive': 'testCategories.cognitive',
     'Abilități Tehnice': 'testCategories.technicalSkills',
@@ -34,7 +36,19 @@ export const getTestNameTranslationKey = (testName: string): string => {
     'Test de Aptitudini Cognitive': 'testNames.cognitiveAbilitiesTest',
     'Cognitive Abilities Test': 'testNames.cognitiveAbilitiesTest',
     'Rolurile de Echipă Belbin': 'testNames.belbinTeamRoles',
-    'Belbin Team Roles': 'testNames.belbinTeamRoles'
+    'Belbin Team Roles': 'testNames.belbinTeamRoles',
+    'Test de Personalitate Big Five': 'testNames.bigFivePersonality',
+    'Big Five Personality Test': 'testNames.bigFivePersonality',
+    'Test de Inteligență Emoțională': 'testNames.emotionalIntelligenceTest',
+    'Emotional Intelligence Test': 'testNames.emotionalIntelligenceTest',
+    'Test de Leadership': 'testNames.leadershipTest',
+    'Leadership Test': 'testNames.leadershipTest',
+    'Test de Burnout Maslach': 'testNames.maslachBurnoutTest',
+    'Maslach Burnout Test': 'testNames.maslachBurnoutTest',
+    'Test de Stres Perceput': 'testNames.perceivedStressTest',
+    'Perceived Stress Test': 'testNames.perceivedStressTest',
+    'Test de Reziliență': 'testNames.resilienceTest',
+    'Resilience Test': 'testNames.resilienceTest'
   };
 
   return testNameMap[testName] || testName;
@@ -46,7 +60,19 @@ export const getTestDescriptionTranslationKey = (testName: string): string => {
     'Test de Aptitudini Cognitive': 'testDescriptions.cognitiveAbilitiesTest',
     'Cognitive Abilities Test': 'testDescriptions.cognitiveAbilitiesTest',
     'Rolurile de Echipă Belbin': 'testDescriptions.belbinTeamRoles',
-    'Belbin Team Roles': 'testDescriptions.belbinTeamRoles'
+    'Belbin Team Roles': 'testDescriptions.belbinTeamRoles',
+    'Test de Personalitate Big Five': 'testDescriptions.bigFivePersonality',
+    'Big Five Personality Test': 'testDescriptions.bigFivePersonality',
+    'Test de Inteligență Emoțională': 'testDescriptions.emotionalIntelligenceTest',
+    'Emotional Intelligence Test': 'testDescriptions.emotionalIntelligenceTest',
+    'Test de Leadership': 'testDescriptions.leadershipTest',
+    'Leadership Test': 'testDescriptions.leadershipTest',
+    'Test de Burnout Maslach': 'testDescriptions.maslachBurnoutTest',
+    'Maslach Burnout Test': 'testDescriptions.maslachBurnoutTest',
+    'Test de Stres Perceput': 'testDescriptions.perceivedStressTest',
+    'Perceived Stress Test': 'testDescriptions.perceivedStressTest',
+    'Test de Reziliență': 'testDescriptions.resilienceTest',
+    'Resilience Test': 'testDescriptions.resilienceTest'
   };
 
   return descriptionMap[testName] || testName;

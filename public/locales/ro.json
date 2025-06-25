@@ -59,6 +59,7 @@
     "leadership": "Leadership",
     "technicalSkills": "Abilități Tehnice",
     "wellness": "Bunăstare",
+    "psychologicalWellness": "Wellness Psihologic",
     "cognitive": "Cognitiv",
     "digital": "Digital",
     "sensory": "Senzorial",
@@ -69,12 +70,24 @@
   "testNames": {
     "beckDepressionInventory": "Beck Depression Inventory",
     "cognitiveAbilitiesTest": "Test de Aptitudini Cognitive",
-    "belbinTeamRoles": "Rolurile de Echipă Belbin"
+    "belbinTeamRoles": "Rolurile de Echipă Belbin",
+    "bigFivePersonality": "Test de Personalitate Big Five",
+    "emotionalIntelligenceTest": "Test de Inteligență Emoțională",
+    "leadershipTest": "Test de Leadership",
+    "maslachBurnoutTest": "Test de Burnout Maslach",
+    "perceivedStressTest": "Test de Stres Perceput",
+    "resilienceTest": "Test de Reziliență"
   },
   "testDescriptions": {
     "beckDepressionInventory": "Evaluează starea ta emoțională și identifică potențiale semne de depresie prin întrebări validate științific.",
     "cognitiveAbilitiesTest": "Evaluează abilitățile tale cognitive incluzând gândirea logică, rezolvarea problemelor și gândirea analitică.",
-    "belbinTeamRoles": "Descoperă rolul tău preferat în echipă și cum contribui cel mai eficient în grupuri."
+    "belbinTeamRoles": "Descoperă rolul tău preferat în echipă și cum contribui cel mai eficient în grupuri.",
+    "bigFivePersonality": "Explorează cele cinci dimensiuni majore ale personalității: deschiderea, conștiinciozitatea, extraversia, amabilitatea și neuroticismul.",
+    "emotionalIntelligenceTest": "Măsoară capacitatea ta de a înțelege și gestiona propriile emoții și pe cele ale altora în diverse situații.",
+    "leadershipTest": "Evaluează stilul tău de leadership, punctele forte și domeniile de dezvoltare în managementul și inspirarea echipelor.",
+    "maslachBurnoutTest": "Evaluează nivelul tău de burnout legat de muncă prin epuizare emoțională, depersonalizare și realizări personale.",
+    "perceivedStressTest": "Măsoară cât de stresante percepi situațiile din viața ta și capacitatea ta de a face față stresului.",
+    "resilienceTest": "Evaluează reziliența ta psihologică și capacitatea de a te recupera după provocări și adversități."
   },
   "plans": {
     "basic": {
