@@ -229,7 +229,10 @@
     "progressRestored": "Progress restored",
     "continueFrom": "Continue from question",
     "testRestarted": "Test restarted",
-    "startFromFirst": "Starting test from the first question"
+    "startFromFirst": "Starting test from the first question",
+    "questionsLabel": "Number of questions",
+    "durationLabel": "Estimated duration",
+    "startButton": "Start test"
   },
   "testResult": {
     "results": "Test Results",

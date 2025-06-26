@@ -3,6 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/hooks/useLanguage';
+import { getTestNameTranslationKey, getTestDescriptionTranslationKey } from '@/utils/testTranslationMapping';
 
 interface TestType {
   id: string;
@@ -23,35 +24,34 @@ const TestStartScreen: React.FC<TestStartScreenProps> = ({
   questionsCount,
   onStartTest
 }) => {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
   
-  const labels = {
-    questionsLabel: language === 'en' ? 'Number of questions' : 'Numărul de întrebări',
-    durationLabel: language === 'en' ? 'Estimated duration' : 'Durata estimată',
-    minutesLabel: language === 'en' ? 'minutes' : 'minute',
-    startButton: language === 'en' ? 'Start test' : 'Începe testul'
-  };
+  // Get translated test name and description
+  const testNameKey = getTestNameTranslationKey(testType.name);
+  const testDescriptionKey = getTestDescriptionTranslationKey(testType.name);
+  const translatedTestName = t(testNameKey);
+  const translatedTestDescription = t(testDescriptionKey);
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <Card className="max-w-2xl">
         <CardHeader>
-          <CardTitle>{testType.name}</CardTitle>
+          <CardTitle>{translatedTestName}</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-gray-600 mb-4">{testType.description}</p>
+          <p className="text-gray-600 mb-4">{translatedTestDescription}</p>
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
-              <p className="text-sm text-gray-500">{labels.questionsLabel}</p>
+              <p className="text-sm text-gray-500">{t('testRunner.questionsLabel') || 'Number of questions'}</p>
               <p className="font-semibold">{questionsCount}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">{labels.durationLabel}</p>
-              <p className="font-semibold">{testType.estimated_duration} {labels.minutesLabel}</p>
+              <p className="text-sm text-gray-500">{t('testRunner.durationLabel') || 'Estimated duration'}</p>
+              <p className="font-semibold">{testType.estimated_duration} {t('tests.minutes')}</p>
             </div>
           </div>
           <Button onClick={onStartTest} className="w-full">
-            {labels.startButton}
+            {t('testRunner.startButton') || t('common.start')}
           </Button>
         </CardContent>
       </Card>
