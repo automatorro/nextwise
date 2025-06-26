@@ -15,7 +15,7 @@ interface Question {
   test_type_id: string;
 }
 
-// Complete DISC test question translations
+// Complete DISC test question translations - mapped to actual Romanian text
 const DISC_QUESTION_TRANSLATIONS: { [key: string]: string } = {
   'În situații de lucru în echipă, eu sunt cel care:': 'In team work situations, I am the one who:',
   'Când iau decizii importante:': 'When making important decisions:',
@@ -47,7 +47,7 @@ const DISC_QUESTION_TRANSLATIONS: { [key: string]: string } = {
   'Când văd o oportunitate nouă:': 'When I see a new opportunity:'
 };
 
-// Complete DISC option translations
+// Complete DISC option translations - mapped to actual Romanian options
 const DISC_OPTION_TRANSLATIONS: { [key: string]: string } = {
   'Iau inițiativa și conduc echipa': 'Take initiative and lead the team',
   'Motivez și entuziasmez echipa': 'Motivate and energize the team',
@@ -184,62 +184,7 @@ const BELBIN_OPTION_TRANSLATIONS: { [key: string]: string } = {
   'capacitatea mea de a urma prin lucru cu perseverență ceea ce consider de valoare': 'my ability to follow through with persistence what I consider valuable',
   'sunt pregătit să fiu nepopular temporar dacă acest lucru duce la rezultate valoroase în final': 'I am prepared to be temporarily unpopular if this leads to worthwhile results in the end',
   'de obicei observ și pot profita de noi oportunități': 'I usually notice and can take advantage of new opportunities',
-  'pot colabora bine cu oameni care oferă ceva nou': 'I can work well with people who offer something new',
-  'am tendința să vorbesc prea mult odată ce grupul abordează idei noi': 'I tend to talk too much once the group gets onto new ideas',
-  'obiectivitatea mea îmi face dificil să mă alătur cu entuziasm colegilor': 'my objectivity makes it difficult for me to join in readily with colleagues',
-  'uneori sunt văzut ca fiind prea energic și impetuos': 'I am sometimes seen as being too forceful and authoritarian',
-  'îmi pare rău să îmi exprim opiniile atunci când există o opoziție puternică împotriva lor': 'I find it difficult to lead from the front, perhaps because I am over-responsive to group atmosphere',
-  'am tendința să devin prea prins în idei care îmi vin în minte': 'I tend to get too caught up in ideas that occur to me',
-  'colegii mei tind să mă vadă ca fiind prea preocupat de detalii': 'my colleagues tend to see me as worrying unnecessarily over detail',
-  'există riscul să nu fiu în stare să comunic entuziasmul pentru propria muncă': 'there is risk that I may not be able to communicate the enthusiasm for my own work',
-  'îmi pare greu să încep dacă obiectivele nu sunt clare': 'I find it difficult to get started unless the goals are clear',
-  'obișnuiesc să am o influență puternică': 'I usually have a strong influence',
-  'promovez ceea ce cred că este corect, fără a considera punctele de vedere ale altora': 'I promote what I believe to be right without considering other viewpoints',
-  'am grijă să urmăresc care sunt cele mai noi idei și evoluții': 'I take care to follow up on the latest ideas and developments',
-  'cred că toți ceilalți membri ai echipei trebuie să fie consultați înainte de a lua o decizie': 'I believe that all other team members should be consulted before making a decision',
-  'mă simt în elementul meu atunci când pot planifica munca în mod sistematic': 'I feel in my element when I can plan work systematically',
-  'îmi evit angajamentele de grup dacă pot găsi o modalitate mai bună de a exprima individualitatea': 'I avoid group commitments if I can find a better way to express individuality',
-  'îmi folosesc relațiile pentru a promova interesele comune': 'I use my relationships to promote common interests',
-  'de obicei pot găsi linia de acțiune care evită extremele': 'I can usually find the line of action that avoids extremes',
-  'îmi place să analizez situațiile și să cântăresc toate opțiunile posibile': 'I like to analyze situations and weigh all possible choices',
-  'mă interesează să cunosc oameni noi și să învăț lucruri noi': 'I am interested in getting to know new people and learning new things',
-  'oamenii se bazează pe mine pentru a pune în aplicare ceea ce trebuie făcut': 'people rely on me to put into practice what needs to be done',
-  'pot fi de încredere pentru a vedea că toată munca necesară este organizată': 'I can be relied upon to see that all necessary work is organized',
-  'sunt pregătit să fac presiuni pentru acțiune să se asigure că întâlnirea nu este o pierdere de timp': 'I am ready to make pressure for action to ensure the meeting is not a waste of time',
-  'pot fi de încredere să contribui cu ceva neobișnuit': 'I can be relied upon to contribute something unusual',
-  'mă bazez pe membrii cu experiență din grup pentru sprijin': 'I rely on experienced group members for support',
-  'pare că am o capacitate naturală de a preveni certurile': 'I seem to have a natural ability to prevent arguments',
-  'de obicei pot fi de încredere să propun ceva creativ': 'I usually can be relied upon to come up with something creative',
-  'îmi place să mă retrag într-un fundal și să urmăresc ce se întâmplă': 'I like to withdraw into the background and observe what is happening',
-  'sunt fericit să profit de cunoștințele specialiste ale altora': 'I am happy to take advantage of others specialist knowledge',
-  'pot acționa ca un fel de liant când oamenii nu se înțeleg': 'I can act as a sort of bridge when people do not get along',
-  'de obicei sunt capabil să influențez evenimentele fără să îmi impun autoritatea oficială': 'I usually am able to influence events without imposing my official authority',
-  'ceea ce scriu este de obicei scurt și la obiect': 'what I write is usually brief and to the point',
-  'mă preocup de aspectele practice mai degrabă decât de urmărirea ideilor în abstract': 'I am concerned with practical aspects rather than pursuing ideas in the abstract',
-  'îmi displac pierderea de timp și prefer să mergem direct la subiect': 'I dislike wasting time and prefer to get straight to the point',
-  'pot să lucrez cu o varietate mare de oameni': 'I can work with a wide variety of people',
-  'îmi rezerv poziția până când toți factorii relevanți sunt cunoscuți': 'I reserve my position until all relevant factors are known',
-  'îmi place să fiu activ și să nu stau doar să urmăresc': 'I like to be active and not just sit back and watch',
-  'în general sprijin punctele de vedere care au fost bine gândite': 'I generally support views that have been well thought out',
-  'nu am nicio ezitare în a contesta punctele de vedere ale altora sau în a fi în minoritate': 'I have no hesitation in challenging the views of others or holding a minority position',
-  'de obicei pot găsi un argument pentru a refuta propunerile nesigure': 'I usually can find an argument to refute unsound propositions',
-  'cred că este important să avem o structură de întâlnire': 'I believe it is important to have a meeting structure',
-  'am tendința să evit evidentul și să vin cu ceva neașteptat': 'I tend to avoid the obvious and come up with something unexpected',
-  'aduc o abordare metodică la sarcini și probleme comune': 'I bring a methodical approach to tasks and common problems',
-  'îmi place să explorez ideile și posibilitățile noi': 'I like to explore new ideas and possibilities',
-  'aduc experiența și cunoștințele practice la probleme': 'I bring experience and practical knowledge to problems',
-  'îmi place varietatea și prefer să nu fac același lucru de două ori': 'I like variety and prefer not to do the same thing twice',
-  'îmi place să lucrez cu oameni care abordează task-urile în mod energic': 'I like to work with people who approach tasks energetically',
-  'am un ochi bun pentru a observa greșelile și omisiunile': 'I have a good eye for spotting mistakes and omissions',
-  'pot vedea cum ideile și tehnicile pot fi folosite în situații noi': 'I can see how ideas and techniques can be used in new situations',
-  'îmi place să mă simt responsabil pentru vederea că important lucru se întâmplă': 'I like to feel responsible for seeing that important work gets done',
-  'pot lucra cu oameni cu condiția să îmi tolereze punctele slabe': 'I can work with people provided they tolerate my weaknesses',
-  'de obicei îmi dau seama atunci când cineva într-un grup nu este folosit în mod corespunzător': 'I usually realize when someone in a group is not being used properly',
-  'nu ezit să cer acțiuni atunci când simt că grupul nu face progrese': 'I do not hesitate to ask for action when I feel the group is not making progress',
-  'îmi place să urmăresc trend-urile actuale': 'I like to keep track of current trends',
-  'pot fi de încredere să nu fac greșeli prin neglijență': 'I can be relied upon not to make careless mistakes',
-  'îmi rezerv eforturile pentru lucrurile care mă pasionează cu adevărat': 'I reserve my efforts for things I am really passionate about',
-  'pot lucra cu majoritatea oamenilor atâta timp cât îmi respect principiile': 'I can work with most people as long as I respect my principles'
+  'pot colabora bine cu oameni care oferă ceva nou': 'I can work well with people who offer something new'
 };
 
 Deno.serve(async (req) => {
@@ -256,31 +201,38 @@ Deno.serve(async (req) => {
 
     console.log('=== STARTING TRANSLATION FIX PROCESS ===');
 
-    // Get DISC test ID
-    const { data: discTest, error: discTestError } = await supabaseClient
+    // Get test IDs by looking for tests that actually have questions
+    const { data: testTypesWithQuestions, error: testTypesError } = await supabaseClient
       .from('test_types')
-      .select('id')
-      .eq('name', 'Test DISC')
-      .single();
+      .select(`
+        id, 
+        name,
+        test_questions(count)
+      `)
+      .in('name', ['Test DISC', 'Test Belbin']);
 
-    if (discTestError) {
-      console.error('Error finding DISC test:', discTestError);
-      throw discTestError;
+    if (testTypesError) {
+      console.error('Error fetching test types:', testTypesError);
+      throw testTypesError;
+    }
+
+    console.log('Found test types:', testTypesWithQuestions);
+
+    // Find the actual tests with questions
+    const discTest = testTypesWithQuestions?.find(test => 
+      test.name === 'Test DISC' && test.test_questions && test.test_questions.length > 0
+    );
+    const belbinTest = testTypesWithQuestions?.find(test => 
+      test.name === 'Test Belbin' && test.test_questions && test.test_questions.length > 0
+    );
+
+    if (!discTest) {
+      console.error('DISC test with questions not found');
+      throw new Error('DISC test with questions not found');
     }
 
     console.log('Found DISC test with ID:', discTest.id);
-
-    // Get Belbin test ID
-    const { data: belbinTest, error: belbinTestError } = await supabaseClient
-      .from('test_types')
-      .select('id')
-      .eq('name', 'Test Belbin')
-      .single();
-
-    if (belbinTestError) {
-      console.error('Error finding Belbin test:', belbinTestError);
-      console.log('Continuing with DISC only...');
-    } else {
+    if (belbinTest) {
       console.log('Found Belbin test with ID:', belbinTest.id);
     }
 
@@ -304,7 +256,6 @@ Deno.serve(async (req) => {
       try {
         console.log(`\n=== Processing DISC question ${question.id} ===`);
         console.log('Romanian text:', question.question_text_ro);
-        console.log('Current English text:', question.question_text_en);
         
         let needsUpdate = false;
         let updatedData: any = {};
@@ -317,16 +268,22 @@ Deno.serve(async (req) => {
           console.log('Will translate question to:', englishQuestion);
         }
 
-        // Process options
+        // Process options - extract Romanian text and translate
         if (question.options && Array.isArray(question.options)) {
           const translatedOptions = question.options.map((option: any, index: number) => {
             let optionText = '';
-            if (typeof option === 'object' && option.label) {
-              optionText = option.label;
+            
+            // Extract Romanian text from different possible structures
+            if (typeof option === 'object') {
+              if (option.label) {
+                optionText = option.label;
+              } else if (option.text) {
+                optionText = option.text;
+              } else if (option.value && typeof option.value === 'string') {
+                optionText = option.value;
+              }
             } else if (typeof option === 'string') {
               optionText = option;
-            } else {
-              optionText = `Option ${index + 1}`;
             }
 
             const englishOption = DISC_OPTION_TRANSLATIONS[optionText] || optionText;
@@ -383,7 +340,6 @@ Deno.serve(async (req) => {
           try {
             console.log(`\n=== Processing Belbin question ${question.id} ===`);
             console.log('Romanian text:', question.question_text_ro);
-            console.log('Current English text:', question.question_text_en);
             
             let needsUpdate = false;
             let updatedData: any = {};
@@ -400,12 +356,17 @@ Deno.serve(async (req) => {
             if (question.options && Array.isArray(question.options)) {
               const translatedOptions = question.options.map((option: any, index: number) => {
                 let optionText = '';
-                if (typeof option === 'object' && option.label) {
-                  optionText = option.label;
+                
+                if (typeof option === 'object') {
+                  if (option.label) {
+                    optionText = option.label;
+                  } else if (option.text) {
+                    optionText = option.text;
+                  } else if (option.value && typeof option.value === 'string') {
+                    optionText = option.value;
+                  }
                 } else if (typeof option === 'string') {
                   optionText = option;
-                } else {
-                  optionText = `Option ${index + 1}`;
                 }
 
                 const englishOption = BELBIN_OPTION_TRANSLATIONS[optionText] || optionText;
