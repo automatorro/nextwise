@@ -236,6 +236,13 @@ const TestResult = () => {
               {/* Overall Score - only for non-Belbin tests */}
               <OverallScoreCard score={result.score} />
 
+              {/* Scoring Explanation - ALWAYS SHOW */}
+              <ScoringExplanation 
+                testName={result.test_types.name}
+                overallScore={result.score.overall}
+                scoreType={scoreType}
+              />
+
               {/* Correct Answers Section - only for cognitive abilities tests */}
               {isCognitiveTest && (
                 <CorrectAnswersSection 
@@ -244,26 +251,23 @@ const TestResult = () => {
                 />
               )}
 
-              {/* Scoring Explanation */}
-              <ScoringExplanation 
-                testName={result.test_types.name}
-                overallScore={result.score.overall}
-                scoreType={scoreType}
-              />
+              {/* Dimensions Analysis - ALWAYS SHOW IF DIMENSIONS EXIST */}
+              {hasValidTestSpecificDimensions && (
+                <DimensionsAnalysis 
+                  dimensions={generalDisplayDimensions}
+                  testName={result.test_types.name}
+                />
+              )}
 
-              {/* Dimensions Analysis */}
-              <DimensionsAnalysis 
-                dimensions={generalDisplayDimensions}
-                testName={result.test_types.name}
-              />
+              {/* Dimension Explanations - ALWAYS SHOW IF DIMENSIONS EXIST */}
+              {hasValidTestSpecificDimensions && (
+                <DimensionExplanations 
+                  testName={result.test_types.name}
+                  dimensions={generalDisplayDimensions}
+                />
+              )}
 
-              {/* Dimension Explanations */}
-              <DimensionExplanations 
-                testName={result.test_types.name}
-                dimensions={generalDisplayDimensions}
-              />
-
-              {/* Detailed Interpretations for Big Five */}
+              {/* Detailed Interpretations for Big Five - ALWAYS SHOW IF EXISTS */}
               {isBigFiveTest && result.score.detailed_interpretations && (
                 <DetailedInterpretations 
                   interpretations={result.score.detailed_interpretations}

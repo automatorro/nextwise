@@ -23,14 +23,14 @@ interface TranslatedQuestion {
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // Retry function with exponential backoff
-const retryWithBackoff = async (fn: () => Promise<any>, maxRetries = 3) => {
+const retryWithBackoff = async (fn: () => Promise<any>, maxRetries = 5) => {
   for (let i = 0; i < maxRetries; i++) {
     try {
       return await fn();
     } catch (error) {
       if (i === maxRetries - 1) throw error;
       
-      const delay = Math.pow(2, i) * 2000; // 2s, 4s, 8s
+      const delay = Math.pow(2, i) * 3000; // 3s, 6s, 12s, 24s, 48s
       console.log(`Retry ${i + 1} failed, waiting ${delay}ms before next attempt`);
       await sleep(delay);
     }
@@ -63,14 +63,14 @@ serve(async (req) => {
 
     const translatedQuestions: TranslatedQuestion[] = [];
 
-    // Process questions in smaller batches to avoid rate limiting
-    const batchSize = 2; // Reduced from 5 to 2
+    // Process questions one by one to avoid rate limiting
+    const batchSize = 1;
     for (let i = 0; i < questions.length; i += batchSize) {
       const batch = questions.slice(i, i + batchSize);
       
-      console.log(`Processing batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(questions.length / batchSize)}`);
+      console.log(`Processing question ${i + 1}/${questions.length}`);
       
-      const prompt = `You are a professional translator specializing in psychological and cognitive assessment tests. Please translate the following Romanian test questions and their answer options to English. Maintain the psychological accuracy and professional tone.
+      const prompt = `You are a professional translator specializing in psychological and cognitive assessment tests. Please translate the following Romanian test question and its answer options to English. Maintain the psychological accuracy and professional tone.
 
 Please respond with ONLY a valid JSON array containing objects with this exact structure:
 [
@@ -81,12 +81,10 @@ Please respond with ONLY a valid JSON array containing objects with this exact s
   }
 ]
 
-Questions to translate:
-${batch.map(q => `
-ID: ${q.id}
-Romanian Question: ${q.question_text_ro}
-Romanian Options: ${JSON.stringify(q.options)}
-`).join('\n')}
+Question to translate:
+ID: ${batch[0].id}
+Romanian Question: ${batch[0].question_text_ro}
+Romanian Options: ${JSON.stringify(batch[0].options)}
 
 Remember: 
 - Preserve the psychological meaning and nuance
@@ -95,7 +93,7 @@ Remember:
 - Return ONLY the JSON array, no additional text`;
 
       try {
-        const batchTranslations = await retryWithBackoff(async () => {
+        const questionTranslation = await retryWithBackoff(async () => {
           const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + geminiApiKey, {
             method: 'POST',
             headers: {
@@ -109,7 +107,7 @@ Remember:
               }],
               generationConfig: {
                 temperature: 0.1,
-                maxOutputTokens: 4096,
+                maxOutputTokens: 2048,
               }
             })
           });
@@ -125,10 +123,10 @@ Remember:
           return data.candidates[0].content.parts[0].text;
         });
 
-        console.log('Raw Gemini response for batch:', batchTranslations);
+        console.log(`Raw Gemini response for question ${batch[0].id}:`, questionTranslation);
         
         // Clean and parse the JSON response
-        let cleanedText = batchTranslations.trim();
+        let cleanedText = questionTranslation.trim();
         
         // Remove markdown code blocks if present
         if (cleanedText.startsWith('```json')) {
@@ -138,44 +136,54 @@ Remember:
         }
         
         try {
-          const parsedBatch = JSON.parse(cleanedText);
-          if (Array.isArray(parsedBatch)) {
-            translatedQuestions.push(...parsedBatch);
-            console.log(`Successfully processed batch with ${parsedBatch.length} questions`);
+          const parsedQuestion = JSON.parse(cleanedText);
+          if (Array.isArray(parsedQuestion) && parsedQuestion.length > 0) {
+            translatedQuestions.push(parsedQuestion[0]);
+            console.log(`Successfully processed question ${batch[0].id}`);
           } else {
-            console.error('Invalid batch translation format:', parsedBatch);
+            console.error('Invalid question translation format:', parsedQuestion);
+            
+            // Create fallback translation
+            const fallbackTranslation = {
+              id: batch[0].id,
+              question_text_en: `[Translation needed] ${batch[0].question_text_ro}`,
+              options_en: batch[0].options.map((opt, idx) => `Option ${idx + 1}`)
+            };
+            
+            translatedQuestions.push(fallbackTranslation);
+            console.log(`Added fallback translation for question ${batch[0].id}`);
           }
         } catch (parseError) {
-          console.error('Failed to parse batch translation:', cleanedText, parseError);
+          console.error('Failed to parse question translation:', cleanedText, parseError);
           
-          // Create fallback translations for this batch
-          const fallbackTranslations = batch.map(q => ({
-            id: q.id,
-            question_text_en: `[Translation needed] ${q.question_text_ro}`,
-            options_en: q.options.map((opt, idx) => `Option ${idx + 1}`)
-          }));
+          // Create fallback translation
+          const fallbackTranslation = {
+            id: batch[0].id,
+            question_text_en: `[Translation needed] ${batch[0].question_text_ro}`,
+            options_en: batch[0].options.map((opt, idx) => `Option ${idx + 1}`)
+          };
           
-          translatedQuestions.push(...fallbackTranslations);
-          console.log(`Added fallback translations for ${fallbackTranslations.length} questions`);
+          translatedQuestions.push(fallbackTranslation);
+          console.log(`Added fallback translation for question ${batch[0].id}`);
         }
-      } catch (batchError) {
-        console.error(`Failed to translate batch ${Math.floor(i / batchSize) + 1}:`, batchError);
+      } catch (questionError) {
+        console.error(`Failed to translate question ${batch[0].id}:`, questionError);
         
-        // Create fallback translations for failed batch
-        const fallbackTranslations = batch.map(q => ({
-          id: q.id,
-          question_text_en: `[Translation needed] ${q.question_text_ro}`,
-          options_en: q.options.map((opt, idx) => `Option ${idx + 1}`)
-        }));
+        // Create fallback translation for failed question
+        const fallbackTranslation = {
+          id: batch[0].id,
+          question_text_en: `[Translation needed] ${batch[0].question_text_ro}`,
+          options_en: batch[0].options.map((opt, idx) => `Option ${idx + 1}`)
+        };
         
-        translatedQuestions.push(...fallbackTranslations);
-        console.log(`Added fallback translations for failed batch with ${fallbackTranslations.length} questions`);
+        translatedQuestions.push(fallbackTranslation);
+        console.log(`Added fallback translation for failed question ${batch[0].id}`);
       }
 
-      // Add longer delay between batches to avoid rate limiting
+      // Add longer delay between questions to avoid rate limiting
       if (i + batchSize < questions.length) {
-        console.log('Waiting 5 seconds before next batch...');
-        await sleep(5000); // Increased from 1s to 5s
+        console.log('Waiting 8 seconds before next question...');
+        await sleep(8000); // Increased delay to 8 seconds
       }
     }
 

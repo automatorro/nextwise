@@ -1,4 +1,3 @@
-
 interface TestResultTranslations {
   [key: string]: {
     en: string;
@@ -29,6 +28,80 @@ export const interpretationTranslations: TestResultTranslations = {
     ro: 'Scor foarte ridicat'
   },
   
+  // GAD-7 Anxiety specific interpretations
+  'Anxietate minimă': {
+    en: 'Minimal anxiety',
+    ro: 'Anxietate minimă'
+  },
+  'Anxietate ușoară': {
+    en: 'Mild anxiety',
+    ro: 'Anxietate ușoară'
+  },
+  'Anxietate moderată': {
+    en: 'Moderate anxiety',
+    ro: 'Anxietate moderată'
+  },
+  'Anxietate severă': {
+    en: 'Severe anxiety',
+    ro: 'Anxietate severă'
+  },
+  'Nivel minimal de anxietate': {
+    en: 'Minimal level of anxiety',
+    ro: 'Nivel minimal de anxietate'
+  },
+  'Nivel ușor de anxietate': {
+    en: 'Mild level of anxiety',
+    ro: 'Nivel ușor de anxietate'
+  },
+  'Nivel moderat de anxietate': {
+    en: 'Moderate level of anxiety',
+    ro: 'Nivel moderat de anxietate'
+  },
+  'Nivel sever de anxietate': {
+    en: 'Severe level of anxiety',
+    ro: 'Nivel sever de anxietate'
+  },
+
+  // PHQ-9 Depression specific interpretations
+  'Depresie minimă': {
+    en: 'Minimal depression',
+    ro: 'Depresie minimă'
+  },
+  'Depresie ușoară': {
+    en: 'Mild depression',
+    ro: 'Depresie ușoară'
+  },
+  'Depresie moderată': {
+    en: 'Moderate depression',
+    ro: 'Depresie moderată'
+  },
+  'Depresie severă': {
+    en: 'Severe depression',
+    ro: 'Depresie severă'
+  },
+  'Depresie foarte severă': {
+    en: 'Very severe depression',
+    ro: 'Depresie foarte severă'
+  },
+
+  // DISC specific interpretations
+  'Stil Dominant': {
+    en: 'Dominant style',
+    ro: 'Stil Dominant'
+  },
+  'Stil Influent': {
+    en: 'Influential style',
+    ro: 'Stil Influent'
+  },
+  'Stil Stabil': {
+    en: 'Steady style',
+    ro: 'Stil Stabil'
+  },
+  'Stil Conștiincios': {
+    en: 'Conscientious style',
+    ro: 'Stil Conștiincios'
+  },
+
   // Cognitive abilities interpretations
   'Performanță excelentă': {
     en: 'Excellent performance',
@@ -51,7 +124,7 @@ export const interpretationTranslations: TestResultTranslations = {
     ro: 'Performanță sub medie'
   },
 
-  // Depression/Anxiety levels
+  // General levels
   'Nivel minimal': {
     en: 'Minimal level',
     ro: 'Nivel minimal'
@@ -109,6 +182,16 @@ export const interpretationTranslations: TestResultTranslations = {
   'Inteligență emoțională ridicată': {
     en: 'High emotional intelligence',
     ro: 'Inteligență emoțională ridicată'
+  },
+
+  // Generic interpretations for fallback
+  'Interpretarea nu este disponibilă': {
+    en: 'Interpretation not available',
+    ro: 'Interpretarea nu este disponibilă'
+  },
+  'Rezultate indisponibile': {
+    en: 'Results unavailable',
+    ro: 'Rezultate indisponibile'
   }
 };
 
@@ -196,6 +279,18 @@ export const translateInterpretation = (text: string, targetLanguage: 'en' | 'ro
     }
   }
 
+  // Enhanced fallback with smart interpretation
+  if (targetLanguage === 'en') {
+    // Generic Romanian to English patterns
+    if (text.includes('scăzut')) return text.replace('scăzut', 'low');
+    if (text.includes('ridicat')) return text.replace('ridicat', 'high');
+    if (text.includes('moderat')) return text.replace('moderat', 'moderate');
+    if (text.includes('minimal')) return text.replace('minimal', 'minimal');
+    if (text.includes('sever')) return text.replace('sever', 'severe');
+    if (text.includes('nivel')) return text.replace('nivel', 'level');
+    if (text.includes('scor')) return text.replace('scor', 'score');
+  }
+
   return text;
 };
 
@@ -216,6 +311,10 @@ export const getResultLabels = (language: 'en' | 'ro') => {
     analysisDescription: language === 'en' 
       ? 'Get a personalized AI analysis and specific recommendations based on your results'
       : 'Primește o analiză personalizată cu AI și recomandări specifice bazate pe rezultatele tale',
-    noResultsFound: language === 'en' ? 'Results not found' : 'Rezultatul nu a fost găsit'
+    noResultsFound: language === 'en' ? 'Results not found' : 'Rezultatul nu a fost găsit',
+    scoreExplanation: language === 'en' ? 'Understanding Your Score' : 'Înțelegerea Scorului',
+    detailedExplanations: language === 'en' ? 'Detailed Dimension Explanations' : 'Explicații Detaliate ale Dimensiunilor',
+    detailedInterpretations: language === 'en' ? 'Detailed Interpretations' : 'Interpretări Detaliate',
+    answerAnalysis: language === 'en' ? 'Detailed Answer Analysis' : 'Analiza Detaliată a Răspunsurilor'
   };
 };

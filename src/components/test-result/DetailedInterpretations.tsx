@@ -2,6 +2,8 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getDimensionLabel } from '@/utils/testLabels';
+import { translateInterpretation } from '@/utils/testResultTranslations';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface DetailedInterpretationsProps {
   interpretations: {
@@ -15,10 +17,16 @@ interface DetailedInterpretationsProps {
 }
 
 const DetailedInterpretations = ({ interpretations, testName = 'Big Five Personalitate' }: DetailedInterpretationsProps) => {
+  const { language } = useLanguage();
+  
+  const labels = {
+    title: language === 'en' ? 'Detailed Interpretations' : 'Interpretări Detaliate'
+  };
+
   return (
     <Card className="mb-8">
       <CardHeader>
-        <CardTitle>Interpretări Detaliate</CardTitle>
+        <CardTitle>{labels.title}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
@@ -28,7 +36,7 @@ const DetailedInterpretations = ({ interpretations, testName = 'Big Five Persona
                 {getDimensionLabel(testName, dimension)}
               </h3>
               <p className="text-gray-700 leading-relaxed">
-                {interpretation}
+                {translateInterpretation(interpretation, language)}
               </p>
             </div>
           ))}
