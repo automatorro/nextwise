@@ -11,6 +11,8 @@ export const getCategoryTranslationKey = (categoryName: string): string => {
     'Team Roles': 'testCategories.teamRoles',
     'Personalitate': 'testCategories.personality',
     'Personality': 'testCategories.personality',
+    'Teste de Personalitate': 'testCategories.personality',
+    'Personality Tests': 'testCategories.personality',
     'Leadership': 'testCategories.leadership',
     'Inteligență Emoțională': 'testCategories.emotionalIntelligence',
     'Emotional Intelligence': 'testCategories.emotionalIntelligence',
