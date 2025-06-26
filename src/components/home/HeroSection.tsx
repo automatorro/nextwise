@@ -22,16 +22,13 @@ const HeroSection = () => {
         <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
           {t('home.subtitle')}
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+        <div className="flex justify-center">
           <Link to="/auth">
             <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
               {t('home.ctaButton')}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>
-          <Button size="lg" variant="outline">
-            {t('home.demoButton')}
-          </Button>
         </div>
       </div>
     </section>
