@@ -1,5 +1,4 @@
 
-
 // Mapping functions to convert database content to translation keys
 
 export const getCategoryTranslationKey = (categoryName: string): string => {
@@ -15,6 +14,8 @@ export const getCategoryTranslationKey = (categoryName: string): string => {
     'Leadership': 'testCategories.leadership',
     'Inteligență Emoțională': 'testCategories.emotionalIntelligence',
     'Emotional Intelligence': 'testCategories.emotionalIntelligence',
+    'Dezvoltare Personală': 'testCategories.emotionalIntelligence', // This maps to emotional intelligence category
+    'Personal Development': 'testCategories.emotionalIntelligence',
     'Bunăstare': 'testCategories.wellness',
     'Wellness': 'testCategories.wellness',
     'Wellness Psihologic': 'testCategories.psychologicalWellness',
