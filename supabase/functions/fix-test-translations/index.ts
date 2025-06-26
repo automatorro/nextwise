@@ -14,7 +14,7 @@ interface Question {
   test_type_id: string;
 }
 
-// DISC test translations
+// Complete DISC test question translations
 const DISC_QUESTION_TRANSLATIONS: { [key: string]: string } = {
   'În situații de lucru în echipă, eu sunt cel care:': 'In team work situations, I am the one who:',
   'Când iau decizii importante:': 'When making important decisions:',
@@ -46,6 +46,7 @@ const DISC_QUESTION_TRANSLATIONS: { [key: string]: string } = {
   'Când văd o oportunitate nouă:': 'When I see a new opportunity:'
 };
 
+// Complete DISC option translations
 const DISC_OPTION_TRANSLATIONS: { [key: string]: string } = {
   'Iau inițiativa și conduc echipa': 'Take initiative and lead the team',
   'Motivez și entuziasmez echipa': 'Motivate and energize the team',
@@ -173,19 +174,20 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    console.log('Starting translation fix process...');
+    console.log('Starting comprehensive DISC translation fix process...');
 
-    // Get all questions with potentially malformed options_en
+    // Get all DISC test questions
     const { data: questions, error: fetchError } = await supabaseClient
       .from('test_questions')
-      .select('id, options, options_en, question_text_ro, question_text_en, test_type_id');
+      .select('id, options, options_en, question_text_ro, question_text_en, test_type_id')
+      .eq('test_type_id', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890');
 
     if (fetchError) {
-      console.error('Error fetching questions:', fetchError);
+      console.error('Error fetching DISC questions:', fetchError);
       throw fetchError;
     }
 
-    console.log(`Found ${questions?.length || 0} questions to process`);
+    console.log(`Found ${questions?.length || 0} DISC questions to process`);
 
     let fixedCount = 0;
     let errorCount = 0;
@@ -193,50 +195,29 @@ Deno.serve(async (req) => {
 
     for (const question of questions || []) {
       try {
-        console.log(`Processing question ${question.id}`);
+        console.log(`Processing DISC question ${question.id}`);
+        console.log('Romanian question text:', question.question_text_ro);
+        console.log('Current English question text:', question.question_text_en);
+        console.log('Current options:', question.options);
         console.log('Current options_en:', question.options_en);
-        console.log('Current question_text_en:', question.question_text_en);
         
         let needsUpdate = false;
         let updatedData: any = {};
 
-        // Check if this is a DISC test question that needs translation
-        if (question.test_type_id === 'a1b2c3d4-e5f6-7890-abcd-ef1234567890') {
-          console.log('Processing DISC test question');
-          
-          // Translate question text if needed
-          if (!question.question_text_en || question.question_text_en === '[Translation needed]') {
-            const translatedQuestion = DISC_QUESTION_TRANSLATIONS[question.question_text_ro];
-            if (translatedQuestion) {
-              updatedData.question_text_en = translatedQuestion;
-              needsUpdate = true;
-              console.log(`Translating question text: ${question.question_text_ro} -> ${translatedQuestion}`);
-            }
-          }
+        // Translate question text
+        const englishQuestion = DISC_QUESTION_TRANSLATIONS[question.question_text_ro];
+        if (englishQuestion && (!question.question_text_en || question.question_text_en === '[Translation needed]')) {
+          updatedData.question_text_en = englishQuestion;
+          needsUpdate = true;
+          console.log(`Translating question: ${question.question_text_ro} -> ${englishQuestion}`);
+        }
 
-          // Fix options_en for DISC test
-          const fixedOptionsEn = fixDISCOptionsStructure(question.options);
-          if (fixedOptionsEn) {
-            updatedData.options_en = fixedOptionsEn;
-            needsUpdate = true;
-            console.log(`Fixing DISC options for question ${question.id}:`, fixedOptionsEn);
-          }
-        } else {
-          // Handle other tests (existing logic)
-          // Check if options_en is already in correct format
-          if (isCorrectFormat(question.options_en)) {
-            console.log(`Question ${question.id} already has correct format`);
-            alreadyCorrectCount++;
-            continue;
-          }
-          
-          const fixedOptionsEn = fixOptionsStructure(question.options, question.options_en);
-          
-          if (fixedOptionsEn) {
-            updatedData.options_en = fixedOptionsEn;
-            needsUpdate = true;
-            console.log(`Fixing question ${question.id} with:`, fixedOptionsEn);
-          }
+        // Fix and translate options
+        const fixedOptionsEn = fixDISCOptionsStructure(question.options);
+        if (fixedOptionsEn) {
+          updatedData.options_en = fixedOptionsEn;
+          needsUpdate = true;
+          console.log(`Fixed and translated options for question ${question.id}:`, fixedOptionsEn);
         }
         
         if (needsUpdate) {
@@ -249,11 +230,11 @@ Deno.serve(async (req) => {
             console.error(`Error updating question ${question.id}:`, updateError);
             errorCount++;
           } else {
-            console.log(`Successfully fixed question ${question.id}`);
+            console.log(`Successfully translated DISC question ${question.id}`);
             fixedCount++;
           }
         } else {
-          console.log(`No fix needed for question ${question.id}`);
+          console.log(`Question ${question.id} already has correct translations`);
           alreadyCorrectCount++;
         }
       } catch (error) {
@@ -262,12 +243,12 @@ Deno.serve(async (req) => {
       }
     }
 
-    console.log(`Process completed. Fixed: ${fixedCount}, Already correct: ${alreadyCorrectCount}, Errors: ${errorCount}`);
+    console.log(`DISC translation process completed. Fixed: ${fixedCount}, Already correct: ${alreadyCorrectCount}, Errors: ${errorCount}`);
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: `Translation fix completed. Fixed ${fixedCount} questions, ${alreadyCorrectCount} were already correct, ${errorCount} errors.`,
+        message: `DISC translation fix completed. Fixed ${fixedCount} questions, ${alreadyCorrectCount} were already correct, ${errorCount} errors.`,
         fixed: fixedCount,
         alreadyCorrect: alreadyCorrectCount,
         errors: errorCount
@@ -309,24 +290,41 @@ function fixDISCOptionsStructure(originalOptions: any): any[] | null {
         const englishLabel = DISC_OPTION_TRANSLATIONS[romanianLabel] || romanianLabel;
         
         return {
-          value: option.value !== undefined ? option.value : index + 1,
+          value: option.value !== undefined ? option.value : index,
           label: englishLabel,
-          dimension: option.dimension || 'D' // Keep the DISC dimension
+          dimension: option.dimension || getDimensionForIndex(index)
         };
       }
+      
+      // Handle string options
+      if (typeof option === 'string') {
+        const englishLabel = DISC_OPTION_TRANSLATIONS[option] || option;
+        return {
+          value: index,
+          label: englishLabel,
+          dimension: getDimensionForIndex(index)
+        };
+      }
+      
       return {
-        value: index + 1,
+        value: index,
         label: `Option ${index + 1}`,
-        dimension: 'D'
+        dimension: getDimensionForIndex(index)
       };
     });
 
-    console.log('Fixed DISC options:', fixedOptions);
+    console.log('Fixed DISC options with translations:', fixedOptions);
     return fixedOptions;
   } catch (error) {
     console.error('Error fixing DISC options:', error);
     return null;
   }
+}
+
+function getDimensionForIndex(index: number): string {
+  // Map option index to DISC dimension (D, I, S, C cycle)
+  const dimensions = ['D', 'I', 'S', 'C'];
+  return dimensions[index % 4];
 }
 
 function isCorrectFormat(optionsEn: any): boolean {
