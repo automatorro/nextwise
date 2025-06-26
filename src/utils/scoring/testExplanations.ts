@@ -1,3 +1,4 @@
+
 interface TestExplanation {
   description: string;
   scoreRanges?: Array<{
@@ -7,12 +8,24 @@ interface TestExplanation {
   }>;
   whatItMeans?: string;
   discSpecific?: {
-    dimensions: any;
+    dimensions: {
+      [key: string]: {
+        name: string;
+        description: string;
+        highTrait: string;
+        lowTrait: string;
+      };
+    };
     combinations?: string;
   };
   belbinSpecific?: {
     roles: any;
-    categories: any;
+    categories: {
+      [key: string]: {
+        name: string;
+        description: string;
+      };
+    };
     primaryVsSecondary: string;
   };
   clinicalSpecific?: {
