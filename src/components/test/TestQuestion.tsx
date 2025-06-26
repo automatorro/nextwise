@@ -19,7 +19,6 @@ import {
 } from '@/components/ui/alert-dialog';
 import { useNavigate } from 'react-router-dom';
 import { parseQuestionOptions } from './QuestionOptionsParser';
-import { translateOptions } from '@/utils/testOptionsTranslations';
 import { useLanguage } from '@/hooks/useLanguage';
 import type { Json } from '@/integrations/supabase/types';
 
@@ -67,22 +66,59 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
   const { language, t } = useLanguage();
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
-  // Get options based on language with fallback
+  // Get options based on language with improved fallback
   const getLocalizedOptions = () => {
+    console.log('Getting localized options for language:', language);
+    console.log('Question options:', currentQuestion.options);
+    console.log('Question options_en:', currentQuestion.options_en);
+
     if (language === 'en' && currentQuestion.options_en) {
-      return parseQuestionOptions(currentQuestion.options_en);
+      const enOptions = parseQuestionOptions(currentQuestion.options_en, 'en');
+      console.log('Parsed EN options:', enOptions);
+      
+      // Validate that we have proper English options
+      if (enOptions.length > 0 && enOptions.every(opt => opt.label && !opt.label.includes('Option '))) {
+        return enOptions;
+      }
     }
     
-    // Fallback to Romanian options and translate common ones
-    const roOptions = parseQuestionOptions(currentQuestion.options);
+    // Fallback to Romanian options
+    const roOptions = parseQuestionOptions(currentQuestion.options, 'ro');
+    console.log('Parsed RO options (fallback):', roOptions);
+    
+    // If we're in English mode but only have Romanian options, try basic translation
     if (language === 'en') {
       return roOptions.map(option => ({
         ...option,
-        label: translateOptions([option.label], 'en')[0]
+        label: translateBasicOption(option.label)
       }));
     }
     
     return roOptions;
+  };
+
+  const translateBasicOption = (label: string): string => {
+    const basicTranslations: { [key: string]: string } = {
+      'Complet dezacord': 'Strongly Disagree',
+      'Dezacord': 'Disagree', 
+      'Neutru': 'Neutral',
+      'Acord': 'Agree',
+      'Complet de acord': 'Strongly Agree',
+      'Deloc': 'Not at all',
+      'Puțin': 'A little',
+      'Moderat': 'Moderately',
+      'Mult': 'A lot',
+      'Foarte mult': 'Very much',
+      'Niciodată': 'Never',
+      'Rareori': 'Rarely',
+      'Uneori': 'Sometimes',
+      'Adesea': 'Often',
+      'Întotdeauna': 'Always',
+      'Da': 'Yes',
+      'Nu': 'No'
+    };
+    
+    return basicTranslations[label] || label;
   };
 
   const questionOptions = getLocalizedOptions();
@@ -97,7 +133,7 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
 
   // Validate that we have valid options
   const hasValidOptions = questionOptions.length > 0 && 
-    questionOptions.every(opt => opt.value >= 0 && opt.label);
+    questionOptions.every(opt => opt.value >= 0 && opt.label && opt.label.trim() !== '');
 
   return (
     <div className="min-h-screen bg-gray-50">

@@ -7,21 +7,22 @@ export interface ParsedOption {
 }
 
 // Comprehensive helper function to safely parse and normalize question options
-export const parseQuestionOptions = (options: Json): ParsedOption[] => {
+export const parseQuestionOptions = (options: Json, language: 'ro' | 'en' = 'ro'): ParsedOption[] => {
   console.log('=== OPTION PARSING ===');
   console.log('Input:', options);
+  console.log('Language:', language);
   
   if (!options) {
     console.log('No options, using default Likert scale');
-    return getDefaultLikertScale();
+    return getDefaultLikertScale(language);
   }
 
   try {
     // Handle array format
     if (Array.isArray(options)) {
-      if (options.length === 0) return getDefaultLikertScale();
+      if (options.length === 0) return getDefaultLikertScale(language);
       
-      // Objects with label/value properties
+      // Objects with label/value properties (proper format)
       if (typeof options[0] === 'object' && options[0] !== null) {
         const firstItem = options[0] as Record<string, any>;
         
@@ -29,21 +30,21 @@ export const parseQuestionOptions = (options: Json): ParsedOption[] => {
           return options.map((opt: any) => ({
             value: ensureValidNumber(opt.value),
             label: String(opt.label || `Option ${opt.value || 1}`)
-          }));
+          })).sort((a, b) => a.value - b.value);
         }
         
         if ('text' in firstItem && 'value' in firstItem) {
           return options.map((opt: any) => ({
             value: ensureValidNumber(opt.value),
             label: String(opt.text || `Option ${opt.value || 1}`)
-          }));
+          })).sort((a, b) => a.value - b.value);
         }
         
         if ('value' in firstItem) {
           return options.map((opt: any, index: number) => ({
             value: ensureValidNumber(opt.value, index),
-            label: String(opt.label || opt.text || `Option ${index}`)
-          }));
+            label: String(opt.label || opt.text || `Option ${index + 1}`)
+          })).sort((a, b) => a.value - b.value);
         }
       }
       
@@ -58,14 +59,14 @@ export const parseQuestionOptions = (options: Json): ParsedOption[] => {
       // Array of primitives
       return options.map((item: any, index: number) => ({
         value: index,
-        label: String(item || `Option ${index}`)
+        label: String(item || `Option ${index + 1}`)
       }));
     }
 
     // Handle object format (key-value pairs)
     if (typeof options === 'object') {
       const entries = Object.entries(options);
-      if (entries.length === 0) return getDefaultLikertScale();
+      if (entries.length === 0) return getDefaultLikertScale(language);
       
       return entries
         .map(([key, value]) => ({
@@ -79,7 +80,7 @@ export const parseQuestionOptions = (options: Json): ParsedOption[] => {
     if (typeof options === 'string') {
       try {
         const parsed = JSON.parse(options);
-        return parseQuestionOptions(parsed);
+        return parseQuestionOptions(parsed, language);
       } catch {
         return [{ value: 0, label: options }];
       }
@@ -88,7 +89,7 @@ export const parseQuestionOptions = (options: Json): ParsedOption[] => {
     console.error('Option parsing error:', error);
   }
 
-  return getDefaultLikertScale();
+  return getDefaultLikertScale(language);
 };
 
 const ensureValidNumber = (value: any, fallback: number = 0): number => {
@@ -106,10 +107,22 @@ const ensureValidNumber = (value: any, fallback: number = 0): number => {
   return Math.max(0, fallback);
 };
 
-const getDefaultLikertScale = (): ParsedOption[] => [
-  { value: 0, label: 'Complet dezacord' },
-  { value: 1, label: 'Dezacord' },
-  { value: 2, label: 'Neutru' },
-  { value: 3, label: 'Acord' },
-  { value: 4, label: 'Complet de acord' }
-];
+const getDefaultLikertScale = (language: 'ro' | 'en' = 'ro'): ParsedOption[] => {
+  if (language === 'en') {
+    return [
+      { value: 0, label: 'Strongly Disagree' },
+      { value: 1, label: 'Disagree' },
+      { value: 2, label: 'Neutral' },
+      { value: 3, label: 'Agree' },
+      { value: 4, label: 'Strongly Agree' }
+    ];
+  }
+  
+  return [
+    { value: 0, label: 'Complet dezacord' },
+    { value: 1, label: 'Dezacord' },
+    { value: 2, label: 'Neutru' },
+    { value: 3, label: 'Acord' },
+    { value: 4, label: 'Complet de acord' }
+  ];
+};

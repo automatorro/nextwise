@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -20,6 +21,8 @@ import TestResultActions from '@/components/test-result/TestResultActions';
 import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
 import { useCognitiveAbilitiesCalculation } from '@/hooks/useCognitiveAbilitiesCalculation';
 import { isCognitiveAbilitiesTest, isBelbinTeamRoles } from '@/utils/testLabels';
+import { translateInterpretation, getResultLabels } from '@/utils/testResultTranslations';
+import { useLanguage } from '@/hooks/useLanguage';
 import HomeNavigation from '@/components/home/HomeNavigation';
 import Footer from '@/components/home/Footer';
 
@@ -77,6 +80,8 @@ const convertToBigFiveDimensions = (dimensions: { [key: string]: number }): BigF
 const TestResult = () => {
   const { resultId } = useParams<{ resultId: string }>();
   const navigate = useNavigate();
+  const { language } = useLanguage();
+  const labels = getResultLabels(language);
 
   const { data: result, isLoading, error } = useQuery({
     queryKey: ['test-result', resultId],
@@ -95,9 +100,15 @@ const TestResult = () => {
       
       if (error) throw error;
       
+      // Translate the interpretation based on current language
+      const translatedScore = {
+        ...data.score,
+        interpretation: translateInterpretation(data.score.interpretation || '', language)
+      };
+      
       return {
         ...data,
-        score: data.score as unknown as ScoreData,
+        score: translatedScore as ScoreData,
         answers: data.answers as unknown as { [key: string]: number }
       } as TestResultData;
     },
@@ -139,7 +150,10 @@ const TestResult = () => {
       <div>
         <HomeNavigation />
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin" />
+          <div className="text-center">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
+            <p>{language === 'en' ? 'Loading...' : 'Se încarcă...'}</p>
+          </div>
         </div>
         <Footer />
       </div>
@@ -152,9 +166,9 @@ const TestResult = () => {
         <HomeNavigation />
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
           <div className="text-center">
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Rezultatul nu a fost găsit</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">{labels.noResultsFound}</h2>
             <Button onClick={() => navigate('/teste')}>
-              Înapoi la teste
+              {labels.backToTests}
             </Button>
           </div>
         </div>
@@ -244,9 +258,9 @@ const TestResult = () => {
           {/* Detailed Analysis Section - AVAILABLE FOR ALL TESTS */}
           <Card className="mb-8">
             <CardHeader>
-              <CardTitle>Analiză Detaliată cu AI</CardTitle>
+              <CardTitle>{labels.generateAnalysis}</CardTitle>
               <p className="text-sm text-gray-600">
-                Generează o analiză personalizată și recomandări specifice bazate pe rezultatele tale.
+                {labels.analysisDescription}
               </p>
             </CardHeader>
             <CardContent>
