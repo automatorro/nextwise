@@ -1,3 +1,4 @@
+
 {
   "common": {
     "poweredByAI": "Powered by AI",
@@ -170,7 +171,7 @@
     }
   },
   "tests": {
-    "title": "AI Psychological Tests",
+    "title": "Psychological Tests",
     "subtitle": "Discover your personality and strengths through advanced psychological assessments analyzed by artificial intelligence.",
     "allCategories": "All Categories",
     "noTests": "No tests available in this category",

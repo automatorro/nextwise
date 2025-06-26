@@ -1,3 +1,4 @@
+
 {
   "common": {
     "poweredByAI": "Alimentat de AI",
@@ -170,7 +171,7 @@
     }
   },
   "tests": {
-    "title": "Teste Psihologice AI",
+    "title": "Teste Psihologice",
     "subtitle": "Descoperă-ți personalitatea și punctele forte prin evaluări psihologice avansate analizate de inteligența artificială.",
     "allCategories": "Toate Categoriile",
     "noTests": "Nu sunt teste disponibile în această categorie",
