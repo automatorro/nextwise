@@ -66,7 +66,6 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
   const { language, t } = useLanguage();
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
-  // Enhanced debugging for option parsing
   console.log('=== DETAILED OPTION DEBUGGING ===');
   console.log('Current language:', language);
   console.log('Question ID:', currentQuestion.id);
@@ -91,29 +90,44 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
     return false;
   };
 
-  // Get options with FORCED translation to English when language is 'en'
+  // Get options with PRIORITIZED use of options_en for English
   const getLocalizedOptions = () => {
     console.log('🔄 Getting localized options...');
     
-    // ALWAYS use Romanian options as source since they contain the actual data
-    const sourceOptions = currentQuestion.options;
-    console.log('📋 Source options:', sourceOptions);
-    
-    if (!sourceOptions || isOptionsCorrupted(sourceOptions)) {
-      console.log('❌ Source options corrupted, using defaults');
-      return parseQuestionOptions(null, language);
-    }
-
-    // For English language: FORCE translation from Romanian to English
+    // For English language: PRIORITIZE options_en column
     if (language === 'en') {
-      console.log('🇬🇧 Language is EN - FORCING translation from Romanian to English');
+      console.log('🇬🇧 Language is EN - checking options_en first');
+      
+      // First, try to use options_en if it exists and is not corrupted
+      if (currentQuestion.options_en && !isOptionsCorrupted(currentQuestion.options_en)) {
+        console.log('✅ Using options_en from database');
+        const enOptions = parseQuestionOptions(currentQuestion.options_en, 'en');
+        console.log('📋 Options from options_en:', enOptions);
+        return enOptions;
+      }
+      
+      console.log('⚠️ options_en not available or corrupted, falling back to translation');
+      // Fallback: translate Romanian options
+      const sourceOptions = currentQuestion.options;
+      if (!sourceOptions || isOptionsCorrupted(sourceOptions)) {
+        console.log('❌ Source options also corrupted, using defaults');
+        return parseQuestionOptions(null, 'en');
+      }
+      
+      console.log('🔄 Translating Romanian options to English as fallback');
       const translatedOptions = parseQuestionOptions(sourceOptions, 'en');
-      console.log('✅ Translated options result:', translatedOptions);
+      console.log('✅ Fallback translated options result:', translatedOptions);
       return translatedOptions;
     }
     
-    // For Romanian language: use as-is
-    console.log('🇷🇴 Language is RO - using Romanian options as-is');
+    // For Romanian language: use Romanian options as-is
+    console.log('🇷🇴 Language is RO - using Romanian options');
+    const sourceOptions = currentQuestion.options;
+    if (!sourceOptions || isOptionsCorrupted(sourceOptions)) {
+      console.log('❌ Romanian options corrupted, using defaults');
+      return parseQuestionOptions(null, 'ro');
+    }
+    
     const roOptions = parseQuestionOptions(sourceOptions, 'ro');
     console.log('✅ Romanian options result:', roOptions);
     return roOptions;
@@ -150,15 +164,6 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* DEBUG INFO - Remove this after testing */}
-        <div className="mb-4 p-4 bg-yellow-100 border border-yellow-400 rounded text-sm">
-          <strong>DEBUG INFO:</strong><br/>
-          Language: {language}<br/>
-          Options count: {questionOptions.length}<br/>
-          First option: {questionOptions[0]?.label}<br/>
-          Has valid options: {hasValidOptions ? 'YES' : 'NO'}
-        </div>
-
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold text-gray-900">{testType.name}</h1>
