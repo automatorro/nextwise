@@ -243,5 +243,23 @@
     "backToTests": "Back to Tests",
     "downloadResults": "Download Results",
     "shareResults": "Share Results"
+  },
+  "belbin": {
+    "roles": {
+      "plant": "Plant (The Creative)",
+      "resourceInvestigator": "Resource Investigator",
+      "coordinator": "Coordinator",
+      "shaper": "Shaper",
+      "monitorEvaluator": "Monitor Evaluator",
+      "teamworker": "Teamworker",
+      "implementer": "Implementer",
+      "completerFinisher": "Completer Finisher",
+      "specialist": "Specialist"
+    },
+    "categories": {
+      "actionOriented": "Action-Oriented Roles",
+      "peopleOriented": "People-Oriented Roles",
+      "thinkingOriented": "Thinking-Oriented Roles"
+    }
   }
 }

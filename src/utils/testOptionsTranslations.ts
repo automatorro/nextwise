@@ -33,7 +33,13 @@ export const COMMON_OPTIONS_TRANSLATIONS: { [key: string]: string } = {
   'Scăzut': 'Low',
   'Mediu': 'Medium',
   'Ridicat': 'High',
-  'Foarte ridicat': 'Very high'
+  'Foarte ridicat': 'Very high',
+  
+  // Belbin specific options
+  'Foarte caracteristic pentru mine': 'Very characteristic of me',
+  'Destul de caracteristic pentru mine': 'Quite characteristic of me',
+  'Puțin caracteristic pentru mine': 'Somewhat characteristic of me',
+  'Deloc caracteristic pentru mine': 'Not at all characteristic of me'
 };
 
 // Function to translate a single option

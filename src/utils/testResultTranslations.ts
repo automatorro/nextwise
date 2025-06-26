@@ -1,3 +1,4 @@
+
 interface TestResultTranslations {
   [key: string]: {
     en: string;
@@ -100,6 +101,64 @@ export const interpretationTranslations: TestResultTranslations = {
   'Stil Conștiincios': {
     en: 'Conscientious style',
     ro: 'Stil Conștiincios'
+  },
+
+  // Belbin Team Roles interpretations
+  'Rolurile tale dominante reflectă stilul natural de contribuție în echipă': {
+    en: 'Your dominant roles reflect your natural style of team contribution',
+    ro: 'Rolurile tale dominante reflectă stilul natural de contribuție în echipă'
+  },
+  'Ești orientat spre': {
+    en: 'You are oriented towards',
+    ro: 'Ești orientat spre'
+  },
+  'acțiune și implementare': {
+    en: 'action and implementation',
+    ro: 'acțiune și implementare'
+  },
+  'relații interpersonale și comunicare': {
+    en: 'interpersonal relationships and communication',
+    ro: 'relații interpersonale și comunicare'
+  },
+  'analiză și gândire strategică': {
+    en: 'analysis and strategic thinking',
+    ro: 'analiză și gândire strategică'
+  },
+  'Plant (Creativul)': {
+    en: 'Plant (The Creative)',
+    ro: 'Plant (Creativul)'
+  },
+  'Resource Investigator (Investigatorul)': {
+    en: 'Resource Investigator',
+    ro: 'Resource Investigator (Investigatorul)'
+  },
+  'Coordinator (Coordonatorul)': {
+    en: 'Coordinator',
+    ro: 'Coordinator (Coordonatorul)'
+  },
+  'Shaper (Modelatorul)': {
+    en: 'Shaper',
+    ro: 'Shaper (Modelatorul)'
+  },
+  'Monitor Evaluator (Evaluatorul)': {
+    en: 'Monitor Evaluator',
+    ro: 'Monitor Evaluator (Evaluatorul)'
+  },
+  'Teamworker (Echipierul)': {
+    en: 'Teamworker',
+    ro: 'Teamworker (Echipierul)'
+  },
+  'Implementer (Implementatorul)': {
+    en: 'Implementer',
+    ro: 'Implementer (Implementatorul)'
+  },
+  'Completer Finisher (Finalizatorul)': {
+    en: 'Completer Finisher',
+    ro: 'Completer Finisher (Finalizatorul)'
+  },
+  'Specialist (Specialistul)': {
+    en: 'Specialist',
+    ro: 'Specialist (Specialistul)'
   },
 
   // Cognitive abilities interpretations
