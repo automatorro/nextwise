@@ -315,6 +315,11 @@ export const getResultLabels = (language: 'en' | 'ro') => {
     scoreExplanation: language === 'en' ? 'Understanding Your Score' : 'Înțelegerea Scorului',
     detailedExplanations: language === 'en' ? 'Detailed Dimension Explanations' : 'Explicații Detaliate ale Dimensiunilor',
     detailedInterpretations: language === 'en' ? 'Detailed Interpretations' : 'Interpretări Detaliate',
-    answerAnalysis: language === 'en' ? 'Detailed Answer Analysis' : 'Analiza Detaliată a Răspunsurilor'
+    answerAnalysis: language === 'en' ? 'Detailed Answer Analysis' : 'Analiza Detaliată a Răspunsurilor',
+    testResult: language === 'en' ? 'Test Result' : 'Rezultatul testului',
+    completedOn: language === 'en' ? 'Completed on' : 'Completat pe',
+    overallScoreTitle: language === 'en' ? 'Overall Score' : 'Scorul General',
+    scoredPoints: language === 'en' ? 'Points scored' : 'Scor obținut',
+    maxPoints: language === 'en' ? 'Maximum score' : 'Scor maxim'
   };
 };

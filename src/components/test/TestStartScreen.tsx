@@ -2,6 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface TestType {
   id: string;
@@ -22,6 +23,15 @@ const TestStartScreen: React.FC<TestStartScreenProps> = ({
   questionsCount,
   onStartTest
 }) => {
+  const { language } = useLanguage();
+  
+  const labels = {
+    questionsLabel: language === 'en' ? 'Number of questions' : 'Numărul de întrebări',
+    durationLabel: language === 'en' ? 'Estimated duration' : 'Durata estimată',
+    minutesLabel: language === 'en' ? 'minutes' : 'minute',
+    startButton: language === 'en' ? 'Start test' : 'Începe testul'
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
       <Card className="max-w-2xl">
@@ -32,16 +42,16 @@ const TestStartScreen: React.FC<TestStartScreenProps> = ({
           <p className="text-gray-600 mb-4">{testType.description}</p>
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
-              <p className="text-sm text-gray-500">Numărul de întrebări</p>
+              <p className="text-sm text-gray-500">{labels.questionsLabel}</p>
               <p className="font-semibold">{questionsCount}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">Durata estimată</p>
-              <p className="font-semibold">{testType.estimated_duration} minute</p>
+              <p className="text-sm text-gray-500">{labels.durationLabel}</p>
+              <p className="font-semibold">{testType.estimated_duration} {labels.minutesLabel}</p>
             </div>
           </div>
           <Button onClick={onStartTest} className="w-full">
-            Începe testul
+            {labels.startButton}
           </Button>
         </CardContent>
       </Card>

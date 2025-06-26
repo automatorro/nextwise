@@ -5,6 +5,8 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { TrendingUp } from 'lucide-react';
 import { getScoreColor, getScoreBadgeVariant } from '@/utils/testScoring';
+import { useLanguage } from '@/hooks/useLanguage';
+import { getResultLabels } from '@/utils/testResultTranslations';
 
 interface OverallScoreCardProps {
   score: {
@@ -16,12 +18,15 @@ interface OverallScoreCardProps {
 }
 
 const OverallScoreCard = ({ score }: OverallScoreCardProps) => {
+  const { language } = useLanguage();
+  const labels = getResultLabels(language);
+
   return (
     <Card className="mb-8">
       <CardHeader>
         <CardTitle className="flex items-center">
           <TrendingUp className="w-5 h-5 mr-2" />
-          Scorul General
+          {labels.overallScoreTitle}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -37,8 +42,8 @@ const OverallScoreCard = ({ score }: OverallScoreCardProps) => {
             </Badge>
           </div>
           <div className="text-right text-sm text-gray-600">
-            <div>Scor obținut: {score.raw_score}</div>
-            <div>Scor maxim: {score.max_score}</div>
+            <div>{labels.scoredPoints}: {score.raw_score}</div>
+            <div>{labels.maxPoints}: {score.max_score}</div>
           </div>
         </div>
         <Progress value={score.overall} className="w-full" />

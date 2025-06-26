@@ -3,6 +3,8 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '@/hooks/useLanguage';
+import { getResultLabels } from '@/utils/testResultTranslations';
 
 interface TestResultHeaderProps {
   testName: string;
@@ -11,6 +13,8 @@ interface TestResultHeaderProps {
 
 const TestResultHeader = ({ testName, completedAt }: TestResultHeaderProps) => {
   const navigate = useNavigate();
+  const { language } = useLanguage();
+  const labels = getResultLabels(language);
 
   return (
     <div className="mb-8">
@@ -20,14 +24,14 @@ const TestResultHeader = ({ testName, completedAt }: TestResultHeaderProps) => {
         className="flex items-center mb-4"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
-        Înapoi la teste
+        {labels.backToTests}
       </Button>
       
       <h1 className="text-3xl font-bold text-gray-900 mb-2">
-        Rezultatul testului: {testName}
+        {labels.testResult}: {testName}
       </h1>
       <p className="text-gray-600">
-        Completat pe {new Date(completedAt).toLocaleDateString('ro-RO')}
+        {labels.completedOn} {new Date(completedAt).toLocaleDateString(language === 'en' ? 'en-US' : 'ro-RO')}
       </p>
     </div>
   );

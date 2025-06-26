@@ -1,5 +1,24 @@
 
 export function getScoreBadgeVariant(score: number, testName?: string): "default" | "secondary" | "destructive" | "outline" {
+  const testKey = testName?.toLowerCase() || '';
+  
+  // Algoritm specific pentru GAD-7 (corectare critică!)
+  if (testKey.includes('gad-7') || testKey.includes('anxietate')) {
+    if (score >= 71) return "destructive"; // Severe anxiety
+    if (score >= 48) return "outline";     // Moderate anxiety  
+    if (score >= 24) return "secondary";   // Mild anxiety
+    return "default";                      // Minimal anxiety
+  }
+  
+  // Algoritm specific pentru PHQ-9 (depresie)
+  if (testKey.includes('phq-9') || testKey.includes('depresie')) {
+    if (score >= 80) return "destructive"; // Severe depression
+    if (score >= 60) return "outline";     // Moderate depression
+    if (score >= 40) return "secondary";   // Mild depression
+    return "default";                      // Minimal depression
+  }
+  
+  // Algoritm default pentru alte teste
   if (score >= 80) return "default";
   if (score >= 60) return "secondary";  
   if (score >= 40) return "outline";
@@ -7,6 +26,18 @@ export function getScoreBadgeVariant(score: number, testName?: string): "default
 }
 
 export function getScoreColor(score: number, testName?: string): string {
+  const testKey = testName?.toLowerCase() || '';
+  
+  // Culori specifice pentru teste clinice (inversate!)
+  if (testKey.includes('gad-7') || testKey.includes('anxietate') || 
+      testKey.includes('phq-9') || testKey.includes('depresie')) {
+    if (score >= 71) return "text-red-700";    // Severe
+    if (score >= 48) return "text-orange-700"; // Moderate  
+    if (score >= 24) return "text-yellow-700"; // Mild
+    return "text-green-700";                   // Minimal
+  }
+  
+  // Culori default pentru teste pozitive
   if (score >= 80) return "text-green-700";
   if (score >= 60) return "text-blue-700"; 
   if (score >= 40) return "text-gray-700";
@@ -20,6 +51,101 @@ export function getScoreInterpretation(score: number, testName?: string, languag
 } {
   const testKey = testName?.toLowerCase() || '';
   
+  // CORECTARE CRITICĂ: Algoritm corect pentru GAD-7
+  if (testKey.includes('gad-7') || testKey.includes('anxietate')) {
+    if (language === 'en') {
+      if (score >= 71) return {
+        level: "Severe anxiety",
+        description: "Significant anxiety symptoms that require professional attention",
+        variant: "destructive"
+      };
+      if (score >= 48) return {
+        level: "Moderate anxiety", 
+        description: "Noticeable anxiety symptoms that may benefit from support",
+        variant: "outline"
+      };
+      if (score >= 24) return {
+        level: "Mild anxiety",
+        description: "Some anxiety symptoms present but manageable",
+        variant: "secondary"
+      };
+      return {
+        level: "Minimal anxiety",
+        description: "Very low levels of anxiety symptoms",
+        variant: "default"
+      };
+    } else {
+      if (score >= 71) return {
+        level: "Anxietate severă",
+        description: "Simptome semnificative de anxietate care necesită atenție profesională",
+        variant: "destructive"
+      };
+      if (score >= 48) return {
+        level: "Anxietate moderată", 
+        description: "Simptome notabile de anxietate care ar putea beneficia de suport",
+        variant: "outline"
+      };
+      if (score >= 24) return {
+        level: "Anxietate ușoară",
+        description: "Simptome de anxietate prezente dar gestionabile",
+        variant: "secondary"
+      };
+      return {
+        level: "Anxietate minimă",
+        description: "Nivele foarte scăzute de simptome de anxietate",
+        variant: "default"
+      };
+    }
+  }
+  
+  // Algoritm similar pentru PHQ-9 (depresie)
+  if (testKey.includes('phq-9') || testKey.includes('depresie')) {
+    if (language === 'en') {
+      if (score >= 80) return {
+        level: "Severe depression",
+        description: "Significant depressive symptoms requiring professional care",
+        variant: "destructive"
+      };
+      if (score >= 60) return {
+        level: "Moderate depression", 
+        description: "Notable depressive symptoms that may need support",
+        variant: "outline"
+      };
+      if (score >= 40) return {
+        level: "Mild depression",
+        description: "Some depressive symptoms present",
+        variant: "secondary"
+      };
+      return {
+        level: "Minimal depression",
+        description: "Very low levels of depressive symptoms",
+        variant: "default"
+      };
+    } else {
+      if (score >= 80) return {
+        level: "Depresie severă",
+        description: "Simptome semnificative de depresie care necesită îngrijire profesională",
+        variant: "destructive"
+      };
+      if (score >= 60) return {
+        level: "Depresie moderată", 
+        description: "Simptome notabile de depresie care ar putea necesita suport",
+        variant: "outline"
+      };
+      if (score >= 40) return {
+        level: "Depresie ușoară",
+        description: "Simptome de depresie prezente",
+        variant: "secondary"
+      };
+      return {
+        level: "Depresie minimă",
+        description: "Nivele foarte scăzute de simptome depresive",
+        variant: "default"
+      };
+    }
+  }
+  
+  // Algoritm pentru teste cognitive
   if (testKey.includes('aptitudini cognitive')) {
     if (language === 'en') {
       if (score >= 80) return {
@@ -142,6 +268,29 @@ export function getTestScoringExplanation(testName: string, language: 'en' | 'ro
   whatItMeans?: string;
 } {
   const testKey = testName.toLowerCase();
+  
+  // CORECTARE CRITICĂ: Explicație corectă pentru GAD-7
+  if (testKey.includes('gad-7') || testKey.includes('anxietate')) {
+    return language === 'en' ? {
+      description: `GAD-7 (Generalized Anxiety Disorder scale) measures anxiety symptoms over the past two weeks. Scores range from 0-21, with higher scores indicating more severe anxiety symptoms that may require professional attention.`,
+      scoreRanges: [
+        { range: '0-23%', label: 'Minimal', variant: 'default' },
+        { range: '24-47%', label: 'Mild', variant: 'secondary' },
+        { range: '48-70%', label: 'Moderate', variant: 'outline' },
+        { range: '71-100%', label: 'Severe', variant: 'destructive' }
+      ],
+      whatItMeans: 'Higher scores indicate more significant anxiety symptoms. Scores above 70% suggest seeking professional support may be beneficial.'
+    } : {
+      description: `GAD-7 (Scala Tulburării de Anxietate Generalizată) măsoară simptomele de anxietate din ultimele două săptămâni. Scorurile variază de la 0-21, unde scoruri mai mari indică simptome de anxietate mai severe care pot necesita atenție profesională.`,
+      scoreRanges: [
+        { range: '0-23%', label: 'Minimal', variant: 'default' },
+        { range: '24-47%', label: 'Ușor', variant: 'secondary' },
+        { range: '48-70%', label: 'Moderat', variant: 'outline' },
+        { range: '71-100%', label: 'Sever', variant: 'destructive' }
+      ],
+      whatItMeans: 'Scorurile mai mari indică simptome de anxietate mai semnificative. Scorurile peste 70% sugerează că ar putea fi benefic să cauți sprijin profesional.'
+    };
+  }
   
   if (testKey.includes('big five')) {
     return language === 'en' ? {
