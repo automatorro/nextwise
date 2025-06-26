@@ -65,6 +65,30 @@ interface BigFiveDimensions {
   [key: string]: number;
 }
 
+// Helper function to safely convert score data
+const convertToScoreData = (score: any): ScoreData => {
+  if (!score || typeof score !== 'object') {
+    return {
+      overall: 0,
+      raw_score: 0,
+      max_score: 100,
+      interpretation: 'Interpretarea nu este disponibilă'
+    };
+  }
+
+  return {
+    overall: score.overall || 0,
+    raw_score: score.raw_score || 0,
+    max_score: score.max_score || 100,
+    interpretation: score.interpretation || 'Interpretarea nu este disponibilă',
+    dimensions: score.dimensions || {},
+    detailed_interpretations: score.detailed_interpretations || {},
+    primary_roles: score.primary_roles || [],
+    secondary_roles: score.secondary_roles || [],
+    role_scores: score.role_scores || {}
+  };
+};
+
 // Helper function to safely convert dimensions to the right format
 const convertToBigFiveDimensions = (dimensions: { [key: string]: number }): BigFiveDimensions => {
   return {
@@ -100,15 +124,18 @@ const TestResult = () => {
       
       if (error) throw error;
       
+      // Safely convert score data
+      const safeScore = convertToScoreData(data.score);
+      
       // Translate the interpretation based on current language
       const translatedScore = {
-        ...data.score,
-        interpretation: translateInterpretation(data.score.interpretation || '', language)
+        ...safeScore,
+        interpretation: translateInterpretation(safeScore.interpretation, language)
       };
       
       return {
         ...data,
-        score: translatedScore as ScoreData,
+        score: translatedScore,
         answers: data.answers as unknown as { [key: string]: number }
       } as TestResultData;
     },

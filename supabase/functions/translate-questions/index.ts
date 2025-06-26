@@ -19,6 +19,24 @@ interface TranslatedQuestion {
   options_en: string[];
 }
 
+// Sleep function for delays
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Retry function with exponential backoff
+const retryWithBackoff = async (fn: () => Promise<any>, maxRetries = 3) => {
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (error) {
+      if (i === maxRetries - 1) throw error;
+      
+      const delay = Math.pow(2, i) * 2000; // 2s, 4s, 8s
+      console.log(`Retry ${i + 1} failed, waiting ${delay}ms before next attempt`);
+      await sleep(delay);
+    }
+  }
+};
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -45,10 +63,12 @@ serve(async (req) => {
 
     const translatedQuestions: TranslatedQuestion[] = [];
 
-    // Process questions in batches of 5 to avoid overwhelming the API
-    const batchSize = 5;
+    // Process questions in smaller batches to avoid rate limiting
+    const batchSize = 2; // Reduced from 5 to 2
     for (let i = 0; i < questions.length; i += batchSize) {
       const batch = questions.slice(i, i + batchSize);
+      
+      console.log(`Processing batch ${Math.floor(i / batchSize) + 1}/${Math.ceil(questions.length / batchSize)}`);
       
       const prompt = `You are a professional translator specializing in psychological and cognitive assessment tests. Please translate the following Romanian test questions and their answer options to English. Maintain the psychological accuracy and professional tone.
 
@@ -74,82 +94,118 @@ Remember:
 - Maintain the same option count and order
 - Return ONLY the JSON array, no additional text`;
 
-      const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + geminiApiKey, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: prompt
-            }]
-          }],
-          generationConfig: {
-            temperature: 0.1,
-            maxOutputTokens: 4096,
-          }
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error(`Gemini API error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const translatedText = data.candidates[0].content.parts[0].text;
-      
-      console.log('Raw Gemini response:', translatedText);
-      
-      // Clean and parse the JSON response
-      let cleanedText = translatedText.trim();
-      
-      // Remove markdown code blocks if present
-      if (cleanedText.startsWith('```json')) {
-        cleanedText = cleanedText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
-      } else if (cleanedText.startsWith('```')) {
-        cleanedText = cleanedText.replace(/^```\n?/, '').replace(/\n?```$/, '');
-      }
-      
       try {
-        const batchTranslations = JSON.parse(cleanedText);
-        if (Array.isArray(batchTranslations)) {
-          translatedQuestions.push(...batchTranslations);
-        } else {
-          console.error('Invalid batch translation format:', batchTranslations);
+        const batchTranslations = await retryWithBackoff(async () => {
+          const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=' + geminiApiKey, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              contents: [{
+                parts: [{
+                  text: prompt
+                }]
+              }],
+              generationConfig: {
+                temperature: 0.1,
+                maxOutputTokens: 4096,
+              }
+            })
+          });
+
+          if (!response.ok) {
+            if (response.status === 429) {
+              throw new Error(`Rate limit exceeded: ${response.status}`);
+            }
+            throw new Error(`Gemini API error: ${response.status}`);
+          }
+
+          const data = await response.json();
+          return data.candidates[0].content.parts[0].text;
+        });
+
+        console.log('Raw Gemini response for batch:', batchTranslations);
+        
+        // Clean and parse the JSON response
+        let cleanedText = batchTranslations.trim();
+        
+        // Remove markdown code blocks if present
+        if (cleanedText.startsWith('```json')) {
+          cleanedText = cleanedText.replace(/^```json\n?/, '').replace(/\n?```$/, '');
+        } else if (cleanedText.startsWith('```')) {
+          cleanedText = cleanedText.replace(/^```\n?/, '').replace(/\n?```$/, '');
         }
-      } catch (parseError) {
-        console.error('Failed to parse batch translation:', cleanedText, parseError);
-        // Continue with next batch instead of failing completely
+        
+        try {
+          const parsedBatch = JSON.parse(cleanedText);
+          if (Array.isArray(parsedBatch)) {
+            translatedQuestions.push(...parsedBatch);
+            console.log(`Successfully processed batch with ${parsedBatch.length} questions`);
+          } else {
+            console.error('Invalid batch translation format:', parsedBatch);
+          }
+        } catch (parseError) {
+          console.error('Failed to parse batch translation:', cleanedText, parseError);
+          
+          // Create fallback translations for this batch
+          const fallbackTranslations = batch.map(q => ({
+            id: q.id,
+            question_text_en: `[Translation needed] ${q.question_text_ro}`,
+            options_en: q.options.map((opt, idx) => `Option ${idx + 1}`)
+          }));
+          
+          translatedQuestions.push(...fallbackTranslations);
+          console.log(`Added fallback translations for ${fallbackTranslations.length} questions`);
+        }
+      } catch (batchError) {
+        console.error(`Failed to translate batch ${Math.floor(i / batchSize) + 1}:`, batchError);
+        
+        // Create fallback translations for failed batch
+        const fallbackTranslations = batch.map(q => ({
+          id: q.id,
+          question_text_en: `[Translation needed] ${q.question_text_ro}`,
+          options_en: q.options.map((opt, idx) => `Option ${idx + 1}`)
+        }));
+        
+        translatedQuestions.push(...fallbackTranslations);
+        console.log(`Added fallback translations for failed batch with ${fallbackTranslations.length} questions`);
       }
 
-      // Add a small delay between batches to be respectful to the API
+      // Add longer delay between batches to avoid rate limiting
       if (i + batchSize < questions.length) {
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        console.log('Waiting 5 seconds before next batch...');
+        await sleep(5000); // Increased from 1s to 5s
       }
     }
 
-    console.log(`Successfully translated ${translatedQuestions.length} out of ${questions.length} questions`);
+    console.log(`Successfully processed ${translatedQuestions.length} out of ${questions.length} questions`);
 
     // Update the database with translations
-    const updates = translatedQuestions.map(tq => ({
-      id: tq.id,
-      question_text_en: tq.question_text_en,
-      options_en: tq.options_en
-    }));
+    if (translatedQuestions.length > 0) {
+      for (const tq of translatedQuestions) {
+        try {
+          // Create proper options_en structure
+          const properOptionsEn = tq.options_en.map((label, index) => ({
+            value: index,
+            label: label
+          }));
 
-    if (updates.length > 0) {
-      for (const update of updates) {
-        const { error } = await supabaseClient
-          .from('test_questions')
-          .update({
-            question_text_en: update.question_text_en,
-            options_en: update.options_en
-          })
-          .eq('id', update.id);
+          const { error } = await supabaseClient
+            .from('test_questions')
+            .update({
+              question_text_en: tq.question_text_en,
+              options_en: properOptionsEn
+            })
+            .eq('id', tq.id);
 
-        if (error) {
-          console.error('Error updating question:', update.id, error);
+          if (error) {
+            console.error('Error updating question:', tq.id, error);
+          } else {
+            console.log('Successfully updated question:', tq.id);
+          }
+        } catch (updateError) {
+          console.error('Error processing question update:', tq.id, updateError);
         }
       }
     }

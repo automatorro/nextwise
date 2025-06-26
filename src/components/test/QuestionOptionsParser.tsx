@@ -8,87 +8,145 @@ export interface ParsedOption {
 
 // Comprehensive helper function to safely parse and normalize question options
 export const parseQuestionOptions = (options: Json, language: 'ro' | 'en' = 'ro'): ParsedOption[] => {
-  console.log('=== OPTION PARSING ===');
-  console.log('Input:', options);
+  console.log('=== OPTION PARSING DEBUG ===');
+  console.log('Input options:', options);
   console.log('Language:', language);
+  console.log('Type of options:', typeof options);
   
   if (!options) {
-    console.log('No options, using default Likert scale');
+    console.log('No options provided, using default Likert scale');
     return getDefaultLikertScale(language);
   }
 
   try {
     // Handle array format
     if (Array.isArray(options)) {
-      if (options.length === 0) return getDefaultLikertScale(language);
+      console.log('Options is array, length:', options.length);
+      
+      if (options.length === 0) {
+        console.log('Empty array, using default Likert scale');
+        return getDefaultLikertScale(language);
+      }
+      
+      console.log('First option:', options[0]);
+      console.log('Type of first option:', typeof options[0]);
       
       // Objects with label/value properties (proper format)
       if (typeof options[0] === 'object' && options[0] !== null) {
         const firstItem = options[0] as Record<string, any>;
+        console.log('First item keys:', Object.keys(firstItem));
         
         if ('label' in firstItem && 'value' in firstItem) {
-          return options.map((opt: any) => ({
+          console.log('Found proper label/value format');
+          const parsed = options.map((opt: any) => ({
             value: ensureValidNumber(opt.value),
             label: String(opt.label || `Option ${opt.value || 1}`)
           })).sort((a, b) => a.value - b.value);
+          console.log('Parsed options:', parsed);
+          return parsed;
         }
         
         if ('text' in firstItem && 'value' in firstItem) {
-          return options.map((opt: any) => ({
+          console.log('Found text/value format');
+          const parsed = options.map((opt: any) => ({
             value: ensureValidNumber(opt.value),
             label: String(opt.text || `Option ${opt.value || 1}`)
           })).sort((a, b) => a.value - b.value);
+          console.log('Parsed options:', parsed);
+          return parsed;
         }
         
         if ('value' in firstItem) {
-          return options.map((opt: any, index: number) => ({
+          console.log('Found value-only format');
+          const parsed = options.map((opt: any, index: number) => ({
             value: ensureValidNumber(opt.value, index),
             label: String(opt.label || opt.text || `Option ${index + 1}`)
           })).sort((a, b) => a.value - b.value);
+          console.log('Parsed options:', parsed);
+          return parsed;
         }
+        
+        // Handle objects without clear structure
+        console.log('Object format without clear structure, attempting generic parsing');
+        const parsed = options.map((opt: any, index: number) => {
+          if (typeof opt === 'object' && opt !== null) {
+            // Try to find a text-like property
+            const textValue = opt.label || opt.text || opt.name || opt.title || Object.values(opt)[0];
+            return {
+              value: index,
+              label: String(textValue || `Option ${index + 1}`)
+            };
+          }
+          return {
+            value: index,
+            label: String(opt || `Option ${index + 1}`)
+          };
+        });
+        console.log('Generic parsed options:', parsed);
+        return parsed;
       }
       
       // Array of strings
       if (typeof options[0] === 'string') {
-        return options.map((label: string, index: number) => ({
+        console.log('Array of strings format');
+        const parsed = options.map((label: string, index: number) => ({
           value: index,
           label: String(label)
         }));
+        console.log('Parsed string options:', parsed);
+        return parsed;
       }
       
       // Array of primitives
-      return options.map((item: any, index: number) => ({
+      console.log('Array of primitives format');
+      const parsed = options.map((item: any, index: number) => ({
         value: index,
         label: String(item || `Option ${index + 1}`)
       }));
+      console.log('Parsed primitive options:', parsed);
+      return parsed;
     }
 
     // Handle object format (key-value pairs)
     if (typeof options === 'object') {
+      console.log('Options is object');
       const entries = Object.entries(options);
-      if (entries.length === 0) return getDefaultLikertScale(language);
+      console.log('Object entries:', entries);
       
-      return entries
+      if (entries.length === 0) {
+        console.log('Empty object, using default Likert scale');
+        return getDefaultLikertScale(language);
+      }
+      
+      const parsed = entries
         .map(([key, value]) => ({
           value: ensureValidNumber(key),
           label: String(value || `Option ${key}`)
         }))
         .sort((a, b) => a.value - b.value);
+      console.log('Parsed object options:', parsed);
+      return parsed;
     }
 
     // Handle JSON string
     if (typeof options === 'string') {
+      console.log('Options is string, attempting to parse JSON');
       try {
         const parsed = JSON.parse(options);
+        console.log('Successfully parsed JSON string:', parsed);
         return parseQuestionOptions(parsed, language);
-      } catch {
+      } catch (jsonError) {
+        console.log('Failed to parse JSON string, treating as single option');
         return [{ value: 0, label: options }];
       }
     }
+
+    console.log('Unhandled options format, using default');
   } catch (error) {
     console.error('Option parsing error:', error);
   }
 
+  console.log('Falling back to default Likert scale');
   return getDefaultLikertScale(language);
 };
 
