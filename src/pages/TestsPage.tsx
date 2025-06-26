@@ -10,6 +10,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { useLanguage } from '@/hooks/useLanguage';
 import { getCategoryTranslationKey, getTestNameTranslationKey, getTestDescriptionTranslationKey } from '@/utils/testTranslationMapping';
 import HomeNavigation from '@/components/home/HomeNavigation';
+import Footer from '@/components/home/Footer';
 
 interface TestType {
   id: string;
@@ -165,6 +166,7 @@ const TestsPage = () => {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -182,6 +184,7 @@ const TestsPage = () => {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -321,6 +324,7 @@ const TestsPage = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
