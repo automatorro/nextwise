@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -236,11 +235,12 @@ const TestResult = () => {
               {/* Overall Score - only for non-Belbin tests */}
               <OverallScoreCard score={result.score} />
 
-              {/* Scoring Explanation - ALWAYS SHOW */}
+              {/* Scoring Explanation - ALWAYS SHOW WITH DIMENSIONS */}
               <ScoringExplanation 
                 testName={result.test_types.name}
                 overallScore={result.score.overall}
                 scoreType={scoreType}
+                dimensions={testSpecificDimensions}
               />
 
               {/* Correct Answers Section - only for cognitive abilities tests */}

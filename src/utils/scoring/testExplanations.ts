@@ -1,4 +1,3 @@
-
 interface TestExplanation {
   description: string;
   scoreRanges?: Array<{
@@ -7,10 +6,77 @@ interface TestExplanation {
     variant: 'default' | 'secondary' | 'destructive' | 'outline';
   }>;
   whatItMeans?: string;
+  discSpecific?: {
+    dimensions: any;
+    combinations?: string;
+  };
+  belbinSpecific?: {
+    roles: any;
+    categories: any;
+    primaryVsSecondary: string;
+  };
+  clinicalSpecific?: {
+    limitations: string;
+    recommendations: string;
+    clinicalRanges: any[];
+  };
 }
+
+import { getDISCExplanation } from '../testSpecificExplanations/discExplanations';
+import { getBelbinExplanation } from '../testSpecificExplanations/belbinExplanations';
+import { getClinicalTestExplanation } from '../testSpecificExplanations/clinicalExplanations';
 
 export function getTestScoringExplanation(testName: string, language: 'en' | 'ro' = 'ro'): TestExplanation {
   const testKey = testName.toLowerCase();
+  
+  // DISC Test - explicații specifice
+  if (testKey.includes('disc') || testKey.includes('comportament')) {
+    const discExplanation = getDISCExplanation(language);
+    return {
+      description: discExplanation.description,
+      scoreRanges: discExplanation.scoreRanges,
+      whatItMeans: discExplanation.whatItMeans,
+      discSpecific: {
+        dimensions: discExplanation.dimensions,
+        combinations: discExplanation.combinations
+      }
+    };
+  }
+  
+  // Belbin Test - explicații specifice  
+  if (testKey.includes('belbin') || testKey.includes('echipa') || testKey.includes('team')) {
+    const belbinExplanation = getBelbinExplanation(language);
+    return {
+      description: belbinExplanation.description,
+      whatItMeans: belbinExplanation.whatItMeans,
+      belbinSpecific: {
+        roles: belbinExplanation.roles,
+        categories: belbinExplanation.categories,
+        primaryVsSecondary: belbinExplanation.primaryVsSecondary
+      }
+    };
+  }
+  
+  // Clinical Tests - explicații specifice
+  if (testKey.includes('gad-7') || testKey.includes('anxietate') || 
+      testKey.includes('phq-9') || testKey.includes('depresie') ||
+      testKey.includes('beck')) {
+    const clinicalExplanation = getClinicalTestExplanation(testName, language);
+    return {
+      description: clinicalExplanation.description,
+      scoreRanges: clinicalExplanation.clinicalRanges.map(range => ({
+        range: range.range,
+        label: range.label,
+        variant: range.variant
+      })),
+      whatItMeans: clinicalExplanation.whatItMeans,
+      clinicalSpecific: {
+        limitations: clinicalExplanation.limitations,
+        recommendations: clinicalExplanation.recommendations,
+        clinicalRanges: clinicalExplanation.clinicalRanges
+      }
+    };
+  }
   
   // CORECTARE CRITICĂ: Explicație corectă pentru GAD-7
   if (testKey.includes('gad-7') || testKey.includes('anxietate')) {

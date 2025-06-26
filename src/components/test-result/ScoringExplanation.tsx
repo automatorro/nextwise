@@ -10,9 +10,10 @@ interface ScoringExplanationProps {
   testName: string;
   overallScore: number;
   scoreType?: 'percentage' | 'scale' | 'raw';
+  dimensions?: { [key: string]: number };
 }
 
-const ScoringExplanation = ({ testName, overallScore, scoreType = 'percentage' }: ScoringExplanationProps) => {
+const ScoringExplanation = ({ testName, overallScore, scoreType = 'percentage', dimensions }: ScoringExplanationProps) => {
   const { language } = useLanguage();
   const explanation = getTestScoringExplanation(testName, language);
   const interpretation = getScoreInterpretation(overallScore, testName, language);
@@ -24,8 +25,20 @@ const ScoringExplanation = ({ testName, overallScore, scoreType = 'percentage' }
     whatThisMeasures: language === 'en' ? 'What this test measures:' : 'Ce măsoară acest test:',
     yourScoreInterpretation: language === 'en' ? 'Your score interpretation:' : 'Interpretarea scorului tău:',
     scoreRanges: language === 'en' ? 'Score ranges:' : 'Intervalele de scor:',
-    whatItMeans: language === 'en' ? 'What the result means:' : 'Ce înseamnă rezultatul:'
+    whatItMeans: language === 'en' ? 'What the result means:' : 'Ce înseamnă rezultatul:',
+    dimensions: language === 'en' ? 'Dimensions:' : 'Dimensiuni:',
+    roles: language === 'en' ? 'Team Roles:' : 'Roluri în Echipă:',
+    clinicalNote: language === 'en' ? 'Clinical Information:' : 'Informații Clinice:',
+    limitations: language === 'en' ? 'Important limitations:' : 'Limitări importante:',
+    recommendations: language === 'en' ? 'Recommendations:' : 'Recomandări:'
   };
+
+  const testKey = testName.toLowerCase();
+  const isDISC = testKey.includes('disc') || testKey.includes('comportament');
+  const isBelbin = testKey.includes('belbin') || testKey.includes('echipa') || testKey.includes('team');
+  const isClinical = testKey.includes('gad-7') || testKey.includes('anxietate') || 
+                     testKey.includes('phq-9') || testKey.includes('depresie') || 
+                     testKey.includes('beck');
 
   return (
     <Card className="mb-6 border-blue-200 bg-blue-50">
@@ -41,19 +54,83 @@ const ScoringExplanation = ({ testName, overallScore, scoreType = 'percentage' }
           <p className="text-gray-700">{explanation.description}</p>
         </div>
         
-        <div>
-          <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
-            <TrendingUp className="w-4 h-4 mr-1" />
-            {labels.yourScoreInterpretation}
-          </h4>
-          <div className="flex items-center gap-3 mb-2">
-            <Badge variant={interpretation.variant} className="text-sm">
-              {interpretation.level}
-            </Badge>
-            <span className="text-lg font-semibold text-gray-900">{overallScore}{scoreType === 'percentage' ? '%' : ''}</span>
+        {!isBelbin && (
+          <div>
+            <h4 className="font-semibold text-gray-900 mb-2 flex items-center">
+              <TrendingUp className="w-4 h-4 mr-1" />
+              {labels.yourScoreInterpretation}
+            </h4>
+            <div className="flex items-center gap-3 mb-2">
+              <Badge variant={interpretation.variant} className="text-sm">
+                {interpretation.level}
+              </Badge>
+              <span className="text-lg font-semibold text-gray-900">{overallScore}{scoreType === 'percentage' ? '%' : ''}</span>
+            </div>
+            <p className="text-gray-700">{interpretation.description}</p>
           </div>
-          <p className="text-gray-700">{interpretation.description}</p>
-        </div>
+        )}
+
+        {/* DISC Specific Content */}
+        {isDISC && explanation.discSpecific && dimensions && (
+          <div>
+            <h4 className="font-semibold text-gray-900 mb-2">{labels.dimensions}</h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+              {Object.entries(explanation.discSpecific.dimensions).map(([key, dimInfo]) => {
+                const score = dimensions[key.toLowerCase()] || 0;
+                return (
+                  <div key={key} className="p-3 bg-white rounded border">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="font-medium text-blue-600">{dimInfo.name}</span>
+                      <span className="text-sm font-semibold">{score}%</span>
+                    </div>
+                    <p className="text-xs text-gray-600 mb-2">{dimInfo.description}</p>
+                    <div className="text-xs">
+                      <span className="text-green-600">Ridicat: </span>
+                      <span className="text-gray-600">{dimInfo.highTrait}</span>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            {explanation.discSpecific.combinations && (
+              <div className="mt-3 p-3 bg-blue-100 rounded">
+                <p className="text-sm text-blue-800">{explanation.discSpecific.combinations}</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Belbin Specific Content */}
+        {isBelbin && explanation.belbinSpecific && (
+          <div>
+            <h4 className="font-semibold text-gray-900 mb-2">{labels.roles}</h4>
+            <div className="space-y-2 text-sm">
+              {Object.entries(explanation.belbinSpecific.categories).map(([key, category]) => (
+                <div key={key} className="p-3 bg-white rounded border">
+                  <h5 className="font-medium text-blue-600 mb-1">{category.name}</h5>
+                  <p className="text-gray-600">{category.description}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-3 p-3 bg-blue-100 rounded">
+              <p className="text-sm text-blue-800">{explanation.belbinSpecific.primaryVsSecondary}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Clinical Tests Specific Content */}
+        {isClinical && explanation.clinicalSpecific && (
+          <div className="space-y-3">
+            <div className="p-3 bg-amber-50 border border-amber-200 rounded">
+              <h4 className="font-semibold text-amber-800 mb-1">{labels.limitations}</h4>
+              <p className="text-sm text-amber-700">{explanation.clinicalSpecific.limitations}</p>
+            </div>
+            <div className="p-3 bg-green-50 border border-green-200 rounded">
+              <h4 className="font-semibold text-green-800 mb-1">{labels.recommendations}</h4>
+              <p className="text-sm text-green-700">{explanation.clinicalSpecific.recommendations}</p>
+            </div>
+          </div>
+        )}
 
         {explanation.scoreRanges && (
           <div>
