@@ -13,7 +13,7 @@ import LoadingSkeleton from '@/components/home/LoadingSkeleton';
 const Index = () => {
   const { loading } = useLanguage();
 
-  // Show loading skeleton while translations are being loaded
+  // Show loading skeleton only while initial translations are being loaded
   if (loading) {
     return <LoadingSkeleton />;
   }

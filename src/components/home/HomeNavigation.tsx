@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { User, LogOut, Menu, Globe, Settings, Loader2 } from 'lucide-react';
+import { User, LogOut, Menu, Settings } from 'lucide-react';
 
 const HomeNavigation = () => {
   const { t, language, changeLanguage, loading } = useLanguage();
@@ -26,12 +26,6 @@ const HomeNavigation = () => {
   const { isAdmin } = useUserRole();
   const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isChangingLanguage, setIsChangingLanguage] = useState(false);
-
-  // Force re-render when translations load
-  useEffect(() => {
-    console.log('Language or loading state changed:', { language, loading });
-  }, [language, loading]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -39,17 +33,33 @@ const HomeNavigation = () => {
   };
 
   const handleLanguageChange = async (newLanguage: string) => {
-    if (isChangingLanguage || newLanguage === language) return;
+    if (newLanguage === language) return;
     
-    console.log('Changing language from', language, 'to', newLanguage);
-    setIsChangingLanguage(true);
-    
-    try {
-      await changeLanguage(newLanguage as 'ro' | 'en');
-    } finally {
-      setIsChangingLanguage(false);
-    }
+    console.log('🔄 User changing language to:', newLanguage);
+    await changeLanguage(newLanguage as 'ro' | 'en');
   };
+
+  // Show loading skeleton only during initial app load
+  if (loading) {
+    return (
+      <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
+        <div className="bg-white/80 backdrop-blur-md shadow-lg border border-white/30 rounded-2xl">
+          <div className="px-6 lg:px-8">
+            <div className="flex justify-between h-16 items-center">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gray-300 rounded-lg animate-pulse"></div>
+                <div className="w-32 h-6 bg-gray-300 rounded animate-pulse"></div>
+              </div>
+              <div className="flex items-center space-x-4">
+                <div className="w-16 h-9 bg-gray-300 rounded animate-pulse"></div>
+                <div className="w-20 h-9 bg-gray-300 rounded animate-pulse"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
@@ -107,15 +117,10 @@ const HomeNavigation = () => {
                   <Select 
                     value={language} 
                     onValueChange={handleLanguageChange}
-                    disabled={isChangingLanguage}
                   >
-                    <SelectTrigger className="w-20 h-9 bg-white/60 hover:bg-white/80 border-gray-200 disabled:opacity-50">
+                    <SelectTrigger className="w-20 h-9 bg-white/60 hover:bg-white/80 border-gray-200">
                       <SelectValue>
-                        {isChangingLanguage ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          language.toUpperCase()
-                        )}
+                        {language.toUpperCase()}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent className="bg-white border-gray-200 shadow-lg z-[60]">
@@ -160,15 +165,10 @@ const HomeNavigation = () => {
                   <Select 
                     value={language} 
                     onValueChange={handleLanguageChange}
-                    disabled={isChangingLanguage}
                   >
-                    <SelectTrigger className="w-20 h-9 bg-white/60 hover:bg-white/80 border-gray-200 disabled:opacity-50">
+                    <SelectTrigger className="w-20 h-9 bg-white/60 hover:bg-white/80 border-gray-200">
                       <SelectValue>
-                        {isChangingLanguage ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          language.toUpperCase()
-                        )}
+                        {language.toUpperCase()}
                       </SelectValue>
                     </SelectTrigger>
                     <SelectContent className="bg-white border-gray-200 shadow-lg z-[60]">
