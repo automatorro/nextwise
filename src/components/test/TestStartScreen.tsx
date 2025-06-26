@@ -42,16 +42,16 @@ const TestStartScreen: React.FC<TestStartScreenProps> = ({
           <p className="text-gray-600 mb-4">{translatedTestDescription}</p>
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
-              <p className="text-sm text-gray-500">{t('testRunner.questionsLabel') || 'Number of questions'}</p>
+              <p className="text-sm text-gray-500">{t('testRunner.questionsLabel')}</p>
               <p className="font-semibold">{questionsCount}</p>
             </div>
             <div>
-              <p className="text-sm text-gray-500">{t('testRunner.durationLabel') || 'Estimated duration'}</p>
+              <p className="text-sm text-gray-500">{t('testRunner.durationLabel')}</p>
               <p className="font-semibold">{testType.estimated_duration} {t('tests.minutes')}</p>
             </div>
           </div>
           <Button onClick={onStartTest} className="w-full">
-            {t('testRunner.startButton') || t('common.start')}
+            {t('testRunner.startButton')}
           </Button>
         </CardContent>
       </Card>

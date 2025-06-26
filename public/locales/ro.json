@@ -229,7 +229,10 @@
     "progressRestored": "Progres restaurat",
     "continueFrom": "Continui de la întrebarea",
     "testRestarted": "Test reînceput",
-    "startFromFirst": "Începi testul de la prima întrebare"
+    "startFromFirst": "Începi testul de la prima întrebare",
+    "questionsLabel": "Numărul de întrebări",
+    "durationLabel": "Durata estimată",
+    "startButton": "Începe testul"
   },
   "testResult": {
     "results": "Rezultatele Testului",
