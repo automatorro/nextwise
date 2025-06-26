@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -15,6 +16,7 @@ import CareerDashboardReal from '@/components/career/CareerDashboardReal';
 import CreateCareerPlan from '@/components/career/CreateCareerPlan';
 import AIMentoring from '@/components/career/AIMentoring';
 import HomeNavigation from '@/components/home/HomeNavigation';
+import Footer from '@/components/home/Footer';
 
 const CareerPaths = () => {
   const { user } = useAuth();
@@ -110,6 +112,7 @@ const CareerPaths = () => {
           </section>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

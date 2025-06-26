@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Navigate } from 'react-router-dom';
@@ -6,6 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Shield, Languages, Settings } from 'lucide-react';
 import HomeNavigation from '@/components/home/HomeNavigation';
+import Footer from '@/components/home/Footer';
 import TranslationManager from '@/components/admin/TranslationManager';
 
 const AdminPanel = () => {
@@ -23,6 +23,7 @@ const AdminPanel = () => {
             </div>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -94,6 +95,7 @@ const AdminPanel = () => {
           </Tabs>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

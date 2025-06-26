@@ -17,6 +17,7 @@ import {
   Heart
 } from 'lucide-react';
 import HomeNavigation from '@/components/home/HomeNavigation';
+import Footer from '@/components/home/Footer';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -198,6 +199,7 @@ const Dashboard = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

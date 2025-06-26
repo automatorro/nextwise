@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -21,6 +20,8 @@ import TestResultActions from '@/components/test-result/TestResultActions';
 import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
 import { useCognitiveAbilitiesCalculation } from '@/hooks/useCognitiveAbilitiesCalculation';
 import { isCognitiveAbilitiesTest, isBelbinTeamRoles } from '@/utils/testLabels';
+import HomeNavigation from '@/components/home/HomeNavigation';
+import Footer from '@/components/home/Footer';
 
 interface ScoreData {
   overall: number;
@@ -135,21 +136,29 @@ const TestResult = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin" />
+      <div>
+        <HomeNavigation />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+        <Footer />
       </div>
     );
   }
 
   if (error || !result) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Rezultatul nu a fost găsit</h2>
-          <Button onClick={() => navigate('/teste')}>
-            Înapoi la teste
-          </Button>
+      <div>
+        <HomeNavigation />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">Rezultatul nu a fost găsit</h2>
+            <Button onClick={() => navigate('/teste')}>
+              Înapoi la teste
+            </Button>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -163,94 +172,98 @@ const TestResult = () => {
   const scoreType = getScoreType(result?.test_types.name || '');
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <TestResultHeader 
-          testName={result.test_types.name}
-          completedAt={result.completed_at}
-        />
-
-        {/* Belbin Test Results - Special handling */}
-        {isBelbinTest ? (
-          <BelbinRoleResults
-            roleScores={result.score.role_scores || result.score.dimensions || {}}
-            primaryRoles={result.score.primary_roles || []}
-            secondaryRoles={result.score.secondary_roles || []}
-            interpretation={result.score.interpretation}
+    <div>
+      <HomeNavigation />
+      <div className="min-h-screen bg-gray-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header */}
+          <TestResultHeader 
+            testName={result.test_types.name}
+            completedAt={result.completed_at}
           />
-        ) : (
-          <>
-            {/* Overall Score - only for non-Belbin tests */}
-            <OverallScoreCard score={result.score} />
 
-            {/* Correct Answers Section - only for cognitive abilities tests */}
-            {isCognitiveTest && (
-              <CorrectAnswersSection 
-                testTypeId={result.test_type_id}
-                userAnswers={result.answers}
+          {/* Belbin Test Results - Special handling */}
+          {isBelbinTest ? (
+            <BelbinRoleResults
+              roleScores={result.score.role_scores || result.score.dimensions || {}}
+              primaryRoles={result.score.primary_roles || []}
+              secondaryRoles={result.score.secondary_roles || []}
+              interpretation={result.score.interpretation}
+            />
+          ) : (
+            <>
+              {/* Overall Score - only for non-Belbin tests */}
+              <OverallScoreCard score={result.score} />
+
+              {/* Correct Answers Section - only for cognitive abilities tests */}
+              {isCognitiveTest && (
+                <CorrectAnswersSection 
+                  testTypeId={result.test_type_id}
+                  userAnswers={result.answers}
+                />
+              )}
+
+              {/* Scoring Explanation */}
+              <ScoringExplanation 
+                testName={result.test_types.name}
+                overallScore={result.score.overall}
+                scoreType={scoreType}
               />
-            )}
 
-            {/* Scoring Explanation */}
-            <ScoringExplanation 
-              testName={result.test_types.name}
-              overallScore={result.score.overall}
-              scoreType={scoreType}
-            />
-
-            {/* Dimensions Analysis */}
-            <DimensionsAnalysis 
-              dimensions={generalDisplayDimensions}
-              testName={result.test_types.name}
-            />
-
-            {/* Dimension Explanations */}
-            <DimensionExplanations 
-              testName={result.test_types.name}
-              dimensions={generalDisplayDimensions}
-            />
-
-            {/* Detailed Interpretations for Big Five */}
-            {isBigFiveTest && result.score.detailed_interpretations && (
-              <DetailedInterpretations 
-                interpretations={result.score.detailed_interpretations}
+              {/* Dimensions Analysis */}
+              <DimensionsAnalysis 
+                dimensions={generalDisplayDimensions}
                 testName={result.test_types.name}
               />
-            )}
-          </>
-        )}
 
-        {/* Charts Section */}
-        <TestResultCharts
-          isBigFiveTest={isBigFiveTest}
-          isCognitiveTest={isCognitiveTest}
-          isBelbinTest={isBelbinTest}
-          hasValidTestSpecificDimensions={hasValidTestSpecificDimensions}
-          testSpecificDimensions={testSpecificDimensions}
-        />
+              {/* Dimension Explanations */}
+              <DimensionExplanations 
+                testName={result.test_types.name}
+                dimensions={generalDisplayDimensions}
+              />
 
-        {/* Detailed Analysis Section - AVAILABLE FOR ALL TESTS */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Analiză Detaliată cu AI</CardTitle>
-            <p className="text-sm text-gray-600">
-              Generează o analiză personalizată și recomandări specifice bazate pe rezultatele tale.
-            </p>
-          </CardHeader>
-          <CardContent>
-            <DetailedAnalysisSection 
-              dimensions={generalDisplayDimensions} 
-              resultId={resultId!}
-              testType={result.test_types.name}
-              score={result.score}
-            />
-          </CardContent>
-        </Card>
+              {/* Detailed Interpretations for Big Five */}
+              {isBigFiveTest && result.score.detailed_interpretations && (
+                <DetailedInterpretations 
+                  interpretations={result.score.detailed_interpretations}
+                  testName={result.test_types.name}
+                />
+              )}
+            </>
+          )}
 
-        {/* Actions */}
-        <TestResultActions />
+          {/* Charts Section */}
+          <TestResultCharts
+            isBigFiveTest={isBigFiveTest}
+            isCognitiveTest={isCognitiveTest}
+            isBelbinTest={isBelbinTest}
+            hasValidTestSpecificDimensions={hasValidTestSpecificDimensions}
+            testSpecificDimensions={testSpecificDimensions}
+          />
+
+          {/* Detailed Analysis Section - AVAILABLE FOR ALL TESTS */}
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Analiză Detaliată cu AI</CardTitle>
+              <p className="text-sm text-gray-600">
+                Generează o analiză personalizată și recomandări specifice bazate pe rezultatele tale.
+              </p>
+            </CardHeader>
+            <CardContent>
+              <DetailedAnalysisSection 
+                dimensions={generalDisplayDimensions} 
+                resultId={resultId!}
+                testType={result.test_types.name}
+                score={result.score}
+              />
+            </CardContent>
+          </Card>
+
+          {/* Actions */}
+          <TestResultActions />
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };

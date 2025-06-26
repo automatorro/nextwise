@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -10,6 +11,7 @@ import { Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTestSubmission } from '@/hooks/useTestSubmission';
 import HomeNavigation from '@/components/home/HomeNavigation';
+import Footer from '@/components/home/Footer';
 import TestStartScreen from '@/components/test/TestStartScreen';
 import TestQuestion from '@/components/test/TestQuestion';
 import TestErrorScreen from '@/components/test/TestErrorScreen';
@@ -204,40 +206,56 @@ const TestRunner = () => {
   // Handle loading states and errors
   if (testTypeLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin" />
+      <div>
+        <HomeNavigation />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin" />
+        </div>
+        <Footer />
       </div>
     );
   }
 
   if (testTypeError || !testType) {
     return (
-      <TestErrorScreen
-        title={t('testRunner.notFound')}
-        message={t('testRunner.testNotExists')}
-        onReturnToTests={() => navigate('/teste')}
-      />
+      <div>
+        <HomeNavigation />
+        <TestErrorScreen
+          title={t('testRunner.notFound')}
+          message={t('testRunner.testNotExists')}
+          onReturnToTests={() => navigate('/teste')}
+        />
+        <Footer />
+      </div>
     );
   }
 
   if (questionsLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
-          <p>{t('testRunner.loadingQuestions')}</p>
+      <div>
+        <HomeNavigation />
+        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+          <div className="text-center">
+            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
+            <p>{t('testRunner.loadingQuestions')}</p>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (questionsError || !questions || questions.length === 0) {
     return (
-      <TestErrorScreen
-        title={t('testRunner.unavailable')}
-        message={`${testType.name} ${t('testRunner.noQuestions')}`}
-        onReturnToTests={() => navigate('/teste')}
-      />
+      <div>
+        <HomeNavigation />
+        <TestErrorScreen
+          title={t('testRunner.unavailable')}
+          message={`${testType.name} ${t('testRunner.noQuestions')}`}
+          onReturnToTests={() => navigate('/teste')}
+        />
+        <Footer />
+      </div>
     );
   }
 
@@ -253,6 +271,7 @@ const TestRunner = () => {
             onStartTest={() => setIsStarted(true)}
           />
         </div>
+        <Footer />
       </div>
     );
   }
@@ -286,6 +305,7 @@ const TestRunner = () => {
           />
         )}
       </div>
+      <Footer />
     </div>
   );
 };
