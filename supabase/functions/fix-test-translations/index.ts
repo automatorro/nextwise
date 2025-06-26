@@ -201,29 +201,44 @@ Deno.serve(async (req) => {
 
     console.log('=== STARTING TRANSLATION FIX PROCESS ===');
 
-    // Get test IDs by looking for tests that actually have questions
-    const { data: testTypesWithQuestions, error: testTypesError } = await supabaseClient
+    // First, get all test types and their question counts
+    const { data: allTestTypes, error: allTestTypesError } = await supabaseClient
       .from('test_types')
-      .select(`
-        id, 
-        name,
-        test_questions(count)
-      `)
-      .in('name', ['Test DISC', 'Test Belbin']);
+      .select('id, name');
 
-    if (testTypesError) {
-      console.error('Error fetching test types:', testTypesError);
-      throw testTypesError;
+    if (allTestTypesError) {
+      console.error('Error fetching test types:', allTestTypesError);
+      throw allTestTypesError;
     }
 
-    console.log('Found test types:', testTypesWithQuestions);
+    console.log('All test types found:', allTestTypes);
 
-    // Find the actual tests with questions
-    const discTest = testTypesWithQuestions?.find(test => 
-      test.name === 'Test DISC' && test.test_questions && test.test_questions.length > 0
+    // Now find tests with questions by checking each test type
+    const testsWithQuestions = [];
+    
+    for (const testType of allTestTypes || []) {
+      const { data: questionCount, error: questionError } = await supabaseClient
+        .from('test_questions')
+        .select('id', { count: 'exact' })
+        .eq('test_type_id', testType.id);
+
+      if (!questionError && questionCount && questionCount.length > 0) {
+        testsWithQuestions.push({
+          ...testType,
+          question_count: questionCount.length
+        });
+        console.log(`Test ${testType.name} has ${questionCount.length} questions`);
+      }
+    }
+
+    console.log('Tests with questions:', testsWithQuestions);
+
+    // Find the DISC and Belbin tests
+    const discTest = testsWithQuestions.find(test => 
+      test.name.includes('DISC') && test.question_count > 0
     );
-    const belbinTest = testTypesWithQuestions?.find(test => 
-      test.name === 'Test Belbin' && test.test_questions && test.test_questions.length > 0
+    const belbinTest = testsWithQuestions.find(test => 
+      test.name.includes('Belbin') && test.question_count > 0
     );
 
     if (!discTest) {
@@ -262,7 +277,7 @@ Deno.serve(async (req) => {
 
         // Check if question needs translation
         const englishQuestion = DISC_QUESTION_TRANSLATIONS[question.question_text_ro];
-        if (englishQuestion && (!question.question_text_en || question.question_text_en === '[Translation needed]')) {
+        if (englishQuestion && (!question.question_text_en || question.question_text_en.includes('[Translation needed]'))) {
           updatedData.question_text_en = englishQuestion;
           needsUpdate = true;
           console.log('Will translate question to:', englishQuestion);
@@ -346,7 +361,7 @@ Deno.serve(async (req) => {
 
             // Check if question needs translation
             const englishQuestion = BELBIN_QUESTION_TRANSLATIONS[question.question_text_ro];
-            if (englishQuestion && (!question.question_text_en || question.question_text_en === '[Translation needed]')) {
+            if (englishQuestion && (!question.question_text_en || question.question_text_en.includes('[Translation needed]'))) {
               updatedData.question_text_en = englishQuestion;
               needsUpdate = true;
               console.log('Will translate question to:', englishQuestion);
