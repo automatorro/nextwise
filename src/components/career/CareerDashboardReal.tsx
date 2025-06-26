@@ -51,15 +51,15 @@ const CareerDashboardReal = () => {
   const handleGenerateCareerPlan = () => {
     if (testResults.length === 0) {
       toast({
-        title: "Teste necesare",
-        description: "Pentru a genera un plan de carieră personalizat, completează mai întâi un test de personalitate.",
+        title: "Assessment Required",
+        description: "To generate a personalized career plan, please complete at least one assessment first.",
         variant: "destructive"
       });
       return;
     }
 
     // For demo, we'll use a default career goal. In production, this should come from user input
-    const careerGoal = "dezvoltator software";
+    const careerGoal = "software developer";
     generateCareerPlan.mutate({ careerGoal, testResults });
   };
 
@@ -94,7 +94,7 @@ const CareerDashboardReal = () => {
   };
 
   if (plansLoading) {
-    return <div>Se încarcă dashboard-ul...</div>;
+    return <div>Loading your career plans...</div>;
   }
 
   return (
@@ -103,39 +103,39 @@ const CareerDashboardReal = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Planuri Active</CardTitle>
+            <CardTitle className="text-sm font-medium">Active Plans</CardTitle>
             <Target className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{careerPlans.length}</div>
             <p className="text-xs text-muted-foreground">
-              din {features.maxPlans === 999 ? '∞' : features.maxPlans} disponibile
+              of {features.maxPlans === 999 ? '∞' : features.maxPlans} available
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Progres Mediu</CardTitle>
+            <CardTitle className="text-sm font-medium">Average Progress</CardTitle>
             <TrendingUp className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{calculateOverallProgress()}%</div>
             <p className="text-xs text-muted-foreground">
-              din toate planurile
+              across all plans
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Milestone-uri</CardTitle>
+            <CardTitle className="text-sm font-medium">Milestones</CardTitle>
             <CheckCircle className="h-4 w-4 text-purple-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{getTotalCompletedMilestones()}</div>
             <p className="text-xs text-muted-foreground">
-              completate luna aceasta
+              completed this month
             </p>
           </CardContent>
         </Card>
@@ -147,10 +147,10 @@ const CareerDashboardReal = () => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Sparkles className="w-5 h-5 text-blue-600" />
-              <span>Acțiuni AI</span>
+              <span>AI-Powered Actions</span>
             </CardTitle>
             <CardDescription>
-              Generează automat planuri de carieră și recomandări personalizate
+              Generate personalized career plans and recommendations automatically
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-3">
@@ -160,7 +160,7 @@ const CareerDashboardReal = () => {
               className="flex items-center space-x-2"
             >
               <Brain className="w-4 h-4" />
-              <span>{isGeneratingPlan ? 'Generez...' : 'Generează Plan de Carieră'}</span>
+              <span>{isGeneratingPlan ? 'Generating...' : 'Generate Career Plan'}</span>
             </Button>
             <Button 
               variant="outline"
@@ -169,7 +169,7 @@ const CareerDashboardReal = () => {
               className="flex items-center space-x-2"
             >
               <Lightbulb className="w-4 h-4" />
-              <span>{isGeneratingRecommendations ? 'Generez...' : 'Actualizează Recomandări'}</span>
+              <span>{isGeneratingRecommendations ? 'Updating...' : 'Refresh Recommendations'}</span>
             </Button>
           </CardContent>
         </Card>
@@ -178,10 +178,10 @@ const CareerDashboardReal = () => {
       {/* Active Career Plans */}
       <div>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Planurile mele active</h2>
+          <h2 className="text-2xl font-bold text-gray-900">My Active Plans</h2>
           <Button variant="outline" className="flex items-center space-x-2">
             <Plus className="w-4 h-4" />
-            <span>Creează plan nou</span>
+            <span>Create New Plan</span>
           </Button>
         </div>
 
@@ -189,22 +189,22 @@ const CareerDashboardReal = () => {
           <Card>
             <CardContent className="py-12 text-center">
               <Target className="w-16 h-16 mx-auto mb-4 text-gray-300" />
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Nu ai planuri de carieră încă</h3>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">No career plans yet</h3>
               <p className="text-gray-600 mb-6">
                 {testResults.length === 0 
-                  ? 'Completează mai întâi un test de personalitate, apoi poți genera automat un plan personalizat.'
-                  : 'Generează automat un plan personalizat bazat pe rezultatele testelor tale.'
+                  ? 'Complete an assessment first, then you can generate a personalized plan automatically.'
+                  : 'Generate a personalized plan based on your assessment results.'
                 }
               </p>
               {testResults.length > 0 && features.hasAI ? (
                 <Button onClick={handleGenerateCareerPlan} disabled={isGeneratingPlan}>
                   <Sparkles className="w-4 h-4 mr-2" />
-                  {isGeneratingPlan ? 'Generez planul...' : 'Generează plan AI'}
+                  {isGeneratingPlan ? 'Generating plan...' : 'Generate AI Plan'}
                 </Button>
               ) : (
                 <Button>
                   <Plus className="w-4 h-4 mr-2" />
-                  Creează primul plan
+                  Create First Plan
                 </Button>
               )}
             </CardContent>
@@ -229,7 +229,7 @@ const CareerDashboardReal = () => {
                     </div>
                     <div className="text-right">
                       <div className="text-2xl font-bold text-blue-600">{plan.progress_percentage || 0}%</div>
-                      <div className="text-xs text-gray-500">progres</div>
+                      <div className="text-xs text-gray-500">progress</div>
                     </div>
                   </div>
                 </CardHeader>
@@ -239,21 +239,21 @@ const CareerDashboardReal = () => {
                   <div className="grid grid-cols-2 gap-4 text-sm">
                     <div className="flex items-center space-x-2">
                       <CheckCircle className="w-4 h-4 text-green-600" />
-                      <span>Milestone-uri în progres</span>
+                      <span>Milestones in progress</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Calendar className="w-4 h-4 text-blue-600" />
-                      <span>Plan activ</span>
+                      <span>Active plan</span>
                     </div>
                   </div>
 
                   <div className="p-3 bg-blue-50 rounded-lg">
-                    <div className="text-sm font-medium text-blue-900 mb-1">Plan de carieră personalizat</div>
-                    <div className="text-sm text-blue-700">Continuă să lucrezi la obiectivele tale</div>
+                    <div className="text-sm font-medium text-blue-900 mb-1">Personalized career plan</div>
+                    <div className="text-sm text-blue-700">Continue working towards your goals</div>
                   </div>
 
                   <Button className="w-full" variant="outline">
-                    Vezi detalii
+                    View Details
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </CardContent>
@@ -267,7 +267,7 @@ const CareerDashboardReal = () => {
       {recommendations.length > 0 && (
         <div>
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Recomandări AI pentru tine</h2>
+            <h2 className="text-2xl font-bold text-gray-900">AI Recommendations for You</h2>
             {features.hasAI && (
               <Button 
                 variant="outline" 
@@ -276,7 +276,7 @@ const CareerDashboardReal = () => {
                 disabled={isGeneratingRecommendations}
               >
                 <Sparkles className="w-4 h-4 mr-2" />
-                {isGeneratingRecommendations ? 'Actualizez...' : 'Actualizează'}
+                {isGeneratingRecommendations ? 'Updating...' : 'Refresh'}
               </Button>
             )}
           </div>
@@ -311,7 +311,7 @@ const CareerDashboardReal = () => {
                         <ArrowRight className="w-4 h-4 ml-2" />
                       </Button>
                       <Badge variant="secondary" className="ml-2">
-                        Prioritate {rec.priority}
+                        Priority {rec.priority}
                       </Badge>
                     </div>
                   </CardContent>

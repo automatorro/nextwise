@@ -1,10 +1,8 @@
-
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import Index from '@/pages/Index';
 import AuthPage from '@/components/auth/AuthPage';
-import Dashboard from '@/pages/Dashboard';
 import TestsPage from '@/pages/TestsPage';
 import TestRunner from '@/pages/TestRunner';
 import TestResult from '@/pages/TestResult';
@@ -31,14 +29,17 @@ function App() {
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<AuthPage />} />
+              {/* Redirect old dashboard route to home */}
+              <Route path="/dashboard" element={<Navigate to="/" replace />} />
               <Route
-                path="/dashboard"
+                path="/assessments"
                 element={
                   <ProtectedRoute>
-                    <Dashboard />
+                    <TestsPage />
                   </ProtectedRoute>
                 }
               />
+              {/* Keep old teste route for backwards compatibility */}
               <Route
                 path="/teste"
                 element={
@@ -64,6 +65,15 @@ function App() {
                 }
               />
               <Route
+                path="/subscription"
+                element={
+                  <ProtectedRoute>
+                    <SubscriptionPage />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Keep old abonament route for backwards compatibility */}
+              <Route
                 path="/abonament"
                 element={
                   <ProtectedRoute>
@@ -72,6 +82,15 @@ function App() {
                 }
               />
               <Route
+                path="/career-hub"
+                element={
+                  <ProtectedRoute>
+                    <CareerPaths />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Keep old cariere route for backwards compatibility */}
+              <Route
                 path="/cariere"
                 element={
                   <ProtectedRoute>
@@ -79,6 +98,15 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/my-profile"
+                element={
+                  <ProtectedRoute>
+                    <MyPage />
+                  </ProtectedRoute>
+                }
+              />
+              {/* Keep old profilul-meu route for backwards compatibility */}
               <Route
                 path="/profilul-meu"
                 element={

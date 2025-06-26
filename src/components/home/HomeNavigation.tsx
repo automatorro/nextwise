@@ -70,7 +70,8 @@ const HomeNavigation = () => {
               <div className="w-8 h-8 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
                 <span className="text-white font-bold text-sm">EC</span>
               </div>
-              <Link to={user ? "/dashboard" : "/"}>
+              {/* Logo always goes to home page */}
+              <Link to="/">
                 <span className="font-bold text-xl text-gray-900">EmpowerCareer</span>
               </Link>
             </div>
@@ -80,28 +81,28 @@ const HomeNavigation = () => {
                 <>
                   <div className="hidden md:flex items-center space-x-4">
                     <Link
-                      to="/dashboard"
+                      to="/"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      {t('nav.dashboard')}
+                      Home
                     </Link>
                     <Link
-                      to="/teste"
+                      to="/assessments"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      {t('nav.tests')}
+                      Assessments
                     </Link>
                     <Link
-                      to="/cariere"
+                      to="/career-hub"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      {t('nav.career')}
+                      Career Hub
                     </Link>
                     <Link
-                      to="/profilul-meu"
+                      to="/my-profile"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      {t('nav.profile')}
+                      My Profile
                     </Link>
                     {isAdmin && (
                       <Link
@@ -141,13 +142,13 @@ const HomeNavigation = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="bg-white border-gray-200 shadow-lg z-[60]">
-                      <DropdownMenuItem onClick={() => navigate('/abonament')}>
+                      <DropdownMenuItem onClick={() => navigate('/subscription')}>
                         <Settings className="h-4 w-4 mr-2" />
-                        {t('nav.subscriptionSettings')}
+                        Subscription Settings
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleSignOut}>
                         <LogOut className="h-4 w-4 mr-2" />
-                        {t('nav.logout')}
+                        Logout
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -183,12 +184,12 @@ const HomeNavigation = () => {
                   
                   <Link to="/auth">
                     <Button variant="ghost" className="hover:bg-white/60 transition-colors">
-                      {t('nav.login')}
+                      Login
                     </Button>
                   </Link>
                   <Link to="/auth">
                     <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
-                      {t('nav.startFree')}
+                      Start Free
                     </Button>
                   </Link>
                 </>
@@ -202,39 +203,39 @@ const HomeNavigation = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/80 backdrop-blur-md border-t border-white/30 rounded-b-2xl">
               <Link
-                to="/dashboard"
+                to="/"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('nav.dashboard')}
+                Home
               </Link>
               <Link
-                to="/teste"
+                to="/assessments"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('nav.tests')}
+                Assessments
               </Link>
               <Link
-                to="/cariere"
+                to="/career-hub"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('nav.career')}
+                Career Hub
               </Link>
               <Link
-                to="/profilul-meu"
+                to="/my-profile"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('nav.profile')}
+                My Profile
               </Link>
               <Link
-                to="/abonament"
+                to="/subscription"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                {t('nav.subscriptionSettings')}
+                Subscription Settings
               </Link>
               {isAdmin && (
                 <Link
@@ -249,7 +250,7 @@ const HomeNavigation = () => {
                 onClick={handleSignOut}
                 className="text-gray-700 hover:text-gray-900 block w-full text-left px-3 py-2 rounded-md text-base font-medium"
               >
-                {t('nav.logout')}
+                Logout
               </button>
             </div>
           </div>
