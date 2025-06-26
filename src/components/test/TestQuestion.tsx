@@ -66,6 +66,14 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
   const { language, t } = useLanguage();
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
+  // Enhanced debugging for option parsing
+  console.log('=== DETAILED OPTION DEBUGGING ===');
+  console.log('Current language:', language);
+  console.log('Question ID:', currentQuestion.id);
+  console.log('Romanian options (raw):', currentQuestion.options);
+  console.log('English options (raw):', currentQuestion.options_en);
+  console.log('Test type name:', testType.name);
+
   // Helper function to check if options data is corrupted
   const isOptionsCorrupted = (options: Json): boolean => {
     if (!options) return true;
@@ -83,51 +91,36 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
     return false;
   };
 
-  // Get options based on language with improved fallback and corruption detection
+  // Get options with FORCED translation to English when language is 'en'
   const getLocalizedOptions = () => {
-    console.log('Getting localized options for language:', language);
-    console.log('Question options:', currentQuestion.options);
-    console.log('Question options_en:', currentQuestion.options_en);
-
-    if (language === 'en' && currentQuestion.options_en) {
-      // Check if English options are corrupted
-      if (isOptionsCorrupted(currentQuestion.options_en)) {
-        console.log('English options are corrupted, falling back to Romanian with translation');
-        return parseQuestionOptions(currentQuestion.options, 'en'); // Parse with English translation
-      }
-      
-      const enOptions = parseQuestionOptions(currentQuestion.options_en, 'en');
-      console.log('Parsed EN options:', enOptions);
-      
-      // Validate that we have proper English options
-      if (enOptions.length > 0 && enOptions.every(opt => opt.label && !opt.label.includes('Option ') && opt.label !== '[object Object]')) {
-        return enOptions;
-      }
-      
-      console.log('English options invalid, falling back to Romanian with translation');
-    }
+    console.log('🔄 Getting localized options...');
     
-    // For English language, parse Romanian options with translation
-    if (language === 'en') {
-      console.log('Using Romanian options with English translation');
-      return parseQuestionOptions(currentQuestion.options, 'en');
-    }
+    // ALWAYS use Romanian options as source since they contain the actual data
+    const sourceOptions = currentQuestion.options;
+    console.log('📋 Source options:', sourceOptions);
     
-    // Check if Romanian options are corrupted
-    if (isOptionsCorrupted(currentQuestion.options)) {
-      console.log('Romanian options are also corrupted, using default scale');
+    if (!sourceOptions || isOptionsCorrupted(sourceOptions)) {
+      console.log('❌ Source options corrupted, using defaults');
       return parseQuestionOptions(null, language);
     }
+
+    // For English language: FORCE translation from Romanian to English
+    if (language === 'en') {
+      console.log('🇬🇧 Language is EN - FORCING translation from Romanian to English');
+      const translatedOptions = parseQuestionOptions(sourceOptions, 'en');
+      console.log('✅ Translated options result:', translatedOptions);
+      return translatedOptions;
+    }
     
-    // Fallback to Romanian options
-    const roOptions = parseQuestionOptions(currentQuestion.options, 'ro');
-    console.log('Parsed RO options (fallback):', roOptions);
-    
+    // For Romanian language: use as-is
+    console.log('🇷🇴 Language is RO - using Romanian options as-is');
+    const roOptions = parseQuestionOptions(sourceOptions, 'ro');
+    console.log('✅ Romanian options result:', roOptions);
     return roOptions;
   };
 
   const questionOptions = getLocalizedOptions();
-  console.log('Final parsed options for question:', currentQuestion.id, questionOptions);
+  console.log('🎯 FINAL OPTIONS FOR RENDERING:', questionOptions);
 
   const isCurrentQuestionAnswered = answers[currentQuestion.id] !== undefined;
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
@@ -146,9 +139,26 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
       !opt.label.includes('[object Object]')
     );
 
+  console.log('✅ Has valid options:', hasValidOptions);
+  console.log('📊 Options validation details:', questionOptions.map(opt => ({
+    value: opt.value,
+    label: opt.label,
+    labelLength: opt.label?.length || 0,
+    isValid: opt.value >= 0 && opt.label && opt.label.trim() !== ''
+  })));
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* DEBUG INFO - Remove this after testing */}
+        <div className="mb-4 p-4 bg-yellow-100 border border-yellow-400 rounded text-sm">
+          <strong>DEBUG INFO:</strong><br/>
+          Language: {language}<br/>
+          Options count: {questionOptions.length}<br/>
+          First option: {questionOptions[0]?.label}<br/>
+          Has valid options: {hasValidOptions ? 'YES' : 'NO'}
+        </div>
+
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-2xl font-bold text-gray-900">{testType.name}</h1>
