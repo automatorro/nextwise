@@ -12,6 +12,7 @@ export const COMMON_OPTIONS_TRANSLATIONS: { [key: string]: string } = {
   'Dezacord': 'Disagree',
   'Neutru': 'Neutral',
   'De acord': 'Agree',
+  'Acord': 'Agree',
   'Complet de acord': 'Strongly agree',
   'Niciodată': 'Never',
   'Rareori': 'Rarely',
@@ -39,7 +40,25 @@ export const COMMON_OPTIONS_TRANSLATIONS: { [key: string]: string } = {
   'Foarte caracteristic pentru mine': 'Very characteristic of me',
   'Destul de caracteristic pentru mine': 'Quite characteristic of me',
   'Puțin caracteristic pentru mine': 'Somewhat characteristic of me',
-  'Deloc caracteristic pentru mine': 'Not at all characteristic of me'
+  'Deloc caracteristic pentru mine': 'Not at all characteristic of me',
+  
+  // Additional common variations
+  'Pentru deloc': 'Not at all',
+  'În mică măsură': 'To a small extent',
+  'În mare măsură': 'To a large extent',
+  'Complet': 'Completely',
+  
+  // Scale variations
+  '1 - Deloc caracteristic': '1 - Not at all characteristic',
+  '2 - Puțin caracteristic': '2 - Somewhat characteristic',
+  '3 - Destul de caracteristic': '3 - Quite characteristic',
+  '4 - Foarte caracteristic': '4 - Very characteristic',
+  
+  // More specific Belbin variations
+  'Nu mă caracterizează deloc': 'Does not characterize me at all',
+  'Mă caracterizează puțin': 'Characterizes me a little',
+  'Mă caracterizează destul de mult': 'Characterizes me quite a lot',
+  'Mă caracterizează foarte mult': 'Characterizes me very much'
 };
 
 // Function to translate a single option
@@ -49,7 +68,19 @@ export const translateOption = (option: string, language: 'en' | 'ro'): string =
   }
   
   // For English, try to find translation
-  return COMMON_OPTIONS_TRANSLATIONS[option] || option;
+  const translated = COMMON_OPTIONS_TRANSLATIONS[option];
+  if (translated) {
+    return translated;
+  }
+  
+  // Try partial matching for complex options
+  for (const [roText, enText] of Object.entries(COMMON_OPTIONS_TRANSLATIONS)) {
+    if (option.includes(roText)) {
+      return option.replace(roText, enText);
+    }
+  }
+  
+  return option; // Return original if no translation found
 };
 
 // Function to translate an array of options

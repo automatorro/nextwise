@@ -93,11 +93,7 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
       // Check if English options are corrupted
       if (isOptionsCorrupted(currentQuestion.options_en)) {
         console.log('English options are corrupted, falling back to Romanian with translation');
-        const roOptions = parseQuestionOptions(currentQuestion.options, 'ro');
-        return roOptions.map(option => ({
-          ...option,
-          label: translateBasicOption(option.label)
-        }));
+        return parseQuestionOptions(currentQuestion.options, 'en'); // Parse with English translation
       }
       
       const enOptions = parseQuestionOptions(currentQuestion.options_en, 'en');
@@ -111,6 +107,12 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
       console.log('English options invalid, falling back to Romanian with translation');
     }
     
+    // For English language, parse Romanian options with translation
+    if (language === 'en') {
+      console.log('Using Romanian options with English translation');
+      return parseQuestionOptions(currentQuestion.options, 'en');
+    }
+    
     // Check if Romanian options are corrupted
     if (isOptionsCorrupted(currentQuestion.options)) {
       console.log('Romanian options are also corrupted, using default scale');
@@ -121,39 +123,7 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
     const roOptions = parseQuestionOptions(currentQuestion.options, 'ro');
     console.log('Parsed RO options (fallback):', roOptions);
     
-    // If we're in English mode but only have Romanian options, try basic translation
-    if (language === 'en') {
-      return roOptions.map(option => ({
-        ...option,
-        label: translateBasicOption(option.label)
-      }));
-    }
-    
     return roOptions;
-  };
-
-  const translateBasicOption = (label: string): string => {
-    const basicTranslations: { [key: string]: string } = {
-      'Complet dezacord': 'Strongly Disagree',
-      'Dezacord': 'Disagree', 
-      'Neutru': 'Neutral',
-      'Acord': 'Agree',
-      'Complet de acord': 'Strongly Agree',
-      'Deloc': 'Not at all',
-      'Puțin': 'A little',
-      'Moderat': 'Moderately',
-      'Mult': 'A lot',
-      'Foarte mult': 'Very much',
-      'Niciodată': 'Never',
-      'Rareori': 'Rarely',
-      'Uneori': 'Sometimes',
-      'Adesea': 'Often',
-      'Întotdeauna': 'Always',
-      'Da': 'Yes',
-      'Nu': 'No'
-    };
-    
-    return basicTranslations[label] || label;
   };
 
   const questionOptions = getLocalizedOptions();
