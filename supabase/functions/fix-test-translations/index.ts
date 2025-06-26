@@ -1,3 +1,4 @@
+
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
@@ -162,6 +163,85 @@ const DISC_OPTION_TRANSLATIONS: { [key: string]: string } = {
   'Cercetez toate aspectele înainte de a decide': 'Research all aspects before deciding'
 };
 
+// Belbin test translations
+const BELBIN_QUESTION_TRANSLATIONS: { [key: string]: string } = {
+  'Cred că pot contribui eficient la o echipă pentru că:': 'I believe I can contribute effectively to a team because:',
+  'Dacă am o deficiență în lucrul în echipă, aceasta ar putea fi:': 'If I have a shortcoming in teamwork, it might be:',
+  'Când sunt implicat într-un proiect cu alte persoane:': 'When I am involved in a project with other people:',
+  'Abordarea mea caracteristică a lucrului în grup este:': 'My characteristic approach to group work is:',
+  'Obțin satisfacție dintr-o muncă pentru că:': 'I gain satisfaction from a job because:',
+  'Dacă brusc mi se dă o sarcină dificilă cu timp limitat și oameni necunoscuți:': 'If I am suddenly given a difficult task with limited time and unfamiliar people:',
+  'În ceea ce privește problemele la care mă confrunt când lucrez în grup:': 'With regard to the problems I encounter when working in groups:',
+  'În caracterizarea stilului meu de lucru:': 'In characterizing my working style:',
+  'Când echipa trebuie să aleagă dintre două opțiuni:': 'When the team needs to choose between two options:'
+};
+
+const BELBIN_OPTION_TRANSLATIONS: { [key: string]: string } = {
+  'am o natură liniștită': 'I have a quiet nature',
+  'sunt obișnuit să mă înțeleg bine cu tot felul de oameni': 'I am used to getting along well with all kinds of people',
+  'producerea de idei este unul dintre punctele mele forte': 'producing ideas is one of my strong points',
+  'am capacitatea de a-i face pe oameni să vorbească atunci când detectez că au ceva valoros de contribuit': 'I have the ability to get people to talk when I detect they have something valuable to contribute',
+  'capacitatea mea de a urma prin lucru cu perseverență ceea ce consider de valoare': 'my ability to follow through with persistence what I consider valuable',
+  'sunt pregătit să fiu nepopular temporar dacă acest lucru duce la rezultate valoroase în final': 'I am prepared to be temporarily unpopular if this leads to worthwhile results in the end',
+  'de obicei observ și pot profita de noi oportunități': 'I usually notice and can take advantage of new opportunities',
+  'pot colabora bine cu oameni care oferă ceva nou': 'I can work well with people who offer something new',
+  'am tendința să vorbesc prea mult odată ce grupul abordează idei noi': 'I tend to talk too much once the group gets onto new ideas',
+  'obiectivitatea mea îmi face dificil să mă alătur cu entuziasm colegilor': 'my objectivity makes it difficult for me to join in readily with colleagues',
+  'uneori sunt văzut ca fiind prea energic și impetuos': 'I am sometimes seen as being too forceful and authoritarian',
+  'îmi pare rău să îmi exprim opiniile atunci când există o opoziție puternică împotriva lor': 'I find it difficult to lead from the front, perhaps because I am over-responsive to group atmosphere',
+  'am tendința să devin prea prins în idei care îmi vin în minte': 'I tend to get too caught up in ideas that occur to me',
+  'colegii mei tind să mă vadă ca fiind prea preocupat de detalii': 'my colleagues tend to see me as worrying unnecessarily over detail',
+  'există riscul să nu fiu în stare să comunic entuziasmul pentru propria muncă': 'there is risk that I may not be able to communicate the enthusiasm for my own work',
+  'îmi pare greu să încep dacă obiectivele nu sunt clare': 'I find it difficult to get started unless the goals are clear',
+  'obișnuiesc să am o influență puternică': 'I usually have a strong influence',
+  'promovez ceea ce cred că este corect, fără a considera punctele de vedere ale altora': 'I promote what I believe to be right without considering other viewpoints',
+  'am grijă să urmăresc care sunt cele mai noi idei și evoluții': 'I take care to follow up on the latest ideas and developments',
+  'cred că toți ceilalți membri ai echipei trebuie să fie consultați înainte de a lua o decizie': 'I believe that all other team members should be consulted before making a decision',
+  'mă simt în elementul meu atunci când pot planifica munca în mod sistematic': 'I feel in my element when I can plan work systematically',
+  'îmi evit angajamentele de grup dacă pot găsi o modalitate mai bună de a exprima individualitatea': 'I avoid group commitments if I can find a better way to express individuality',
+  'îmi folosesc relațiile pentru a promova interesele comune': 'I use my relationships to promote common interests',
+  'de obicei pot găsi linia de acțiune care evită extremele': 'I can usually find the line of action that avoids extremes',
+  'îmi place să analizez situațiile și să cântăresc toate opțiunile posibile': 'I like to analyze situations and weigh all possible choices',
+  'mă interesează să cunosc oameni noi și să învăț lucruri noi': 'I am interested in getting to know new people and learning new things',
+  'oamenii se bazează pe mine pentru a pune în aplicare ceea ce trebuie făcut': 'people rely on me to put into practice what needs to be done',
+  'pot fi de încredere pentru a vedea că toată munca necesară este organizată': 'I can be relied upon to see that all necessary work is organized',
+  'sunt pregătit să fac presiuni pentru acțiune să se asigure că întâlnirea nu este o pierdere de timp': 'I am ready to make pressure for action to ensure the meeting is not a waste of time',
+  'pot fi de încredere să contribui cu ceva neobișnuit': 'I can be relied upon to contribute something unusual',
+  'mă bazez pe membrii cu experiență din grup pentru sprijin': 'I rely on experienced group members for support',
+  'pare că am o capacitate naturală de a preveni certurile': 'I seem to have a natural ability to prevent arguments',
+  'de obicei pot fi de încredere să propun ceva creativ': 'I usually can be relied upon to come up with something creative',
+  'îmi place să mă retrag într-un fundal și să urmăresc ce se întâmplă': 'I like to withdraw into the background and observe what is happening',
+  'sunt fericit să profit de cunoștințele specialiste ale altora': 'I am happy to take advantage of others specialist knowledge',
+  'pot acționa ca un fel de liant când oamenii nu se înțeleg': 'I can act as a sort of bridge when people do not get along',
+  'de obicei sunt capabil să influențez evenimentele fără să îmi impun autoritatea oficială': 'I usually am able to influence events without imposing my official authority',
+  'ceea ce scriu este de obicei scurt și la obiect': 'what I write is usually brief and to the point',
+  'mă preocup de aspectele practice mai degrabă decât de urmărirea ideilor în abstract': 'I am concerned with practical aspects rather than pursuing ideas in the abstract',
+  'îmi displac pierderea de timp și prefer să mergem direct la subiect': 'I dislike wasting time and prefer to get straight to the point',
+  'pot să lucrez cu o varietate mare de oameni': 'I can work with a wide variety of people',
+  'îmi rezerv poziția până când toți factorii relevanți sunt cunoscuți': 'I reserve my position until all relevant factors are known',
+  'îmi place să fiu activ și să nu stau doar să urmăresc': 'I like to be active and not just sit back and watch',
+  'în general sprijin punctele de vedere care au fost bine gândite': 'I generally support views that have been well thought out',
+  'nu am nicio ezitare în a contesta punctele de vedere ale altora sau în a fi în minoritate': 'I have no hesitation in challenging the views of others or holding a minority position',
+  'de obicei pot găsi un argument pentru a refuta propunerile nesigure': 'I usually can find an argument to refute unsound propositions',
+  'cred că este important să avem o structură de întâlnire': 'I believe it is important to have a meeting structure',
+  'am tendința să evit evidentul și să vin cu ceva neașteptat': 'I tend to avoid the obvious and come up with something unexpected',
+  'aduc o abordare metodică la sarcini și probleme comune': 'I bring a methodical approach to tasks and common problems',
+  'îmi place să explorez ideile și posibilitățile noi': 'I like to explore new ideas and possibilities',
+  'aduc experiența și cunoștințele practice la probleme': 'I bring experience and practical knowledge to problems',
+  'îmi place varietatea și prefer să nu fac același lucru de două ori': 'I like variety and prefer not to do the same thing twice',
+  'îmi place să lucrez cu oameni care abordează task-urile în mod energic': 'I like to work with people who approach tasks energetically',
+  'am un ochi bun pentru a observa greșelile și omisiunile': 'I have a good eye for spotting mistakes and omissions',
+  'pot vedea cum ideile și tehnicile pot fi folosite în situații noi': 'I can see how ideas and techniques can be used in new situations',
+  'îmi place să mă simt responsabil pentru vederea că important lucru se întâmplă': 'I like to feel responsible for seeing that important work gets done',
+  'pot lucra cu oameni cu condiția să îmi tolereze punctele slabe': 'I can work with people provided they tolerate my weaknesses',
+  'de obicei îmi dau seama atunci când cineva într-un grup nu este folosit în mod corespunzător': 'I usually realize when someone in a group is not being used properly',
+  'nu ezit să cer acțiuni atunci când simt că grupul nu face progrese': 'I do not hesitate to ask for action when I feel the group is not making progress',
+  'îmi place să urmăresc trend-urile actuale': 'I like to keep track of current trends',
+  'pot fi de încredere să nu fac greșeli prin neglijență': 'I can be relied upon not to make careless mistakes',
+  'îmi rezerv eforturile pentru lucrurile care mă pasionează cu adevărat': 'I reserve my efforts for things I am really passionate about',
+  'pot lucra cu majoritatea oamenilor atâta timp cât îmi respect principiile': 'I can work with most people as long as I respect my principles'
+};
+
 Deno.serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -174,84 +254,209 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
-    console.log('Starting comprehensive DISC translation fix process...');
+    console.log('=== STARTING TRANSLATION FIX PROCESS ===');
 
-    // Get all DISC test questions
-    const { data: questions, error: fetchError } = await supabaseClient
-      .from('test_questions')
-      .select('id, options, options_en, question_text_ro, question_text_en, test_type_id')
-      .eq('test_type_id', 'a1b2c3d4-e5f6-7890-abcd-ef1234567890');
+    // Get DISC test ID
+    const { data: discTest, error: discTestError } = await supabaseClient
+      .from('test_types')
+      .select('id')
+      .eq('name', 'Test DISC')
+      .single();
 
-    if (fetchError) {
-      console.error('Error fetching DISC questions:', fetchError);
-      throw fetchError;
+    if (discTestError) {
+      console.error('Error finding DISC test:', discTestError);
+      throw discTestError;
     }
 
-    console.log(`Found ${questions?.length || 0} DISC questions to process`);
+    console.log('Found DISC test with ID:', discTest.id);
 
-    let fixedCount = 0;
-    let errorCount = 0;
-    let alreadyCorrectCount = 0;
+    // Get Belbin test ID
+    const { data: belbinTest, error: belbinTestError } = await supabaseClient
+      .from('test_types')
+      .select('id')
+      .eq('name', 'Test Belbin')
+      .single();
 
-    for (const question of questions || []) {
+    if (belbinTestError) {
+      console.error('Error finding Belbin test:', belbinTestError);
+      console.log('Continuing with DISC only...');
+    } else {
+      console.log('Found Belbin test with ID:', belbinTest.id);
+    }
+
+    let totalFixed = 0;
+    let totalErrors = 0;
+
+    // Process DISC questions
+    const { data: discQuestions, error: discFetchError } = await supabaseClient
+      .from('test_questions')
+      .select('id, options, options_en, question_text_ro, question_text_en')
+      .eq('test_type_id', discTest.id);
+
+    if (discFetchError) {
+      console.error('Error fetching DISC questions:', discFetchError);
+      throw discFetchError;
+    }
+
+    console.log(`Processing ${discQuestions?.length || 0} DISC questions`);
+
+    for (const question of discQuestions || []) {
       try {
-        console.log(`Processing DISC question ${question.id}`);
-        console.log('Romanian question text:', question.question_text_ro);
-        console.log('Current English question text:', question.question_text_en);
-        console.log('Current options:', question.options);
-        console.log('Current options_en:', question.options_en);
+        console.log(`\n=== Processing DISC question ${question.id} ===`);
+        console.log('Romanian text:', question.question_text_ro);
+        console.log('Current English text:', question.question_text_en);
         
         let needsUpdate = false;
         let updatedData: any = {};
 
-        // Translate question text
+        // Check if question needs translation
         const englishQuestion = DISC_QUESTION_TRANSLATIONS[question.question_text_ro];
         if (englishQuestion && (!question.question_text_en || question.question_text_en === '[Translation needed]')) {
           updatedData.question_text_en = englishQuestion;
           needsUpdate = true;
-          console.log(`Translating question: ${question.question_text_ro} -> ${englishQuestion}`);
+          console.log('Will translate question to:', englishQuestion);
         }
 
-        // Fix and translate options
-        const fixedOptionsEn = fixDISCOptionsStructure(question.options);
-        if (fixedOptionsEn) {
-          updatedData.options_en = fixedOptionsEn;
+        // Process options
+        if (question.options && Array.isArray(question.options)) {
+          const translatedOptions = question.options.map((option: any, index: number) => {
+            let optionText = '';
+            if (typeof option === 'object' && option.label) {
+              optionText = option.label;
+            } else if (typeof option === 'string') {
+              optionText = option;
+            } else {
+              optionText = `Option ${index + 1}`;
+            }
+
+            const englishOption = DISC_OPTION_TRANSLATIONS[optionText] || optionText;
+            
+            return {
+              value: index,
+              label: englishOption,
+              dimension: ['D', 'I', 'S', 'C'][index % 4]
+            };
+          });
+
+          updatedData.options_en = translatedOptions;
           needsUpdate = true;
-          console.log(`Fixed and translated options for question ${question.id}:`, fixedOptionsEn);
+          console.log('Will update options to:', translatedOptions);
         }
-        
+
         if (needsUpdate) {
+          console.log('Updating question with data:', updatedData);
+          
           const { error: updateError } = await supabaseClient
             .from('test_questions')
             .update(updatedData)
             .eq('id', question.id);
 
           if (updateError) {
-            console.error(`Error updating question ${question.id}:`, updateError);
-            errorCount++;
+            console.error(`Failed to update DISC question ${question.id}:`, updateError);
+            totalErrors++;
           } else {
-            console.log(`Successfully translated DISC question ${question.id}`);
-            fixedCount++;
+            console.log(`Successfully updated DISC question ${question.id}`);
+            totalFixed++;
           }
         } else {
-          console.log(`Question ${question.id} already has correct translations`);
-          alreadyCorrectCount++;
+          console.log('Question already translated correctly');
         }
       } catch (error) {
-        console.error(`Error processing question ${question.id}:`, error);
-        errorCount++;
+        console.error(`Error processing DISC question ${question.id}:`, error);
+        totalErrors++;
       }
     }
 
-    console.log(`DISC translation process completed. Fixed: ${fixedCount}, Already correct: ${alreadyCorrectCount}, Errors: ${errorCount}`);
+    // Process Belbin questions if test exists
+    if (belbinTest) {
+      const { data: belbinQuestions, error: belbinFetchError } = await supabaseClient
+        .from('test_questions')
+        .select('id, options, options_en, question_text_ro, question_text_en')
+        .eq('test_type_id', belbinTest.id);
+
+      if (belbinFetchError) {
+        console.error('Error fetching Belbin questions:', belbinFetchError);
+      } else {
+        console.log(`Processing ${belbinQuestions?.length || 0} Belbin questions`);
+
+        for (const question of belbinQuestions || []) {
+          try {
+            console.log(`\n=== Processing Belbin question ${question.id} ===`);
+            console.log('Romanian text:', question.question_text_ro);
+            console.log('Current English text:', question.question_text_en);
+            
+            let needsUpdate = false;
+            let updatedData: any = {};
+
+            // Check if question needs translation
+            const englishQuestion = BELBIN_QUESTION_TRANSLATIONS[question.question_text_ro];
+            if (englishQuestion && (!question.question_text_en || question.question_text_en === '[Translation needed]')) {
+              updatedData.question_text_en = englishQuestion;
+              needsUpdate = true;
+              console.log('Will translate question to:', englishQuestion);
+            }
+
+            // Process options
+            if (question.options && Array.isArray(question.options)) {
+              const translatedOptions = question.options.map((option: any, index: number) => {
+                let optionText = '';
+                if (typeof option === 'object' && option.label) {
+                  optionText = option.label;
+                } else if (typeof option === 'string') {
+                  optionText = option;
+                } else {
+                  optionText = `Option ${index + 1}`;
+                }
+
+                const englishOption = BELBIN_OPTION_TRANSLATIONS[optionText] || optionText;
+                
+                return {
+                  value: index,
+                  label: englishOption
+                };
+              });
+
+              updatedData.options_en = translatedOptions;
+              needsUpdate = true;
+              console.log('Will update options to:', translatedOptions);
+            }
+
+            if (needsUpdate) {
+              console.log('Updating question with data:', updatedData);
+              
+              const { error: updateError } = await supabaseClient
+                .from('test_questions')
+                .update(updatedData)
+                .eq('id', question.id);
+
+              if (updateError) {
+                console.error(`Failed to update Belbin question ${question.id}:`, updateError);
+                totalErrors++;
+              } else {
+                console.log(`Successfully updated Belbin question ${question.id}`);
+                totalFixed++;
+              }
+            } else {
+              console.log('Question already translated correctly');
+            }
+          } catch (error) {
+            console.error(`Error processing Belbin question ${question.id}:`, error);
+            totalErrors++;
+          }
+        }
+      }
+    }
+
+    console.log(`\n=== TRANSLATION PROCESS COMPLETED ===`);
+    console.log(`Total questions fixed: ${totalFixed}`);
+    console.log(`Total errors: ${totalErrors}`);
 
     return new Response(
       JSON.stringify({
         success: true,
-        message: `DISC translation fix completed. Fixed ${fixedCount} questions, ${alreadyCorrectCount} were already correct, ${errorCount} errors.`,
-        fixed: fixedCount,
-        alreadyCorrect: alreadyCorrectCount,
-        errors: errorCount
+        message: `Translation fix completed successfully. Fixed ${totalFixed} questions with ${totalErrors} errors.`,
+        fixed: totalFixed,
+        errors: totalErrors
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -260,11 +465,13 @@ Deno.serve(async (req) => {
     );
 
   } catch (error) {
-    console.error('Fatal error:', error);
+    console.error('=== FATAL ERROR IN TRANSLATION PROCESS ===');
+    console.error('Error details:', error);
     return new Response(
       JSON.stringify({
         success: false,
-        error: error.message
+        error: error.message,
+        details: 'Check function logs for more information'
       }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -273,270 +480,3 @@ Deno.serve(async (req) => {
     );
   }
 });
-
-function fixDISCOptionsStructure(originalOptions: any): any[] | null {
-  console.log('=== FIXING DISC OPTIONS STRUCTURE ===');
-  console.log('Original DISC options:', originalOptions);
-
-  if (!Array.isArray(originalOptions)) {
-    console.log('Original options is not an array, cannot fix DISC options');
-    return null;
-  }
-
-  try {
-    const fixedOptions = originalOptions.map((option, index) => {
-      if (typeof option === 'object' && option !== null) {
-        const romanianLabel = option.label || option.text || `Option ${index + 1}`;
-        const englishLabel = DISC_OPTION_TRANSLATIONS[romanianLabel] || romanianLabel;
-        
-        return {
-          value: option.value !== undefined ? option.value : index,
-          label: englishLabel,
-          dimension: option.dimension || getDimensionForIndex(index)
-        };
-      }
-      
-      // Handle string options
-      if (typeof option === 'string') {
-        const englishLabel = DISC_OPTION_TRANSLATIONS[option] || option;
-        return {
-          value: index,
-          label: englishLabel,
-          dimension: getDimensionForIndex(index)
-        };
-      }
-      
-      return {
-        value: index,
-        label: `Option ${index + 1}`,
-        dimension: getDimensionForIndex(index)
-      };
-    });
-
-    console.log('Fixed DISC options with translations:', fixedOptions);
-    return fixedOptions;
-  } catch (error) {
-    console.error('Error fixing DISC options:', error);
-    return null;
-  }
-}
-
-function getDimensionForIndex(index: number): string {
-  // Map option index to DISC dimension (D, I, S, C cycle)
-  const dimensions = ['D', 'I', 'S', 'C'];
-  return dimensions[index % 4];
-}
-
-function isCorrectFormat(optionsEn: any): boolean {
-  if (!Array.isArray(optionsEn)) return false;
-  if (optionsEn.length === 0) return false;
-  
-  // Check if all elements have the correct {label, value} structure
-  return optionsEn.every(opt => 
-    typeof opt === 'object' && 
-    opt !== null && 
-    'label' in opt && 
-    'value' in opt &&
-    typeof opt.label === 'string' &&
-    typeof opt.value === 'number' &&
-    opt.label.trim() !== '' &&
-    opt.label !== '[object Object]' &&
-    !opt.label.includes('[object Object]') &&
-    !opt.label.startsWith('Option ') // Not generic placeholder
-  );
-}
-
-function isCorruptedData(data: any): boolean {
-  if (typeof data === 'string') {
-    return data === '[object Object]' || data.includes('[object Object]');
-  }
-  
-  if (Array.isArray(data)) {
-    return data.some(item => 
-      typeof item === 'string' && (item === '[object Object]' || item.includes('[object Object]'))
-    );
-  }
-  
-  if (typeof data === 'object' && data !== null) {
-    const values = Object.values(data);
-    return values.some(val => 
-      typeof val === 'string' && (val === '[object Object]' || val.includes('[object Object]'))
-    );
-  }
-  
-  return false;
-}
-
-function fixOptionsStructure(originalOptions: any, malformedOptionsEn: any): any[] | null {
-  console.log('=== FIXING OPTIONS STRUCTURE ===');
-  console.log('Original options:', originalOptions);
-  console.log('Malformed options_en:', malformedOptionsEn);
-
-  // If options_en is already properly formatted, return null (no fix needed)
-  if (isCorrectFormat(malformedOptionsEn)) {
-    console.log('Options already in correct format');
-    return null;
-  }
-
-  // If the data is corrupted, create proper structure from original options
-  if (isCorruptedData(malformedOptionsEn)) {
-    console.log('Detected corrupted data, rebuilding from original options');
-    return createEnglishOptionsFromOriginal(originalOptions);
-  }
-
-  // Parse original options to get the structure
-  let parsedOriginal: any[] = [];
-  
-  if (Array.isArray(originalOptions)) {
-    parsedOriginal = originalOptions.map((opt, index) => {
-      if (typeof opt === 'object' && opt !== null) {
-        return {
-          value: opt.value !== undefined ? opt.value : index,
-          label: opt.label || opt.text || `Option ${index + 1}`
-        };
-      }
-      return {
-        value: index,
-        label: String(opt)
-      };
-    });
-  } else if (typeof originalOptions === 'object' && originalOptions !== null) {
-    parsedOriginal = Object.entries(originalOptions).map(([key, value]) => ({
-      value: parseInt(key) || 0,
-      label: String(value)
-    }));
-  }
-
-  if (parsedOriginal.length === 0) {
-    console.log('Could not parse original options, using default Likert scale');
-    return [
-      { value: 0, label: 'Strongly Disagree' },
-      { value: 1, label: 'Disagree' },
-      { value: 2, label: 'Neutral' },
-      { value: 3, label: 'Agree' },
-      { value: 4, label: 'Strongly Agree' }
-    ];
-  }
-
-  // Try to extract English translations from malformed data
-  let englishLabels: string[] = [];
-
-  if (Array.isArray(malformedOptionsEn)) {
-    englishLabels = malformedOptionsEn.map((item, index) => {
-      if (typeof item === 'string' && !isCorruptedData(item)) {
-        return item;
-      } else if (typeof item === 'object' && item !== null && !isCorruptedData(item)) {
-        return item.label || item.text || translateOption(parsedOriginal[index]?.label) || `Option ${index + 1}`;
-      }
-      return translateOption(parsedOriginal[index]?.label) || `Option ${index + 1}`;
-    });
-  } else if (typeof malformedOptionsEn === 'string' && !isCorruptedData(malformedOptionsEn)) {
-    try {
-      const parsed = JSON.parse(malformedOptionsEn);
-      if (Array.isArray(parsed)) {
-        englishLabels = parsed.map(String);
-      }
-    } catch {
-      // If parsing fails, create translated labels from original
-      englishLabels = parsedOriginal.map(opt => translateOption(opt.label));
-    }
-  } else {
-    // Create translated labels from original options
-    englishLabels = parsedOriginal.map(opt => translateOption(opt.label));
-  }
-
-  // Ensure we have the right number of labels
-  while (englishLabels.length < parsedOriginal.length) {
-    const index = englishLabels.length;
-    englishLabels.push(translateOption(parsedOriginal[index]?.label) || `Option ${index + 1}`);
-  }
-
-  // Create properly structured options_en
-  const fixedOptions = parsedOriginal.map((originalOpt, index) => ({
-    value: originalOpt.value,
-    label: englishLabels[index] || translateOption(originalOpt.label) || `Option ${originalOpt.value + 1}`
-  }));
-
-  console.log('Fixed options:', fixedOptions);
-  return fixedOptions;
-}
-
-function createEnglishOptionsFromOriginal(originalOptions: any): any[] {
-  console.log('Creating English options from original:', originalOptions);
-  
-  let parsedOriginal: any[] = [];
-  
-  if (Array.isArray(originalOptions)) {
-    parsedOriginal = originalOptions.map((opt, index) => {
-      if (typeof opt === 'object' && opt !== null) {
-        return {
-          value: opt.value !== undefined ? opt.value : index,
-          label: opt.label || opt.text || `Option ${index + 1}`
-        };
-      }
-      return {
-        value: index,
-        label: String(opt)
-      };
-    });
-  } else if (typeof originalOptions === 'object' && originalOptions !== null) {
-    parsedOriginal = Object.entries(originalOptions).map(([key, value]) => ({
-      value: parseInt(key) || 0,
-      label: String(value)
-    }));
-  }
-
-  if (parsedOriginal.length === 0) {
-    // Default Likert scale
-    return [
-      { value: 0, label: 'Strongly Disagree' },
-      { value: 1, label: 'Disagree' },
-      { value: 2, label: 'Neutral' },
-      { value: 3, label: 'Agree' },
-      { value: 4, label: 'Strongly Agree' }
-    ];
-  }
-
-  // Translate Romanian labels to English
-  const englishOptions = parsedOriginal.map(opt => ({
-    value: opt.value,
-    label: translateOption(opt.label)
-  }));
-
-  console.log('Created English options:', englishOptions);
-  return englishOptions;
-}
-
-function translateOption(romanianLabel: string): string {
-  if (!romanianLabel) return '';
-  
-  const translations: { [key: string]: string } = {
-    'Complet dezacord': 'Strongly Disagree',
-    'Dezacord': 'Disagree',
-    'Neutru': 'Neutral',
-    'Acord': 'Agree',
-    'Complet de acord': 'Strongly Agree',
-    'Deloc': 'Not at all',
-    'Puțin': 'A little',
-    'Putin': 'A little',
-    'Moderat': 'Moderately',
-    'Mult': 'A lot',
-    'Foarte mult': 'Very much',
-    'Niciodata': 'Never',
-    'Niciodată': 'Never',
-    'Rareori': 'Rarely',
-    'Uneori': 'Sometimes',
-    'Adesea': 'Often',
-    'Intotdeauna': 'Always',
-    'Întotdeauna': 'Always',
-    'Da': 'Yes',
-    'Nu': 'No',
-    'Foarte scăzut': 'Very low',
-    'Scăzut': 'Low',
-    'Mediu': 'Medium',
-    'Ridicat': 'High',
-    'Foarte ridicat': 'Very high'
-  };
-
-  return translations[romanianLabel] || romanianLabel;
-}
