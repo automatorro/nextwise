@@ -84,25 +84,25 @@ const HomeNavigation = () => {
                       to="/"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      Home
+                      {t('nav.dashboard')}
                     </Link>
                     <Link
                       to="/assessments"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      Assessments
+                      {t('nav.tests')}
                     </Link>
                     <Link
                       to="/career-hub"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      Career Hub
+                      {t('nav.career')}
                     </Link>
                     <Link
                       to="/my-profile"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
-                      My Profile
+                      {t('nav.profile')}
                     </Link>
                     {isAdmin && (
                       <Link
@@ -144,11 +144,11 @@ const HomeNavigation = () => {
                     <DropdownMenuContent align="end" className="bg-white border-gray-200 shadow-lg z-[60]">
                       <DropdownMenuItem onClick={() => navigate('/subscription')}>
                         <Settings className="h-4 w-4 mr-2" />
-                        Subscription Settings
+                        {t('nav.subscriptionSettings')}
                       </DropdownMenuItem>
                       <DropdownMenuItem onClick={handleSignOut}>
                         <LogOut className="h-4 w-4 mr-2" />
-                        Logout
+                        {t('nav.logout')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -184,12 +184,12 @@ const HomeNavigation = () => {
                   
                   <Link to="/auth">
                     <Button variant="ghost" className="hover:bg-white/60 transition-colors">
-                      Login
+                      {t('nav.login')}
                     </Button>
                   </Link>
                   <Link to="/auth">
                     <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
-                      Start Free
+                      {t('nav.startFree')}
                     </Button>
                   </Link>
                 </>
@@ -207,35 +207,35 @@ const HomeNavigation = () => {
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Home
+                {t('nav.dashboard')}
               </Link>
               <Link
                 to="/assessments"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Assessments
+                {t('nav.tests')}
               </Link>
               <Link
                 to="/career-hub"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Career Hub
+                {t('nav.career')}
               </Link>
               <Link
                 to="/my-profile"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                My Profile
+                {t('nav.profile')}
               </Link>
               <Link
                 to="/subscription"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Subscription Settings
+                {t('nav.subscriptionSettings')}
               </Link>
               {isAdmin && (
                 <Link
@@ -250,7 +250,7 @@ const HomeNavigation = () => {
                 onClick={handleSignOut}
                 className="text-gray-700 hover:text-gray-900 block w-full text-left px-3 py-2 rounded-md text-base font-medium"
               >
-                Logout
+                {t('nav.logout')}
               </button>
             </div>
           </div>
