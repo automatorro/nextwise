@@ -11,9 +11,16 @@ interface ScoringExplanationProps {
   overallScore: number;
   scoreType?: 'percentage' | 'scale' | 'raw';
   dimensions?: { [key: string]: number };
+  roleScores?: { [key: string]: number };
 }
 
-const ScoringExplanation = ({ testName, overallScore, scoreType = 'percentage', dimensions }: ScoringExplanationProps) => {
+const ScoringExplanation = ({ 
+  testName, 
+  overallScore, 
+  scoreType = 'percentage', 
+  dimensions,
+  roleScores 
+}: ScoringExplanationProps) => {
   const { language } = useLanguage();
   const explanation = getTestScoringExplanation(testName, language);
   const interpretation = getScoreInterpretation(overallScore, testName, language);
@@ -112,6 +119,32 @@ const ScoringExplanation = ({ testName, overallScore, scoreType = 'percentage', 
                 </div>
               ))}
             </div>
+            
+            {/* Role Scores Display for Belbin */}
+            {roleScores && Object.keys(roleScores).length > 0 && (
+              <div className="mt-4">
+                <h5 className="font-medium text-gray-900 mb-2">
+                  {language === 'en' ? 'Your Role Scores:' : 'Scorurile Tale pe Roluri:'}
+                </h5>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                  {Object.entries(roleScores)
+                    .sort(([,a], [,b]) => b - a)
+                    .slice(0, 5)
+                    .map(([role, score]) => {
+                      const roleInfo = explanation.belbinSpecific.roles?.[role.replace('_', '-')];
+                      return (
+                        <div key={role} className="flex items-center justify-between p-2 bg-white rounded border">
+                          <span className="font-medium">
+                            {roleInfo?.name || role.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                          </span>
+                          <span className="font-semibold text-blue-600">{score} pts</span>
+                        </div>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
+            
             <div className="mt-3 p-3 bg-blue-100 rounded">
               <p className="text-sm text-blue-800">{explanation.belbinSpecific.primaryVsSecondary}</p>
             </div>
@@ -132,7 +165,7 @@ const ScoringExplanation = ({ testName, overallScore, scoreType = 'percentage', 
           </div>
         )}
 
-        {explanation.scoreRanges && (
+        {explanation.scoreRanges && !isBelbin && (
           <div>
             <h4 className="font-semibold text-gray-900 mb-2">{labels.scoreRanges}</h4>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">

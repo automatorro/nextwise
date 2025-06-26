@@ -224,12 +224,24 @@ const TestResult = () => {
 
           {/* Belbin Test Results - Special handling */}
           {isBelbinTest ? (
-            <BelbinRoleResults
-              roleScores={result.score.role_scores || result.score.dimensions || {}}
-              primaryRoles={result.score.primary_roles || []}
-              secondaryRoles={result.score.secondary_roles || []}
-              interpretation={result.score.interpretation}
-            />
+            <>
+              {/* Scoring Explanation for Belbin - ALWAYS SHOW FIRST */}
+              <ScoringExplanation 
+                testName={result.test_types.name}
+                overallScore={result.score.overall}
+                scoreType={scoreType}
+                dimensions={testSpecificDimensions}
+                roleScores={result.score.role_scores || result.score.dimensions}
+              />
+              
+              {/* Belbin Role Results */}
+              <BelbinRoleResults
+                roleScores={result.score.role_scores || result.score.dimensions || {}}
+                primaryRoles={result.score.primary_roles || []}
+                secondaryRoles={result.score.secondary_roles || []}
+                interpretation={result.score.interpretation}
+              />
+            </>
           ) : (
             <>
               {/* Overall Score - only for non-Belbin tests */}
