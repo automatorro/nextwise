@@ -61,6 +61,11 @@ export const COMMON_OPTIONS_TRANSLATIONS: { [key: string]: string } = {
   'Mă caracterizează foarte mult': 'Characterizes me very much',
 
   // COMPREHENSIVE BELBIN ANSWER OPTIONS - Direct mappings from database
+  'Vin cu idei noi și creative pentru problemele echipei': 'I come up with new and creative ideas for team problems',
+  'Caut resurse și oportunități în exterior': 'I look for resources and opportunities outside',
+  'Coordonez eforturile membrilor echipei': 'I coordinate the efforts of team members',
+  'Încerc să dau direcție și să motivez echipa': 'I try to give direction and motivate the team',
+  'Analizez critic opțiunile și evaluez obiectiv': 'I critically analyze options and evaluate objectively',
   'Mă asigur că toată lumea se simte confortabil să contribuie': 'I make sure everyone feels comfortable contributing',
   'Transform ideile în planuri practice și realizabile': 'I transform ideas into practical and achievable plans',
   'Verific detaliile și mă asigur că totul este corect': 'I check details and make sure everything is correct',
@@ -146,7 +151,7 @@ export const COMMON_OPTIONS_TRANSLATIONS: { [key: string]: string } = {
   'Dezvolt relații bazate pe obiective comune': 'I develop relationships based on common goals'
 };
 
-// Function to translate a single option with enhanced debugging
+// Function to translate a single option with enhanced debugging and better matching
 export const translateOption = (option: string, language: 'en' | 'ro'): string => {
   console.log(`🔄 Translating option: "${option}" to language: ${language}`);
   
@@ -162,12 +167,29 @@ export const translateOption = (option: string, language: 'en' | 'ro'): string =
     return directTranslation;
   }
   
-  // Try partial matching for complex options
+  // Try partial matching for complex options (more aggressive matching)
   for (const [roText, enText] of Object.entries(COMMON_OPTIONS_TRANSLATIONS)) {
-    if (option.includes(roText)) {
+    // Check if the option contains the Romanian text
+    if (option.includes(roText) && roText.length > 5) { // Only match longer phrases
       const partialTranslation = option.replace(roText, enText);
       console.log(`🔄 Partial translation: "${option}" -> "${partialTranslation}"`);
       return partialTranslation;
+    }
+    
+    // Check if the Romanian text contains the option (reverse matching)
+    if (roText.includes(option) && option.length > 5) {
+      console.log(`🔄 Reverse match translation: "${option}" -> "${enText}"`);
+      return enText;
+    }
+  }
+  
+  // Try fuzzy matching for slight variations
+  const normalizedOption = option.toLowerCase().trim();
+  for (const [roText, enText] of Object.entries(COMMON_OPTIONS_TRANSLATIONS)) {
+    const normalizedRoText = roText.toLowerCase().trim();
+    if (normalizedOption === normalizedRoText) {
+      console.log(`🔄 Fuzzy match translation: "${option}" -> "${enText}"`);
+      return enText;
     }
   }
   
