@@ -66,20 +66,55 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
   const { language, t } = useLanguage();
   const progress = ((currentQuestionIndex + 1) / totalQuestions) * 100;
 
-  // Get options based on language with improved fallback
+  // Helper function to check if options data is corrupted
+  const isOptionsCorrupted = (options: Json): boolean => {
+    if (!options) return true;
+    
+    if (typeof options === 'string') {
+      return options === '[object Object]' || options.includes('[object Object]');
+    }
+    
+    if (Array.isArray(options)) {
+      return options.some(opt => 
+        typeof opt === 'string' && (opt === '[object Object]' || opt.includes('[object Object]'))
+      );
+    }
+    
+    return false;
+  };
+
+  // Get options based on language with improved fallback and corruption detection
   const getLocalizedOptions = () => {
     console.log('Getting localized options for language:', language);
     console.log('Question options:', currentQuestion.options);
     console.log('Question options_en:', currentQuestion.options_en);
 
     if (language === 'en' && currentQuestion.options_en) {
+      // Check if English options are corrupted
+      if (isOptionsCorrupted(currentQuestion.options_en)) {
+        console.log('English options are corrupted, falling back to Romanian with translation');
+        const roOptions = parseQuestionOptions(currentQuestion.options, 'ro');
+        return roOptions.map(option => ({
+          ...option,
+          label: translateBasicOption(option.label)
+        }));
+      }
+      
       const enOptions = parseQuestionOptions(currentQuestion.options_en, 'en');
       console.log('Parsed EN options:', enOptions);
       
       // Validate that we have proper English options
-      if (enOptions.length > 0 && enOptions.every(opt => opt.label && !opt.label.includes('Option '))) {
+      if (enOptions.length > 0 && enOptions.every(opt => opt.label && !opt.label.includes('Option ') && opt.label !== '[object Object]')) {
         return enOptions;
       }
+      
+      console.log('English options invalid, falling back to Romanian with translation');
+    }
+    
+    // Check if Romanian options are corrupted
+    if (isOptionsCorrupted(currentQuestion.options)) {
+      console.log('Romanian options are also corrupted, using default scale');
+      return parseQuestionOptions(null, language);
     }
     
     // Fallback to Romanian options
@@ -131,9 +166,15 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
     navigate('/teste');
   };
 
-  // Validate that we have valid options
+  // Validate that we have valid options and none contain corrupted data
   const hasValidOptions = questionOptions.length > 0 && 
-    questionOptions.every(opt => opt.value >= 0 && opt.label && opt.label.trim() !== '');
+    questionOptions.every(opt => 
+      opt.value >= 0 && 
+      opt.label && 
+      opt.label.trim() !== '' && 
+      opt.label !== '[object Object]' &&
+      !opt.label.includes('[object Object]')
+    );
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -213,17 +254,17 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
               ) : (
                 <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-200 rounded-lg">
                   <p className="text-lg font-medium mb-2">
-                    {language === 'en' ? 'Options unavailable' : 'Opțiuni indisponibile'}
+                    {language === 'en' ? 'Options corrupted' : 'Opțiuni corupte'}
                   </p>
                   <p className="text-sm">
                     {language === 'en' 
-                      ? 'Could not load options for this question.'
-                      : 'Nu s-au putut încărca opțiunile pentru această întrebare.'}
+                      ? 'The question options appear to be corrupted. Please contact support.'
+                      : 'Opțiunile pentru această întrebare par să fie corupte. Te rugăm să contactezi suportul.'}
                   </p>
                   <p className="text-xs mt-2 text-gray-400">
                     {language === 'en'
-                      ? 'Please contact support or try again later.'
-                      : 'Te rugăm să contactezi suportul sau să încerci din nou mai târziu.'}
+                      ? 'Data repair is needed for this question.'
+                      : 'Este necesară repararea datelor pentru această întrebare.'}
                   </p>
                 </div>
               )}

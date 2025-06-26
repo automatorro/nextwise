@@ -126,8 +126,31 @@ function isCorrectFormat(optionsEn: any): boolean {
     typeof opt.label === 'string' &&
     typeof opt.value === 'number' &&
     opt.label.trim() !== '' &&
+    opt.label !== '[object Object]' &&
+    !opt.label.includes('[object Object]') &&
     !opt.label.startsWith('Option ') // Not generic placeholder
   );
+}
+
+function isCorruptedData(data: any): boolean {
+  if (typeof data === 'string') {
+    return data === '[object Object]' || data.includes('[object Object]');
+  }
+  
+  if (Array.isArray(data)) {
+    return data.some(item => 
+      typeof item === 'string' && (item === '[object Object]' || item.includes('[object Object]'))
+    );
+  }
+  
+  if (typeof data === 'object' && data !== null) {
+    const values = Object.values(data);
+    return values.some(val => 
+      typeof val === 'string' && (val === '[object Object]' || val.includes('[object Object]'))
+    );
+  }
+  
+  return false;
 }
 
 function fixOptionsStructure(originalOptions: any, malformedOptionsEn: any): any[] | null {
@@ -139,6 +162,12 @@ function fixOptionsStructure(originalOptions: any, malformedOptionsEn: any): any
   if (isCorrectFormat(malformedOptionsEn)) {
     console.log('Options already in correct format');
     return null;
+  }
+
+  // If the data is corrupted, create proper structure from original options
+  if (isCorruptedData(malformedOptionsEn)) {
+    console.log('Detected corrupted data, rebuilding from original options');
+    return createEnglishOptionsFromOriginal(originalOptions);
   }
 
   // Parse original options to get the structure
@@ -180,14 +209,14 @@ function fixOptionsStructure(originalOptions: any, malformedOptionsEn: any): any
 
   if (Array.isArray(malformedOptionsEn)) {
     englishLabels = malformedOptionsEn.map((item, index) => {
-      if (typeof item === 'string') {
+      if (typeof item === 'string' && !isCorruptedData(item)) {
         return item;
-      } else if (typeof item === 'object' && item !== null) {
+      } else if (typeof item === 'object' && item !== null && !isCorruptedData(item)) {
         return item.label || item.text || translateOption(parsedOriginal[index]?.label) || `Option ${index + 1}`;
       }
       return translateOption(parsedOriginal[index]?.label) || `Option ${index + 1}`;
     });
-  } else if (typeof malformedOptionsEn === 'string') {
+  } else if (typeof malformedOptionsEn === 'string' && !isCorruptedData(malformedOptionsEn)) {
     try {
       const parsed = JSON.parse(malformedOptionsEn);
       if (Array.isArray(parsed)) {
@@ -216,6 +245,52 @@ function fixOptionsStructure(originalOptions: any, malformedOptionsEn: any): any
 
   console.log('Fixed options:', fixedOptions);
   return fixedOptions;
+}
+
+function createEnglishOptionsFromOriginal(originalOptions: any): any[] {
+  console.log('Creating English options from original:', originalOptions);
+  
+  let parsedOriginal: any[] = [];
+  
+  if (Array.isArray(originalOptions)) {
+    parsedOriginal = originalOptions.map((opt, index) => {
+      if (typeof opt === 'object' && opt !== null) {
+        return {
+          value: opt.value !== undefined ? opt.value : index,
+          label: opt.label || opt.text || `Option ${index + 1}`
+        };
+      }
+      return {
+        value: index,
+        label: String(opt)
+      };
+    });
+  } else if (typeof originalOptions === 'object' && originalOptions !== null) {
+    parsedOriginal = Object.entries(originalOptions).map(([key, value]) => ({
+      value: parseInt(key) || 0,
+      label: String(value)
+    }));
+  }
+
+  if (parsedOriginal.length === 0) {
+    // Default Likert scale
+    return [
+      { value: 0, label: 'Strongly Disagree' },
+      { value: 1, label: 'Disagree' },
+      { value: 2, label: 'Neutral' },
+      { value: 3, label: 'Agree' },
+      { value: 4, label: 'Strongly Agree' }
+    ];
+  }
+
+  // Translate Romanian labels to English
+  const englishOptions = parsedOriginal.map(opt => ({
+    value: opt.value,
+    label: translateOption(opt.label)
+  }));
+
+  console.log('Created English options:', englishOptions);
+  return englishOptions;
 }
 
 function translateOption(romanianLabel: string): string {
