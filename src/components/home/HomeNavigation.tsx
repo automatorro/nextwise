@@ -81,25 +81,25 @@ const HomeNavigation = () => {
                 <>
                   <div className="hidden md:flex items-center space-x-4">
                     <Link
-                      to="/"
+                      to="/dashboard"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
                       {t('nav.dashboard')}
                     </Link>
                     <Link
-                      to="/assessments"
+                      to="/tests"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
                       {t('nav.tests')}
                     </Link>
                     <Link
-                      to="/career-hub"
+                      to="/career-paths"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
                       {t('nav.career')}
                     </Link>
                     <Link
-                      to="/my-profile"
+                      to="/my-page"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
                       {t('nav.profile')}
@@ -203,28 +203,28 @@ const HomeNavigation = () => {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/80 backdrop-blur-md border-t border-white/30 rounded-b-2xl">
               <Link
-                to="/"
+                to="/dashboard"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('nav.dashboard')}
               </Link>
               <Link
-                to="/assessments"
+                to="/tests"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('nav.tests')}
               </Link>
               <Link
-                to="/career-hub"
+                to="/career-paths"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
                 {t('nav.career')}
               </Link>
               <Link
-                to="/my-profile"
+                to="/my-page"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
