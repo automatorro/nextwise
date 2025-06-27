@@ -10,10 +10,15 @@ export interface CareerRecommendation {
   title: string;
   description: string;
   action_text: string;
+  action_type: string;
+  action_data: any;
+  category: string;
+  estimated_time_minutes: number;
   priority: number;
   is_dismissed: boolean;
   based_on_test_ids: string[] | null;
   created_at: string;
+  updated_at: string;
 }
 
 export const useCareerRecommendations = () => {
