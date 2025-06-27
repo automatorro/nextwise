@@ -52,7 +52,7 @@ function App() {
                     <TestResult />
                   </ProtectedRoute>
                 } />
-                <Route path="/my-page" element={
+                <Route path="/my-profile" element={
                   <ProtectedRoute>
                     <MyPage />
                   </ProtectedRoute>

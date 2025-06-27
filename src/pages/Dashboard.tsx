@@ -128,7 +128,7 @@ const Dashboard = () => {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <Link to="/teste">
+                  <Link to="/tests">
                     <Button className="w-full bg-blue-600 hover:bg-blue-700">
                       {t('dashboard.actions.exploreTests')}
                     </Button>
@@ -188,7 +188,7 @@ const Dashboard = () => {
                   ))}
                 </div>
                 <div className="mt-6">
-                  <Link to="/teste">
+                  <Link to="/tests">
                     <Button variant="outline" className="w-full">
                       {t('dashboard.categories.viewAllTests')}
                     </Button>

@@ -99,7 +99,7 @@ const HomeNavigation = () => {
                       {t('nav.career')}
                     </Link>
                     <Link
-                      to="/my-page"
+                      to="/my-profile"
                       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
                     >
                       {t('nav.profile')}
@@ -224,7 +224,7 @@ const HomeNavigation = () => {
                 {t('nav.career')}
               </Link>
               <Link
-                to="/my-page"
+                to="/my-profile"
                 className="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium"
                 onClick={() => setIsMenuOpen(false)}
               >
