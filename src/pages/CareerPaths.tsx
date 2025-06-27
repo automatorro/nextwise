@@ -1,116 +1,70 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
+import { Navigate, useParams } from 'react-router-dom';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useCareerPlans } from '@/hooks/useCareerPlans';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { 
-  Target, 
-  MessageCircle,
-  BarChart3,
-  Sparkles
-} from 'lucide-react';
 import CareerDashboardReal from '@/components/career/CareerDashboardReal';
-import CreateCareerPlan from '@/components/career/CreateCareerPlan';
-import AIMentoring from '@/components/career/AIMentoring';
-import HomeNavigation from '@/components/home/HomeNavigation';
-import Footer from '@/components/home/Footer';
+import CreateCareerPlanEnhanced from '@/components/career/CreateCareerPlanEnhanced';
+import CareerPlanDetails from '@/components/career/CareerPlanDetails';
+import AIMentoringWithLimits from '@/components/career/AIMentoringWithLimits';
 
 const CareerPaths = () => {
-  const { user } = useAuth();
+  const { planId } = useParams();
   const { subscription } = useSubscription();
   const { careerPlans } = useCareerPlans();
-  const [activeTab, setActiveTab] = React.useState('my-plans');
+
+  // If we have a planId in the route, show the details page
+  if (planId) {
+    return <CareerPlanDetails />;
+  }
 
   const getSubscriptionFeatures = () => {
-    if (!subscription) return { maxPlans: 1, hasAI: false, hasAnalytics: false };
+    if (!subscription) return { maxPlans: 1, hasAI: false };
     
     switch (subscription.subscription_type) {
       case 'premium':
-        return { maxPlans: 999, hasAI: true, hasAnalytics: true };
+        return { maxPlans: 999, hasAI: true };
       case 'professional':
-        return { maxPlans: 999, hasAI: false, hasAnalytics: true };
+        return { maxPlans: 999, hasAI: false };
       default:
-        return { maxPlans: 1, hasAI: false, hasAnalytics: false };
+        return { maxPlans: 1, hasAI: false };
     }
   };
 
   const features = getSubscriptionFeatures();
 
   return (
-    <div>
-      <HomeNavigation />
-      <div className="pt-28">
-        <div className="min-h-screen bg-gray-50">
-          {/* Hero Section */}
-          <section className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto">
-              <div className="text-center mb-8">
-                <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-200">
-                  <Sparkles className="w-3 h-3 mr-1" />
-                  AI-Powered Career Planning
-                </Badge>
-                <h1 className="text-4xl font-bold text-gray-900 mb-4">
-                  Build Your Future
-                </h1>
-                <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-8">
-                  Create personalized career plans, get AI-powered guidance, and track your professional growth with intelligent insights
-                </p>
-              </div>
-
-              {/* Navigation Tabs */}
-              <div className="flex justify-center mb-8">
-                <div className="bg-white rounded-lg p-1 shadow-sm border">
-                  <Button
-                    variant={activeTab === 'my-plans' ? 'default' : 'ghost'}
-                    onClick={() => setActiveTab('my-plans')}
-                    className="flex items-center space-x-2"
-                  >
-                    <BarChart3 className="w-4 h-4" />
-                    <span>My Plans</span>
-                  </Button>
-                  <Button
-                    variant={activeTab === 'create' ? 'default' : 'ghost'}
-                    onClick={() => setActiveTab('create')}
-                    className="flex items-center space-x-2"
-                  >
-                    <Target className="w-4 h-4" />
-                    <span>Create Plan</span>
-                  </Button>
-                  {features.hasAI && (
-                    <Button
-                      variant={activeTab === 'ai-coach' ? 'default' : 'ghost'}
-                      onClick={() => setActiveTab('ai-coach')}
-                      className="flex items-center space-x-2"
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      <span>AI Coach</span>
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* Main Content */}
-          <section className="py-8 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-7xl mx-auto">
-              {activeTab === 'my-plans' && <CareerDashboardReal />}
-              
-              {activeTab === 'create' && (
-                <CreateCareerPlan 
-                  maxPlans={features.maxPlans}
-                  currentPlansCount={careerPlans.length}
-                />
-              )}
-              
-              {activeTab === 'ai-coach' && features.hasAI && <AIMentoring />}
-            </div>
-          </section>
-        </div>
+    <div className="container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-900">Career Hub</h1>
+        <p className="text-gray-600 mt-2">
+          Plan, track, and accelerate your professional growth
+        </p>
       </div>
-      <Footer />
+
+      <Tabs defaultValue="my-plans" className="space-y-6">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger value="my-plans">My Plans</TabsTrigger>
+          <TabsTrigger value="create-plan">Create Plan</TabsTrigger>
+          <TabsTrigger value="ai-mentoring">AI Mentoring</TabsTrigger>
+        </TabsList>
+
+        <TabsContent value="my-plans" className="space-y-6">
+          <CareerDashboardReal />
+        </TabsContent>
+
+        <TabsContent value="create-plan" className="space-y-6">
+          <CreateCareerPlanEnhanced 
+            maxPlans={features.maxPlans}
+            currentPlansCount={careerPlans.length}
+          />
+        </TabsContent>
+
+        <TabsContent value="ai-mentoring" className="space-y-6">
+          <AIMentoringWithLimits />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };

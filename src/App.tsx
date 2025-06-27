@@ -1,133 +1,88 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import Index from '@/pages/Index';
-import AuthPage from '@/components/auth/AuthPage';
-import TestsPage from '@/pages/TestsPage';
-import TestRunner from '@/pages/TestRunner';
-import TestResult from '@/pages/TestResult';
-import SubscriptionPage from '@/pages/SubscriptionPage';
-import CareerPaths from '@/pages/CareerPaths';
-import MyPage from '@/pages/MyPage';
-import AdminPanel from '@/pages/AdminPanel';
-import NotFound from '@/pages/NotFound';
-import ProtectedRoute from '@/components/layout/ProtectedRoute';
-import { AuthProvider } from '@/contexts/AuthContext';
-import { LanguageProvider } from '@/contexts/LanguageContext';
-import { Toaster } from '@/components/ui/toaster';
-import './App.css';
+
+import { Toaster } from "@/components/ui/toaster";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { LanguageProvider } from "@/contexts/LanguageContext";
+import Index from "./pages/Index";
+import Dashboard from "./pages/Dashboard";
+import TestsPage from "./pages/TestsPage";
+import TestRunner from "./pages/TestRunner";
+import TestResult from "./pages/TestResult";
+import MyPage from "./pages/MyPage";
+import CareerPaths from "./pages/CareerPaths";
+import SubscriptionPage from "./pages/SubscriptionPage";
+import AdminPanel from "./pages/AdminPanel";
+import NotFound from "./pages/NotFound";
+import ProtectedRoute from "./components/layout/ProtectedRoute";
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <LanguageProvider>
+      <TooltipProvider>
         <AuthProvider>
-          <Router>
+          <LanguageProvider>
             <Toaster />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/auth" element={<AuthPage />} />
-              {/* Redirect old dashboard route to home */}
-              <Route path="/dashboard" element={<Navigate to="/" replace />} />
-              <Route
-                path="/assessments"
-                element={
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/auth" element={<Index />} />
+                <Route path="/dashboard" element={
+                  <ProtectedRoute>
+                    <Dashboard />
+                  </ProtectedRoute>
+                } />
+                <Route path="/tests" element={
                   <ProtectedRoute>
                     <TestsPage />
                   </ProtectedRoute>
-                }
-              />
-              {/* Keep old teste route for backwards compatibility */}
-              <Route
-                path="/teste"
-                element={
-                  <ProtectedRoute>
-                    <TestsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/test/:testId"
-                element={
+                } />
+                <Route path="/test/:testId" element={
                   <ProtectedRoute>
                     <TestRunner />
                   </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/test-result/:resultId"
-                element={
+                } />
+                <Route path="/test-result/:resultId" element={
                   <ProtectedRoute>
                     <TestResult />
                   </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/subscription"
-                element={
-                  <ProtectedRoute>
-                    <SubscriptionPage />
-                  </ProtectedRoute>
-                }
-              />
-              {/* Keep old abonament route for backwards compatibility */}
-              <Route
-                path="/abonament"
-                element={
-                  <ProtectedRoute>
-                    <SubscriptionPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/career-hub"
-                element={
-                  <ProtectedRoute>
-                    <CareerPaths />
-                  </ProtectedRoute>
-                }
-              />
-              {/* Keep old cariere route for backwards compatibility */}
-              <Route
-                path="/cariere"
-                element={
-                  <ProtectedRoute>
-                    <CareerPaths />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/my-profile"
-                element={
+                } />
+                <Route path="/my-page" element={
                   <ProtectedRoute>
                     <MyPage />
                   </ProtectedRoute>
-                }
-              />
-              {/* Keep old profilul-meu route for backwards compatibility */}
-              <Route
-                path="/profilul-meu"
-                element={
+                } />
+                <Route path="/career-paths" element={
                   <ProtectedRoute>
-                    <MyPage />
+                    <CareerPaths />
                   </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin"
-                element={
+                } />
+                <Route path="/career-paths/plan/:planId" element={
+                  <ProtectedRoute>
+                    <CareerPaths />
+                  </ProtectedRoute>
+                } />
+                <Route path="/subscription" element={
+                  <ProtectedRoute>
+                    <SubscriptionPage />
+                  </ProtectedRoute>
+                } />
+                <Route path="/admin" element={
                   <ProtectedRoute>
                     <AdminPanel />
                   </ProtectedRoute>
-                }
-              />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Router>
+                } />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </LanguageProvider>
         </AuthProvider>
-      </LanguageProvider>
+      </TooltipProvider>
     </QueryClientProvider>
   );
 }

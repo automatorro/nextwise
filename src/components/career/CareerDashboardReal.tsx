@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -16,7 +17,9 @@ import {
   Lightbulb,
   Plus,
   Sparkles,
-  X
+  X,
+  ExternalLink,
+  PlayCircle
 } from 'lucide-react';
 import { useCareerPlans } from '@/hooks/useCareerPlans';
 import { useCareerRecommendations } from '@/hooks/useCareerRecommendations';
@@ -26,6 +29,7 @@ import { useSubscription } from '@/hooks/useSubscription';
 import { useToast } from '@/hooks/use-toast';
 
 const CareerDashboardReal = () => {
+  const navigate = useNavigate();
   const { careerPlans, isLoading: plansLoading } = useCareerPlans();
   const { recommendations, dismissRecommendation } = useCareerRecommendations();
   const { generateCareerPlan, generateRecommendations, isGeneratingPlan, isGeneratingRecommendations } = useCareerPlanGeneration();
@@ -58,7 +62,6 @@ const CareerDashboardReal = () => {
       return;
     }
 
-    // For demo, we'll use a default career goal. In production, this should come from user input
     const careerGoal = "software developer";
     generateCareerPlan.mutate({ careerGoal, testResults });
   };
@@ -67,12 +70,45 @@ const CareerDashboardReal = () => {
     generateRecommendations.mutate();
   };
 
+  const handleRecommendationAction = (recommendation: any) => {
+    switch (recommendation.action_type) {
+      case 'test':
+        // Navigate to specific test
+        const testPath = recommendation.action_data?.test_path || '/tests';
+        navigate(testPath);
+        break;
+      case 'external_link':
+        // Open external link
+        const url = recommendation.action_data?.url;
+        if (url) {
+          window.open(url, '_blank');
+        }
+        break;
+      case 'course':
+        // Navigate to course or open external course link
+        const courseUrl = recommendation.action_data?.course_url;
+        if (courseUrl) {
+          window.open(courseUrl, '_blank');
+        }
+        break;
+      case 'skill_assessment':
+        // Navigate to skill assessment
+        navigate('/tests?category=skills');
+        break;
+      default:
+        toast({
+          title: "Feature în dezvoltare",
+          description: "Această funcționalitate va fi disponibilă în curând."
+        });
+    }
+  };
+
   const getRecommendationIcon = (type: string) => {
     switch (type) {
       case 'skill': return BookOpen;
       case 'path': return Target;
       case 'test': return Brain;
-      case 'course': return BookOpen;
+      case 'course': return PlayCircle;
       case 'certification': return Badge;
       default: return Lightbulb;
     }
@@ -85,9 +121,8 @@ const CareerDashboardReal = () => {
   };
 
   const getTotalCompletedMilestones = () => {
-    // For now, estimate based on progress percentage
     return careerPlans.reduce((sum, plan) => {
-      const estimatedTotal = 5; // Estimate 5 milestones per plan
+      const estimatedTotal = 5;
       const completed = Math.floor((plan.progress_percentage || 0) / 100 * estimatedTotal);
       return sum + completed;
     }, 0);
@@ -202,7 +237,7 @@ const CareerDashboardReal = () => {
                   {isGeneratingPlan ? 'Generating plan...' : 'Generate AI Plan'}
                 </Button>
               ) : (
-                <Button>
+                <Button onClick={() => navigate('/career-paths?tab=create')}>
                   <Plus className="w-4 h-4 mr-2" />
                   Create First Plan
                 </Button>
@@ -252,7 +287,11 @@ const CareerDashboardReal = () => {
                     <div className="text-sm text-blue-700">Continue working towards your goals</div>
                   </div>
 
-                  <Button className="w-full" variant="outline">
+                  <Button 
+                    className="w-full" 
+                    variant="outline"
+                    onClick={() => navigate(`/career-paths/plan/${plan.id}`)}
+                  >
                     View Details
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
@@ -280,7 +319,7 @@ const CareerDashboardReal = () => {
               </Button>
             )}
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recommendations.slice(0, 6).map((rec) => {
               const Icon = getRecommendationIcon(rec.recommendation_type);
               return (
@@ -306,14 +345,28 @@ const CareerDashboardReal = () => {
                   <CardContent>
                     <p className="text-gray-600 mb-4">{rec.description}</p>
                     <div className="flex items-center justify-between">
-                      <Button variant="outline" className="flex-1">
+                      <Button 
+                        variant="outline" 
+                        className="flex-1"
+                        onClick={() => handleRecommendationAction(rec)}
+                      >
                         {rec.action_text}
-                        <ArrowRight className="w-4 h-4 ml-2" />
+                        {rec.action_type === 'external_link' ? (
+                          <ExternalLink className="w-4 h-4 ml-2" />
+                        ) : (
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        )}
                       </Button>
                       <Badge variant="secondary" className="ml-2">
                         Priority {rec.priority}
                       </Badge>
                     </div>
+                    {rec.estimated_time_minutes && (
+                      <div className="flex items-center space-x-1 mt-2 text-xs text-gray-500">
+                        <Clock className="w-3 h-3" />
+                        <span>{rec.estimated_time_minutes} min</span>
+                      </div>
+                    )}
                   </CardContent>
                 </Card>
               );

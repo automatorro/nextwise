@@ -36,6 +36,53 @@ export type Database = {
         }
         Relationships: []
       }
+      career_milestones: {
+        Row: {
+          career_path_id: string
+          completed_at: string | null
+          created_at: string
+          description: string | null
+          id: string
+          is_completed: boolean
+          milestone_order: number
+          target_date: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          career_path_id: string
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_completed?: boolean
+          milestone_order?: number
+          target_date?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          career_path_id?: string
+          completed_at?: string | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_completed?: boolean
+          milestone_order?: number
+          target_date?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "career_milestones_career_path_id_fkey"
+            columns: ["career_path_id"]
+            isOneToOne: false
+            referencedRelation: "career_paths"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       career_paths: {
         Row: {
           created_at: string | null
@@ -72,12 +119,58 @@ export type Database = {
         }
         Relationships: []
       }
-      career_recommendations: {
+      career_plan_templates: {
         Row: {
-          action_text: string
-          based_on_test_ids: string[] | null
+          category: string
           created_at: string
           description: string
+          difficulty_level: string
+          estimated_duration_months: number
+          id: string
+          is_active: boolean
+          required_skills: Json | null
+          target_roles: Json | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string
+          created_at?: string
+          description: string
+          difficulty_level?: string
+          estimated_duration_months?: number
+          id?: string
+          is_active?: boolean
+          required_skills?: Json | null
+          target_roles?: Json | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string
+          difficulty_level?: string
+          estimated_duration_months?: number
+          id?: string
+          is_active?: boolean
+          required_skills?: Json | null
+          target_roles?: Json | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      career_recommendations: {
+        Row: {
+          action_data: Json | null
+          action_text: string
+          action_type: string | null
+          based_on_test_ids: string[] | null
+          category: string | null
+          created_at: string
+          description: string
+          estimated_time_minutes: number | null
           id: string
           is_dismissed: boolean
           priority: number
@@ -87,10 +180,14 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          action_data?: Json | null
           action_text: string
+          action_type?: string | null
           based_on_test_ids?: string[] | null
+          category?: string | null
           created_at?: string
           description: string
+          estimated_time_minutes?: number | null
           id?: string
           is_dismissed?: boolean
           priority: number
@@ -100,10 +197,14 @@ export type Database = {
           user_id: string
         }
         Update: {
+          action_data?: Json | null
           action_text?: string
+          action_type?: string | null
           based_on_test_ids?: string[] | null
+          category?: string | null
           created_at?: string
           description?: string
+          estimated_time_minutes?: number | null
           id?: string
           is_dismissed?: boolean
           priority?: number
@@ -113,6 +214,50 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      career_template_milestones: {
+        Row: {
+          created_at: string
+          description: string | null
+          estimated_duration_weeks: number
+          id: string
+          milestone_order: number
+          required_skills: Json | null
+          resources: Json | null
+          template_id: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          estimated_duration_weeks?: number
+          id?: string
+          milestone_order?: number
+          required_skills?: Json | null
+          resources?: Json | null
+          template_id: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          estimated_duration_weeks?: number
+          id?: string
+          milestone_order?: number
+          required_skills?: Json | null
+          resources?: Json | null
+          template_id?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "career_template_milestones_template_id_fkey"
+            columns: ["template_id"]
+            isOneToOne: false
+            referencedRelation: "career_plan_templates"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -365,6 +510,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      calculate_career_plan_progress: {
+        Args: { plan_id: string }
+        Returns: number
+      }
       can_take_test: {
         Args: { _user_id: string }
         Returns: boolean
