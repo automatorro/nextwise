@@ -191,18 +191,52 @@
     }
   },
   "careerPaths": {
-    "title": "Your personalized career plans",
-    "subtitle": "Artificial intelligence creates career plans based on your test results, giving you a clear path to your professional goals.",
+    "title": "Career Hub",
+    "subtitle": "Plan, track, and accelerate your professional growth",
     "poweredByAI": "AI-Powered Plans",
     "tabs": {
-      "dashboard": "Dashboard",
-      "create": "New Plan",
+      "dashboard": "My Plans",
+      "create": "Create Plan",
       "mentoring": "AI Mentoring"
     },
     "noPlans": "You don't have any career plans yet",
     "createFirst": "Create your first career plan",
     "createPlan": "Create Plan",
-    "viewPlan": "View Plan"
+    "viewPlan": "View Plan",
+    "milestones": {
+      "title": "Career Milestones",
+      "completed": "Completed",
+      "pending": "Pending",
+      "overdue": "Overdue",
+      "markComplete": "Mark as Complete",
+      "markIncomplete": "Mark as Incomplete",
+      "addMilestone": "Add Milestone",
+      "editMilestone": "Edit Milestone",
+      "deleteMilestone": "Delete Milestone",
+      "targetDate": "Target Date",
+      "progress": "Progress"
+    },
+    "recommendations": {
+      "title": "AI Recommendations",
+      "subtitle": "Personalized suggestions based on your profile and test results",
+      "dismiss": "Dismiss",
+      "viewDetails": "View Details",
+      "takeAction": "Take Action",
+      "basedOn": "Based on your",
+      "estimatedTime": "Estimated time",
+      "minutes": "minutes"
+    },
+    "templates": {
+      "title": "Career Templates",
+      "subtitle": "Pre-built career paths to help you get started",
+      "useTemplate": "Use Template",
+      "viewDetails": "View Details",
+      "difficulty": "Difficulty",
+      "duration": "Duration",
+      "months": "months",
+      "skills": "Required Skills",
+      "roles": "Target Roles"
+    }
   },
   "subscription": {
     "title": "Subscription & Settings",
