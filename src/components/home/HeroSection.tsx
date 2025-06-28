@@ -23,7 +23,7 @@ const HeroSection = () => {
           {t('home.subtitle')}
         </p>
         <div className="flex justify-center">
-          <Link to="/auth">
+          <Link to="/auth" className="inline-block">
             <Button size="lg" className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
               {t('home.ctaButton')}
               <ArrowRight className="w-4 h-4 ml-2" />

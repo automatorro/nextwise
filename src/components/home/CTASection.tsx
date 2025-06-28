@@ -17,7 +17,7 @@ const CTASection = () => {
         <p className="text-blue-100 text-lg mb-8">
           {t('home.ctaFinalSubtitle')}
         </p>
-        <Link to="/auth">
+        <Link to="/auth" className="inline-block">
           <Button size="lg" className="bg-white text-blue-600 hover:bg-gray-100">
             {t('home.ctaFinalButton')}
             <ArrowRight className="w-4 h-4 ml-2" />
