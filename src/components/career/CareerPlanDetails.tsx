@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,6 +18,8 @@ import {
 import { useCareerPlans } from '@/hooks/useCareerPlans';
 import { useCareerMilestones } from '@/hooks/useCareerMilestones';
 import MilestoneTracker from './MilestoneTracker';
+import EditCareerPlanModal from './EditCareerPlanModal';
+import ShareCareerPlanModal from './ShareCareerPlanModal';
 import { format } from 'date-fns';
 
 const CareerPlanDetails = () => {
@@ -25,6 +27,9 @@ const CareerPlanDetails = () => {
   const navigate = useNavigate();
   const { careerPlans, isLoading: plansLoading } = useCareerPlans();
   const { milestones, isLoading: milestonesLoading } = useCareerMilestones(planId);
+  
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const plan = careerPlans.find(p => p.id === planId);
 
@@ -67,11 +72,19 @@ const CareerPlanDetails = () => {
           </div>
         </div>
         <div className="flex items-center space-x-3">
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setIsEditModalOpen(true)}
+          >
             <Edit className="w-4 h-4 mr-2" />
             Editează
           </Button>
-          <Button variant="outline" size="sm">
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => setIsShareModalOpen(true)}
+          >
             <Share className="w-4 h-4 mr-2" />
             Partajează
           </Button>
@@ -160,6 +173,23 @@ const CareerPlanDetails = () => {
 
       {/* Milestone Tracker */}
       <MilestoneTracker careerPathId={planId!} canEdit={true} />
+
+      {/* Modals */}
+      {isEditModalOpen && (
+        <EditCareerPlanModal
+          isOpen={isEditModalOpen}
+          onClose={() => setIsEditModalOpen(false)}
+          plan={plan}
+        />
+      )}
+
+      {isShareModalOpen && (
+        <ShareCareerPlanModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          plan={plan}
+        />
+      )}
     </div>
   );
 };

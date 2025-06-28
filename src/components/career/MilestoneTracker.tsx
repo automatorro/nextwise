@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -13,6 +13,8 @@ import {
   Plus
 } from 'lucide-react';
 import { useCareerMilestones, type CareerMilestone } from '@/hooks/useCareerMilestones';
+import AddMilestoneModal from './AddMilestoneModal';
+import EditMilestoneModal from './EditMilestoneModal';
 import { format } from 'date-fns';
 
 interface Props {
@@ -22,6 +24,8 @@ interface Props {
 
 const MilestoneTracker = ({ careerPathId, canEdit = true }: Props) => {
   const { milestones, isLoading, toggleMilestone, deleteMilestone } = useCareerMilestones(careerPathId);
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [editingMilestone, setEditingMilestone] = useState<CareerMilestone | null>(null);
 
   const handleToggleComplete = (milestone: CareerMilestone) => {
     toggleMilestone.mutate({
@@ -81,93 +85,121 @@ const MilestoneTracker = ({ careerPathId, canEdit = true }: Props) => {
   }
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex justify-between items-center">
-          <div>
-            <CardTitle>Milestone-uri</CardTitle>
-            <CardDescription>
-              Urmărește progresul pas cu pas către obiectivul tău de carieră
-            </CardDescription>
-          </div>
-          {canEdit && (
-            <Button size="sm" variant="outline">
-              <Plus className="w-4 h-4 mr-2" />
-              Adaugă milestone
-            </Button>
-          )}
-        </div>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {milestones.length === 0 ? (
-          <div className="text-center py-8 text-gray-500">
-            <Clock className="w-12 h-12 mx-auto mb-4 text-gray-300" />
-            <p>Nu există milestone-uri încă.</p>
+    <>
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <div>
+              <CardTitle>Milestone-uri</CardTitle>
+              <CardDescription>
+                Urmărește progresul pas cu pas către obiectivul tău de carieră
+              </CardDescription>
+            </div>
             {canEdit && (
-              <p className="text-sm">Adaugă primul milestone pentru a începe urmărirea progresului.</p>
+              <Button 
+                size="sm" 
+                variant="outline"
+                onClick={() => setIsAddModalOpen(true)}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Adaugă milestone
+              </Button>
             )}
           </div>
-        ) : (
-          milestones.map((milestone) => (
-            <div key={milestone.id} className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-gray-50">
-              <Checkbox
-                checked={milestone.is_completed}
-                onCheckedChange={() => handleToggleComplete(milestone)}
-                disabled={!canEdit}
-                className="mt-1"
-              />
-              
-              <div className="flex-1 space-y-2">
-                <div className="flex justify-between items-start">
-                  <h4 className={`font-medium ${milestone.is_completed ? 'line-through text-gray-500' : ''}`}>
-                    {milestone.title}
-                  </h4>
-                  <div className="flex items-center space-x-2">
-                    {getStatusBadge(milestone)}
-                    {canEdit && (
-                      <div className="flex space-x-1">
-                        <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
-                          <Edit className="w-4 h-4" />
-                        </Button>
-                        <Button 
-                          size="sm" 
-                          variant="ghost" 
-                          className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-                          onClick={() => handleDeleteMilestone(milestone.id)}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {milestones.length === 0 ? (
+            <div className="text-center py-8 text-gray-500">
+              <Clock className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+              <p>Nu există milestone-uri încă.</p>
+              {canEdit && (
+                <p className="text-sm">Adaugă primul milestone pentru a începe urmărirea progresului.</p>
+              )}
+            </div>
+          ) : (
+            milestones.map((milestone) => (
+              <div key={milestone.id} className="flex items-start space-x-3 p-4 border rounded-lg hover:bg-gray-50">
+                <Checkbox
+                  checked={milestone.is_completed}
+                  onCheckedChange={() => handleToggleComplete(milestone)}
+                  disabled={!canEdit}
+                  className="mt-1"
+                />
+                
+                <div className="flex-1 space-y-2">
+                  <div className="flex justify-between items-start">
+                    <h4 className={`font-medium ${milestone.is_completed ? 'line-through text-gray-500' : ''}`}>
+                      {milestone.title}
+                    </h4>
+                    <div className="flex items-center space-x-2">
+                      {getStatusBadge(milestone)}
+                      {canEdit && (
+                        <div className="flex space-x-1">
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="h-8 w-8 p-0"
+                            onClick={() => setEditingMilestone(milestone)}
+                          >
+                            <Edit className="w-4 h-4" />
+                          </Button>
+                          <Button 
+                            size="sm" 
+                            variant="ghost" 
+                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                            onClick={() => handleDeleteMilestone(milestone.id)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {milestone.description && (
+                    <p className={`text-sm text-gray-600 ${milestone.is_completed ? 'line-through' : ''}`}>
+                      {milestone.description}
+                    </p>
+                  )}
+                  
+                  <div className="flex items-center space-x-4 text-xs text-gray-500">
+                    {milestone.target_date && (
+                      <div className="flex items-center space-x-1">
+                        <Calendar className="w-3 h-3" />
+                        <span>Target: {format(new Date(milestone.target_date), 'dd MMM yyyy')}</span>
+                      </div>
+                    )}
+                    {milestone.completed_at && (
+                      <div className="flex items-center space-x-1">
+                        <CheckCircle className="w-3 h-3 text-green-600" />
+                        <span>Completat: {format(new Date(milestone.completed_at), 'dd MMM yyyy')}</span>
                       </div>
                     )}
                   </div>
                 </div>
-                
-                {milestone.description && (
-                  <p className={`text-sm text-gray-600 ${milestone.is_completed ? 'line-through' : ''}`}>
-                    {milestone.description}
-                  </p>
-                )}
-                
-                <div className="flex items-center space-x-4 text-xs text-gray-500">
-                  {milestone.target_date && (
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="w-3 h-3" />
-                      <span>Target: {format(new Date(milestone.target_date), 'dd MMM yyyy')}</span>
-                    </div>
-                  )}
-                  {milestone.completed_at && (
-                    <div className="flex items-center space-x-1">
-                      <CheckCircle className="w-3 h-3 text-green-600" />
-                      <span>Completat: {format(new Date(milestone.completed_at), 'dd MMM yyyy')}</span>
-                    </div>
-                  )}
-                </div>
               </div>
-            </div>
-          ))
-        )}
-      </CardContent>
-    </Card>
+            ))
+          )}
+        </CardContent>
+      </Card>
+
+      {/* Modals */}
+      {isAddModalOpen && (
+        <AddMilestoneModal
+          isOpen={isAddModalOpen}
+          onClose={() => setIsAddModalOpen(false)}
+          careerPathId={careerPathId}
+        />
+      )}
+
+      {editingMilestone && (
+        <EditMilestoneModal
+          isOpen={!!editingMilestone}
+          onClose={() => setEditingMilestone(null)}
+          milestone={editingMilestone}
+        />
+      )}
+    </>
   );
 };
 
