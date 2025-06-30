@@ -8,41 +8,63 @@ const GuestActions = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
 
-  const handleLoginClick = (e: React.MouseEvent) => {
+  const handleLoginClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('GuestActions: Login button clicked - START');
     e.preventDefault();
     e.stopPropagation();
-    console.log('Login button clicked');
-    navigate('/auth');
+    
+    try {
+      console.log('GuestActions: Attempting navigation to /auth');
+      navigate('/auth');
+      console.log('GuestActions: Navigation completed');
+    } catch (error) {
+      console.error('GuestActions: Navigation failed:', error);
+    }
   };
 
-  const handleStartFreeClick = (e: React.MouseEvent) => {
+  const handleStartFreeClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('GuestActions: Start Free button clicked - START');
     e.preventDefault();
     e.stopPropagation();
-    console.log('Start Free button clicked');
-    navigate('/auth');
+    
+    try {
+      console.log('GuestActions: Attempting navigation to /auth');
+      navigate('/auth');
+      console.log('GuestActions: Navigation completed');
+    } catch (error) {
+      console.error('GuestActions: Navigation failed:', error);
+    }
   };
+
+  console.log('GuestActions: Component rendered');
 
   return (
     <>
       <Button 
         variant="ghost" 
-        className="hover:bg-white/60 transition-colors duration-200 touch-manipulation"
+        className="hover:bg-gray-100 transition-colors duration-200 min-h-[44px] min-w-[44px] px-4 py-2"
         onClick={handleLoginClick}
+        onTouchStart={() => console.log('GuestActions: Login touch start')}
+        onTouchEnd={() => console.log('GuestActions: Login touch end')}
         style={{ 
           WebkitTapHighlightColor: 'transparent',
           touchAction: 'manipulation',
-          userSelect: 'none'
+          userSelect: 'none',
+          cursor: 'pointer'
         }}
       >
         {t('nav.login')}
       </Button>
       <Button 
-        className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:from-blue-800 active:to-indigo-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 touch-manipulation"
+        className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg min-h-[44px] min-w-[44px] px-4 py-2"
         onClick={handleStartFreeClick}
+        onTouchStart={() => console.log('GuestActions: Start Free touch start')}
+        onTouchEnd={() => console.log('GuestActions: Start Free touch end')}
         style={{ 
           WebkitTapHighlightColor: 'transparent',
           touchAction: 'manipulation',
-          userSelect: 'none'
+          userSelect: 'none',
+          cursor: 'pointer'
         }}
       >
         {t('nav.startFree')}

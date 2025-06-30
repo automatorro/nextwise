@@ -9,12 +9,21 @@ const CTASection = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
 
-  const handleFinalCTAClick = (e: React.MouseEvent) => {
+  const handleFinalCTAClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('CTASection: Final CTA button clicked - START');
     e.preventDefault();
     e.stopPropagation();
-    console.log('Final CTA button clicked');
-    navigate('/auth');
+    
+    try {
+      console.log('CTASection: Attempting navigation to /auth');
+      navigate('/auth');
+      console.log('CTASection: Navigation completed');
+    } catch (error) {
+      console.error('CTASection: Navigation failed:', error);
+    }
   };
+
+  console.log('CTASection: Component rendered');
 
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-indigo-600">
@@ -27,12 +36,15 @@ const CTASection = () => {
         </p>
         <Button 
           size="lg" 
-          className="bg-white text-blue-600 hover:bg-gray-100 active:bg-gray-200 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 touch-manipulation"
+          className="bg-white text-blue-600 hover:bg-gray-100 font-semibold shadow-lg min-h-[48px] px-8"
           onClick={handleFinalCTAClick}
+          onTouchStart={() => console.log('CTASection: Final CTA touch start')}
+          onTouchEnd={() => console.log('CTASection: Final CTA touch end')}
           style={{ 
             WebkitTapHighlightColor: 'transparent',
             touchAction: 'manipulation',
-            userSelect: 'none'
+            userSelect: 'none',
+            cursor: 'pointer'
           }}
         >
           {t('home.ctaFinalButton')}

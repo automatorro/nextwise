@@ -10,12 +10,21 @@ const HeroSection = () => {
   const { t } = useLanguage();
   const navigate = useNavigate();
 
-  const handleCTAClick = (e: React.MouseEvent) => {
+  const handleCTAClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    console.log('HeroSection: CTA button clicked - START');
     e.preventDefault();
     e.stopPropagation();
-    console.log('Hero CTA button clicked');
-    navigate('/auth');
+    
+    try {
+      console.log('HeroSection: Attempting navigation to /auth');
+      navigate('/auth');
+      console.log('HeroSection: Navigation completed');
+    } catch (error) {
+      console.error('HeroSection: Navigation failed:', error);
+    }
   };
+
+  console.log('HeroSection: Component rendered');
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 pt-28">
@@ -33,12 +42,15 @@ const HeroSection = () => {
         <div className="flex justify-center">
           <Button 
             size="lg" 
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:from-blue-800 active:to-indigo-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 touch-manipulation"
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg min-h-[48px] px-8"
             onClick={handleCTAClick}
+            onTouchStart={() => console.log('HeroSection: CTA touch start')}
+            onTouchEnd={() => console.log('HeroSection: CTA touch end')}
             style={{ 
               WebkitTapHighlightColor: 'transparent',
               touchAction: 'manipulation',
-              userSelect: 'none'
+              userSelect: 'none',
+              cursor: 'pointer'
             }}
           >
             {t('home.ctaButton')}

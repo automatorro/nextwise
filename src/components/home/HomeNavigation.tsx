@@ -14,11 +14,14 @@ const HomeNavigation = () => {
   const { user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Add debugging
+  console.log('HomeNavigation: Component rendered, user:', !!user, 'loading:', loading);
+
   // Show loading skeleton only during initial app load
   if (loading) {
     return (
       <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
-        <div className="bg-white/80 backdrop-blur-md shadow-lg border border-white/30 rounded-2xl">
+        <div className="bg-white shadow-lg border border-gray-200 rounded-2xl">
           <div className="px-6 lg:px-8">
             <div className="flex justify-between h-16 items-center">
               <div className="flex items-center space-x-2">
@@ -37,8 +40,8 @@ const HomeNavigation = () => {
   }
 
   return (
-    <nav className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 w-[95%] max-w-6xl">
-      <div className="bg-white/80 backdrop-blur-md shadow-lg border border-white/30 rounded-2xl">
+    <nav className="fixed top-4 left-1/2 z-[100] w-[95%] max-w-6xl" style={{ transform: 'translateX(-50%)' }}>
+      <div className="bg-white shadow-lg border border-gray-200 rounded-2xl overflow-hidden">
         <div className="px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <NavigationLogo />
