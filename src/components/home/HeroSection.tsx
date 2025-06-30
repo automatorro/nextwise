@@ -1,13 +1,21 @@
 
 import React from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Zap, ArrowRight } from 'lucide-react';
 
 const HeroSection = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+
+  const handleCTAClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Hero CTA button clicked');
+    navigate('/auth');
+  };
 
   return (
     <section className="py-20 px-4 sm:px-6 lg:px-8 pt-28">
@@ -24,14 +32,17 @@ const HeroSection = () => {
         </p>
         <div className="flex justify-center">
           <Button 
-            asChild 
             size="lg" 
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:from-blue-800 active:to-indigo-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+            className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 active:from-blue-800 active:to-indigo-800 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-200 touch-manipulation"
+            onClick={handleCTAClick}
+            style={{ 
+              WebkitTapHighlightColor: 'transparent',
+              touchAction: 'manipulation',
+              userSelect: 'none'
+            }}
           >
-            <Link to="/auth" className="no-underline">
-              {t('home.ctaButton')}
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Link>
+            {t('home.ctaButton')}
+            <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </div>
       </div>

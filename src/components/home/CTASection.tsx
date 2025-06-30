@@ -1,12 +1,20 @@
 
 import React from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
 const CTASection = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
+
+  const handleFinalCTAClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log('Final CTA button clicked');
+    navigate('/auth');
+  };
 
   return (
     <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-600 to-indigo-600">
@@ -18,14 +26,17 @@ const CTASection = () => {
           {t('home.ctaFinalSubtitle')}
         </p>
         <Button 
-          asChild 
           size="lg" 
-          className="bg-white text-blue-600 hover:bg-gray-100 active:bg-gray-200 font-semibold shadow-lg hover:shadow-xl transition-all duration-200"
+          className="bg-white text-blue-600 hover:bg-gray-100 active:bg-gray-200 font-semibold shadow-lg hover:shadow-xl transition-all duration-200 touch-manipulation"
+          onClick={handleFinalCTAClick}
+          style={{ 
+            WebkitTapHighlightColor: 'transparent',
+            touchAction: 'manipulation',
+            userSelect: 'none'
+          }}
         >
-          <Link to="/auth" className="no-underline">
-            {t('home.ctaFinalButton')}
-            <ArrowRight className="w-4 h-4 ml-2" />
-          </Link>
+          {t('home.ctaFinalButton')}
+          <ArrowRight className="w-4 h-4 ml-2" />
         </Button>
       </div>
     </section>
