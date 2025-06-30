@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate, useSearchParams } from 'react-router-dom';
@@ -25,7 +26,9 @@ const AuthPage = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    console.log('AuthPage: Component mounted, user:', !!user);
     if (user) {
+      console.log('AuthPage: User is logged in, redirecting to dashboard');
       navigate('/dashboard');
     }
   }, [user, navigate]);
@@ -68,20 +71,48 @@ const AuthPage = () => {
   }, [searchParams, navigate, toast]);
 
   const handleSignIn = async (e: React.FormEvent) => {
+    console.log('AuthPage: Sign in form submitted');
     e.preventDefault();
+    e.stopPropagation();
     setIsLoading(true);
-    await signIn(email, password);
+    
+    try {
+      console.log('AuthPage: Attempting sign in with email:', email);
+      await signIn(email, password);
+      console.log('AuthPage: Sign in completed');
+    } catch (error) {
+      console.error('AuthPage: Sign in error:', error);
+    }
+    
     setIsLoading(false);
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
+    console.log('AuthPage: Sign up form submitted');
     e.preventDefault();
+    e.stopPropagation();
     setIsLoading(true);
-    const result = await signUp(email, password, fullName);
-    if (!result.error) {
-      setShowEmailSent(true);
+    
+    try {
+      console.log('AuthPage: Attempting sign up with email:', email);
+      const result = await signUp(email, password, fullName);
+      if (!result.error) {
+        console.log('AuthPage: Sign up successful, showing email sent message');
+        setShowEmailSent(true);
+      }
+      console.log('AuthPage: Sign up completed');
+    } catch (error) {
+      console.error('AuthPage: Sign up error:', error);
     }
+    
     setIsLoading(false);
+  };
+
+  const handleBackToAuth = (e: React.MouseEvent) => {
+    console.log('AuthPage: Back to auth button clicked');
+    e.preventDefault();
+    e.stopPropagation();
+    setShowEmailSent(false);
   };
 
   if (showEmailSent) {
@@ -109,8 +140,13 @@ const AuthPage = () => {
               </Alert>
               <Button 
                 variant="outline" 
-                className="w-full" 
-                onClick={() => setShowEmailSent(false)}
+                className="w-full min-h-[48px]" 
+                onClick={handleBackToAuth}
+                style={{ 
+                  WebkitTapHighlightColor: 'transparent',
+                  touchAction: 'manipulation',
+                  userSelect: 'none'
+                }}
               >
                 Înapoi la autentificare
               </Button>
@@ -121,6 +157,8 @@ const AuthPage = () => {
       </div>
     );
   }
+
+  console.log('AuthPage: Rendering auth form');
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
@@ -164,7 +202,16 @@ const AuthPage = () => {
                       placeholder="••••••••"
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full min-h-[48px]" 
+                    disabled={isLoading}
+                    style={{ 
+                      WebkitTapHighlightColor: 'transparent',
+                      touchAction: 'manipulation',
+                      userSelect: 'none'
+                    }}
+                  >
                     {isLoading ? 'Se încarcă...' : 'Autentificare'}
                   </Button>
                 </form>
@@ -206,7 +253,16 @@ const AuthPage = () => {
                       minLength={6}
                     />
                   </div>
-                  <Button type="submit" className="w-full" disabled={isLoading}>
+                  <Button 
+                    type="submit" 
+                    className="w-full min-h-[48px]" 
+                    disabled={isLoading}
+                    style={{ 
+                      WebkitTapHighlightColor: 'transparent',
+                      touchAction: 'manipulation',
+                      userSelect: 'none'
+                    }}
+                  >
                     {isLoading ? 'Se încarcă...' : 'Înregistrare'}
                   </Button>
                 </form>

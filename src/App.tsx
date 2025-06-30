@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
+import AuthPage from "./components/auth/AuthPage";
 import Dashboard from "./pages/Dashboard";
 import TestsPage from "./pages/TestsPage";
 import TestRunner from "./pages/TestRunner";
@@ -31,7 +32,7 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<Index />} />
+                <Route path="/auth" element={<AuthPage />} />
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
                     <Dashboard />
