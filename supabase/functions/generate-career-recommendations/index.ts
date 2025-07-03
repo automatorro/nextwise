@@ -83,7 +83,7 @@ serve(async (req) => {
     }
 
     let analysisPrompt = `
-      Pe baza următorului profil al utilizatorului, generează 3-5 recomandări personalizate pentru carieră:
+      Pe baza următorului profil al utilizatorului, generează 3-5 recomandări personalizate pentru carieră cu RESURSE GRATUITE REALE:
       
       Rezultatele testelor:
       ${testResults.map(r => `- ${r.test_types?.name}: Scor ${JSON.stringify(r.score)}`).join('\n')}
@@ -94,24 +94,42 @@ serve(async (req) => {
       
       Recomandări existente (evită duplicatele): ${existingRecs?.map(r => r.title).join(', ') || 'Niciunul'}
       
-      Generează recomandări în aceste categorii: skill, path, test, course, certification
-      
-      Criterii pentru recomandări:
-      - Bazate pe punctele forte și slăbiciunile din teste
-      - Relevante pentru dezvoltarea carierei
-      - Acționabile și specifice
-      - Evită duplicarea recomandărilor existente
+      IMPORTANT: Pentru fiecare recomandare, include RESURSE GRATUITE cu linkuri REALE către:
+      - Coursera (cursuri gratuite cu audit)
+      - edX (cursuri MIT, Harvard gratuite)
+      - Khan Academy 
+      - YouTube (canale educaționale specifice)
+      - LinkedIn Learning (trial gratuit)
+      - Teste gratuite (16personalities, VIA Character Survey)
+      - Cărți PDF gratuite
       
       Formatează ca array JSON (DOAR JSON, fără alte explicații):
       [
         {
           "recommendation_type": "skill|path|test|course|certification",
-          "title": "Titlu scurt al recomandării",
-          "description": "De ce este recomandată pe baza profilului lor",
-          "action_text": "Text pentru call-to-action",
-          "priority": 1-5
+          "title": "Titlu scurt și atractiv",
+          "description": "De ce este recomandată pe baza profilului lor (2-3 propoziții concrete)",
+          "action_text": "Text pentru buton (ex: 'Înscrie-te gratuit', 'Fă testul acum')",
+          "action_type": "external_link",
+          "action_data": {
+            "url": "https://link-real-către-resursa-gratuită",
+            "estimatedHours": 5-20,
+            "difficulty": "beginner|intermediate|advanced"
+          },
+          "category": "skill_development|assessment|networking|certification",
+          "priority": 1-5,
+          "estimated_time_minutes": 60-300
         }
       ]
+      
+      Exemplu de linkuri reale:
+      - https://www.coursera.org/learn/leadership-introduction (Leadership gratuit)
+      - https://www.16personalities.com/ (Test MBTI gratuit)
+      - https://www.edx.org/course/introduction-to-project-management (Project Management MIT)
+      - https://www.youtube.com/c/CrashCourse (YouTube educațional)
+      - https://www.khanacademy.org/ (Competențe fundamentale)
+      
+      Fii specific și practic. Linkurile TREBUIE să fie funcționale.
     `;
 
     const response = await fetch(
@@ -154,59 +172,122 @@ serve(async (req) => {
         
         if (dims.openness > 70) {
           recommendations.push({
-            recommendation_type: 'skill',
-            title: 'Explorează tehnologii noi',
-            description: 'Deschiderea ta ridicată sugerează că ai avea succes în învățarea de tehnologii inovatoare.',
-            action_text: 'Vezi cursuri noi',
-            priority: 4
+            recommendation_type: 'course',
+            title: 'Explorează tehnologii noi cu MIT',
+            description: 'Deschiderea ta ridicată sugerează că ai avea succes în învățarea de tehnologii inovatoare. Acest curs MIT te introduce în noile paradigme tehnologice.',
+            action_text: 'Începe cursul MIT gratuit',
+            action_type: 'external_link',
+            action_data: {
+              url: 'https://www.edx.org/course/introduction-to-computer-science-and-programming-7',
+              estimatedHours: 15,
+              difficulty: 'intermediate'
+            },
+            category: 'skill_development',
+            priority: 4,
+            estimated_time_minutes: 180
           });
         }
         
         if (dims.conscientiousness > 70) {
           recommendations.push({
             recommendation_type: 'certification',
-            title: 'Obține certificări profesionale',
-            description: 'Conștiinciozitatea ta ridicată te va ajuta să completezi cu succes programe de certificare.',
-            action_text: 'Explorează certificări',
-            priority: 5
+            title: 'Google Project Management Certificate',
+            description: 'Conștiinciozitatea ta ridicată te va ajuta să completezi cu succes acest program de certificare Google. Ideal pentru management și organizare.',
+            action_text: 'Înscrie-te gratuit la Google',
+            action_type: 'external_link',
+            action_data: {
+              url: 'https://www.coursera.org/professional-certificates/google-project-management',
+              estimatedHours: 180,
+              difficulty: 'intermediate'
+            },
+            category: 'certification',
+            priority: 5,
+            estimated_time_minutes: 300
           });
         }
         
         if (dims.extraversion > 70) {
           recommendations.push({
-            recommendation_type: 'path',
-            title: 'Consideră roluri de leadership',
-            description: 'Extraversiunea ta ridicată indică potențial pentru roluri manageriale sau de conducere.',
-            action_text: 'Explorează leadership',
-            priority: 4
+            recommendation_type: 'course',
+            title: 'Leadership și Management - Stanford',
+            description: 'Extraversiunea ta ridicată indică potențial pentru roluri manageriale. Acest curs Stanford te va pregăti pentru pozițiile de conducere.',
+            action_text: 'Începe cursul Stanford',
+            action_type: 'external_link',
+            action_data: {
+              url: 'https://www.coursera.org/learn/leadership-introduction',
+              estimatedHours: 12,
+              difficulty: 'intermediate'
+            },
+            category: 'skill_development',
+            priority: 4,
+            estimated_time_minutes: 180
           });
         } else if (dims.extraversion < 40) {
           recommendations.push({
-            recommendation_type: 'skill',
-            title: 'Dezvoltă competențe tehnice specializate',
-            description: 'Introversiunea ta poate fi un avantaj în roluri tehnice care necesită concentrare profundă.',
-            action_text: 'Vezi competențe tehnice',
-            priority: 4
+            recommendation_type: 'course',
+            title: 'Deep Learning Specialization',
+            description: 'Introversiunea ta poate fi un avantaj în roluri tehnice care necesită concentrare profundă. Acest curs Andrew Ng te va specializa în AI.',
+            action_text: 'Începe cursul Andrew Ng',
+            action_type: 'external_link',
+            action_data: {
+              url: 'https://www.coursera.org/specializations/deep-learning',
+              estimatedHours: 60,
+              difficulty: 'advanced'
+            },
+            category: 'skill_development',
+            priority: 4,
+            estimated_time_minutes: 240
           });
         }
       }
       
-      // Default fallback
+      // Default fallback with real resources
       if (recommendations.length === 0) {
         recommendations = [
           {
-            recommendation_type: 'skill',
-            title: 'Dezvoltă competențe de comunicare',
-            description: 'Competențele de comunicare sunt esențiale în orice carieră și te vor ajuta să progresezi.',
-            action_text: 'Vezi cursuri de comunicare',
-            priority: 4
+            recommendation_type: 'test',
+            title: 'Myers-Briggs Type Indicator (MBTI)',
+            description: 'Descoperă tipul tău de personalitate pentru a-ți alinia cariera cu punctele forte naturale. Acest test gratuit îți va oferi insight-uri valoroase.',
+            action_text: 'Fă testul MBTI gratuit',
+            action_type: 'external_link',
+            action_data: {
+              url: 'https://www.16personalities.com/',
+              estimatedHours: 1,
+              difficulty: 'beginner'
+            },
+            category: 'assessment',
+            priority: 5,
+            estimated_time_minutes: 15
           },
           {
-            recommendation_type: 'path',
-            title: 'Explorează opțiuni de carieră',
-            description: 'Pe baza profilului tău, ar fi util să explorezi diferite căi de carieră disponibile.',
-            action_text: 'Explorează cariere',
-            priority: 3
+            recommendation_type: 'course',
+            title: 'Competențe de comunicare - Harvard',
+            description: 'Competențele de comunicare sunt esențiale în orice carieră. Acest curs Harvard te va ajuta să devii un comunicator mai eficient.',
+            action_text: 'Înscrie-te gratuit la Harvard',
+            action_type: 'external_link',
+            action_data: {
+              url: 'https://www.edx.org/course/introduction-to-communication-science',
+              estimatedHours: 8,
+              difficulty: 'beginner'
+            },
+            category: 'skill_development',
+            priority: 4,
+            estimated_time_minutes: 120
+          },
+          {
+            recommendation_type: 'course',
+            title: 'Project Management Fundamentals',
+            description: 'Învață fundamentele managementului de proiect pentru a-ți îmbunătăți capacitatea de organizare și leadership.',
+            action_text: 'Începe cursul gratuit',
+            action_type: 'external_link',
+            action_data: {
+              url: 'https://www.coursera.org/learn/project-management',
+              estimatedHours: 15,
+              difficulty: 'intermediate'
+            },
+            category: 'skill_development',
+            priority: 3,
+            estimated_time_minutes: 180
           }
         ];
       }

@@ -51,36 +51,68 @@ serve(async (req) => {
       Alte rezultate ale testelor:
       ${testResults.map((r: any) => `- ${r.test_types?.name}: ${JSON.stringify(r.score)}`).join('\n')}
       
-      Te rog să furnizezi:
-      1. Un timeline realist (3-6 luni, 6-12 luni, 1-2 ani)
-      2. 6-10 milestones specifice cu descrieri clare
-      3. Competențe de dezvoltat
-      4. Cursuri sau certificări recomandate
-      5. Strategii de networking
-      6. Provocări potențiale și cum să le depășești
+      IMPORTANT: Pentru fiecare milestone și recomandare, INCLUDE RESURSE GRATUITE CONCRETE cu linkuri reale către:
+      - Coursera (cursuri gratuite)
+      - edX (cursuri gratuite) 
+      - Khan Academy
+      - YouTube tutorials specifice
+      - Articole relevante
+      - Cărți gratuite (PDF-uri disponibile online)
+      - Teste gratuite de personalitate sau competențe
+      - Platforme de practică gratuite
       
-      Formatează răspunsul ca JSON cu această structură:
+      Structură obligatorie:
       {
-        "title": "Titlul planului de dezvoltare a carierei",
-        "description": "Descriere scurtă a căii de carieră",
-        "timeline": "Timpul estimat de finalizare",
+        "title": "Plan de dezvoltare ${careerGoal}",
+        "description": "Plan personalizat cu resurse gratuite pentru a deveni ${careerGoal}",
+        "timeline": "6-12 luni",
         "milestones": [
           {
             "title": "Titlul Milestone-ului",
-            "description": "Descriere detaliată",
-            "targetWeeks": 4,
-            "category": "skill|certification|experience|networking|assessment"
+            "description": "Descriere detaliată cu pași concreti",
+            "targetWeeks": 2-8,
+            "category": "skill|certification|experience|networking|assessment",
+            "resources": [
+              {
+                "type": "course|article|book|test|video|practice",
+                "title": "Numele resursei",
+                "url": "https://link-real-către-resursa",
+                "description": "Ce vei învăța",
+                "estimatedHours": 5-20,
+                "isFree": true
+              }
+            ],
+            "actionItems": [
+              "Acțiune concretă 1",
+              "Acțiune concretă 2"
+            ]
           }
         ],
         "recommendations": [
           {
-            "type": "skill|course|certification|networking",
+            "type": "skill|course|certification|networking|test",
             "title": "Titlul recomandării",
-            "description": "De ce este important",
-            "priority": 1-5
+            "description": "De ce este important și cum te ajută",
+            "priority": 1-5,
+            "resources": [
+              {
+                "type": "course|article|book|test|video",
+                "title": "Nume resursă",
+                "url": "https://link-real",
+                "description": "Descriere",
+                "isFree": true
+              }
+            ]
           }
         ]
       }
+      
+      Exemple de linkuri reale pentru ${careerGoal}:
+      - Coursera: https://www.coursera.org/search?query=${encodeURIComponent(careerGoal)}
+      - edX: https://www.edx.org/search?q=${encodeURIComponent(careerGoal)}
+      - Khan Academy pentru competențe de bază
+      - YouTube pentru tutoriale practice
+      - LinkedIn Learning (cu trial gratuit)
       
       Răspunde DOAR cu JSON-ul, fără alte explicații.
     `;
@@ -127,49 +159,188 @@ serve(async (req) => {
       }
     } catch (parseError) {
       console.error('JSON Parse Error:', parseError);
-      // Fallback: create a basic structure
+      // Fallback: create a comprehensive structure with real resources
       careerPlan = {
-        title: `Plan de carieră ${careerGoal}`,
-        description: `Plan personalizat pentru a deveni ${careerGoal} bazat pe profilul tău de personalitate.`,
+        title: `Plan de dezvoltare ${careerGoal}`,
+        description: `Plan personalizat cu resurse gratuite concrete pentru a deveni ${careerGoal} în 6-12 luni.`,
         timeline: '6-12 luni',
         milestones: [
           {
-            title: 'Evaluare competențe actuale',
-            description: 'Identifică punctele forte și zonele de îmbunătățire relevante pentru rolul dorit.',
-            targetWeeks: 2,
-            category: 'assessment'
+            title: 'Evaluare competențe și personalitate',
+            description: 'Completează teste gratuite pentru a-ți cunoaște punctele forte și zonele de dezvoltare.',
+            targetWeeks: 1,
+            category: 'assessment',
+            resources: [
+              {
+                type: 'test',
+                title: 'Myers-Briggs Type Indicator',
+                url: 'https://www.16personalities.com/',
+                description: 'Test gratuit de personalitate pentru înțelegerea preferințelor tale profesionale',
+                estimatedHours: 1,
+                isFree: true
+              },
+              {
+                type: 'test',
+                title: 'VIA Character Strengths Survey',
+                url: 'https://www.viacharacter.org/www/Character-Strengths-Survey',
+                description: 'Identifică-ți punctele forte de caracter',
+                estimatedHours: 1,
+                isFree: true
+              }
+            ],
+            actionItems: [
+              'Completează testul MBTI și salvează rezultatele',
+              'Fă testul de puncte forte VIA',
+              'Notează 3 puncte forte principale identificate'
+            ]
           },
           {
-            title: 'Dezvoltare competențe tehnice',
-            description: 'Învățarea tehnologiilor și instrumentelor necesare în domeniu.',
-            targetWeeks: 12,
-            category: 'skill'
-          },
-          {
-            title: 'Construirea unui portofoliu',
-            description: 'Crearea de proiecte demonstrative relevante.',
+            title: `Învață fundamentele pentru ${careerGoal}`,
+            description: 'Dobândește cunoștințele de bază necesare în domeniu prin cursuri gratuite de calitate.',
             targetWeeks: 8,
-            category: 'experience'
+            category: 'skill',
+            resources: [
+              {
+                type: 'course',
+                title: 'Curs introductiv relevant',
+                url: `https://www.coursera.org/search?query=${encodeURIComponent(careerGoal)}`,
+                description: 'Cursuri gratuite de introducere în domeniu',
+                estimatedHours: 20,
+                isFree: true
+              },
+              {
+                type: 'course',
+                title: 'Khan Academy - Competențe fundamentale',
+                url: 'https://www.khanacademy.org/',
+                description: 'Dezvoltă competențele de bază necesare',
+                estimatedHours: 15,
+                isFree: true
+              }
+            ],
+            actionItems: [
+              'Înscrie-te la 2 cursuri gratuite relevante',
+              'Dedică 2-3 ore pe săptămână studiului',
+              'Completează exercițiile practice'
+            ]
           },
           {
-            title: 'Networking în industrie',
-            description: 'Conectarea cu profesioniști din domeniu și participarea la evenimente.',
+            title: 'Dezvoltă competențe practice',
+            description: 'Aplică cunoștințele învățate prin proiecte practice și exerciții.',
+            targetWeeks: 12,
+            category: 'experience',
+            resources: [
+              {
+                type: 'practice',
+                title: 'YouTube - Tutorial-uri practice',
+                url: `https://www.youtube.com/results?search_query=${encodeURIComponent(careerGoal)}+tutorial`,
+                description: 'Tutorial-uri gratuite pentru aplicarea practică',
+                estimatedHours: 25,
+                isFree: true
+              },
+              {
+                type: 'book',
+                title: 'Cărți gratuite de specialitate',
+                url: 'https://archive.org/',
+                description: 'Resurse gratuite pentru aprofundarea cunoștințelor',
+                estimatedHours: 30,
+                isFree: true
+              }
+            ],
+            actionItems: [
+              'Creează 2-3 proiecte demonstrative',
+              'Documentează progresul într-un jurnal',
+              'Solicită feedback de la profesioniști'
+            ]
+          },
+          {
+            title: 'Construiește rețeaua profesională',
+            description: 'Conectează-te cu profesioniști din domeniu și participă la evenimente.',
             targetWeeks: 16,
-            category: 'networking'
+            category: 'networking',
+            resources: [
+              {
+                type: 'networking',
+                title: 'LinkedIn - Grupuri profesionale',
+                url: 'https://www.linkedin.com/groups/',
+                description: 'Alătură-te grupurilor relevante pentru domeniul tău',
+                estimatedHours: 5,
+                isFree: true
+              },
+              {
+                type: 'networking',
+                title: 'Meetup - Evenimente locale',
+                url: 'https://www.meetup.com/',
+                description: 'Participă la evenimente și workshop-uri locale',
+                estimatedHours: 10,
+                isFree: true
+              }
+            ],
+            actionItems: [
+              'Creează profil LinkedIn profesional',
+              'Alătură-te la 3 grupuri relevante',
+              'Participă la minim 2 evenimente în domeniu'
+            ]
+          },
+          {
+            title: 'Pregătire pentru tranziție',
+            description: 'Pregătește-te pentru primul rol în noua carieră prin CV, portofoliu și interviuri.',
+            targetWeeks: 20,
+            category: 'experience',
+            resources: [
+              {
+                type: 'course',
+                title: 'Coursera - CV și scrisori de intenție',
+                url: 'https://www.coursera.org/learn/resume-writing',
+                description: 'Învață să scrii CV-uri eficiente',
+                estimatedHours: 8,
+                isFree: true
+              },
+              {
+                type: 'practice',
+                title: 'GitHub - Portofoliu online',
+                url: 'https://github.com/',
+                description: 'Creează un portofoliu online pentru proiectele tale',
+                estimatedHours: 12,
+                isFree: true
+              }
+            ],
+            actionItems: [
+              'Actualizează CV-ul cu noile competențe',
+              'Creează portofoliu online',
+              'Practică interviurile cu prietenii'
+            ]
           }
         ],
         recommendations: [
           {
-            type: 'skill',
-            title: 'Dezvoltă competențe practice',
-            description: 'Concentrează-te pe implementarea practică a cunoștințelor teoretice.',
-            priority: 5
+            type: 'course',
+            title: 'Certificare Google relevantă',
+            description: 'Obține o certificare Google gratuită pentru a-ți valida competențele.',
+            priority: 5,
+            resources: [
+              {
+                type: 'certification',
+                title: 'Google Career Certificates',
+                url: 'https://www.coursera.org/google-career-certificates',
+                description: 'Certificări Google pentru cariere în tehnologie',
+                isFree: true
+              }
+            ]
           },
           {
-            type: 'certification',
-            title: 'Obține certificări relevante',
-            description: 'Certificările validate de industrie îți vor crește credibilitatea.',
-            priority: 4
+            type: 'skill',
+            title: 'Competențe de comunicare',
+            description: 'Dezvoltă competențele de comunicare esențiale pentru orice carieră.',
+            priority: 4,
+            resources: [
+              {
+                type: 'course',
+                title: 'edX - Communication Skills',
+                url: 'https://www.edx.org/course/introduction-to-communication-science',
+                description: 'Curs gratuit de comunicare de la universități de top',
+                isFree: true
+              }
+            ]
           }
         ]
       };

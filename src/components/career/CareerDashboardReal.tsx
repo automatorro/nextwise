@@ -71,33 +71,36 @@ const CareerDashboardReal = () => {
   };
 
   const handleRecommendationAction = (recommendation: any) => {
-    switch (recommendation.action_type) {
+    // Always open external links from action_data.url
+    const url = recommendation.action_data?.url;
+    if (url) {
+      window.open(url, '_blank');
+      return;
+    }
+
+    // Fallback based on recommendation type
+    switch (recommendation.recommendation_type) {
       case 'test':
-        // Navigate to specific test
-        const testPath = recommendation.action_data?.test_path || '/tests';
-        navigate(testPath);
-        break;
-      case 'external_link':
-        // Open external link
-        const url = recommendation.action_data?.url;
-        if (url) {
-          window.open(url, '_blank');
-        }
+        navigate('/tests');
         break;
       case 'course':
-        // Navigate to course or open external course link
-        const courseUrl = recommendation.action_data?.course_url;
-        if (courseUrl) {
-          window.open(courseUrl, '_blank');
-        }
+        toast({
+          title: "Deschide linkul",
+          description: "Vezi resursa recomandată în tab-ul nou deschis.",
+        });
         break;
-      case 'skill_assessment':
-        // Navigate to skill assessment
+      case 'skill':
         navigate('/tests?category=skills');
+        break;
+      case 'certification':
+        toast({
+          title: "Certificare recomandată",
+          description: "Vezi linkul către programul de certificare.",
+        });
         break;
       default:
         toast({
-          title: "Feature în dezvoltare",
+          title: "Recomandare utilă",
           description: "Această funcționalitate va fi disponibilă în curând."
         });
     }
