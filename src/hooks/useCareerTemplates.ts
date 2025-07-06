@@ -88,70 +88,64 @@ export const useCareerTemplates = () => {
 
       if (templateError) throw templateError;
 
-      // Get template milestones
-      const { data: templateMilestones, error: milestonesError } = await supabase
-        .from('career_template_milestones')
+      // Get user's test results for personalization
+      const { data: testResults } = await supabase
+        .from('test_results')
+        .select('*, test_types(name)')
+        .eq('user_id', userId)
+        .order('completed_at', { ascending: false });
+
+      // Get user profile
+      const { data: userProfile } = await supabase
+        .from('profiles')
         .select('*')
-        .eq('template_id', templateId)
-        .order('milestone_order', { ascending: true });
-
-      if (milestonesError) throw milestonesError;
-
-      // Create new career plan
-      const { data: careerPlan, error: planError } = await supabase
-        .from('career_paths')
-        .insert({
-          user_id: userId,
-          title: customizations?.title || `Plan ${template.title}`,
-          description: customizations?.description || template.description,
-          generated_by_ai: false,
-          progress_percentage: 0
-        })
-        .select()
+        .eq('id', userId)
         .single();
 
-      if (planError) throw planError;
+      // Call generate-career-plan edge function with template-specific data
+      const { data: generatedPlan, error: generateError } = await supabase.functions.invoke(
+        'generate-career-plan', 
+        {
+          body: {
+            testResults: testResults || [],
+            careerGoal: template.title,
+            userProfile: userProfile || {},
+            userId: userId,
+            templateContext: {
+              title: template.title,
+              description: template.description,
+              category: template.category,
+              estimatedDurationMonths: template.estimated_duration_months,
+              difficultyLevel: template.difficulty_level,
+              requiredSkills: template.required_skills,
+              targetRoles: template.target_roles
+            }
+          }
+        }
+      );
 
-      // Create milestones from template
-      const milestones = templateMilestones.map((tm, index) => {
-        const startDate = new Date();
-        const weeksOffset = templateMilestones
-          .slice(0, index)
-          .reduce((sum, m) => sum + m.estimated_duration_weeks, 0);
-        
-        const targetDate = new Date(startDate);
-        targetDate.setDate(targetDate.getDate() + (weeksOffset * 7));
+      if (generateError) throw generateError;
 
-        return {
-          career_path_id: careerPlan.id,
-          title: tm.title,
-          description: tm.description,
-          milestone_order: tm.milestone_order,
-          target_date: targetDate.toISOString().split('T')[0],
-          is_completed: false
-        };
-      });
+      if (!generatedPlan?.success) {
+        throw new Error(generatedPlan?.error || 'Failed to generate career plan');
+      }
 
-      const { error: milestonesInsertError } = await supabase
-        .from('career_milestones')
-        .insert(milestones);
-
-      if (milestonesInsertError) throw milestonesInsertError;
-
-      return careerPlan;
+      // The edge function already creates the plan and returns it with ID
+      return generatedPlan.careerPlan;
     },
     onSuccess: (careerPlan) => {
       queryClient.invalidateQueries({ queryKey: ['career-plans'] });
+      queryClient.invalidateQueries({ queryKey: ['career-recommendations'] });
       toast({
-        title: "Plan creat cu succes!",
-        description: `Planul "${careerPlan.title}" a fost creat din template.`
+        title: "Plan generat cu succes!",
+        description: `Planul "${careerPlan.title}" a fost creat cu resurse și milestone-uri concrete.`
       });
     },
     onError: (error) => {
       console.error('Error creating plan from template:', error);
       toast({
-        title: "Eroare",
-        description: "Nu am putut crea planul din template.",
+        title: "Eroare la generarea planului",
+        description: "Nu am putut genera planul cu resurse. Încearcă din nou.",
         variant: "destructive"
       });
     }

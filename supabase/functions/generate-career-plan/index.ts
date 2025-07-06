@@ -2,6 +2,170 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import "https://deno.land/x/xhr@0.1.0/mod.ts"
 
+// Helper functions for template-specific content generation
+function getTemplateSpecificDescription(careerGoal: string, phase: string): string {
+  const goal = careerGoal.toLowerCase();
+  
+  if (goal.includes('trainer') || goal.includes('senior trainer')) {
+    switch (phase) {
+      case 'fundamentals':
+        return 'Dezvoltă competențele de instruire și facilitare prin cursuri practice de pedagogie și comunicare.';
+      case 'practical':
+        return 'Aplică tehnicile de training prin proiecte demonstrative și practică cu audiențe reale.';
+      case 'networking':
+        return 'Conectează-te cu traineri experimentați și participă la evenimente de HR și Learning & Development.';
+      default:
+        return 'Dezvoltă competențele necesare pentru rolul de trainer.';
+    }
+  }
+  
+  if (goal.includes('data science') || goal.includes('data scientist')) {
+    switch (phase) {
+      case 'fundamentals':
+        return 'Învață Python, statistică și algoritmi de machine learning prin cursuri gratuite de top.';
+      case 'practical':
+        return 'Construiește proiecte de data science reale și creează un portofoliu demonstrativ.';
+      default:
+        return 'Dezvoltă competențele tehnice pentru data science.';
+    }
+  }
+  
+  // Generic fallback
+  return `Dezvoltă competențele specifice pentru ${careerGoal} prin resurse gratuite de calitate.`;
+}
+
+function getTemplateSpecificResources(careerGoal: string, phase: string): any[] {
+  const goal = careerGoal.toLowerCase();
+  
+  if (goal.includes('trainer') || goal.includes('senior trainer')) {
+    switch (phase) {
+      case 'fundamentals':
+        return [
+          {
+            type: 'course',
+            title: 'Learning How to Learn - Coursera',
+            url: 'https://www.coursera.org/learn/learning-how-to-learn',
+            description: 'Fundamentele învățării eficiente - esențial pentru traineri',
+            estimatedHours: 15,
+            isFree: true
+          },
+          {
+            type: 'course',
+            title: 'Introduction to Public Speaking - edX',
+            url: 'https://www.edx.org/course/introduction-to-public-speaking',
+            description: 'Dezvoltă competențele de prezentare și comunicare',
+            estimatedHours: 12,
+            isFree: true
+          },
+          {
+            type: 'video',
+            title: 'TED Talks - How to Give Great Presentations',
+            url: 'https://www.youtube.com/playlist?list=PLJicmE8fK0EiGpX9BtIz2WtS6j2vz2u9d',
+            description: 'Colecție de prezentări despre arta comunicării',
+            estimatedHours: 8,
+            isFree: true
+          }
+        ];
+      case 'practical':
+        return [
+          {
+            type: 'practice',
+            title: 'Toastmasters International',
+            url: 'https://www.toastmasters.org/',
+            description: 'Practică prezentarea în fața audiențelor reale',
+            estimatedHours: 20,
+            isFree: true
+          },
+          {
+            type: 'course',
+            title: 'Instructional Design Course - Khan Academy',
+            url: 'https://www.khanacademy.org/computing/computer-programming',
+            description: 'Învață să creezi curriculum educațional eficient',
+            estimatedHours: 15,
+            isFree: true
+          }
+        ];
+      case 'networking':
+        return [
+          {
+            type: 'networking',
+            title: 'ATD (Association for Talent Development)',
+            url: 'https://www.td.org/',
+            description: 'Asociația internațională pentru profesioniștii în training',
+            estimatedHours: 5,
+            isFree: true
+          },
+          {
+            type: 'networking',
+            title: 'LinkedIn Learning & Development Groups',
+            url: 'https://www.linkedin.com/groups/',
+            description: 'Grupuri specializate pentru traineri și specialiști L&D',
+            estimatedHours: 8,
+            isFree: true
+          }
+        ];
+      default:
+        return [];
+    }
+  }
+  
+  // Generic resources
+  return [
+    {
+      type: 'course',
+      title: `${careerGoal} Fundamentals`,
+      url: `https://www.coursera.org/search?query=${encodeURIComponent(careerGoal)}`,
+      description: 'Cursuri introductive în domeniu',
+      estimatedHours: 20,
+      isFree: true
+    },
+    {
+      type: 'video',
+      title: 'YouTube Learning Path',
+      url: `https://www.youtube.com/results?search_query=${encodeURIComponent(careerGoal)}+tutorial`,
+      description: 'Tutorial-uri gratuite și practice',
+      estimatedHours: 15,
+      isFree: true
+    }
+  ];
+}
+
+function getTemplateSpecificActions(careerGoal: string, phase: string): string[] {
+  const goal = careerGoal.toLowerCase();
+  
+  if (goal.includes('trainer') || goal.includes('senior trainer')) {
+    switch (phase) {
+      case 'fundamentals':
+        return [
+          'Completează cursul Learning How to Learn',
+          'Practică 15 minute de public speaking zilnic',
+          'Citește 3 articole despre pedagogie pe săptămână'
+        ];
+      case 'practical':
+        return [
+          'Creează primul tău material de training (20 min)',
+          'Găzduiește o sesiune de training pentru colegi/prieteni',
+          'Documentează feedback-ul și îmbunătățește materialul'
+        ];
+      case 'networking':
+        return [
+          'Creează profil LinkedIn optimizat pentru training',
+          'Alătură-te la ATD și 2 grupuri locale de traineri',
+          'Participă la minim 1 webinar L&D pe lună'
+        ];
+      default:
+        return ['Stabilește obiective clare', 'Urmărește progresul zilnic'];
+    }
+  }
+  
+  // Generic actions
+  return [
+    'Dedică 1-2 ore zilnic studiului',
+    'Aplică cunoștințele în proiecte practice',
+    'Solicită feedback de la profesioniști din domeniu'
+  ];
+}
+
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
@@ -13,7 +177,7 @@ serve(async (req) => {
   }
 
   try {
-    const { testResults, careerGoal, userProfile, userId } = await req.json();
+    const { testResults, careerGoal, userProfile, userId, templateContext } = await req.json();
     
     const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
@@ -43,8 +207,21 @@ serve(async (req) => {
       `;
     }
 
+    // Enhanced prompt based on template context
+    const isTemplate = templateContext && templateContext.title;
+    const timeframe = isTemplate ? `${templateContext.estimatedDurationMonths} luni` : '6-12 luni';
+    
     const prompt = `
       Creează un plan detaliat de dezvoltare a carierei pentru cineva care vrea să devină ${careerGoal}.
+      ${isTemplate ? `
+      
+      CONTEXT TEMPLATE:
+      - Categorie: ${templateContext.category}
+      - Nivel dificultate: ${templateContext.difficultyLevel}
+      - Durată estimată: ${templateContext.estimatedDurationMonths} luni
+      - Skills necesare: ${templateContext.requiredSkills?.join(', ') || 'N/A'}
+      - Roluri țintă: ${templateContext.targetRoles?.join(', ') || 'N/A'}
+      ` : ''}
       
       ${personalityInsights}
       
@@ -52,20 +229,20 @@ serve(async (req) => {
       ${testResults.map((r: any) => `- ${r.test_types?.name}: ${JSON.stringify(r.score)}`).join('\n')}
       
       IMPORTANT: Pentru fiecare milestone și recomandare, INCLUDE RESURSE GRATUITE CONCRETE cu linkuri reale către:
-      - Coursera (cursuri gratuite)
-      - edX (cursuri gratuite) 
-      - Khan Academy
-      - YouTube tutorials specifice
-      - Articole relevante
-      - Cărți gratuite (PDF-uri disponibile online)
-      - Teste gratuite de personalitate sau competențe
-      - Platforme de practică gratuite
+      - Coursera (cursuri gratuite cu audit)
+      - edX (cursuri MIT, Harvard, Stanford gratuite)
+      - Khan Academy pentru skills fundamentale
+      - YouTube canale educaționale specializate (CrashCourse, freeCodeCamp, etc.)
+      - Articole Medium, dev.to, blog-uri relevante
+      - Cărți gratuite (archive.org, PDF-uri open source)
+      - Teste gratuite (16personalities, VIA Character Survey)
+      - Platforme practică (HackerRank, Codecademy free tier, etc.)
       
       Structură obligatorie:
       {
         "title": "Plan de dezvoltare ${careerGoal}",
         "description": "Plan personalizat cu resurse gratuite pentru a deveni ${careerGoal}",
-        "timeline": "6-12 luni",
+        "timeline": "${timeframe}",
         "milestones": [
           {
             "title": "Titlul Milestone-ului",
@@ -159,11 +336,12 @@ serve(async (req) => {
       }
     } catch (parseError) {
       console.error('JSON Parse Error:', parseError);
-      // Fallback: create a comprehensive structure with real resources
+      // Fallback: create a template-specific structure with real resources
+      const fallbackTimeframe = isTemplate ? `${templateContext.estimatedDurationMonths} luni` : '6-12 luni';
       careerPlan = {
         title: `Plan de dezvoltare ${careerGoal}`,
-        description: `Plan personalizat cu resurse gratuite concrete pentru a deveni ${careerGoal} în 6-12 luni.`,
-        timeline: '6-12 luni',
+        description: `Plan personalizat cu resurse gratuite concrete pentru a deveni ${careerGoal} în ${fallbackTimeframe}.`,
+        timeline: fallbackTimeframe,
         milestones: [
           {
             title: 'Evaluare competențe și personalitate',
@@ -196,90 +374,27 @@ serve(async (req) => {
           },
           {
             title: `Învață fundamentele pentru ${careerGoal}`,
-            description: 'Dobândește cunoștințele de bază necesare în domeniu prin cursuri gratuite de calitate.',
-            targetWeeks: 8,
+            description: getTemplateSpecificDescription(careerGoal, 'fundamentals'),
+            targetWeeks: isTemplate ? Math.floor(templateContext.estimatedDurationMonths * 4 * 0.4) : 8,
             category: 'skill',
-            resources: [
-              {
-                type: 'course',
-                title: 'Curs introductiv relevant',
-                url: `https://www.coursera.org/search?query=${encodeURIComponent(careerGoal)}`,
-                description: 'Cursuri gratuite de introducere în domeniu',
-                estimatedHours: 20,
-                isFree: true
-              },
-              {
-                type: 'course',
-                title: 'Khan Academy - Competențe fundamentale',
-                url: 'https://www.khanacademy.org/',
-                description: 'Dezvoltă competențele de bază necesare',
-                estimatedHours: 15,
-                isFree: true
-              }
-            ],
-            actionItems: [
-              'Înscrie-te la 2 cursuri gratuite relevante',
-              'Dedică 2-3 ore pe săptămână studiului',
-              'Completează exercițiile practice'
-            ]
+            resources: getTemplateSpecificResources(careerGoal, 'fundamentals'),
+            actionItems: getTemplateSpecificActions(careerGoal, 'fundamentals')
           },
           {
             title: 'Dezvoltă competențe practice',
-            description: 'Aplică cunoștințele învățate prin proiecte practice și exerciții.',
-            targetWeeks: 12,
+            description: getTemplateSpecificDescription(careerGoal, 'practical'),
+            targetWeeks: isTemplate ? Math.floor(templateContext.estimatedDurationMonths * 4 * 0.5) : 12,
             category: 'experience',
-            resources: [
-              {
-                type: 'practice',
-                title: 'YouTube - Tutorial-uri practice',
-                url: `https://www.youtube.com/results?search_query=${encodeURIComponent(careerGoal)}+tutorial`,
-                description: 'Tutorial-uri gratuite pentru aplicarea practică',
-                estimatedHours: 25,
-                isFree: true
-              },
-              {
-                type: 'book',
-                title: 'Cărți gratuite de specialitate',
-                url: 'https://archive.org/',
-                description: 'Resurse gratuite pentru aprofundarea cunoștințelor',
-                estimatedHours: 30,
-                isFree: true
-              }
-            ],
-            actionItems: [
-              'Creează 2-3 proiecte demonstrative',
-              'Documentează progresul într-un jurnal',
-              'Solicită feedback de la profesioniști'
-            ]
+            resources: getTemplateSpecificResources(careerGoal, 'practical'),
+            actionItems: getTemplateSpecificActions(careerGoal, 'practical')
           },
           {
             title: 'Construiește rețeaua profesională',
-            description: 'Conectează-te cu profesioniști din domeniu și participă la evenimente.',
-            targetWeeks: 16,
+            description: getTemplateSpecificDescription(careerGoal, 'networking'),
+            targetWeeks: isTemplate ? Math.floor(templateContext.estimatedDurationMonths * 4 * 0.3) : 16,
             category: 'networking',
-            resources: [
-              {
-                type: 'networking',
-                title: 'LinkedIn - Grupuri profesionale',
-                url: 'https://www.linkedin.com/groups/',
-                description: 'Alătură-te grupurilor relevante pentru domeniul tău',
-                estimatedHours: 5,
-                isFree: true
-              },
-              {
-                type: 'networking',
-                title: 'Meetup - Evenimente locale',
-                url: 'https://www.meetup.com/',
-                description: 'Participă la evenimente și workshop-uri locale',
-                estimatedHours: 10,
-                isFree: true
-              }
-            ],
-            actionItems: [
-              'Creează profil LinkedIn profesional',
-              'Alătură-te la 3 grupuri relevante',
-              'Participă la minim 2 evenimente în domeniu'
-            ]
+            resources: getTemplateSpecificResources(careerGoal, 'networking'),
+            actionItems: getTemplateSpecificActions(careerGoal, 'networking')
           },
           {
             title: 'Pregătire pentru tranziție',
@@ -363,6 +478,16 @@ serve(async (req) => {
     if (saveError) {
       console.error('Error saving career plan:', saveError);
       throw saveError;
+    }
+
+    // Trigger career recommendations generation in background
+    try {
+      await supabase.functions.invoke('generate-career-recommendations', {
+        body: { userId }
+      });
+    } catch (recError) {
+      console.error('Error generating recommendations (non-blocking):', recError);
+      // Don't throw - this shouldn't block the main plan creation
     }
 
     return new Response(
