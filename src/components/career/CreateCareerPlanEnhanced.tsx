@@ -346,12 +346,12 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
                         {createPlanFromTemplate.isPending ? (
                           <>
                             <Sparkles className="w-4 h-4 mr-2 animate-spin" />
-                            Generez planul...
+                            Creez planul...
                           </>
                         ) : (
                           <>
                             <Target className="w-4 h-4 mr-2" />
-                            Generează plan
+                            Folosește template-ul
                           </>
                         )}
                       </Button>
