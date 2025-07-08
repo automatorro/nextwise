@@ -12,6 +12,7 @@ export interface CareerMilestone {
   completed_at: string | null;
   is_completed: boolean;
   milestone_order: number;
+  resources: any[] | null;
   created_at: string;
   updated_at: string;
 }
@@ -48,6 +49,7 @@ export const useCareerMilestones = (careerPathId?: string) => {
       description?: string;
       target_date?: string;
       milestone_order?: number;
+      resources?: any[];
     }) => {
       const { data, error } = await supabase
         .from('career_milestones' as any)

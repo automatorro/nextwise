@@ -120,7 +120,8 @@ export const useCareerTemplates = () => {
           description: tm.description,
           milestone_order: tm.milestone_order,
           is_completed: false,
-          target_date: null // User can set this later
+          target_date: null, // User can set this later
+          resources: tm.resources // Copy resources from template
         }));
 
         const { error: milestonesInsertError } = await supabase

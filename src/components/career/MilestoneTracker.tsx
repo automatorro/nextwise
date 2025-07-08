@@ -15,6 +15,7 @@ import {
 import { useCareerMilestones, type CareerMilestone } from '@/hooks/useCareerMilestones';
 import AddMilestoneModal from './AddMilestoneModal';
 import EditMilestoneModal from './EditMilestoneModal';
+import MilestoneResourcesSection from './MilestoneResourcesSection';
 import { format } from 'date-fns';
 
 interface Props {
@@ -176,6 +177,16 @@ const MilestoneTracker = ({ careerPathId, canEdit = true }: Props) => {
                       </div>
                     )}
                   </div>
+                  
+                  {/* Resources Section */}
+                  {milestone.resources && milestone.resources.length > 0 && (
+                    <div className="mt-3">
+                      <MilestoneResourcesSection
+                        resources={milestone.resources}
+                        milestoneTitle={milestone.title}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             ))
