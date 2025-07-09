@@ -480,6 +480,28 @@ serve(async (req) => {
       throw saveError;
     }
 
+    // Create individual milestone records in career_milestones table
+    if (careerPlan.milestones && Array.isArray(careerPlan.milestones)) {
+      const milestoneInserts = careerPlan.milestones.map((milestone: any, index: number) => ({
+        career_path_id: savedPlan.id,
+        title: milestone.title,
+        description: milestone.description,
+        milestone_order: index + 1,
+        resources: milestone.resources || [],
+        target_date: null, // Can be set later by user
+        is_completed: false
+      }));
+
+      const { error: milestonesError } = await supabase
+        .from('career_milestones')
+        .insert(milestoneInserts);
+
+      if (milestonesError) {
+        console.error('Error creating milestones:', milestonesError);
+        // Don't throw - the plan was created successfully, milestones can be added later
+      }
+    }
+
     // Trigger career recommendations generation in background
     try {
       await supabase.functions.invoke('generate-career-recommendations', {

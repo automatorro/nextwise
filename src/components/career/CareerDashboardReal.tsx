@@ -27,6 +27,7 @@ import { useCareerPlanGeneration } from '@/hooks/useCareerPlanGeneration';
 import { useTestResults } from '@/hooks/useTestResults';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useToast } from '@/hooks/use-toast';
+import CareerGoalSelector from './CareerGoalSelector';
 
 const CareerDashboardReal = () => {
   const navigate = useNavigate();
@@ -52,7 +53,7 @@ const CareerDashboardReal = () => {
 
   const features = getSubscriptionFeatures();
 
-  const handleGenerateCareerPlan = () => {
+  const handleGenerateCareerPlan = (careerGoal: string) => {
     if (testResults.length === 0) {
       toast({
         title: "Assessment Required",
@@ -62,7 +63,6 @@ const CareerDashboardReal = () => {
       return;
     }
 
-    const careerGoal = "software developer";
     generateCareerPlan.mutate({ careerGoal, testResults });
   };
 
@@ -192,14 +192,18 @@ const CareerDashboardReal = () => {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-wrap gap-3">
-            <Button 
-              onClick={handleGenerateCareerPlan}
-              disabled={isGeneratingPlan}
-              className="flex items-center space-x-2"
+            <CareerGoalSelector 
+              onSelectGoal={handleGenerateCareerPlan}
+              isGenerating={isGeneratingPlan}
             >
-              <Brain className="w-4 h-4" />
-              <span>{isGeneratingPlan ? 'Generating...' : 'Generate Career Plan'}</span>
-            </Button>
+              <Button 
+                disabled={isGeneratingPlan}
+                className="flex items-center space-x-2"
+              >
+                <Brain className="w-4 h-4" />
+                <span>{isGeneratingPlan ? 'Generating...' : 'Generate Career Plan'}</span>
+              </Button>
+            </CareerGoalSelector>
             <Button 
               variant="outline"
               onClick={handleGenerateRecommendations}
@@ -235,10 +239,15 @@ const CareerDashboardReal = () => {
                 }
               </p>
               {testResults.length > 0 && features.hasAI ? (
-                <Button onClick={handleGenerateCareerPlan} disabled={isGeneratingPlan}>
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  {isGeneratingPlan ? 'Generating plan...' : 'Generate AI Plan'}
-                </Button>
+                <CareerGoalSelector 
+                  onSelectGoal={handleGenerateCareerPlan}
+                  isGenerating={isGeneratingPlan}
+                >
+                  <Button disabled={isGeneratingPlan}>
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    {isGeneratingPlan ? 'Generating plan...' : 'Generate AI Plan'}
+                  </Button>
+                </CareerGoalSelector>
               ) : (
                 <Button onClick={() => navigate('/career-paths?tab=create')}>
                   <Plus className="w-4 h-4 mr-2" />
