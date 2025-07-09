@@ -28,6 +28,7 @@ import { useTestResults } from '@/hooks/useTestResults';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useToast } from '@/hooks/use-toast';
 import CareerGoalSelector from './CareerGoalSelector';
+import LoadingState from './LoadingState';
 
 const CareerDashboardReal = () => {
   const navigate = useNavigate();
@@ -71,37 +72,67 @@ const CareerDashboardReal = () => {
   };
 
   const handleRecommendationAction = (recommendation: any) => {
-    // Always open external links from action_data.url
+    // Handle internal navigation
+    if (recommendation.action_type === 'internal_navigation') {
+      const route = recommendation.action_data?.route;
+      if (route) {
+        navigate(route);
+        return;
+      }
+    }
+
+    // Handle external links with better validation
     const url = recommendation.action_data?.url;
-    if (url) {
-      window.open(url, '_blank');
-      return;
+    if (url && recommendation.action_type === 'external_link') {
+      try {
+        // Validate URL before opening
+        new URL(url); // This will throw if URL is invalid
+        window.open(url, '_blank');
+        
+        // Show helpful message
+        toast({
+          title: "Link deschis",
+          description: `Resursa "${recommendation.title}" s-a deschis într-un tab nou.`,
+        });
+        return;
+      } catch (urlError) {
+        console.error('Invalid URL:', url, urlError);
+        toast({
+          title: "Link invalid",
+          description: "Ne pare rău, acest link nu mai este disponibil. Recomandările vor fi actualizate în curând.",
+          variant: "destructive"
+        });
+        return;
+      }
     }
 
     // Fallback based on recommendation type
     switch (recommendation.recommendation_type) {
       case 'test':
-        navigate('/tests');
+        navigate('/assessments');
         break;
       case 'course':
         toast({
-          title: "Deschide linkul",
-          description: "Vezi resursa recomandată în tab-ul nou deschis.",
+          title: "Resurse educaționale",
+          description: "Verifică recomandările actualizate cu link-uri validate.",
         });
         break;
       case 'skill':
-        navigate('/tests?category=skills');
+        navigate('/assessments?category=skills');
+        break;
+      case 'path':
+        navigate('/career-paths?tab=create');
         break;
       case 'certification':
         toast({
           title: "Certificare recomandată",
-          description: "Vezi linkul către programul de certificare.",
+          description: "Vezi resursa pentru program de certificare."
         });
         break;
       default:
         toast({
-          title: "Recomandare utilă",
-          description: "Această funcționalitate va fi disponibilă în curând."
+          title: "Funcționalitate în dezvoltare",
+          description: "Această opțiune va fi disponibilă în curând."
         });
     }
   };
@@ -314,8 +345,23 @@ const CareerDashboardReal = () => {
         )}
       </div>
 
+      {/* Loading States */}
+      {isGeneratingPlan && (
+        <LoadingState 
+          type="plan" 
+          message="Creez un plan personalizat bazat pe testele tale și obiectivele selectate..."
+        />
+      )}
+      
+      {isGeneratingRecommendations && (
+        <LoadingState 
+          type="recommendations" 
+          message="Analizez profilul tău pentru a găsi cele mai potrivite resurse și oportunități..."
+        />
+      )}
+
       {/* AI Recommendations */}
-      {recommendations.length > 0 && (
+      {recommendations.length > 0 && !isGeneratingRecommendations && (
         <div>
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900">AI Recommendations for You</h2>
@@ -369,9 +415,16 @@ const CareerDashboardReal = () => {
                           <ArrowRight className="w-4 h-4 ml-2" />
                         )}
                       </Button>
-                      <Badge variant="secondary" className="ml-2">
-                        Priority {rec.priority}
-                      </Badge>
+                      <div className="flex items-center space-x-2 ml-2">
+                        <Badge variant="secondary">
+                          P{rec.priority}
+                        </Badge>
+                        {rec.action_data?.platform && (
+                          <Badge variant="outline" className="text-xs">
+                            {rec.action_data.platform}
+                          </Badge>
+                        )}
+                      </div>
                     </div>
                     {rec.estimated_time_minutes && (
                       <div className="flex items-center space-x-1 mt-2 text-xs text-gray-500">

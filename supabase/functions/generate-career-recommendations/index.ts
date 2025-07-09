@@ -7,6 +7,260 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+// Updated stable resource links that are less likely to change
+const VERIFIED_RESOURCES = {
+  personality_tests: [
+    {
+      title: 'Test 16 Personalities (MBTI)',
+      url: 'https://www.16personalities.com/',
+      description: 'Test gratuit de personalitate MBTI pentru înțelegerea preferințelor profesionale'
+    },
+    {
+      title: 'VIA Character Strengths Survey',
+      url: 'https://www.viacharacter.org/character-strengths-survey',
+      description: 'Identifică-ți cele 24 de puncte forte de caracter'
+    }
+  ],
+  courses: {
+    leadership: [
+      {
+        title: 'Introduction to Leadership - University of Virginia',
+        url: 'https://www.coursera.org/learn/leadership-introduction',
+        platform: 'Coursera',
+        estimatedHours: 12
+      },
+      {
+        title: 'Leadership in Organizations - IESE Business School',
+        url: 'https://www.coursera.org/learn/leadership-organizations',
+        platform: 'Coursera',
+        estimatedHours: 15
+      }
+    ],
+    project_management: [
+      {
+        title: 'Introduction to Project Management - University of Adelaide',
+        url: 'https://www.coursera.org/learn/project-management',
+        platform: 'Coursera',
+        estimatedHours: 18
+      },
+      {
+        title: 'Google Project Management Certificate',
+        url: 'https://www.coursera.org/professional-certificates/google-project-management',
+        platform: 'Coursera',
+        estimatedHours: 180
+      }
+    ],
+    communication: [
+      {
+        title: 'Introduction to Communication Science - University of Amsterdam',
+        url: 'https://www.coursera.org/learn/communication',
+        platform: 'Coursera',
+        estimatedHours: 25
+      },
+      {
+        title: 'Improving Communication Skills - University of Pennsylvania',
+        url: 'https://www.coursera.org/learn/wharton-communication-skills',
+        platform: 'Coursera',
+        estimatedHours: 12
+      }
+    ],
+    data_science: [
+      {
+        title: 'Data Science Methodology - IBM',
+        url: 'https://www.coursera.org/learn/data-science-methodology',
+        platform: 'Coursera',
+        estimatedHours: 15
+      },
+      {
+        title: 'Python for Data Science and AI - IBM',
+        url: 'https://www.coursera.org/learn/python-for-applied-data-science-ai',
+        platform: 'Coursera',
+        estimatedHours: 20
+      }
+    ],
+    technology: [
+      {
+        title: 'Introduction to Computer Science - Harvard CS50',
+        url: 'https://www.edx.org/course/introduction-computer-science-harvardx-cs50x',
+        platform: 'edX',
+        estimatedHours: 150
+      },
+      {
+        title: 'Web Development - University of Michigan',
+        url: 'https://www.coursera.org/specializations/web-design',
+        platform: 'Coursera',
+        estimatedHours: 60
+      }
+    ]
+  },
+  youtube_channels: [
+    {
+      title: 'CrashCourse - Educational Content',
+      url: 'https://www.youtube.com/@CrashCourse',
+      description: 'Cursuri intensive pe diverse domenii'
+    },
+    {
+      title: 'TED-Ed - Professional Development',
+      url: 'https://www.youtube.com/@TEDEd',
+      description: 'Lecții pentru dezvoltare profesională'
+    },
+    {
+      title: 'Khan Academy - Skill Building',
+      url: 'https://www.youtube.com/@khanacademy',
+      description: 'Construirea competențelor fundamentale'
+    }
+  ]
+}
+
+function getPersonalizedRecommendations(testResults: any[], careerPlans: any[], existingRecs: any[]): any[] {
+  const recommendations = [];
+  
+  // Find Big Five results
+  const bigFiveResult = testResults.find(r => 
+    r.test_type_id === 'f47ac10b-58cc-4372-a567-0e02b2c3d480'
+  );
+
+  // Get career plan context for personalization
+  const careerGoals = careerPlans?.map(p => p.title.toLowerCase()) || [];
+  const hasLeadershipGoal = careerGoals.some(goal => 
+    goal.includes('manager') || goal.includes('director') || goal.includes('lead')
+  );
+  const hasTechGoal = careerGoals.some(goal => 
+    goal.includes('developer') || goal.includes('engineer') || goal.includes('tech')
+  );
+
+  if (bigFiveResult?.score?.dimensions) {
+    const dims = bigFiveResult.score.dimensions;
+    
+    // Leadership recommendations for high extraversion OR career goals
+    if (dims.extraversion > 70 || hasLeadershipGoal) {
+      const leadershipCourse = VERIFIED_RESOURCES.courses.leadership[0];
+      recommendations.push({
+        recommendation_type: 'course',
+        title: 'Dezvoltă competențe de leadership',
+        description: `${dims.extraversion > 70 ? 'Extraversiunea ta ridicată' : 'Obiectivele tale de carieră'} indică potențial pentru roluri manageriale. Acest curs te va pregăti pentru pozițiile de conducere.`,
+        action_text: 'Începe cursul gratuit',
+        action_type: 'external_link',
+        action_data: {
+          url: leadershipCourse.url,
+          estimatedHours: leadershipCourse.estimatedHours,
+          difficulty: 'intermediate',
+          platform: leadershipCourse.platform
+        },
+        category: 'skill_development',
+        priority: hasLeadershipGoal ? 5 : 4,
+        estimated_time_minutes: 180
+      });
+    }
+
+    // Project management for high conscientiousness
+    if (dims.conscientiousness > 70) {
+      const pmCourse = VERIFIED_RESOURCES.courses.project_management[0];
+      recommendations.push({
+        recommendation_type: 'course',
+        title: 'Project Management pentru persoane organizate',
+        description: 'Conștiinciozitatea ta ridicată te predestinează pentru managementul de proiect. Acest curs îți va oferi instrumentele necesare.',
+        action_text: 'Începe cursul PM',
+        action_type: 'external_link',
+        action_data: {
+          url: pmCourse.url,
+          estimatedHours: pmCourse.estimatedHours,
+          difficulty: 'intermediate',
+          platform: pmCourse.platform
+        },
+        category: 'certification',
+        priority: 4,
+        estimated_time_minutes: 240
+      });
+    }
+
+    // Technical recommendations for tech career goals or high openness
+    if (hasTechGoal || dims.openness > 75) {
+      const techCourse = VERIFIED_RESOURCES.courses.technology[hasTechGoal ? 1 : 0];
+      recommendations.push({
+        recommendation_type: 'course',
+        title: hasTechGoal ? 'Dezvoltare Web pentru cariera ta' : 'Explorează Computer Science',
+        description: `${hasTechGoal ? 'Obiectivele tale tehnologice' : 'Deschiderea ta ridicată către experiențe noi'} te fac ideal pentru învățarea de tehnologii moderne.`,
+        action_text: 'Începe cursul tech',
+        action_type: 'external_link',
+        action_data: {
+          url: techCourse.url,
+          estimatedHours: techCourse.estimatedHours,
+          difficulty: hasTechGoal ? 'intermediate' : 'beginner',
+          platform: techCourse.platform
+        },
+        category: 'skill_development',
+        priority: hasTechGoal ? 5 : 3,
+        estimated_time_minutes: 200
+      });
+    }
+
+    // Communication skills for everyone, but especially low extraversion
+    if (dims.extraversion < 50 || !existingRecs?.some(r => r.title.includes('comunicare'))) {
+      const commCourse = VERIFIED_RESOURCES.courses.communication[1];
+      recommendations.push({
+        recommendation_type: 'course',
+        title: 'Îmbunătățește comunicarea profesională',
+        description: dims.extraversion < 50 
+          ? 'Pentru introverți, competențele de comunicare structurate sunt esențiale pentru avansarea în carieră.'
+          : 'Competențele de comunicare sunt fundamentale în orice carieră. Acest curs Wharton te va face un comunicator mai eficient.',
+        action_text: 'Începe cursul Wharton',
+        action_type: 'external_link',
+        action_data: {
+          url: commCourse.url,
+          estimatedHours: commCourse.estimatedHours,
+          difficulty: 'intermediate',
+          platform: commCourse.platform
+        },
+        category: 'skill_development',
+        priority: dims.extraversion < 50 ? 5 : 3,
+        estimated_time_minutes: 150
+      });
+    }
+  }
+
+  // Add personality test recommendation if no Big Five results
+  if (!bigFiveResult && !existingRecs?.some(r => r.title.includes('personalitate'))) {
+    const personalityTest = VERIFIED_RESOURCES.personality_tests[0];
+    recommendations.push({
+      recommendation_type: 'test',
+      title: 'Descoperă tipul tău de personalitate',
+      description: 'Înțelegerea personalității tale este primul pas către o carieră aliniată cu punctele forte naturale.',
+      action_text: 'Fă testul MBTI',
+      action_type: 'external_link',
+      action_data: {
+        url: personalityTest.url,
+        estimatedHours: 1,
+        difficulty: 'beginner'
+      },
+      category: 'assessment',
+      priority: 5,
+      estimated_time_minutes: 15
+    });
+  }
+
+  // Add internal navigation recommendations
+  if (careerPlans.length === 0) {
+    recommendations.push({
+      recommendation_type: 'path',
+      title: 'Creează primul tău plan de carieră',
+      description: 'Pe baza testelor completate, poți genera un plan personalizat cu AI sau să creezi unul manual.',
+      action_text: 'Creează plan de carieră',
+      action_type: 'internal_navigation',
+      action_data: {
+        route: '/career-paths?tab=create',
+        estimatedHours: 2,
+        difficulty: 'beginner'
+      },
+      category: 'planning',
+      priority: 4,
+      estimated_time_minutes: 30
+    });
+  }
+
+  return recommendations;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -15,11 +269,10 @@ serve(async (req) => {
   try {
     const { userId } = await req.json();
     
-    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
     const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-    if (!GEMINI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
       throw new Error('Missing required environment variables');
     }
 
@@ -45,268 +298,73 @@ serve(async (req) => {
       .eq('user_id', userId)
       .eq('is_dismissed', false);
 
-    if (!testResults || testResults.length === 0) {
-      return new Response(
-        JSON.stringify({ 
-          success: true, 
-          recommendations: [
-            {
-              user_id: userId,
-              recommendation_type: 'test',
-              title: 'Completează primul test de personalitate',
-              description: 'Pentru a primi recomandări personalizate, completează testul Big Five pentru a-ți înțelege mai bine personalitatea și preferințele profesionale.',
-              action_text: 'Fă testul Big Five',
-              priority: 5
-            }
-          ]
-        }),
-        { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Analyze test results for recommendations
-    const bigFiveResult = testResults.find(r => 
-      r.test_type_id === 'f47ac10b-58cc-4372-a567-0e02b2c3d480'
-    );
-
-    let personalityAnalysis = '';
-    if (bigFiveResult?.score?.dimensions) {
-      const dims = bigFiveResult.score.dimensions;
-      personalityAnalysis = `
-        Analiză Big Five:
-        - Deschidere: ${dims.openness}/100
-        - Conștiinciozitate: ${dims.conscientiousness}/100  
-        - Extraversiune: ${dims.extraversion}/100
-        - Amabilitate: ${dims.agreeableness}/100
-        - Nevroza: ${dims.neuroticism}/100
-      `;
-    }
-
-    let analysisPrompt = `
-      Pe baza următorului profil al utilizatorului, generează 3-5 recomandări personalizate pentru carieră cu RESURSE GRATUITE REALE:
-      
-      Rezultatele testelor:
-      ${testResults.map(r => `- ${r.test_types?.name}: Scor ${JSON.stringify(r.score)}`).join('\n')}
-      
-      ${personalityAnalysis}
-      
-      Planuri de carieră existente: ${careerPlans?.map(p => p.title).join(', ') || 'Niciunul'}
-      
-      Recomandări existente (evită duplicatele): ${existingRecs?.map(r => r.title).join(', ') || 'Niciunul'}
-      
-      IMPORTANT: Pentru fiecare recomandare, include RESURSE GRATUITE cu linkuri REALE către:
-      - Coursera (cursuri gratuite cu audit)
-      - edX (cursuri MIT, Harvard gratuite)
-      - Khan Academy 
-      - YouTube (canale educaționale specifice)
-      - LinkedIn Learning (trial gratuit)
-      - Teste gratuite (16personalities, VIA Character Survey)
-      - Cărți PDF gratuite
-      
-      Formatează ca array JSON (DOAR JSON, fără alte explicații):
-      [
-        {
-          "recommendation_type": "skill|path|test|course|certification",
-          "title": "Titlu scurt și atractiv",
-          "description": "De ce este recomandată pe baza profilului lor (2-3 propoziții concrete)",
-          "action_text": "Text pentru buton (ex: 'Înscrie-te gratuit', 'Fă testul acum')",
-          "action_type": "external_link",
-          "action_data": {
-            "url": "https://link-real-către-resursa-gratuită",
-            "estimatedHours": 5-20,
-            "difficulty": "beginner|intermediate|advanced"
-          },
-          "category": "skill_development|assessment|networking|certification",
-          "priority": 1-5,
-          "estimated_time_minutes": 60-300
-        }
-      ]
-      
-      Exemplu de linkuri reale:
-      - https://www.coursera.org/learn/leadership-introduction (Leadership gratuit)
-      - https://www.16personalities.com/ (Test MBTI gratuit)
-      - https://www.edx.org/course/introduction-to-project-management (Project Management MIT)
-      - https://www.youtube.com/c/CrashCourse (YouTube educațional)
-      - https://www.khanacademy.org/ (Competențe fundamentale)
-      
-      Fii specific și practic. Linkurile TREBUIE să fie funcționale.
-    `;
-
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: analysisPrompt
-            }]
-          }]
-        })
-      }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Gemini API error: ${response.status} - ${errorText}`);
-      throw new Error(`Gemini API error: ${response.status}`);
-    }
-
-    const geminiResult = await response.json();
-    const generatedText = geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
+    // Clear old recommendations (keep only last 5 most recent)
+    await supabase
+      .from('career_recommendations')
+      .update({ is_dismissed: true })
+      .eq('user_id', userId)
+      .lt('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString()); // older than 7 days
 
     let recommendations = [];
-    try {
-      const jsonMatch = generatedText.match(/\[[\s\S]*\]/);
-      if (jsonMatch) {
-        recommendations = JSON.parse(jsonMatch[0]);
-      }
-    } catch (parseError) {
-      console.error('JSON Parse Error:', parseError);
-      // Fallback recommendations based on Big Five results
-      if (bigFiveResult?.score?.dimensions) {
-        const dims = bigFiveResult.score.dimensions;
-        
-        if (dims.openness > 70) {
-          recommendations.push({
-            recommendation_type: 'course',
-            title: 'Explorează tehnologii noi cu MIT',
-            description: 'Deschiderea ta ridicată sugerează că ai avea succes în învățarea de tehnologii inovatoare. Acest curs MIT te introduce în noile paradigme tehnologice.',
-            action_text: 'Începe cursul MIT gratuit',
-            action_type: 'external_link',
-            action_data: {
-              url: 'https://www.edx.org/course/introduction-to-computer-science-and-programming-7',
-              estimatedHours: 15,
-              difficulty: 'intermediate'
-            },
-            category: 'skill_development',
-            priority: 4,
-            estimated_time_minutes: 180
-          });
-        }
-        
-        if (dims.conscientiousness > 70) {
-          recommendations.push({
-            recommendation_type: 'certification',
-            title: 'Google Project Management Certificate',
-            description: 'Conștiinciozitatea ta ridicată te va ajuta să completezi cu succes acest program de certificare Google. Ideal pentru management și organizare.',
-            action_text: 'Înscrie-te gratuit la Google',
-            action_type: 'external_link',
-            action_data: {
-              url: 'https://www.coursera.org/professional-certificates/google-project-management',
-              estimatedHours: 180,
-              difficulty: 'intermediate'
-            },
-            category: 'certification',
-            priority: 5,
-            estimated_time_minutes: 300
-          });
-        }
-        
-        if (dims.extraversion > 70) {
-          recommendations.push({
-            recommendation_type: 'course',
-            title: 'Leadership și Management - Stanford',
-            description: 'Extraversiunea ta ridicată indică potențial pentru roluri manageriale. Acest curs Stanford te va pregăti pentru pozițiile de conducere.',
-            action_text: 'Începe cursul Stanford',
-            action_type: 'external_link',
-            action_data: {
-              url: 'https://www.coursera.org/learn/leadership-introduction',
-              estimatedHours: 12,
-              difficulty: 'intermediate'
-            },
-            category: 'skill_development',
-            priority: 4,
-            estimated_time_minutes: 180
-          });
-        } else if (dims.extraversion < 40) {
-          recommendations.push({
-            recommendation_type: 'course',
-            title: 'Deep Learning Specialization',
-            description: 'Introversiunea ta poate fi un avantaj în roluri tehnice care necesită concentrare profundă. Acest curs Andrew Ng te va specializa în AI.',
-            action_text: 'Începe cursul Andrew Ng',
-            action_type: 'external_link',
-            action_data: {
-              url: 'https://www.coursera.org/specializations/deep-learning',
-              estimatedHours: 60,
-              difficulty: 'advanced'
-            },
-            category: 'skill_development',
-            priority: 4,
-            estimated_time_minutes: 240
-          });
-        }
-      }
-      
-      // Default fallback with real resources
-      if (recommendations.length === 0) {
-        recommendations = [
-          {
-            recommendation_type: 'test',
-            title: 'Myers-Briggs Type Indicator (MBTI)',
-            description: 'Descoperă tipul tău de personalitate pentru a-ți alinia cariera cu punctele forte naturale. Acest test gratuit îți va oferi insight-uri valoroase.',
-            action_text: 'Fă testul MBTI gratuit',
-            action_type: 'external_link',
-            action_data: {
-              url: 'https://www.16personalities.com/',
-              estimatedHours: 1,
-              difficulty: 'beginner'
-            },
-            category: 'assessment',
-            priority: 5,
-            estimated_time_minutes: 15
+
+    if (!testResults || testResults.length === 0) {
+      // Fallback for users without tests
+      const personalityTest = VERIFIED_RESOURCES.personality_tests[0];
+      recommendations = [
+        {
+          user_id: userId,
+          recommendation_type: 'test',
+          title: 'Completează primul test de personalitate',
+          description: 'Pentru a primi recomandări personalizate, completează testul Big Five pentru a-ți înțelege mai bine personalitatea și preferințele profesionale.',
+          action_text: 'Fă testul Big Five',
+          action_type: 'internal_navigation',
+          action_data: {
+            route: '/assessments',
+            estimatedHours: 1,
+            difficulty: 'beginner'
           },
-          {
-            recommendation_type: 'course',
-            title: 'Competențe de comunicare - Harvard',
-            description: 'Competențele de comunicare sunt esențiale în orice carieră. Acest curs Harvard te va ajuta să devii un comunicator mai eficient.',
-            action_text: 'Înscrie-te gratuit la Harvard',
-            action_type: 'external_link',
-            action_data: {
-              url: 'https://www.edx.org/course/introduction-to-communication-science',
-              estimatedHours: 8,
-              difficulty: 'beginner'
-            },
-            category: 'skill_development',
-            priority: 4,
-            estimated_time_minutes: 120
+          category: 'assessment',
+          priority: 5,
+          estimated_time_minutes: 30
+        },
+        {
+          user_id: userId,
+          recommendation_type: 'test',
+          title: 'Test MBTI pentru tipul de personalitate',
+          description: 'Acest test gratuit îți va oferi insight-uri valoroase despre preferințele tale profesionale.',
+          action_text: 'Fă testul MBTI gratuit',
+          action_type: 'external_link',
+          action_data: {
+            url: personalityTest.url,
+            estimatedHours: 1,
+            difficulty: 'beginner'
           },
-          {
-            recommendation_type: 'course',
-            title: 'Project Management Fundamentals',
-            description: 'Învață fundamentele managementului de proiect pentru a-ți îmbunătăți capacitatea de organizare și leadership.',
-            action_text: 'Începe cursul gratuit',
-            action_type: 'external_link',
-            action_data: {
-              url: 'https://www.coursera.org/learn/project-management',
-              estimatedHours: 15,
-              difficulty: 'intermediate'
-            },
-            category: 'skill_development',
-            priority: 3,
-            estimated_time_minutes: 180
-          }
-        ];
-      }
+          category: 'assessment',
+          priority: 4,
+          estimated_time_minutes: 15
+        }
+      ];
+    } else {
+      // Generate personalized recommendations
+      recommendations = getPersonalizedRecommendations(testResults, careerPlans, existingRecs);
     }
 
     // Add user_id and test_ids to each recommendation
     const enrichedRecommendations = recommendations.map((rec: any) => ({
       ...rec,
       user_id: userId,
-      based_on_test_ids: testResults.map(r => r.id)
+      based_on_test_ids: testResults?.map(r => r.id) || []
     }));
 
-    // Save recommendations to database
-    const { error: insertError } = await supabase
-      .from('career_recommendations')
-      .insert(enrichedRecommendations);
+    // Save new recommendations to database
+    if (enrichedRecommendations.length > 0) {
+      const { error: insertError } = await supabase
+        .from('career_recommendations')
+        .insert(enrichedRecommendations);
 
-    if (insertError) {
-      console.error('Error saving recommendations:', insertError);
+      if (insertError) {
+        console.error('Error saving recommendations:', insertError);
+      }
     }
 
     return new Response(
