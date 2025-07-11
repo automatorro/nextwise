@@ -1,6 +1,8 @@
 
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useTestResults } from '@/hooks/useTestResults';
+import { useCareerPlans } from '@/hooks/useCareerPlans';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -20,6 +22,8 @@ import {
 
 const UserDashboard = () => {
   const { user } = useAuth();
+  const { testResults } = useTestResults();
+  const { careerPlans } = useCareerPlans();
 
   const testCategories = [
     {
@@ -52,28 +56,36 @@ const UserDashboard = () => {
     }
   ];
 
+  // Calculate real stats
+  const testsCompleted = testResults.length;
+  const careerPlansCount = careerPlans.length;
+  const avgProgress = careerPlans.length 
+    ? Math.round(careerPlans.reduce((sum, plan) => sum + (plan.progress_percentage || 0), 0) / careerPlans.length)
+    : 0;
+  const timeSaved = testsCompleted * 2; // Estimate 2 hours saved per test
+
   const quickStats = [
     {
       title: 'Tests Completed',
-      value: '0',
+      value: testsCompleted.toString(),
       icon: BarChart3,
       color: 'text-blue-600'
     },
     {
       title: 'Career Plans',
-      value: '0',
+      value: careerPlansCount.toString(),
       icon: Target,
       color: 'text-green-600'
     },
     {
       title: 'Time Saved',
-      value: '0h',
+      value: `${timeSaved}h`,
       icon: Clock,
       color: 'text-orange-600'
     },
     {
       title: 'Career Progress',
-      value: '0%',
+      value: `${avgProgress}%`,
       icon: TrendingUp,
       color: 'text-purple-600'
     }
@@ -186,7 +198,7 @@ const UserDashboard = () => {
                 ))}
               </div>
               <div className="mt-6">
-                <Link to="/assessments">
+                <Link to="/tests">
                   <Button variant="outline" className="w-full">
                     View All Assessments
                     <Sparkles className="w-4 h-4 ml-2" />
