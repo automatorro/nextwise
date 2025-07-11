@@ -124,7 +124,7 @@ const UserDashboard = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Link to="/assessments">
+                <Link to="/tests">
                   <Button className="w-full bg-blue-600 hover:bg-blue-700">
                     Start Your Journey
                     <ArrowRight className="w-4 h-4 ml-2" />
