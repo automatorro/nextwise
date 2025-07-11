@@ -19,6 +19,7 @@ import TestResultCharts from '@/components/test-result/TestResultCharts';
 import TestResultActions from '@/components/test-result/TestResultActions';
 import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
 import { useCognitiveAbilitiesCalculation } from '@/hooks/useCognitiveAbilitiesCalculation';
+import { useCattell16PFCalculation } from '@/hooks/useCattell16PFCalculation';
 import { isCognitiveAbilitiesTest, isBelbinTeamRoles } from '@/utils/testLabels';
 import { translateInterpretation, getResultLabels } from '@/utils/testResultTranslations';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -145,9 +146,11 @@ const TestResult = () => {
   const isBigFiveTest = result?.test_types.name.includes('Big Five');
   const isCognitiveTest = result ? isCognitiveAbilitiesTest(result.test_types.name) : false;
   const isBelbinTest = result ? isBelbinTeamRoles(result.test_types.name) : false;
+  const isCattell16PFTest = result?.test_types.name.includes('Cattell') || result?.test_types.name.includes('16PF');
   
   const calculatedBigFiveDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
   const calculatedCognitiveDimensions = useCognitiveAbilitiesCalculation(isCognitiveTest ? result?.answers : undefined);
+  const calculatedCattell16PFDimensions = useCattell16PFCalculation(isCattell16PFTest ? result?.answers : undefined);
 
   // Get properly typed dimensions based on test type
   const testSpecificDimensions = React.useMemo(() => {
@@ -159,12 +162,16 @@ const TestResult = () => {
       return calculatedCognitiveDimensions;
     }
 
+    if (isCattell16PFTest && calculatedCattell16PFDimensions) {
+      return calculatedCattell16PFDimensions;
+    }
+
     if (isBelbinTest) {
       return result?.score.role_scores || result?.score.dimensions || {};
     }
     
     return result?.score.dimensions || {};
-  }, [isBigFiveTest, isCognitiveTest, isBelbinTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, result?.score]);
+  }, [isBigFiveTest, isCognitiveTest, isCattell16PFTest, isBelbinTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, calculatedCattell16PFDimensions, result?.score]);
 
   const hasValidTestSpecificDimensions = Object.values(testSpecificDimensions).some(value => value > 0);
 
@@ -294,6 +301,7 @@ const TestResult = () => {
             isBigFiveTest={isBigFiveTest}
             isCognitiveTest={isCognitiveTest}
             isBelbinTest={isBelbinTest}
+            isCattell16PFTest={isCattell16PFTest}
             hasValidTestSpecificDimensions={hasValidTestSpecificDimensions}
             testSpecificDimensions={testSpecificDimensions}
           />
