@@ -295,5 +295,148 @@
       "peopleOriented": "People-Oriented Roles",
       "thinkingOriented": "Thinking-Oriented Roles"
     }
+  },
+  "testResult": {
+    "overallScore": "Overall Score",
+    "detailedAnalysis": "Detailed Analysis",
+    "dimensions": "Dimensions",
+    "explanations": "Explanations",
+    "aiAnalysis": "AI Analysis",
+    "chartTitle": "Results Chart",
+    "noAnalysis": "AI analysis is not available for this test.",
+    "loadingAnalysis": "Generating AI analysis...",
+    "correctAnswers": "Correct Answers",
+    "questionAnalysis": "Question Analysis",
+    "performanceSummary": "Performance Summary",
+    "scoringExplanation": "Score Explanation"
+  },
+  "profile": {
+    "title": "Profile",
+    "welcome": "Welcome",
+    "administrator": "Administrator",
+    "welcomeMessage": "Here you can view your progress and test results.",
+    "personalInfo": "Personal Information",
+    "fullName": "Full Name",
+    "email": "Email",
+    "avatar": "Avatar",
+    "updateProfile": "Update Profile",
+    "passwordSection": "Password",
+    "currentPassword": "Current Password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "changePassword": "Change Password",
+    "profileUpdated": "Profile updated successfully!",
+    "passwordChanged": "Password changed successfully!",
+    "overview": "Overview",
+    "recentResults": "Recent Results",
+    "quickActions": "Quick Actions",
+    "statsCards": {
+      "testsCompleted": "Tests Completed",
+      "avgScore": "Average Score",
+      "lastTest": "Last Test",
+      "timeSpent": "Time Spent"
+    },
+    "actions": {
+      "takeTest": "Take a Test",
+      "viewResults": "View Results",
+      "planCareer": "Plan Career",
+      "settings": "Settings"
+    }
+  },
+  "career": {
+    "dashboard": {
+      "title": "Career Dashboard",
+      "subtitle": "Track progress and plan your next steps",
+      "createPlan": "Create New Plan",
+      "noPlanTitle": "You don't have any career plans",
+      "noPlanDesc": "Start by creating your first personalized plan",
+      "activePlans": "Active Plans",
+      "completedMilestones": "Completed Milestones",
+      "inProgress": "In Progress",
+      "viewDetails": "View Details"
+    },
+    "createPlan": {
+      "title": "Create Career Plan",
+      "selectGoal": "Select Goal",
+      "generatePlan": "Generate Plan",
+      "currentRole": "Current Role",
+      "targetRole": "Target Role",
+      "timeframe": "Timeframe",
+      "skills": "Skills",
+      "interests": "Interests",
+      "creating": "Creating plan...",
+      "error": "Error creating plan"
+    },
+    "planDetails": {
+      "title": "Plan Details",
+      "description": "Description",
+      "milestones": "Milestones",
+      "progress": "Progress",
+      "editPlan": "Edit Plan",
+      "deletePlan": "Delete Plan",
+      "sharePlan": "Share Plan",
+      "addMilestone": "Add Milestone",
+      "targetDate": "Target Date",
+      "completed": "Completed",
+      "markComplete": "Mark as Complete",
+      "markIncomplete": "Mark as Incomplete",
+      "resources": "Resources",
+      "noResources": "No resources available"
+    },
+    "milestones": {
+      "add": "Add Milestone",
+      "edit": "Edit Milestone",
+      "delete": "Delete Milestone",
+      "title": "Title",
+      "description": "Description",
+      "targetDate": "Target Date",
+      "resources": "Resources",
+      "save": "Save",
+      "cancel": "Cancel",
+      "deleteConfirm": "Are you sure you want to delete this milestone?"
+    },
+    "aiMentoring": {
+      "title": "AI Mentoring",
+      "subtitle": "Get personalized advice for your career",
+      "askQuestion": "Ask a question...",
+      "send": "Send",
+      "thinking": "Thinking...",
+      "error": "Error sending message",
+      "placeholder": "Write your question here...",
+      "suggestions": [
+        "How can I improve my leadership skills?",
+        "What steps should I take for promotion?",
+        "How to better manage work stress?"
+      ]
+    },
+    "templates": {
+      "title": "Career Templates",
+      "useTemplate": "Use Template",
+      "difficulty": "Difficulty",
+      "duration": "Duration",
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    }
+  },
+  "forms": {
+    "required": "Required field",
+    "invalidEmail": "Invalid email",
+    "passwordMismatch": "Passwords don't match",
+    "minLength": "Minimum {count} characters",
+    "maxLength": "Maximum {count} characters",
+    "uploading": "Uploading...",
+    "uploadError": "Upload error",
+    "selectFile": "Select file"
+  },
+  "admin": {
+    "panel": "Admin Panel",
+    "users": "Users",
+    "tests": "Tests",
+    "translations": "Translations",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "fixTranslations": "Fix Translations",
+    "notice": "Administrative features available only to administrators."
   }
 }

@@ -17,6 +17,7 @@ import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useCareerMilestones } from '@/hooks/useCareerMilestones';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface Props {
   isOpen: boolean;
@@ -29,6 +30,7 @@ const AddMilestoneModal = ({ isOpen, onClose, careerPathId }: Props) => {
   const [description, setDescription] = useState('');
   const [targetDate, setTargetDate] = useState<Date>();
   const { createMilestone, milestones } = useCareerMilestones(careerPathId);
+  const { t } = useLanguage();
 
   const handleSave = () => {
     if (!title.trim()) return;
@@ -52,15 +54,15 @@ const AddMilestoneModal = ({ isOpen, onClose, careerPathId }: Props) => {
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Adaugă milestone nou</DialogTitle>
+          <DialogTitle>{t('career.milestones.add')}</DialogTitle>
           <DialogDescription>
-            Creează un nou milestone pentru planul tău de carieră.
+            {t('career.createPlan.title')}
           </DialogDescription>
         </DialogHeader>
         
         <div className="grid gap-4 py-4">
           <div className="grid gap-2">
-            <Label htmlFor="milestone-title">Titlu *</Label>
+            <Label htmlFor="milestone-title">{t('career.milestones.title')} *</Label>
             <Input
               id="milestone-title"
               value={title}
@@ -70,7 +72,7 @@ const AddMilestoneModal = ({ isOpen, onClose, careerPathId }: Props) => {
           </div>
           
           <div className="grid gap-2">
-            <Label htmlFor="milestone-description">Descriere</Label>
+            <Label htmlFor="milestone-description">{t('career.milestones.description')}</Label>
             <Textarea
               id="milestone-description"
               value={description}
@@ -81,7 +83,7 @@ const AddMilestoneModal = ({ isOpen, onClose, careerPathId }: Props) => {
           </div>
 
           <div className="grid gap-2">
-            <Label>Data țintă</Label>
+            <Label>{t('career.milestones.targetDate')}</Label>
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -109,10 +111,10 @@ const AddMilestoneModal = ({ isOpen, onClose, careerPathId }: Props) => {
         
         <div className="flex justify-end space-x-2">
           <Button variant="outline" onClick={onClose}>
-            Anulează
+            {t('common.cancel')}
           </Button>
           <Button onClick={handleSave} disabled={!title.trim()}>
-            Adaugă milestone
+            {t('career.milestones.save')}
           </Button>
         </div>
       </DialogContent>

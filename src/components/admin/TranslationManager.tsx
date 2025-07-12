@@ -1,19 +1,22 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useLanguage } from '@/hooks/useLanguage';
 import TranslationFixButton from './TranslationFixButton';
 
 const TranslationManager = () => {
+  const { t } = useLanguage();
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Gestionare Traduceri</CardTitle>
+        <CardTitle>{t('admin.translations')}</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-2">
-          <h3 className="text-lg font-semibold">Reparare Traduceri Teste</h3>
+          <h3 className="text-lg font-semibold">{t('admin.fixTranslations')}</h3>
           <p className="text-gray-600">
-            Repară traducerile pentru întrebările și opțiunile testelor, inclusiv testul DISC.
+            {t('admin.notice')}
           </p>
           <TranslationFixButton />
         </div>

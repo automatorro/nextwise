@@ -242,6 +242,147 @@
     "interpretation": "Interpretare",
     "backToTests": "Înapoi la Teste",
     "downloadResults": "Descarcă Rezultatele",
-    "shareResults": "Distribuie Rezultatele"
+    "shareResults": "Distribuie Rezultatele",
+    "overallScore": "Scor General",
+    "detailedAnalysis": "Analiză Detaliată",
+    "dimensions": "Dimensiuni",
+    "explanations": "Explicații",
+    "aiAnalysis": "Analiză AI",
+    "chartTitle": "Graficul Rezultatelor",
+    "noAnalysis": "Analiza AI nu este disponibilă pentru acest test.",
+    "loadingAnalysis": "Se generează analiza AI...",
+    "correctAnswers": "Răspunsuri Corecte",
+    "questionAnalysis": "Analiza Întrebărilor",
+    "performanceSummary": "Rezumat Performanță",
+    "scoringExplanation": "Explicația Scorului"
+  },
+  "profile": {
+    "title": "Profil",
+    "welcome": "Bun venit",
+    "administrator": "Administrator",
+    "welcomeMessage": "Aici poți vedea progresul tău și rezultatele testelor.",
+    "personalInfo": "Informații Personale",
+    "fullName": "Nume Complet",
+    "email": "Email",
+    "avatar": "Avatar",
+    "updateProfile": "Actualizează Profilul",
+    "passwordSection": "Parolă",
+    "currentPassword": "Parola Curentă",
+    "newPassword": "Parola Nouă",
+    "confirmPassword": "Confirmă Parola",
+    "changePassword": "Schimbă Parola",
+    "profileUpdated": "Profil actualizat cu succes!",
+    "passwordChanged": "Parola a fost schimbată cu succes!",
+    "overview": "Prezentare Generală",
+    "recentResults": "Rezultate Recente",
+    "quickActions": "Acțiuni Rapide",
+    "statsCards": {
+      "testsCompleted": "Teste Completate",
+      "avgScore": "Scor Mediu",
+      "lastTest": "Ultimul Test",
+      "timeSpent": "Timp Petrecut"
+    },
+    "actions": {
+      "takeTest": "Începe un Test",
+      "viewResults": "Vezi Rezultatele",
+      "planCareer": "Planifică Cariera",
+      "settings": "Setări"
+    }
+  },
+  "career": {
+    "dashboard": {
+      "title": "Dashboard Carieră",
+      "subtitle": "Monitorizează progresul și planifică următorii pași",
+      "createPlan": "Creează Plan Nou",
+      "noPlanTitle": "Nu ai planuri de carieră",
+      "noPlanDesc": "Începe prin a crea primul tău plan personalizat",
+      "activePlans": "Planuri Active",
+      "completedMilestones": "Obiective Completate",
+      "inProgress": "În Progres",
+      "viewDetails": "Vezi Detalii"
+    },
+    "createPlan": {
+      "title": "Creează Plan de Carieră",
+      "selectGoal": "Selectează Obiectivul",
+      "generatePlan": "Generează Plan",
+      "currentRole": "Rolul Curent",
+      "targetRole": "Rolul Țintă",
+      "timeframe": "Perioada de Timp",
+      "skills": "Abilități",
+      "interests": "Interese",
+      "creating": "Se creează planul...",
+      "error": "Eroare la crearea planului"
+    },
+    "planDetails": {
+      "title": "Detalii Plan",
+      "description": "Descriere",
+      "milestones": "Obiective",
+      "progress": "Progres",
+      "editPlan": "Editează Planul",
+      "deletePlan": "Șterge Planul",
+      "sharePlan": "Distribuie Planul",
+      "addMilestone": "Adaugă Obiectiv",
+      "targetDate": "Data Țintă",
+      "completed": "Completat",
+      "markComplete": "Marchează ca Completat",
+      "markIncomplete": "Marchează ca Incomplet",
+      "resources": "Resurse",
+      "noResources": "Nu sunt resurse disponibile"
+    },
+    "milestones": {
+      "add": "Adaugă Obiectiv",
+      "edit": "Editează Obiectiv",
+      "delete": "Șterge Obiectiv",
+      "title": "Titlu",
+      "description": "Descriere",
+      "targetDate": "Data Țintă",
+      "resources": "Resurse",
+      "save": "Salvează",
+      "cancel": "Anulează",
+      "deleteConfirm": "Ești sigur că vrei să ștergi acest obiectiv?"
+    },
+    "aiMentoring": {
+      "title": "Mentoring AI",
+      "subtitle": "Obține sfaturi personalizate pentru cariera ta",
+      "askQuestion": "Pune o întrebare...",
+      "send": "Trimite",
+      "thinking": "Se gândește...",
+      "error": "Eroare la trimiterea mesajului",
+      "placeholder": "Scrie întrebarea ta aici...",
+      "suggestions": [
+        "Cum pot să îmi îmbunătățesc abilitățile de leadership?",
+        "Ce pași să urmez pentru promovare?",
+        "Cum să gestionez mai bine stresul la muncă?"
+      ]
+    },
+    "templates": {
+      "title": "Șabloane de Carieră",
+      "useTemplate": "Folosește Șablonul",
+      "difficulty": "Dificultate",
+      "duration": "Durată",
+      "beginner": "Începător",
+      "intermediate": "Intermediar",
+      "advanced": "Avansat"
+    }
+  },
+  "forms": {
+    "required": "Câmp obligatoriu",
+    "invalidEmail": "Email invalid",
+    "passwordMismatch": "Parolele nu se potrivesc",
+    "minLength": "Minim {count} caractere",
+    "maxLength": "Maxim {count} caractere",
+    "uploading": "Se încarcă...",
+    "uploadError": "Eroare la încărcare",
+    "selectFile": "Selectează fișier"
+  },
+  "admin": {
+    "panel": "Panou Administrare",
+    "users": "Utilizatori",
+    "tests": "Teste",
+    "translations": "Traduceri",
+    "analytics": "Analiză",
+    "settings": "Setări",
+    "fixTranslations": "Repară Traducerile",
+    "notice": "Funcționalități administrative disponibile doar pentru administratori."
   }
 }

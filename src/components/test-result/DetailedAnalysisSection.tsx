@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Loader2, Brain } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface DetailedAnalysisSectionProps {
   dimensions: {
@@ -23,6 +24,7 @@ const DetailedAnalysisSection = ({ dimensions, resultId, testType, score }: Deta
   const [detailedAnalysis, setDetailedAnalysis] = useState<string>('');
   const [isGeneratingAnalysis, setIsGeneratingAnalysis] = useState(false);
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const generatePromptForTestType = (testType: string, score: any, dimensions: any) => {
     const baseInfo = `
@@ -162,8 +164,8 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
       if (data && data.analysis) {
         setDetailedAnalysis(data.analysis);
         toast({
-          title: "Analiză detaliată generată cu succes",
-          description: "Analiza personalizată completă a rezultatelor tale a fost generată cu AI."
+          title: t('common.success'),
+          description: t('testResult.loadingAnalysis')
         });
       } else {
         throw new Error('No analysis returned from function');
@@ -171,8 +173,8 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
     } catch (error) {
       console.error('Error generating analysis:', error);
       toast({
-        title: "Eroare",
-        description: "Nu am putut genera analiza detaliată. Te rog încearcă din nou.",
+        title: t('common.error'),
+        description: t('testResult.noAnalysis'),
         variant: "destructive"
       });
     } finally {
@@ -216,12 +218,12 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
           {isGeneratingAnalysis ? (
             <>
               <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-              Se generează analiza cu AI...
+              {t('testResult.loadingAnalysis')}
             </>
           ) : (
             <>
               <Brain className="w-5 h-5 mr-2" />
-              Generează Analiza Detaliată cu AI
+              {t('testResult.detailedAnalysis')}
             </>
           )}
         </Button>
@@ -235,7 +237,7 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
         <div className="mt-8 p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg border border-blue-200">
           <div className="flex items-center mb-4">
             <Brain className="w-5 h-5 mr-2 text-blue-600" />
-            <h3 className="text-lg font-semibold text-gray-800">Analiza Ta Personalizată</h3>
+            <h3 className="text-lg font-semibold text-gray-800">{t('testResult.aiAnalysis')}</h3>
           </div>
           <div className="prose prose-gray max-w-none">
             {formatMarkdownToJSX(detailedAnalysis)}

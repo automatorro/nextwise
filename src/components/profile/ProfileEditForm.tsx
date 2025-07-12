@@ -10,10 +10,11 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const profileSchema = z.object({
-  fullName: z.string().min(2, 'Numele trebuie să aibă cel puțin 2 caractere'),
-  email: z.string().email('Adresa de email nu este validă'),
+  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
 });
 
 type ProfileFormData = z.infer<typeof profileSchema>;
@@ -28,6 +29,7 @@ interface ProfileEditFormProps {
 const ProfileEditForm = ({ initialData }: ProfileEditFormProps) => {
   const { toast } = useToast();
   const { user } = useAuth();
+  const { t } = useLanguage();
   
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -45,8 +47,8 @@ const ProfileEditForm = ({ initialData }: ProfileEditFormProps) => {
         if (emailError) throw emailError;
         
         toast({
-          title: "Email actualizat",
-          description: "Verifică noul email pentru confirmare.",
+          title: t('common.success'),
+          description: t('profile.profileUpdated'),
         });
       }
 
@@ -66,8 +68,8 @@ const ProfileEditForm = ({ initialData }: ProfileEditFormProps) => {
       if (metadataError) throw metadataError;
 
       toast({
-        title: "Profil actualizat",
-        description: "Informațiile tale au fost salvate cu succes.",
+        title: t('common.success'),
+        description: t('profile.profileUpdated'),
       });
 
     } catch (error: any) {
@@ -82,7 +84,7 @@ const ProfileEditForm = ({ initialData }: ProfileEditFormProps) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Informații Personale</CardTitle>
+        <CardTitle>{t('profile.personalInfo')}</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -92,7 +94,7 @@ const ProfileEditForm = ({ initialData }: ProfileEditFormProps) => {
               name="fullName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Nume Complet</FormLabel>
+                  <FormLabel>{t('profile.fullName')}</FormLabel>
                   <FormControl>
                     <Input placeholder="Introduceți numele complet" {...field} />
                   </FormControl>
@@ -106,7 +108,7 @@ const ProfileEditForm = ({ initialData }: ProfileEditFormProps) => {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Adresa de Email</FormLabel>
+                  <FormLabel>{t('profile.email')}</FormLabel>
                   <FormControl>
                     <Input type="email" placeholder="Introduceți adresa de email" {...field} />
                   </FormControl>
@@ -120,7 +122,7 @@ const ProfileEditForm = ({ initialData }: ProfileEditFormProps) => {
               disabled={form.formState.isSubmitting}
               className="w-full"
             >
-              {form.formState.isSubmitting ? 'Se salvează...' : 'Salvează Modificările'}
+              {form.formState.isSubmitting ? t('common.loading') : t('profile.updateProfile')}
             </Button>
           </form>
         </Form>

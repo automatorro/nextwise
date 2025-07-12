@@ -27,11 +27,13 @@ import { useCareerPlanGeneration } from '@/hooks/useCareerPlanGeneration';
 import { useTestResults } from '@/hooks/useTestResults';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useToast } from '@/hooks/use-toast';
+import { useLanguage } from '@/hooks/useLanguage';
 import CareerGoalSelector from './CareerGoalSelector';
 import LoadingState from './LoadingState';
 
 const CareerDashboardReal = () => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const { careerPlans, isLoading: plansLoading } = useCareerPlans();
   const { recommendations, dismissRecommendation } = useCareerRecommendations();
   const { generateCareerPlan, generateRecommendations, isGeneratingPlan, isGeneratingRecommendations } = useCareerPlanGeneration();
@@ -172,7 +174,7 @@ const CareerDashboardReal = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Plans</CardTitle>
+            <CardTitle className="text-sm font-medium">{t('career.dashboard.activePlans')}</CardTitle>
             <Target className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
@@ -251,10 +253,10 @@ const CareerDashboardReal = () => {
       {/* Active Career Plans */}
       <div>
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">My Active Plans</h2>
+          <h2 className="text-2xl font-bold text-gray-900">{t('career.dashboard.activePlans')}</h2>
           <Button variant="outline" className="flex items-center space-x-2">
             <Plus className="w-4 h-4" />
-            <span>Create New Plan</span>
+            <span>{t('career.dashboard.createPlan')}</span>
           </Button>
         </div>
 
