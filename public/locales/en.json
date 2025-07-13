@@ -438,5 +438,32 @@
     "settings": "Settings",
     "fixTranslations": "Fix Translations",
     "notice": "Administrative features available only to administrators."
+  },
+  "careerJourney": {
+    "title": "Your path to professional success",
+    "subtitle": "Transform your career with psychometric testing and strategic planning",
+    "step1": {
+      "title": "Take the tests",
+      "description": "Discover your strengths, personality style, and cognitive abilities through scientifically validated assessments"
+    },
+    "step2": {
+      "title": "Get detailed analysis",
+      "description": "Receive a comprehensive report with personalized interpretations and recommendations based on your results"
+    },
+    "step3": {
+      "title": "Create your career plan",
+      "description": "Use AI recommendations to build a concrete professional development strategy tailored to you"
+    },
+    "step4": {
+      "title": "Track your progress",
+      "description": "Monitor your evolution and adjust your strategy to achieve your career goals"
+    },
+    "benefits": {
+      "title": "Why choose our platform?",
+      "benefit1": "Scientifically validated tests for accurate results",
+      "benefit2": "Personalized AI analysis for each profile",
+      "benefit3": "Concrete and achievable career plans",
+      "benefit4": "Continuous tracking of your progress"
+    }
   }
 }

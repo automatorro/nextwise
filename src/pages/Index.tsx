@@ -5,6 +5,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import HeroSection from '@/components/home/HeroSection';
 import FeaturesSection from '@/components/home/FeaturesSection';
 import TestCategoriesSection from '@/components/home/TestCategoriesSection';
+import CareerJourneySection from '@/components/home/CareerJourneySection';
 import PricingSection from '@/components/home/PricingSection';
 import CTASection from '@/components/home/CTASection';
 import Footer from '@/components/home/Footer';
@@ -39,6 +40,7 @@ const Index = () => {
       <HeroSection />
       <FeaturesSection />
       <TestCategoriesSection />
+      <CareerJourneySection />
       <PricingSection />
       <CTASection />
       <Footer />

@@ -384,5 +384,32 @@
     "settings": "Setări",
     "fixTranslations": "Repară Traducerile",
     "notice": "Funcționalități administrative disponibile doar pentru administratori."
+  },
+  "careerJourney": {
+    "title": "Drumul tău către succes profesional",
+    "subtitle": "Transformă-ți cariera cu ajutorul testelor psihometrice și planificării strategice",
+    "step1": {
+      "title": "Completează testele",
+      "description": "Descoperă-ți punctele forte, stilul de personalitate și abilitățile cognitive prin teste validate științific"
+    },
+    "step2": {
+      "title": "Primești analiză detaliată",
+      "description": "Obții un raport complet cu interpretări personalizate și recomandări bazate pe rezultatele tale"
+    },
+    "step3": {
+      "title": "Creezi planul de carieră",
+      "description": "Folosește recomandările AI pentru a-ți construi un plan concret de dezvoltare profesională"
+    },
+    "step4": {
+      "title": "Urmărești progresul",
+      "description": "Monitorizează-ți evoluția și ajustează strategia pentru a-ți atinge obiectivele de carieră"
+    },
+    "benefits": {
+      "title": "De ce să alegi platforma noastră?",
+      "benefit1": "Teste validate științific pentru rezultate precise",
+      "benefit2": "Analiză AI personalizată pentru fiecare profil",
+      "benefit3": "Planuri de carieră concrete și realizabile",
+      "benefit4": "Urmărire continuă a progresului tău"
+    }
   }
 }
