@@ -14,6 +14,147 @@ export type Database = {
   }
   public: {
     Tables: {
+      ai_programs_14_days: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          current_day: number
+          daily_reflections: Json
+          daily_tasks: Json
+          final_feedback: string | null
+          final_score: number | null
+          id: string
+          intermediate_feedback: string | null
+          is_active: boolean
+          is_completed: boolean
+          program_type: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          current_day?: number
+          daily_reflections?: Json
+          daily_tasks?: Json
+          final_feedback?: string | null
+          final_score?: number | null
+          id?: string
+          intermediate_feedback?: string | null
+          is_active?: boolean
+          is_completed?: boolean
+          program_type: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          current_day?: number
+          daily_reflections?: Json
+          daily_tasks?: Json
+          final_feedback?: string | null
+          final_score?: number | null
+          id?: string
+          intermediate_feedback?: string | null
+          is_active?: boolean
+          is_completed?: boolean
+          program_type?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      ai_progress_sheets: {
+        Row: {
+          ai_analysis: string
+          created_at: string
+          extracted_objective: string
+          id: string
+          is_saved: boolean
+          next_steps: Json
+          recommendations: Json
+          updated_at: string
+          user_id: string
+          user_question: string
+        }
+        Insert: {
+          ai_analysis: string
+          created_at?: string
+          extracted_objective: string
+          id?: string
+          is_saved?: boolean
+          next_steps?: Json
+          recommendations?: Json
+          updated_at?: string
+          user_id: string
+          user_question: string
+        }
+        Update: {
+          ai_analysis?: string
+          created_at?: string
+          extracted_objective?: string
+          id?: string
+          is_saved?: boolean
+          next_steps?: Json
+          recommendations?: Json
+          updated_at?: string
+          user_id?: string
+          user_question?: string
+        }
+        Relationships: []
+      }
+      ai_simulations: {
+        Row: {
+          ai_feedback: string | null
+          clarity_score: number | null
+          completed_at: string | null
+          conversation_log: Json
+          conviction_score: number | null
+          created_at: string
+          empathy_score: number | null
+          id: string
+          is_completed: boolean
+          overall_score: number | null
+          simulation_type: string
+          structure_score: number | null
+          user_id: string
+          user_responses: Json
+        }
+        Insert: {
+          ai_feedback?: string | null
+          clarity_score?: number | null
+          completed_at?: string | null
+          conversation_log?: Json
+          conviction_score?: number | null
+          created_at?: string
+          empathy_score?: number | null
+          id?: string
+          is_completed?: boolean
+          overall_score?: number | null
+          simulation_type: string
+          structure_score?: number | null
+          user_id: string
+          user_responses?: Json
+        }
+        Update: {
+          ai_feedback?: string | null
+          clarity_score?: number | null
+          completed_at?: string | null
+          conversation_log?: Json
+          conviction_score?: number | null
+          created_at?: string
+          empathy_score?: number | null
+          id?: string
+          is_completed?: boolean
+          overall_score?: number | null
+          simulation_type?: string
+          structure_score?: number | null
+          user_id?: string
+          user_responses?: Json
+        }
+        Relationships: []
+      }
       career_chat_messages: {
         Row: {
           content: string
@@ -491,6 +632,39 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_progress_tracking: {
+        Row: {
+          achievement_description: string | null
+          created_at: string
+          id: string
+          milestones_reached: number
+          steps_completed: number
+          tests_retaken: number
+          tracking_date: string
+          user_id: string
+        }
+        Insert: {
+          achievement_description?: string | null
+          created_at?: string
+          id?: string
+          milestones_reached?: number
+          steps_completed?: number
+          tests_retaken?: number
+          tracking_date?: string
+          user_id: string
+        }
+        Update: {
+          achievement_description?: string | null
+          created_at?: string
+          id?: string
+          milestones_reached?: number
+          steps_completed?: number
+          tests_retaken?: number
+          tracking_date?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_roles: {
         Row: {

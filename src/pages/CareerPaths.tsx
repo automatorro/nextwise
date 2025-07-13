@@ -11,6 +11,10 @@ import CareerDashboardReal from '@/components/career/CareerDashboardReal';
 import CreateCareerPlanEnhanced from '@/components/career/CreateCareerPlanEnhanced';
 import CareerPlanDetails from '@/components/career/CareerPlanDetails';
 import AIMentoringWithLimits from '@/components/career/AIMentoringWithLimits';
+import AIPrograms14Days from '@/components/premium/AIPrograms14Days';
+import AIProgressSheets from '@/components/premium/AIProgressSheets';
+import AISimulations from '@/components/premium/AISimulations';
+import ProgressTracking from '@/components/premium/ProgressTracking';
 
 const CareerPaths = () => {
   const { planId } = useParams();
@@ -61,10 +65,18 @@ const CareerPaths = () => {
           </div>
 
           <Tabs defaultValue="my-plans" className="space-y-6">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className={`grid w-full ${features.hasAI ? 'grid-cols-7' : 'grid-cols-3'}`}>
               <TabsTrigger value="my-plans">{t('careerPaths.tabs.dashboard')}</TabsTrigger>
               <TabsTrigger value="create-plan">{t('careerPaths.tabs.create')}</TabsTrigger>
               <TabsTrigger value="ai-mentoring">{t('careerPaths.tabs.mentoring')}</TabsTrigger>
+              {features.hasAI && (
+                <>
+                  <TabsTrigger value="ai-programs">{t('premiumFeatures.aiPrograms.title')}</TabsTrigger>
+                  <TabsTrigger value="progress-sheets">{t('premiumFeatures.progressSheets.title')}</TabsTrigger>
+                  <TabsTrigger value="ai-simulations">{t('premiumFeatures.simulations.title')}</TabsTrigger>
+                  <TabsTrigger value="progress-analytics">{t('premiumFeatures.progressTracking.title')}</TabsTrigger>
+                </>
+              )}
             </TabsList>
 
             <TabsContent value="my-plans" className="space-y-6">
@@ -81,6 +93,26 @@ const CareerPaths = () => {
             <TabsContent value="ai-mentoring" className="space-y-6">
               <AIMentoringWithLimits />
             </TabsContent>
+
+            {features.hasAI && (
+              <>
+                <TabsContent value="ai-programs" className="space-y-6">
+                  <AIPrograms14Days />
+                </TabsContent>
+
+                <TabsContent value="progress-sheets" className="space-y-6">
+                  <AIProgressSheets />
+                </TabsContent>
+
+                <TabsContent value="ai-simulations" className="space-y-6">
+                  <AISimulations />
+                </TabsContent>
+
+                <TabsContent value="progress-analytics" className="space-y-6">
+                  <ProgressTracking />
+                </TabsContent>
+              </>
+            )}
           </Tabs>
         </div>
       </div>
