@@ -31,7 +31,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       try {
         console.log('🌐 Initializing translations...');
         
-        // Clear all caches to force fresh reload
+        // Force clear all caches
         globalTranslationsCache.clear();
         clearTranslationResultCache();
         
@@ -42,19 +42,26 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // Set initial language
         setLanguage(initialLanguage);
         
-        // Load fresh translations
-        const initialTranslations = await loadTranslations(initialLanguage);
+        // Force reload translations from server
+        console.log(`🔄 Force loading fresh translations for: ${initialLanguage}`);
+        const freshTranslations = await loadTranslations(initialLanguage);
+        
+        // Verify the premium features are there
+        console.log('🔍 Checking premium features in translations:', {
+          hasPremiumFeatures: !!freshTranslations.premiumFeatures,
+          premiumKeys: freshTranslations.premiumFeatures ? Object.keys(freshTranslations.premiumFeatures) : 'missing'
+        });
         
         // Cache and set translations
-        globalTranslationsCache.set(initialLanguage, initialTranslations);
-        setTranslations(initialTranslations);
+        globalTranslationsCache.set(initialLanguage, freshTranslations);
+        setTranslations(freshTranslations);
         
-        // Preload the other language in background
+        // Preload the other language
         const otherLanguage = initialLanguage === 'ro' ? 'en' : 'ro';
         const otherTranslations = await loadTranslations(otherLanguage);
         globalTranslationsCache.set(otherLanguage, otherTranslations);
         
-        console.log(`🚀 Initial translations loaded for: ${initialLanguage}`);
+        console.log(`🚀 Fresh translations loaded for: ${initialLanguage}`);
       } catch (error) {
         console.error('❌ Error initializing translations:', error);
         // Fallback to basic translations

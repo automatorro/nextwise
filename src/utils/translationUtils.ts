@@ -12,6 +12,12 @@ export const translateKey = (translations: Translations, key: string): any => {
     if (value && typeof value === 'object' && k in value) {
       value = value[k];
     } else {
+      // Log missing key for debugging
+      console.warn(`Translation missing for key: "${key}" at "${k}"`, {
+        fullKey: key,
+        currentValue: value,
+        availableKeys: value ? Object.keys(value) : 'null'
+      });
       return key;
     }
   }
