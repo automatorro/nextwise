@@ -92,6 +92,24 @@ export const fallbackTranslations: Record<Language, Translations> = {
         test: "test",
         tests: "teste"
       }
+    },
+    premiumFeatures: {
+      aiPrograms: {
+        title: "Programe AI de 14 Zile",
+        subtitle: "Mini-intervenții ghidate pentru dezvoltare rapidă"
+      },
+      progressSheets: {
+        title: "Fișe de Progres AI",
+        subtitle: "Evaluări vizuale și feedback personalizat"
+      },
+      simulations: {
+        title: "Simulări AI",
+        subtitle: "Exersează scenarii profesionale cu AI"
+      },
+      progressTracking: {
+        title: "Analiza Progresului",
+        subtitle: "Urmărește-ți evoluția în timp"
+      }
     }
   },
   en: {
@@ -183,6 +201,24 @@ export const fallbackTranslations: Record<Language, Translations> = {
       categories: {
         test: "test",
         tests: "tests"
+      }
+    },
+    premiumFeatures: {
+      aiPrograms: {
+        title: "14-Day AI Programs",
+        subtitle: "Guided mini-interventions for rapid development"
+      },
+      progressSheets: {
+        title: "AI Progress Sheets",
+        subtitle: "Visual assessments and personalized feedback"
+      },
+      simulations: {
+        title: "AI Simulations",
+        subtitle: "Practice professional scenarios with AI"
+      },
+      progressTracking: {
+        title: "Progress Analytics",
+        subtitle: "Track your evolution over time"
       }
     }
   }

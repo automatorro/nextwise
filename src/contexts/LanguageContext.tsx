@@ -31,6 +31,10 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       try {
         console.log('🌐 Initializing translations...');
         
+        // Clear all caches to force fresh reload
+        globalTranslationsCache.clear();
+        clearTranslationResultCache();
+        
         // Get stored language or default to 'ro'
         const savedLanguage = getStoredLanguage() as Language;
         const initialLanguage = savedLanguage && (savedLanguage === 'ro' || savedLanguage === 'en') ? savedLanguage : 'ro';
@@ -38,17 +42,17 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // Set initial language
         setLanguage(initialLanguage);
         
-        // Preload all translations in background
-        await preloadAllTranslations();
-        console.log('✅ All translations preloaded');
-        
-        // Get translations from cache or load them
-        const initialTranslations = globalTranslationsCache.get(initialLanguage) || 
-                                   await loadTranslations(initialLanguage);
+        // Load fresh translations
+        const initialTranslations = await loadTranslations(initialLanguage);
         
         // Cache and set translations
         globalTranslationsCache.set(initialLanguage, initialTranslations);
         setTranslations(initialTranslations);
+        
+        // Preload the other language in background
+        const otherLanguage = initialLanguage === 'ro' ? 'en' : 'ro';
+        const otherTranslations = await loadTranslations(otherLanguage);
+        globalTranslationsCache.set(otherLanguage, otherTranslations);
         
         console.log(`🚀 Initial translations loaded for: ${initialLanguage}`);
       } catch (error) {
