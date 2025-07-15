@@ -547,9 +547,9 @@
       },
       "aiRole": {
         "Recruiter": "Recruiter",
-        "Manager": "Manager", 
-        "Team Member": "Membru al Echipei",
-        "HR Manager": "Manager HR"
+        "Manager": "Manager",
+        "Team_Member": "Membru al Echipei",
+        "HR_Manager": "Manager HR"
       }
     },
     "progressTracking": {

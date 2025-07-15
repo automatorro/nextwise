@@ -602,8 +602,8 @@
       "aiRole": {
         "Recruiter": "Recruiter",
         "Manager": "Manager",
-        "Team Member": "Team Member",
-        "HR Manager": "HR Manager"
+        "Team_Member": "Team Member",
+        "HR_Manager": "HR Manager"
       }
     },
     "progressTracking": {

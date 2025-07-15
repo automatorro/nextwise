@@ -31,13 +31,13 @@ const AISimulations = () => {
       id: 'team_conflict',
       icon: '⚖️',
       color: 'bg-orange-500',
-      role: 'Team Member'
+      role: 'Team_Member'
     },
     {
       id: 'salary_negotiation',
       icon: '💰',
       color: 'bg-green-500',
-      role: 'HR Manager'
+      role: 'HR_Manager'
     }
   ];
 
@@ -92,7 +92,7 @@ const AISimulations = () => {
               {t(`premiumFeatures.simulations.${activeSimulation.simulation_type}`)}
             </h2>
             <p className="text-muted-foreground">
-              {t('premiumFeatures.simulations.aiRole')} {config?.role}
+              {t(`premiumFeatures.simulations.aiRole.${config?.role}`)}
             </p>
           </div>
           {isCompleted && (
@@ -230,7 +230,7 @@ const AISimulations = () => {
                 </p>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Bot className="w-4 h-4" />
-                  {t('premiumFeatures.simulations.aiRole')} {simulation.role}
+                  {t(`premiumFeatures.simulations.aiRole.${simulation.role}`)}
                 </div>
                 <Button 
                   onClick={() => handleStartSimulation(simulation.id)}
