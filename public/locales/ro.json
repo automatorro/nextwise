@@ -506,5 +506,58 @@
       "accessRestricted": "Această funcționalitate este disponibilă doar pentru utilizatorii Premium.",
       "upgradeNow": "Upgrade la Premium"
     }
+  },
+  "premiumFeatures": {
+    "aiPrograms": {
+      "title": "Programe AI de 14 Zile",
+      "subtitle": "Mini-intervenții ghidate pentru dezvoltare rapidă",
+      "motivation_reset": "Resetarea Motivației",
+      "confidence_building": "Construirea Încrederii",
+      "stress_management": "Gestionarea Stresului",
+      "leadership_development": "Dezvoltarea Leadership-ului",
+      "communication_skills": "Abilități de Comunicare",
+      "time_management": "Gestionarea Timpului"
+    },
+    "progressSheets": {
+      "title": "Fișe de Progres AI",
+      "subtitle": "Evaluări vizuale și feedback personalizat",
+      "questionPlaceholder": "Descrie obiectivul sau provocarea ta...",
+      "generateSheet": "Generează Fișa",
+      "mySheets": "Fișele Mele",
+      "askQuestion": "Pune o întrebare pentru a genera o fișă de progres personalizată",
+      "loading": "Se generează fișa...",
+      "error": "Eroare la generarea fișei",
+      "saved": "Fișa a fost salvată",
+      "noSavedSheets": "Nu ai fișe salvate încă"
+    },
+    "simulations": {
+      "title": "Simulări AI",
+      "subtitle": "Exersează scenarii profesionale cu AI",
+      "selectSimulation": "Selectează o simulare",
+      "job_interview": "Interviu de Angajare",
+      "management_promotion": "Promovare în Management",
+      "team_conflict": "Conflict în Echipă",
+      "salary_negotiation": "Negociere Salariu",
+      "startSimulation": "Începe Simularea",
+      "simulationDescription": {
+        "job_interview": "Practică pentru un interviu de angajare într-un mediu sigur",
+        "management_promotion": "Pregătește-te pentru o promovare în management",
+        "team_conflict": "Învață să gestionezi conflictele în echipă",
+        "salary_negotiation": "Dezvoltă-ți abilitățile de negociere"
+      },
+      "aiRole": {
+        "Recruiter": "Recruiter",
+        "Manager": "Manager", 
+        "Team Member": "Membru al Echipei",
+        "HR Manager": "Manager HR"
+      }
+    },
+    "progressTracking": {
+      "title": "Analiza Progresului",
+      "subtitle": "Urmărește-ți evoluția în timp",
+      "exportPDF": "Exportă PDF",
+      "progressReport": "Raport de Progres",
+      "noData": "Nu există date pentru perioada selectată"
+    }
   }
 }
