@@ -1,6 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,56 +15,62 @@ serve(async (req) => {
   try {
     const { userId, timeframe, progressData } = await req.json();
     
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openAIApiKey) {
-      throw new Error('OPENAI_API_KEY is not configured');
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
+    if (!GEMINI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error('Missing required environment variables');
     }
 
-    // Create Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // Generate AI analysis of progress data
-    const systemPrompt = `You are a career development analyst. Create a comprehensive progress report analyzing the user's career development journey.`;
+    const fullPrompt = `Ești un analist în dezvoltarea carierei. Creează un raport de progres cuprinzător care analizează călătoria de dezvoltare a carierei utilizatorului.
 
-    const userPrompt = `Analyze this career progress data for ${timeframe}:
+    Analizează aceste date de progres în carieră pentru ${timeframe}:
 
     ${JSON.stringify(progressData, null, 2)}
 
-    Generate a professional progress report with:
-    - Executive summary of progress
-    - Key achievements and milestones
-    - Areas of growth and improvement
-    - Trends and patterns analysis
-    - Recommendations for future development
-    - Goals for the next period
+    Generează un raport de progres profesional cu:
+    - Rezumatul executiv al progresului
+    - Realizări și jaloane cheie
+    - Zone de creștere și îmbunătățire
+    - Analiza tendințelor și pattern-urilor
+    - Recomandări pentru dezvoltarea viitoare
+    - Obiective pentru următoarea perioadă
 
-    Format as HTML that can be converted to PDF with professional styling.`;
+    Formatează ca HTML care poate fi convertit în PDF cu stilizare profesională.`;
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 2000,
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: fullPrompt
+            }]
+          }]
+        })
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`Gemini API error: ${response.status} - ${errorText}`);
+      throw new Error(`Gemini API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    const htmlContent = data.choices[0].message.content;
+    const geminiResult = await response.json();
+    const htmlContent = geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!htmlContent) {
+      throw new Error('No response from Gemini API');
+    }
 
     // Create a complete HTML document with styling
     const fullHtml = `

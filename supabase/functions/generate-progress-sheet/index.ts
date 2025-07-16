@@ -1,6 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,72 +15,80 @@ serve(async (req) => {
   try {
     const { question, userId } = await req.json();
     
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openAIApiKey) {
-      throw new Error('OPENAI_API_KEY is not configured');
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
+    if (!GEMINI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error('Missing required environment variables');
     }
 
-    // Create Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    const systemPrompt = `You are an expert career counselor and coach. Analyze the user's question or situation and provide a comprehensive progress sheet with:
-    - Clear objective extraction
-    - Detailed analysis of the situation
-    - Actionable recommendations
-    - Specific next steps
-    - Timeline and milestones`;
+    const fullPrompt = `Ești un consilier expert în carieră și coach. Analizează întrebarea sau situația utilizatorului și oferă o fișă de progres cuprinzătoare cu:
+    - Extragerea clară a obiectivului
+    - Analiza detaliată a situației
+    - Recomandări acționabile
+    - Pași specifici următori
+    - Calendar și jaloane
 
-    const userPrompt = `Analyze this career development question/situation:
+    Analizează această întrebare/situație de dezvoltare a carierei:
 
     "${question}"
 
-    Provide a comprehensive response as a JSON object with:
+    Oferă un răspuns cuprinzător ca obiect JSON cu:
     {
-      "extracted_objective": "The main career goal or challenge identified",
-      "ai_analysis": "Detailed analysis of the situation, challenges, and opportunities",
+      "extracted_objective": "Obiectivul principal de carieră sau provocarea identificată",
+      "ai_analysis": "Analiza detaliată a situației, provocărilor și oportunităților",
       "recommendations": [
         {
-          "title": "Recommendation title",
-          "description": "Detailed description",
+          "title": "Titlul recomandării",
+          "description": "Descrierea detaliată",
           "priority": "high/medium/low",
           "timeframe": "immediate/short-term/long-term"
         }
       ],
       "next_steps": [
         {
-          "step": "Action step description",
-          "timeline": "When to complete",
-          "resources": ["Required resources"],
-          "success_metrics": "How to measure success"
+          "step": "Descrierea pasului de acțiune",
+          "timeline": "Când să fie completat",
+          "resources": ["Resurse necesare"],
+          "success_metrics": "Cum să măsori succesul"
         }
       ]
     }`;
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 1500,
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: fullPrompt
+            }]
+          }]
+        })
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`Gemini API error: ${response.status} - ${errorText}`);
+      throw new Error(`Gemini API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    const sheetContent = JSON.parse(data.choices[0].message.content);
+    const geminiResult = await response.json();
+    const aiResponse = geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!aiResponse) {
+      throw new Error('No response from Gemini API');
+    }
+
+    const sheetContent = JSON.parse(aiResponse);
 
     console.log(`Generated progress sheet for user ${userId}`);
 

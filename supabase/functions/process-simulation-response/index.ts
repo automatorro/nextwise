@@ -1,6 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,33 +15,33 @@ serve(async (req) => {
   try {
     const { userResponse, conversationHistory, simulationType, userId } = await req.json();
     
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openAIApiKey) {
-      throw new Error('OPENAI_API_KEY is not configured');
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
+    if (!GEMINI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error('Missing required environment variables');
     }
 
-    // Create Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // Define simulation contexts
     const simulationConfigs = {
       'job_interview': {
         role: 'Recruiter',
-        context: 'You are conducting a job interview. Continue the conversation naturally, ask follow-up questions, probe deeper into their experience and skills.'
+        context: 'Desfășori un interviu de angajare. Continuă conversația natural, pune întrebări de urmărire, investighează mai adânc experiența și abilitățile lor.'
       },
       'performance_review': {
         role: 'Manager',
-        context: 'You are conducting a performance review. Provide feedback, discuss goals, and address any concerns professionally.'
+        context: 'Desfășori o evaluare de performanță. Oferă feedback, discută obiectivele și abordează orice preocupări în mod profesional.'
       },
       'team_conflict': {
         role: 'Team_Member',
-        context: 'You are a team member in a conflict situation. Respond to their points, express your perspective, work toward resolution.'
+        context: 'Ești un membru al echipei într-o situație de conflict. Răspunde la punctele lor, exprimă-ți perspectiva, lucrează către rezolvare.'
       },
       'salary_negotiation': {
         role: 'HR_Manager',
-        context: 'You are an HR manager in salary negotiation. Consider their request, ask for justification, negotiate professionally.'
+        context: 'Ești un manager HR în negocierea salariului. Consideră cererea lor, cere justificare, negociază profesional.'
       }
     };
 
@@ -54,52 +54,60 @@ serve(async (req) => {
     const exchangeCount = conversationHistory.length;
     const shouldEnd = exchangeCount >= 8; // 4-6 exchanges = 8-12 messages
 
-    const systemPrompt = `${config.context}
+    const fullPrompt = `${config.context}
 
-    Conversation history: ${JSON.stringify(conversationHistory)}
+    Istoricul conversației: ${JSON.stringify(conversationHistory)}
 
-    Instructions:
-    - Respond naturally to: "${userResponse}"
-    - ${shouldEnd ? 'This should be your final response. Wrap up the conversation professionally and provide a summary of how they performed.' : 'Continue the conversation naturally.'}
-    - Rate their response on: clarity (1-10), empathy (1-10), structure (1-10), conviction (1-10)
-    - Keep responses concise (2-3 sentences max unless ending)
+    Instrucțiuni:
+    - Răspunde natural la: "${userResponse}"
+    - ${shouldEnd ? 'Acesta ar trebui să fie răspunsul tău final. Încheie conversația profesional și oferă un rezumat al performanței lor.' : 'Continuă conversația natural.'}
+    - Evaluează răspunsul lor pe: claritate (1-10), empatie (1-10), structură (1-10), convingere (1-10)
+    - Păstrează răspunsurile concise (maxim 2-3 propoziții, exceptând încheierea)
 
-    Respond with JSON:
+    Răspunde cu JSON:
     {
-      "message": "Your response",
+      "message": "Răspunsul tău",
       "scores": {
         "clarity": 7,
         "empathy": 8,
         "structure": 6,
         "conviction": 9
       },
-      "feedback": "Brief feedback on their response",
+      "feedback": "Feedback scurt despre răspunsul lor",
       "shouldEnd": ${shouldEnd}
     }`;
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userResponse }
-        ],
-        temperature: 0.8,
-        max_tokens: 400,
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: fullPrompt
+            }]
+          }]
+        })
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`Gemini API error: ${response.status} - ${errorText}`);
+      throw new Error(`Gemini API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    const aiResponse = JSON.parse(data.choices[0].message.content);
+    const geminiResult = await response.json();
+    const aiResponseText = geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!aiResponseText) {
+      throw new Error('No response from Gemini API');
+    }
+
+    const aiResponse = JSON.parse(aiResponseText);
 
     console.log(`Processed simulation response for user ${userId}, simulation ${simulationType}`);
 

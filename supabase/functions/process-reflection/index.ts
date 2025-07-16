@@ -1,6 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,60 +15,68 @@ serve(async (req) => {
   try {
     const { reflection, programType, currentDay, userId } = await req.json();
     
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openAIApiKey) {
-      throw new Error('OPENAI_API_KEY is not configured');
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
+    if (!GEMINI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error('Missing required environment variables');
     }
 
-    // Create Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    const systemPrompt = `You are an expert career coach analyzing a user's daily reflection for a ${programType} program. 
-    Provide constructive, encouraging feedback that:
-    - Acknowledges their efforts and insights
-    - Identifies key learnings and growth areas
-    - Offers specific suggestions for improvement
-    - Connects today's learning to career development
-    - Maintains a supportive and motivational tone`;
+    const fullPrompt = `Ești un coach expert în carieră care analizează reflecția zilnică a unui utilizator pentru un program de ${programType}. 
+    Oferă feedback constructiv și încurajator care să:
+    - Recunoască eforturile și perspectivele lor
+    - Identifice învățăturile cheie și zonele de creștere
+    - Ofere sugestii specifice pentru îmbunătățire
+    - Conecteze învățarea de astăzi cu dezvoltarea carierei
+    - Mențină un ton suportiv și motivațional
 
-    const userPrompt = `Analyze this reflection from day ${currentDay} of the program:
+    Analizează această reflecție din ziua ${currentDay} a programului:
 
     "${reflection}"
 
-    Provide feedback as a JSON object with:
+    Oferă feedback ca un obiect JSON cu:
     {
-      "feedback": "Personalized feedback message",
-      "key_insights": ["insight 1", "insight 2"],
-      "suggestions": ["suggestion 1", "suggestion 2"],
-      "encouragement": "Motivational message",
-      "next_focus": "What to focus on tomorrow"
+      "feedback": "Mesaj de feedback personalizat",
+      "key_insights": ["perspectiva 1", "perspectiva 2"],
+      "suggestions": ["sugestia 1", "sugestia 2"],
+      "encouragement": "Mesaj motivațional",
+      "next_focus": "Pe ce să se concentreze mâine"
     }`;
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 800,
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: fullPrompt
+            }]
+          }]
+        })
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`Gemini API error: ${response.status} - ${errorText}`);
+      throw new Error(`Gemini API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    const feedbackContent = JSON.parse(data.choices[0].message.content);
+    const geminiResult = await response.json();
+    const aiResponse = geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!aiResponse) {
+      throw new Error('No response from Gemini API');
+    }
+
+    const feedbackContent = JSON.parse(aiResponse);
 
     console.log(`Processed reflection for user ${userId}, program ${programType}, day ${currentDay}`);
 

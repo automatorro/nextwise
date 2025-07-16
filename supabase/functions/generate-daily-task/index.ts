@@ -1,6 +1,6 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.0';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -15,67 +15,77 @@ serve(async (req) => {
   try {
     const { programType, currentDay, userId } = await req.json();
     
-    const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
-    if (!openAIApiKey) {
-      throw new Error('OPENAI_API_KEY is not configured');
+    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
+    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+
+    if (!GEMINI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+      throw new Error('Missing required environment variables');
     }
 
-    // Create Supabase client
-    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
-    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-    const supabase = createClient(supabaseUrl, supabaseKey);
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
     // Define specialized prompts for each program type
     const programPrompts = {
-      'leadership_development': `You are an expert leadership coach. Generate a practical daily task for day ${currentDay} of a 14-day leadership development program. Focus on building essential leadership skills like communication, decision-making, team management, and emotional intelligence.`,
-      'communication_skills': `You are a communication expert. Generate a practical daily task for day ${currentDay} of a 14-day communication skills program. Focus on improving verbal, non-verbal, written communication, active listening, and interpersonal skills.`,
-      'time_management': `You are a productivity expert. Generate a practical daily task for day ${currentDay} of a 14-day time management program. Focus on planning, prioritization, goal setting, productivity techniques, and work-life balance.`,
-      'emotional_intelligence': `You are an emotional intelligence coach. Generate a practical daily task for day ${currentDay} of a 14-day emotional intelligence program. Focus on self-awareness, self-regulation, empathy, social skills, and emotional management.`
+      'leadership_development': `Ești un coach expert în leadership. Generează o sarcină practică zilnică pentru ziua ${currentDay} dintr-un program de dezvoltare a leadership-ului de 14 zile. Concentrează-te pe construirea abilităților esențiale de leadership precum comunicarea, luarea deciziilor, managementul echipei și inteligența emoțională.`,
+      'communication_skills': `Ești un expert în comunicare. Generează o sarcină practică zilnică pentru ziua ${currentDay} dintr-un program de dezvoltare a abilităților de comunicare de 14 zile. Concentrează-te pe îmbunătățirea comunicării verbale, non-verbale, scrise, ascultarea activă și abilitățile interpersonale.`,
+      'time_management': `Ești un expert în productivitate. Generează o sarcină practică zilnică pentru ziua ${currentDay} dintr-un program de management al timpului de 14 zile. Concentrează-te pe planificare, prioritizare, stabilirea obiectivelor, tehnici de productivitate și echilibrul viață-muncă.`,
+      'emotional_intelligence': `Ești un coach de inteligență emoțională. Generează o sarcină practică zilnică pentru ziua ${currentDay} dintr-un program de dezvoltare a inteligenței emoționale de 14 zile. Concentrează-te pe autocunoaștere, autocontrol, empatie, abilități sociale și managementul emoțional.`
     };
 
     const systemPrompt = programPrompts[programType as keyof typeof programPrompts] || 
-      `You are a career development expert. Generate a practical daily task for day ${currentDay} of a 14-day professional development program.`;
+      `Ești un expert în dezvoltarea carierei. Generează o sarcină practică zilnică pentru ziua ${currentDay} dintr-un program de dezvoltare profesională de 14 zile.`;
 
-    const userPrompt = `Generate a specific, actionable daily task for day ${currentDay}. The task should:
-    - Be completable in 15-30 minutes
-    - Be practical and applicable to real work situations
-    - Include clear instructions and expected outcomes
-    - Build upon previous days' learning
-    - Be engaging and motivating
+    const fullPrompt = `${systemPrompt}
 
-    Return the response as a JSON object with:
+    Generează o sarcină specifică și acționabilă pentru ziua ${currentDay}. Sarcina trebuie să:
+    - Fie completabilă în 15-30 de minute
+    - Fie practică și aplicabilă în situații de lucru reale
+    - Includă instrucțiuni clare și rezultate așteptate
+    - Se bazeze pe învățarea din zilele anterioare
+    - Fie captivantă și motivantă
+
+    Răspunde cu un obiect JSON cu:
     {
-      "title": "Task title",
-      "description": "Detailed task description",
-      "instructions": ["step 1", "step 2", "step 3"],
-      "estimated_time": "15-20 minutes",
-      "learning_objective": "What the user will learn",
-      "reflection_prompt": "Question for end-of-day reflection"
+      "title": "Titlul sarcinii",
+      "description": "Descrierea detaliată a sarcinii",
+      "instructions": ["pasul 1", "pasul 2", "pasul 3"],
+      "estimated_time": "15-20 minute",
+      "learning_objective": "Ce va învăța utilizatorul",
+      "reflection_prompt": "Întrebare pentru reflecția de sfârșitul zilei"
     }`;
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openAIApiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'gpt-4o-mini',
-        messages: [
-          { role: 'system', content: systemPrompt },
-          { role: 'user', content: userPrompt }
-        ],
-        temperature: 0.7,
-        max_tokens: 1000,
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: [{
+            parts: [{
+              text: fullPrompt
+            }]
+          }]
+        })
+      }
+    );
 
     if (!response.ok) {
-      throw new Error(`OpenAI API error: ${response.status}`);
+      const errorText = await response.text();
+      console.error(`Gemini API error: ${response.status} - ${errorText}`);
+      throw new Error(`Gemini API error: ${response.status}`);
     }
 
-    const data = await response.json();
-    const taskContent = JSON.parse(data.choices[0].message.content);
+    const geminiResult = await response.json();
+    const aiResponse = geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
+
+    if (!aiResponse) {
+      throw new Error('No response from Gemini API');
+    }
+
+    const taskContent = JSON.parse(aiResponse);
 
     console.log(`Generated daily task for user ${userId}, program ${programType}, day ${currentDay}`);
 
