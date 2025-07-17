@@ -5,6 +5,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAISimulations } from '@/hooks/useAISimulations';
+import { useProgressTracking } from '@/hooks/useProgressTracking';
 import { MessageSquare, User, Bot, BarChart3, Play, Send } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -12,6 +13,7 @@ const AISimulations = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
   const { activeSimulation, startSimulation, sendResponse, isLoading } = useAISimulations();
+  const { trackProgress } = useProgressTracking();
   const [userResponse, setUserResponse] = useState('');
 
   const simulationTypes = [
@@ -63,9 +65,16 @@ const AISimulations = () => {
     try {
       await sendResponse(userResponse);
       setUserResponse('');
+      
+      // Track progress
+      await trackProgress({
+        steps_completed: 1,
+        achievement_description: `Responded in ${activeSimulation?.simulation_type} simulation`
+      });
+      
       toast({
         title: t('common.success'),
-        description: t('premiumFeatures.simulations.sendResponse'),
+        description: t('premiumFeatures.simulations.responseSent'),
       });
     } catch (error) {
       toast({
@@ -111,7 +120,7 @@ const AISimulations = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4 max-h-96 overflow-y-auto">
-              {activeSimulation.conversation_log.map((message, index) => (
+              {Array.isArray(activeSimulation.conversation_log) && activeSimulation.conversation_log.map((message, index) => (
                 <div 
                   key={index}
                   className={`flex gap-3 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
@@ -129,12 +138,19 @@ const AISimulations = () => {
                     }`}>
                       <p className="text-sm">{message.content}</p>
                       <p className="text-xs opacity-70 mt-1">
-                        {new Date(message.timestamp).toLocaleTimeString()}
+                        {message.timestamp ? new Date(message.timestamp).toLocaleTimeString() : ''}
                       </p>
                     </div>
                   </div>
                 </div>
               ))}
+              
+              {(!activeSimulation.conversation_log || activeSimulation.conversation_log.length === 0) && (
+                <div className="text-center py-8">
+                  <Bot className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">{t('premiumFeatures.simulations.waitingForStart')}</p>
+                </div>
+              )}
             </div>
 
             {!isCompleted && (

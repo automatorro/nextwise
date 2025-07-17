@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAIPrograms } from '@/hooks/useAIPrograms';
+import { useProgressTracking } from '@/hooks/useProgressTracking';
 import { Calendar, Clock, CheckCircle, Play, ArrowRight } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
@@ -12,6 +13,7 @@ const AIPrograms14Days = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
   const { activeProgram, availablePrograms, startProgram, submitReflection, isLoading } = useAIPrograms();
+  const { trackProgress } = useProgressTracking();
   const [reflection, setReflection] = useState('');
 
   const programTypes = [
@@ -59,9 +61,16 @@ const AIPrograms14Days = () => {
     try {
       await submitReflection(reflection);
       setReflection('');
+      
+      // Track progress
+      await trackProgress({
+        steps_completed: 1,
+        achievement_description: `Completed day ${activeProgram?.current_day} of ${activeProgram?.program_type} program`
+      });
+      
       toast({
         title: t('common.success'),
-        description: t('premiumFeatures.aiPrograms.submitReflection'),
+        description: t('premiumFeatures.aiPrograms.reflectionSubmitted'),
       });
     } catch (error) {
       toast({
@@ -96,6 +105,33 @@ const AIPrograms14Days = () => {
           )}
         </div>
 
+        {/* Progress Bar */}
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium">{t('premiumFeatures.aiPrograms.progress')}</span>
+              <span className="text-sm text-muted-foreground">{Math.round((currentDay / 14) * 100)}%</span>
+            </div>
+            <div className="w-full bg-muted rounded-full h-2">
+              <div 
+                className="bg-primary h-2 rounded-full transition-all duration-300" 
+                style={{ width: `${(currentDay / 14) * 100}%` }}
+              ></div>
+            </div>
+            <div className="grid grid-cols-7 gap-1 mt-3">
+              {Array.from({ length: 14 }, (_, i) => (
+                <div
+                  key={i}
+                  className={`h-2 rounded-full ${
+                    i < currentDay ? 'bg-primary' : i === currentDay ? 'bg-primary/50' : 'bg-muted'
+                  }`}
+                  title={`Day ${i + 1}`}
+                />
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
         {!isCompleted && dailyTask && (
           <Card>
             <CardHeader>
@@ -106,7 +142,14 @@ const AIPrograms14Days = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="p-4 bg-muted rounded-lg">
+                <h3 className="font-medium mb-2">{dailyTask.title}</h3>
                 <p className="text-foreground">{dailyTask.task}</p>
+                {dailyTask.estimated_duration && (
+                  <div className="flex items-center gap-1 mt-2 text-sm text-muted-foreground">
+                    <Clock className="w-4 h-4" />
+                    {dailyTask.estimated_duration}
+                  </div>
+                )}
               </div>
               
               <div>
@@ -115,7 +158,7 @@ const AIPrograms14Days = () => {
                 <Textarea
                   value={reflection}
                   onChange={(e) => setReflection(e.target.value)}
-                  placeholder={t('premiumFeatures.aiPrograms.reflection')}
+                  placeholder={t('premiumFeatures.aiPrograms.reflectionPlaceholder')}
                   className="min-h-[100px]"
                 />
                 <Button 
@@ -123,9 +166,18 @@ const AIPrograms14Days = () => {
                   disabled={!reflection.trim() || isLoading}
                   className="mt-3"
                 >
-                  {t('premiumFeatures.aiPrograms.submitReflection')}
+                  {isLoading ? t('premiumFeatures.aiPrograms.processing') : t('premiumFeatures.aiPrograms.submitReflection')}
                 </Button>
               </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {!isCompleted && !dailyTask && (
+          <Card>
+            <CardContent className="py-8 text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+              <p className="text-muted-foreground">{t('premiumFeatures.aiPrograms.generatingTask')}</p>
             </CardContent>
           </Card>
         )}
