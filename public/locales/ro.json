@@ -140,7 +140,7 @@
   "dashboard": {
     "welcome": "Bun venit",
     "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
-    "stats": {
+    "stats":"Zile"
       "testsCompleted": "Teste Completate",
       "careerPlans": "Planuri de Carieră",
       "timeSaved": "Timp Economisit",
