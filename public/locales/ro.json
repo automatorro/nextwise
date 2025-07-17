@@ -138,14 +138,15 @@
     "mostPopular": "Cel mai popular"
   },
   "dashboard": {
-    "welcome": "Bun venit",
-    "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
-    "stats":"Zile"
-      "testsCompleted": "Teste Completate",
-      "careerPlans": "Planuri de Carieră",
-      "timeSaved": "Timp Economisit",
-      "careerProgress": "Progres Carieră"
-    },
+  "welcome": "Bun venit",
+  "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
+  "stats": {
+    "testsCompleted": "Teste Completate",
+    "careerPlans": "Planuri de Carieră",
+    "timeSaved": "Timp Economisit",
+    "careerProgress": "Progres Carieră",
+    "days": "Zile" // ← adaugă această linie
+  },
     "actions": {
       "startFirstTest": "Începe Primul Tău Test",
       "startFirstTestDesc": "Descoperă-ți personalitatea și punctele forte cu primul nostru test AI.",
