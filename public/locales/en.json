@@ -138,14 +138,15 @@
     "mostPopular": "Most Popular"
   },
   "dashboard": {
-    "welcome": "Welcome",
-    "welcomeSubtext": "Start your personal and professional development journey with our AI tests.",
-    "stats": {
-      "testsCompleted": "Tests Completed",
-      "careerPlans": "Career Plans",
-      "timeSaved": "Time Saved",
-      "careerProgress": "Career Progress"
-    },
+  "welcome": "Welcome",
+  "welcomeSubtext": "Start your personal and professional development journey with our AI tests.",
+  "stats": {
+    "testsCompleted": "Tests Completed",
+    "careerPlans": "Career Plans",
+    "timeSaved": "Time Saved",
+    "careerProgress": "Career Progress",
+    "days": "Days" // ← adaugă această linie
+  },
     "actions": {
       "startFirstTest": "Start Your First Test",
       "startFirstTestDesc": "Discover your personality and strengths with our first AI test.",
