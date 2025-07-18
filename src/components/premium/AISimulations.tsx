@@ -4,16 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAISimulations } from '@/hooks/useAISimulations';
 import { useProgressTracking } from '@/hooks/useProgressTracking';
-import { MessageSquare, User, Bot, BarChart3, Play, Send, Target, ArrowLeft } from 'lucide-react';
-import { useToast } from '@/components/ui/use-toast';
+import { MessageSquare, User, Bot, BarChart3, Play, Send, Target, ArrowLeft, AlertCircle } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const AISimulations = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
-  const { activeSimulation, startSimulation, sendResponse, isLoading } = useAISimulations();
+  const { activeSimulation, startSimulation, sendResponse, clearActiveSimulation, isLoading, error } = useAISimulations();
   const { trackProgress } = useProgressTracking();
   const [userResponse, setUserResponse] = useState('');
   const [showSimulationList, setShowSimulationList] = useState(!activeSimulation);
@@ -62,6 +63,10 @@ const AISimulations = () => {
     scrollToBottom();
   }, [activeSimulation?.conversation_log]);
 
+  useEffect(() => {
+    setShowSimulationList(!activeSimulation);
+  }, [activeSimulation]);
+
   const handleStartSimulation = async (simulationType: string) => {
     try {
       await startSimulation(simulationType);
@@ -74,14 +79,14 @@ const AISimulations = () => {
       console.error('Error starting simulation:', error);
       toast({
         title: t('common.error'),
-        description: 'Eroare la pornirea simulării',
+        description: error instanceof Error ? error.message : 'Eroare la pornirea simulării',
         variant: 'destructive',
       });
     }
   };
 
   const handleSendResponse = async () => {
-    if (!userResponse.trim()) return;
+    if (!userResponse.trim() || !activeSimulation) return;
     
     try {
       await sendResponse(userResponse);
@@ -90,25 +95,27 @@ const AISimulations = () => {
       // Track progress
       await trackProgress({
         steps_completed: 1,
-        achievement_description: `Participated in ${activeSimulation?.simulation_type} simulation`
+        achievement_description: `Participated in ${activeSimulation.simulation_type} simulation`
       });
       
       toast({
         title: t('common.success'),
-        description: 'Răspunsul a fost trimis!',
+        description: 'Răspunsul a fost trimis cu succes!',
       });
     } catch (error) {
       console.error('Error sending response:', error);
       toast({
         title: t('common.error'),
-        description: 'Eroare la trimiterea răspunsului',
+        description: error instanceof Error ? error.message : 'Eroare la trimiterea răspunsului',
         variant: 'destructive',
       });
     }
   };
 
   const handleBackToSimulations = () => {
+    clearActiveSimulation();
     setShowSimulationList(true);
+    setUserResponse('');
   };
 
   const getSimulationConfig = (type: string) => {
@@ -138,7 +145,7 @@ const AISimulations = () => {
               className="flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
-              {t('careerJourney.premiumFeatures.simulations.backToSimulations')}
+              Înapoi la Simulări
             </Button>
           </div>
           {isCompleted && (
@@ -158,6 +165,13 @@ const AISimulations = () => {
             Rol AI: {config?.role}
           </p>
         </div>
+
+        {error && (
+          <Alert variant="destructive">
+            <AlertCircle className="h-4 w-4" />
+            <AlertDescription>{error}</AlertDescription>
+          </Alert>
+        )}
 
         <Card>
           <CardHeader>
@@ -283,6 +297,13 @@ const AISimulations = () => {
         </p>
       </div>
 
+      {error && (
+        <Alert variant="destructive">
+          <AlertCircle className="h-4 w-4" />
+          <AlertDescription>{error}</AlertDescription>
+        </Alert>
+      )}
+
       <div className="grid gap-6 md:grid-cols-2">
         {simulationTypes.map((simulation) => (
           <Card key={simulation.id} className="cursor-pointer hover:shadow-lg transition-all duration-200">
@@ -308,7 +329,7 @@ const AISimulations = () => {
                 className="w-full"
               >
                 <Play className="w-4 h-4 mr-2" />
-                Începe Simularea
+                {isLoading ? 'Se încarcă...' : 'Începe Simularea'}
               </Button>
             </CardContent>
           </Card>

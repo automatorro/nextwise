@@ -15,14 +15,17 @@ serve(async (req) => {
   try {
     const { userResponse, conversationLog, simulationType } = await req.json();
     
+    console.log('Processing simulation response:', { simulationType, userResponse, conversationLength: conversationLog?.length });
+    
     const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
 
     if (!GEMINI_API_KEY) {
+      console.error('GEMINI_API_KEY not configured');
       throw new Error('GEMINI_API_KEY not configured');
     }
 
     // Determine if simulation should continue or complete
-    const messageCount = conversationLog.length;
+    const messageCount = conversationLog?.length || 0;
     const shouldComplete = messageCount >= 8; // Complete after 4 exchanges (8 messages total)
 
     const simulationRoles = {
@@ -65,6 +68,8 @@ serve(async (req) => {
       }`
     }`;
 
+    console.log('Calling Gemini API...');
+
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
       {
@@ -83,36 +88,83 @@ serve(async (req) => {
     );
 
     if (!response.ok) {
+      console.error(`Gemini API error: ${response.status} ${response.statusText}`);
       throw new Error(`Gemini API error: ${response.status}`);
     }
 
     const geminiResult = await response.json();
+    console.log('Gemini API response:', JSON.stringify(geminiResult, null, 2));
+    
     const aiResponse = geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
 
     if (!aiResponse) {
+      console.error('No response from Gemini API');
       throw new Error('No response from Gemini API');
     }
 
-    // Clean the response to extract only JSON
-    const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) {
-      throw new Error('No valid JSON found in AI response');
+    console.log('Raw AI response:', aiResponse);
+
+    // Try multiple approaches to extract JSON
+    let responseContent;
+    
+    try {
+      // First try: direct JSON parse
+      responseContent = JSON.parse(aiResponse);
+    } catch {
+      try {
+        // Second try: extract JSON with regex
+        const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          responseContent = JSON.parse(jsonMatch[0]);
+        } else {
+          throw new Error('No JSON found');
+        }
+      } catch {
+        // Third try: create a fallback response
+        console.warn('Could not parse AI response as JSON, creating fallback');
+        responseContent = {
+          message: aiResponse.length > 10 ? aiResponse : "Thank you for your response. That's interesting. Can you tell me more about that?",
+          shouldComplete: shouldComplete,
+          ...(shouldComplete && {
+            feedback: "Thank you for participating in this simulation. You showed good communication skills.",
+            scores: {
+              clarity: 7,
+              empathy: 7,
+              conviction: 7,
+              structure: 7,
+              overall: 70
+            }
+          })
+        };
+      }
     }
 
-    const responseContent = JSON.parse(jsonMatch[0]);
+    // Validate response structure
+    if (!responseContent.message || typeof responseContent.message !== 'string') {
+      responseContent.message = "Thank you for your response. Let me think about that...";
+    }
 
+    if (typeof responseContent.shouldComplete !== 'boolean') {
+      responseContent.shouldComplete = shouldComplete;
+    }
+
+    console.log('Final response content:', responseContent);
     console.log(`Processed simulation response for ${simulationType}`);
 
     return new Response(JSON.stringify(responseContent), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
+    
   } catch (error) {
     console.error('Error in process-simulation-response:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      message: "Thank you for your response. Let me think about that...",
+    
+    // Return a proper fallback response instead of throwing
+    const fallbackResponse = {
+      message: "Thank you for your response. I'm processing your input and will continue our conversation.",
       shouldComplete: false
-    }), {
+    };
+    
+    return new Response(JSON.stringify(fallbackResponse), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });

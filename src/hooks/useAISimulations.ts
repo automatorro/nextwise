@@ -23,12 +23,14 @@ interface AISimulation {
 export const useAISimulations = () => {
   const [activeSimulation, setActiveSimulation] = useState<AISimulation | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
 
   const fetchActiveSimulation = async () => {
     if (!user) return;
 
     try {
+      setError(null);
       const { data, error } = await supabase
         .from('ai_simulations')
         .select('*')
@@ -40,12 +42,14 @@ export const useAISimulations = () => {
 
       if (error && error.code !== 'PGRST116') {
         console.error('Error fetching active simulation:', error);
+        setError('Eroare la încărcarea simulării');
         return;
       }
 
       setActiveSimulation(data as AISimulation);
     } catch (error) {
       console.error('Error fetching active simulation:', error);
+      setError('Eroare la încărcarea simulării');
     }
   };
 
@@ -53,6 +57,8 @@ export const useAISimulations = () => {
     if (!user) throw new Error('User not authenticated');
 
     setIsLoading(true);
+    setError(null);
+    
     try {
       // Complete any existing active simulations
       await supabase
@@ -68,7 +74,7 @@ export const useAISimulations = () => {
 
       if (messageError) {
         console.error('Error starting simulation:', messageError);
-        throw messageError;
+        throw new Error('Eroare la pornirea simulării');
       }
 
       // Create new simulation
@@ -92,11 +98,15 @@ export const useAISimulations = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Database error:', error);
+        throw new Error('Eroare la crearea simulării');
+      }
 
       setActiveSimulation(data as AISimulation);
     } catch (error) {
       console.error('Error starting simulation:', error);
+      setError(error instanceof Error ? error.message : 'Eroare necunoscută');
       throw error;
     } finally {
       setIsLoading(false);
@@ -104,10 +114,16 @@ export const useAISimulations = () => {
   };
 
   const sendResponse = async (response: string) => {
-    if (!activeSimulation || !user) throw new Error('No active simulation or user');
+    if (!activeSimulation || !user) {
+      throw new Error('No active simulation or user');
+    }
 
     setIsLoading(true);
+    setError(null);
+    
     try {
+      console.log('Sending response for simulation:', activeSimulation.id);
+      
       const userMessage = {
         sender: 'user',
         content: response,
@@ -116,6 +132,9 @@ export const useAISimulations = () => {
 
       const updatedConversation = [...activeSimulation.conversation_log, userMessage];
       const updatedResponses = [...activeSimulation.user_responses, response];
+
+      console.log('Updated conversation:', updatedConversation);
+      console.log('Updated responses:', updatedResponses);
 
       // Get AI response
       const { data: aiResponse, error: aiError } = await supabase.functions.invoke('process-simulation-response', {
@@ -128,7 +147,13 @@ export const useAISimulations = () => {
 
       if (aiError) {
         console.error('Error processing response:', aiError);
-        throw aiError;
+        throw new Error('Eroare la procesarea răspunsului');
+      }
+
+      console.log('AI Response received:', aiResponse);
+
+      if (!aiResponse || typeof aiResponse.message !== 'string') {
+        throw new Error('Răspuns invalid de la AI');
       }
 
       const aiMessage = {
@@ -149,30 +174,49 @@ export const useAISimulations = () => {
       if (aiResponse.shouldComplete) {
         updates.is_completed = true;
         updates.completed_at = new Date().toISOString();
-        updates.ai_feedback = aiResponse.feedback;
-        updates.clarity_score = aiResponse.scores?.clarity;
-        updates.empathy_score = aiResponse.scores?.empathy;
-        updates.conviction_score = aiResponse.scores?.conviction;
-        updates.structure_score = aiResponse.scores?.structure;
-        updates.overall_score = aiResponse.scores?.overall;
+        
+        if (aiResponse.feedback) {
+          updates.ai_feedback = aiResponse.feedback;
+        }
+        
+        if (aiResponse.scores) {
+          updates.clarity_score = aiResponse.scores.clarity || 0;
+          updates.empathy_score = aiResponse.scores.empathy || 0;
+          updates.conviction_score = aiResponse.scores.conviction || 0;
+          updates.structure_score = aiResponse.scores.structure || 0;
+          updates.overall_score = aiResponse.scores.overall || 0;
+        }
       }
 
-      const { data, error } = await supabase
+      console.log('Updating simulation with:', updates);
+
+      const { data: updatedData, error: updateError } = await supabase
         .from('ai_simulations')
         .update(updates)
         .eq('id', activeSimulation.id)
         .select()
         .single();
 
-      if (error) throw error;
+      if (updateError) {
+        console.error('Database update error:', updateError);
+        throw new Error('Eroare la salvarea conversației');
+      }
 
-      setActiveSimulation(data as AISimulation);
+      console.log('Simulation updated successfully:', updatedData);
+      setActiveSimulation(updatedData as AISimulation);
+      
     } catch (error) {
       console.error('Error sending response:', error);
+      setError(error instanceof Error ? error.message : 'Eroare la trimiterea răspunsului');
       throw error;
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const clearActiveSimulation = () => {
+    setActiveSimulation(null);
+    setError(null);
   };
 
   useEffect(() => {
@@ -183,7 +227,9 @@ export const useAISimulations = () => {
     activeSimulation,
     startSimulation,
     sendResponse,
+    clearActiveSimulation,
     isLoading,
+    error,
     refetch: fetchActiveSimulation
   };
 };
