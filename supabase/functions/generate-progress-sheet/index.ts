@@ -21,28 +21,34 @@ serve(async (req) => {
       throw new Error('GEMINI_API_KEY not configured');
     }
 
-    const fullPrompt = `You are an expert career counselor and coach. Analyze the user's career question/situation and provide a comprehensive progress sheet.
+    const systemPrompt = `You are an expert career coach and analyst. Based on the user's question or goal, create a comprehensive progress sheet.
 
-    User's question/situation: "${question}"
-
-    Provide a comprehensive response as a JSON object with this exact structure:
+    User's question/goal: "${question}"
+    
+    Analyze this and provide:
+    1. Extract the main objective
+    2. Provide detailed analysis of the situation
+    3. Give specific recommendations
+    4. List concrete next steps
+    
+    Respond with a JSON object with this exact structure:
     {
-      "objective": "The main career objective or challenge identified",
-      "analysis": "Detailed analysis of the situation, challenges, and opportunities",
+      "objective": "Clear, concise statement of the main objective",
+      "analysis": "Detailed analysis of the current situation, challenges, and opportunities (2-3 paragraphs)",
       "recommendations": [
-        {
-          "title": "Recommendation title",
-          "description": "Detailed description",
-          "priority": "high",
-          "timeframe": "short-term"
-        }
+        "Specific recommendation 1",
+        "Specific recommendation 2",
+        "Specific recommendation 3"
       ],
       "nextSteps": [
-        "Specific action step 1",
-        "Specific action step 2",
-        "Specific action step 3"
+        "Concrete action step 1",
+        "Concrete action step 2", 
+        "Concrete action step 3",
+        "Concrete action step 4"
       ]
-    }`;
+    }
+    
+    Make sure all recommendations and steps are practical, actionable, and relevant to the user's career development.`;
 
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
@@ -54,7 +60,7 @@ serve(async (req) => {
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: fullPrompt
+              text: systemPrompt
             }]
           }]
         })
@@ -72,6 +78,7 @@ serve(async (req) => {
       throw new Error('No response from Gemini API');
     }
 
+    // Clean the response to extract only JSON
     const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('No valid JSON found in AI response');
@@ -79,7 +86,7 @@ serve(async (req) => {
 
     const sheetContent = JSON.parse(jsonMatch[0]);
 
-    console.log('Generated progress sheet successfully');
+    console.log(`Generated progress sheet for question: ${question.substring(0, 50)}...`);
 
     return new Response(JSON.stringify(sheetContent), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -88,20 +95,18 @@ serve(async (req) => {
     console.error('Error in generate-progress-sheet:', error);
     return new Response(JSON.stringify({ 
       error: error.message,
-      objective: "Career Development",
-      analysis: "Based on your question, there are opportunities for growth and development in your career path.",
+      objective: "Career Development Goal",
+      analysis: "Based on your question, it's important to take a strategic approach to your career development. Consider your current skills, desired outcomes, and the steps needed to bridge any gaps.",
       recommendations: [
-        {
-          title: "Self-Assessment",
-          description: "Take time to evaluate your current skills and identify areas for improvement.",
-          priority: "high",
-          timeframe: "short-term"
-        }
+        "Assess your current skills and identify areas for improvement",
+        "Network with professionals in your target field",
+        "Create a timeline with specific milestones"
       ],
       nextSteps: [
-        "Reflect on your career goals",
-        "Identify key skill gaps",
-        "Create an action plan"
+        "Write down your specific career goal",
+        "Research the requirements for your target role",
+        "Identify 3 key skills to develop",
+        "Set up informational interviews with industry professionals"
       ]
     }), {
       status: 200,

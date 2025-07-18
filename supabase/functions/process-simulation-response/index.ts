@@ -21,42 +21,48 @@ serve(async (req) => {
       throw new Error('GEMINI_API_KEY not configured');
     }
 
-    const simulationConfigs = {
-      'job_interview': 'You are conducting a job interview. Respond naturally to their answer and ask follow-up questions about their experience and skills.',
-      'management_promotion': 'You are a senior manager evaluating someone for promotion. Ask about their leadership experience and management capabilities.',
-      'team_conflict': 'You are a team member in a workplace conflict. Respond to their points and express your perspective professionally.',
-      'salary_negotiation': 'You are an HR manager in a salary negotiation. Consider their request and negotiate professionally while considering budget constraints.'
+    // Determine if simulation should continue or complete
+    const messageCount = conversationLog.length;
+    const shouldComplete = messageCount >= 8; // Complete after 4 exchanges (8 messages total)
+
+    const simulationRoles = {
+      'job_interview': 'experienced HR recruiter conducting a job interview',
+      'management_promotion': 'senior manager discussing promotion opportunities',
+      'team_conflict': 'colleague involved in a workplace conflict that needs resolution',
+      'salary_negotiation': 'HR manager in a salary negotiation meeting'
     };
 
-    const context = simulationConfigs[simulationType as keyof typeof simulationConfigs] || 
-      'You are a professional assistant helping someone practice workplace communication.';
+    const role = simulationRoles[simulationType as keyof typeof simulationRoles] || 'professional colleague';
 
-    const exchangeCount = conversationLog.length;
-    const shouldEnd = exchangeCount >= 8;
-
-    const fullPrompt = `${context}
-
+    let systemPrompt = `You are a ${role}. You are having a realistic professional conversation.
+    
+    Based on the user's response: "${userResponse}"
+    
     Conversation history: ${JSON.stringify(conversationLog)}
-    Their latest response: "${userResponse}"
-
-    Instructions:
-    - Respond naturally to: "${userResponse}"
-    - ${shouldEnd ? 'This should be your final response. End the conversation professionally and provide feedback on their performance.' : 'Continue the conversation naturally.'}
-    - Evaluate their response on: clarity (1-10), empathy (1-10), structure (1-10), conviction (1-10)
-    - Keep responses concise (max 2-3 sentences, except for ending)
-
-    Respond with JSON:
-    {
-      "message": "Your response",
-      "scores": {
-        "clarity": 7,
-        "empathy": 8,
-        "structure": 6,
-        "conviction": 9,
-        "overall": 75
-      },
-      "feedback": "Brief feedback about their response",
-      "shouldComplete": ${shouldEnd}
+    
+    ${shouldComplete ? 
+      `This conversation is ending. Provide a natural conclusion and detailed feedback with scores.
+      
+      Respond with a JSON object with this exact structure:
+      {
+        "message": "Your final response to conclude the conversation",
+        "shouldComplete": true,
+        "feedback": "Detailed feedback on the user's performance throughout the conversation",
+        "scores": {
+          "clarity": 8,
+          "empathy": 7,
+          "conviction": 9,
+          "structure": 8,
+          "overall": 82
+        }
+      }` :
+      `Continue the conversation naturally. Ask relevant follow-up questions or respond appropriately to move the conversation forward.
+      
+      Respond with a JSON object with this exact structure:
+      {
+        "message": "Your response to continue the conversation",
+        "shouldComplete": false
+      }`
     }`;
 
     const response = await fetch(
@@ -69,7 +75,7 @@ serve(async (req) => {
         body: JSON.stringify({
           contents: [{
             parts: [{
-              text: fullPrompt
+              text: systemPrompt
             }]
           }]
         })
@@ -81,37 +87,30 @@ serve(async (req) => {
     }
 
     const geminiResult = await response.json();
-    const aiResponseText = geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
+    const aiResponse = geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
 
-    if (!aiResponseText) {
+    if (!aiResponse) {
       throw new Error('No response from Gemini API');
     }
 
-    const jsonMatch = aiResponseText.match(/\{[\s\S]*\}/);
+    // Clean the response to extract only JSON
+    const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('No valid JSON found in AI response');
     }
 
-    const aiResponse = JSON.parse(jsonMatch[0]);
+    const responseContent = JSON.parse(jsonMatch[0]);
 
     console.log(`Processed simulation response for ${simulationType}`);
 
-    return new Response(JSON.stringify(aiResponse), {
+    return new Response(JSON.stringify(responseContent), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error in process-simulation-response:', error);
     return new Response(JSON.stringify({ 
       error: error.message,
-      message: "Thank you for your response. Let's continue our practice session.",
-      scores: {
-        clarity: 7,
-        empathy: 7,
-        structure: 7,
-        conviction: 7,
-        overall: 70
-      },
-      feedback: "Good effort! Keep practicing to improve your communication skills.",
+      message: "Thank you for your response. Let me think about that...",
       shouldComplete: false
     }), {
       status: 200,

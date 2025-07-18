@@ -138,15 +138,15 @@
     "mostPopular": "Cel mai popular"
   },
   "dashboard": {
-  "welcome": "Bun venit",
-  "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
-  "stats": {
-    "testsCompleted": "Teste Completate",
-    "careerPlans": "Planuri de Carieră",
-    "timeSaved": "Timp Economisit",
-    "careerProgress": "Progres Carieră",
-    "days": "Zile" // ← adaugă această linie
-  },
+    "welcome": "Bun venit",
+    "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
+    "stats": {
+      "testsCompleted": "Teste Completate",
+      "careerPlans": "Planuri de Carieră",
+      "timeSaved": "Timp Economisit",
+      "careerProgress": "Progres Carieră",
+      "days": "Zile"
+    },
     "actions": {
       "startFirstTest": "Începe Primul Tău Test",
       "startFirstTestDesc": "Descoperă-ți personalitatea și punctele forte cu primul nostru test AI.",
@@ -198,12 +198,50 @@
     "tabs": {
       "dashboard": "Dashboard",
       "create": "Plan Nou",
-      "mentoring": "Mentoring AI"
+      "mentoring": "Mentoring AI",
+      "aiPrograms": "Programe AI de 14 Zile",
+      "progressSheets": "Fișe de Progres AI",
+      "simulations": "Simulări AI",
+      "analytics": "Analiza Progresului"
     },
     "noPlans": "Nu ai încă planuri de carieră",
     "createFirst": "Creează primul tău plan de carieră",
     "createPlan": "Creează Plan",
-    "viewPlan": "Vezi Planul"
+    "viewPlan": "Vezi Planul",
+    "milestones": {
+      "title": "Obiective de Carieră",
+      "completed": "Completat",
+      "pending": "În Așteptare",
+      "overdue": "Întârziat",
+      "markComplete": "Marchează ca Completat",
+      "markIncomplete": "Marchează ca Incomplet",
+      "addMilestone": "Adaugă Obiectiv",
+      "editMilestone": "Editează Obiectiv",
+      "deleteMilestone": "Șterge Obiectiv",
+      "targetDate": "Data Țintă",
+      "progress": "Progres"
+    },
+    "recommendations": {
+      "title": "Recomandări AI",
+      "subtitle": "Sugestii personalizate bazate pe profilul și rezultatele testelor tale",
+      "dismiss": "Respinge",
+      "viewDetails": "Vezi Detalii",
+      "takeAction": "Acționează",
+      "basedOn": "Bazat pe",
+      "estimatedTime": "Timp estimat",
+      "minutes": "minute"
+    },
+    "templates": {
+      "title": "Șabloane de Carieră",
+      "subtitle": "Planuri de carieră pre-construite pentru a te ajuta să începi",
+      "useTemplate": "Folosește Șablonul",
+      "viewDetails": "Vezi Detalii",
+      "difficulty": "Dificultate",
+      "duration": "Durată",
+      "months": "luni",
+      "skills": "Abilități Necesare",
+      "roles": "Roluri Țintă"
+    }
   },
   "subscription": {
     "title": "Abonament & Setări",
@@ -455,7 +493,8 @@
         "deleteSheet": "Șterge Fișa",
         "noSheets": "Nu ai încă fișe de progres salvate.",
         "generating": "Generez fișa de progres...",
-        "error": "Eroare la generarea fișei"
+        "error": "Eroare la generarea fișei",
+        "backToSheets": "Înapoi la Fișe"
       },
       "simulations": {
         "title": "Simulări AI",
@@ -483,7 +522,8 @@
           "managementPromotion": "Exersează o conversație de promovare cu managerul tău.",
           "teamConflict": "Învață să gestionezi conflictele în echipă într-un mediu sigur.",
           "salaryNegotiation": "Pregătește-te pentru negocierea salariului cu AI-ul."
-        }
+        },
+        "backToSimulations": "Înapoi la Simulări"
       },
       "progressTracking": {
         "title": "Analiza Progresului",
@@ -536,7 +576,8 @@
         "leadership_transition": "Dezvoltă abilitățile de leadership și pregătește-te pentru roluri de conducere",
         "interview_training": "Pregătește-te pentru interviuri de succes cu exerciții practice zilnice",
         "career_clarity": "Descoperă-ți direcția profesională ideală prin exerciții de auto-cunoaștere"
-      }
+      },
+      "backToPrograms": "Înapoi la Programe"
     },
     "progressSheets": {
       "title": "Fișe de Progres AI",

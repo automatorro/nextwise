@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAIPrograms } from '@/hooks/useAIPrograms';
 import { useProgressTracking } from '@/hooks/useProgressTracking';
-import { Calendar, Clock, CheckCircle, Play, Target, BookOpen } from 'lucide-react';
+import { Calendar, Clock, CheckCircle, Play, Target, BookOpen, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const AIPrograms14Days = () => {
@@ -16,6 +16,7 @@ const AIPrograms14Days = () => {
   const { activeProgram, startProgram, submitReflection, isLoading } = useAIPrograms();
   const { trackProgress } = useProgressTracking();
   const [reflection, setReflection] = useState('');
+  const [showProgramList, setShowProgramList] = useState(!activeProgram);
 
   const programTypes = [
     {
@@ -51,6 +52,7 @@ const AIPrograms14Days = () => {
   const handleStartProgram = async (programType: string) => {
     try {
       await startProgram(programType);
+      setShowProgramList(false);
       toast({
         title: t('common.success'),
         description: 'Programul a fost pornit cu succes!',
@@ -92,6 +94,10 @@ const AIPrograms14Days = () => {
     }
   };
 
+  const handleBackToPrograms = () => {
+    setShowProgramList(true);
+  };
+
   if (isLoading && !activeProgram) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
@@ -100,7 +106,7 @@ const AIPrograms14Days = () => {
     );
   }
 
-  if (activeProgram) {
+  if (activeProgram && !showProgramList) {
     const currentDay = activeProgram.current_day;
     const isCompleted = activeProgram.is_completed;
     const dailyTask = activeProgram.daily_tasks[currentDay - 1];
@@ -109,21 +115,33 @@ const AIPrograms14Days = () => {
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
-              <span className="text-3xl">{programConfig?.icon}</span>
-              {programConfig?.title || activeProgram.program_type}
-            </h2>
-            <p className="text-muted-foreground">
-              Ziua {currentDay} din 14
-            </p>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleBackToPrograms}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              {t('premiumFeatures.aiPrograms.backToPrograms')}
+            </Button>
           </div>
           {isCompleted && (
             <Badge variant="secondary" className="bg-green-100 text-green-800">
               <CheckCircle className="w-4 h-4 mr-1" />
-              Finalizat
+              {t('premiumFeatures.aiPrograms.completed')}
             </Badge>
           )}
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
+            <span className="text-3xl">{programConfig?.icon}</span>
+            {programConfig?.title || activeProgram.program_type}
+          </h2>
+          <p className="text-muted-foreground">
+            Ziua {currentDay} din 14
+          </p>
         </div>
 
         {/* Progress Bar */}

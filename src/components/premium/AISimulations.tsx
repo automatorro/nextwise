@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAISimulations } from '@/hooks/useAISimulations';
 import { useProgressTracking } from '@/hooks/useProgressTracking';
-import { MessageSquare, User, Bot, BarChart3, Play, Send, Target } from 'lucide-react';
+import { MessageSquare, User, Bot, BarChart3, Play, Send, Target, ArrowLeft } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const AISimulations = () => {
@@ -16,6 +16,7 @@ const AISimulations = () => {
   const { activeSimulation, startSimulation, sendResponse, isLoading } = useAISimulations();
   const { trackProgress } = useProgressTracking();
   const [userResponse, setUserResponse] = useState('');
+  const [showSimulationList, setShowSimulationList] = useState(!activeSimulation);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const simulationTypes = [
@@ -64,6 +65,7 @@ const AISimulations = () => {
   const handleStartSimulation = async (simulationType: string) => {
     try {
       await startSimulation(simulationType);
+      setShowSimulationList(false);
       toast({
         title: t('common.success'),
         description: 'Simularea a început cu succes!',
@@ -105,6 +107,10 @@ const AISimulations = () => {
     }
   };
 
+  const handleBackToSimulations = () => {
+    setShowSimulationList(true);
+  };
+
   const getSimulationConfig = (type: string) => {
     return simulationTypes.find(sim => sim.id === type);
   };
@@ -117,28 +123,40 @@ const AISimulations = () => {
     );
   }
 
-  if (activeSimulation) {
+  if (activeSimulation && !showSimulationList) {
     const config = getSimulationConfig(activeSimulation.simulation_type);
     const isCompleted = activeSimulation.is_completed;
 
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
-              <span className="text-3xl">{config?.icon}</span>
-              {config?.title}
-            </h2>
-            <p className="text-muted-foreground flex items-center gap-2">
-              <Target className="w-4 h-4" />
-              Rol AI: {config?.role}
-            </p>
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleBackToSimulations}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              {t('careerJourney.premiumFeatures.simulations.backToSimulations')}
+            </Button>
           </div>
           {isCompleted && (
             <Badge variant="secondary" className="bg-green-100 text-green-800">
               Finalizat
             </Badge>
           )}
+        </div>
+
+        <div>
+          <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
+            <span className="text-3xl">{config?.icon}</span>
+            {config?.title}
+          </h2>
+          <p className="text-muted-foreground flex items-center gap-2">
+            <Target className="w-4 h-4" />
+            Rol AI: {config?.role}
+          </p>
         </div>
 
         <Card>
