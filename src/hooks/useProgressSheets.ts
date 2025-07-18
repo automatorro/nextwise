@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -31,7 +32,10 @@ export const useProgressSheets = () => {
         .eq('is_saved', true)
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching progress sheets:', error);
+        return;
+      }
 
       setSheets((data as ProgressSheet[]) || []);
     } catch (error) {
@@ -45,9 +49,14 @@ export const useProgressSheets = () => {
     setIsLoading(true);
     try {
       // Call edge function to generate progress sheet
-      const { data: sheetData } = await supabase.functions.invoke('generate-progress-sheet', {
-        body: { question, userId: user.id }
+      const { data: sheetData, error: sheetError } = await supabase.functions.invoke('generate-progress-sheet', {
+        body: { question }
       });
+
+      if (sheetError) {
+        console.error('Error generating sheet:', sheetError);
+        throw sheetError;
+      }
 
       // Create temporary sheet (not saved)
       const { data, error } = await supabase

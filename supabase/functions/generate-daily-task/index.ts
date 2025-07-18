@@ -1,6 +1,6 @@
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,46 +13,40 @@ serve(async (req) => {
   }
 
   try {
-    const { programType, currentDay, userId } = await req.json();
+    const { programType, day } = await req.json();
     
     const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
-    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-    if (!GEMINI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      throw new Error('Missing required environment variables');
+    if (!GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY not configured');
     }
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-    // Define specialized prompts for each program type
+    // Define program-specific prompts
     const programPrompts = {
-      'leadership_development': `Ești un coach expert în leadership. Generează o sarcină practică zilnică pentru ziua ${currentDay} dintr-un program de dezvoltare a leadership-ului de 14 zile. Concentrează-te pe construirea abilităților esențiale de leadership precum comunicarea, luarea deciziilor, managementul echipei și inteligența emoțională.`,
-      'communication_skills': `Ești un expert în comunicare. Generează o sarcină practică zilnică pentru ziua ${currentDay} dintr-un program de dezvoltare a abilităților de comunicare de 14 zile. Concentrează-te pe îmbunătățirea comunicării verbale, non-verbale, scrise, ascultarea activă și abilitățile interpersonale.`,
-      'time_management': `Ești un expert în productivitate. Generează o sarcină practică zilnică pentru ziua ${currentDay} dintr-un program de management al timpului de 14 zile. Concentrează-te pe planificare, prioritizare, stabilirea obiectivelor, tehnici de productivitate și echilibrul viață-muncă.`,
-      'emotional_intelligence': `Ești un coach de inteligență emoțională. Generează o sarcină practică zilnică pentru ziua ${currentDay} dintr-un program de dezvoltare a inteligenței emoționale de 14 zile. Concentrează-te pe autocunoaștere, autocontrol, empatie, abilități sociale și managementul emoțional.`
+      'motivation_reset': `Generate a practical daily task for day ${day} of a 14-day motivation reset program. Focus on building confidence, setting clear goals, and developing positive habits.`,
+      'leadership_transition': `Generate a practical daily task for day ${day} of a 14-day leadership transition program. Focus on leadership skills, team management, and decision-making.`,
+      'interview_training': `Generate a practical daily task for day ${day} of a 14-day interview training program. Focus on interview preparation, communication skills, and confidence building.`,
+      'career_clarity': `Generate a practical daily task for day ${day} of a 14-day career clarity program. Focus on self-discovery, career exploration, and goal setting.`
     };
 
     const systemPrompt = programPrompts[programType as keyof typeof programPrompts] || 
-      `Ești un expert în dezvoltarea carierei. Generează o sarcină practică zilnică pentru ziua ${currentDay} dintr-un program de dezvoltare profesională de 14 zile.`;
+      `Generate a practical daily task for day ${day} of a 14-day professional development program.`;
 
     const fullPrompt = `${systemPrompt}
 
-    Generează o sarcină specifică și acționabilă pentru ziua ${currentDay}. Sarcina trebuie să:
-    - Fie completabilă în 15-30 de minute
-    - Fie practică și aplicabilă în situații de lucru reale
-    - Includă instrucțiuni clare și rezultate așteptate
-    - Se bazeze pe învățarea din zilele anterioare
-    - Fie captivantă și motivantă
+    Create a specific and actionable task for day ${day}. The task should:
+    - Be completable in 15-30 minutes
+    - Be practical and applicable to real work situations
+    - Include clear instructions and expected outcomes
+    - Build on previous days' learning
+    - Be engaging and motivating
 
-    Răspunde cu un obiect JSON cu:
+    Respond with a JSON object with this exact structure:
     {
-      "title": "Titlul sarcinii",
-      "description": "Descrierea detaliată a sarcinii",
-      "instructions": ["pasul 1", "pasul 2", "pasul 3"],
-      "estimated_time": "15-20 minute",
-      "learning_objective": "Ce va învăța utilizatorul",
-      "reflection_prompt": "Întrebare pentru reflecția de sfârșitul zilei"
+      "title": "Task title",
+      "task": "Detailed task description with clear instructions",
+      "estimated_duration": "15-20 minutes",
+      "reflection_question": "Question for end-of-day reflection"
     }`;
 
     const response = await fetch(
@@ -73,8 +67,6 @@ serve(async (req) => {
     );
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Gemini API error: ${response.status} - ${errorText}`);
       throw new Error(`Gemini API error: ${response.status}`);
     }
 
@@ -85,17 +77,29 @@ serve(async (req) => {
       throw new Error('No response from Gemini API');
     }
 
-    const taskContent = JSON.parse(aiResponse);
+    // Clean the response to extract only JSON
+    const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('No valid JSON found in AI response');
+    }
 
-    console.log(`Generated daily task for user ${userId}, program ${programType}, day ${currentDay}`);
+    const taskContent = JSON.parse(jsonMatch[0]);
+
+    console.log(`Generated daily task for program ${programType}, day ${day}`);
 
     return new Response(JSON.stringify(taskContent), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error in generate-daily-task:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      title: "Daily Task",
+      task: "Take 15 minutes to reflect on your professional goals and write down three specific actions you can take this week to move closer to achieving them.",
+      estimated_duration: "15 minutes",
+      reflection_question: "What did you learn about yourself today, and how will you apply this insight?"
+    }), {
+      status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }

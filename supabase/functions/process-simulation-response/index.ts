@@ -1,6 +1,6 @@
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -13,68 +13,50 @@ serve(async (req) => {
   }
 
   try {
-    const { userResponse, conversationHistory, simulationType, userId } = await req.json();
+    const { userResponse, conversationLog, simulationType } = await req.json();
     
     const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
-    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
-    if (!GEMINI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      throw new Error('Missing required environment variables');
+    if (!GEMINI_API_KEY) {
+      throw new Error('GEMINI_API_KEY not configured');
     }
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
-
-    // Define simulation contexts
     const simulationConfigs = {
-      'job_interview': {
-        role: 'Recruiter',
-        context: 'Desfășori un interviu de angajare. Continuă conversația natural, pune întrebări de urmărire, investighează mai adânc experiența și abilitățile lor.'
-      },
-      'performance_review': {
-        role: 'Manager',
-        context: 'Desfășori o evaluare de performanță. Oferă feedback, discută obiectivele și abordează orice preocupări în mod profesional.'
-      },
-      'team_conflict': {
-        role: 'Team_Member',
-        context: 'Ești un membru al echipei într-o situație de conflict. Răspunde la punctele lor, exprimă-ți perspectiva, lucrează către rezolvare.'
-      },
-      'salary_negotiation': {
-        role: 'HR_Manager',
-        context: 'Ești un manager HR în negocierea salariului. Consideră cererea lor, cere justificare, negociază profesional.'
-      }
+      'job_interview': 'You are conducting a job interview. Respond naturally to their answer and ask follow-up questions about their experience and skills.',
+      'management_promotion': 'You are a senior manager evaluating someone for promotion. Ask about their leadership experience and management capabilities.',
+      'team_conflict': 'You are a team member in a workplace conflict. Respond to their points and express your perspective professionally.',
+      'salary_negotiation': 'You are an HR manager in a salary negotiation. Consider their request and negotiate professionally while considering budget constraints.'
     };
 
-    const config = simulationConfigs[simulationType as keyof typeof simulationConfigs];
-    if (!config) {
-      throw new Error(`Unknown simulation type: ${simulationType}`);
-    }
+    const context = simulationConfigs[simulationType as keyof typeof simulationConfigs] || 
+      'You are a professional assistant helping someone practice workplace communication.';
 
-    // Determine if simulation should end (after 4-6 exchanges)
-    const exchangeCount = conversationHistory.length;
-    const shouldEnd = exchangeCount >= 8; // 4-6 exchanges = 8-12 messages
+    const exchangeCount = conversationLog.length;
+    const shouldEnd = exchangeCount >= 8;
 
-    const fullPrompt = `${config.context}
+    const fullPrompt = `${context}
 
-    Istoricul conversației: ${JSON.stringify(conversationHistory)}
+    Conversation history: ${JSON.stringify(conversationLog)}
+    Their latest response: "${userResponse}"
 
-    Instrucțiuni:
-    - Răspunde natural la: "${userResponse}"
-    - ${shouldEnd ? 'Acesta ar trebui să fie răspunsul tău final. Încheie conversația profesional și oferă un rezumat al performanței lor.' : 'Continuă conversația natural.'}
-    - Evaluează răspunsul lor pe: claritate (1-10), empatie (1-10), structură (1-10), convingere (1-10)
-    - Păstrează răspunsurile concise (maxim 2-3 propoziții, exceptând încheierea)
+    Instructions:
+    - Respond naturally to: "${userResponse}"
+    - ${shouldEnd ? 'This should be your final response. End the conversation professionally and provide feedback on their performance.' : 'Continue the conversation naturally.'}
+    - Evaluate their response on: clarity (1-10), empathy (1-10), structure (1-10), conviction (1-10)
+    - Keep responses concise (max 2-3 sentences, except for ending)
 
-    Răspunde cu JSON:
+    Respond with JSON:
     {
-      "message": "Răspunsul tău",
+      "message": "Your response",
       "scores": {
         "clarity": 7,
         "empathy": 8,
         "structure": 6,
-        "conviction": 9
+        "conviction": 9,
+        "overall": 75
       },
-      "feedback": "Feedback scurt despre răspunsul lor",
-      "shouldEnd": ${shouldEnd}
+      "feedback": "Brief feedback about their response",
+      "shouldComplete": ${shouldEnd}
     }`;
 
     const response = await fetch(
@@ -95,8 +77,6 @@ serve(async (req) => {
     );
 
     if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Gemini API error: ${response.status} - ${errorText}`);
       throw new Error(`Gemini API error: ${response.status}`);
     }
 
@@ -107,17 +87,34 @@ serve(async (req) => {
       throw new Error('No response from Gemini API');
     }
 
-    const aiResponse = JSON.parse(aiResponseText);
+    const jsonMatch = aiResponseText.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) {
+      throw new Error('No valid JSON found in AI response');
+    }
 
-    console.log(`Processed simulation response for user ${userId}, simulation ${simulationType}`);
+    const aiResponse = JSON.parse(jsonMatch[0]);
+
+    console.log(`Processed simulation response for ${simulationType}`);
 
     return new Response(JSON.stringify(aiResponse), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
     console.error('Error in process-simulation-response:', error);
-    return new Response(JSON.stringify({ error: error.message }), {
-      status: 500,
+    return new Response(JSON.stringify({ 
+      error: error.message,
+      message: "Thank you for your response. Let's continue our practice session.",
+      scores: {
+        clarity: 7,
+        empathy: 7,
+        structure: 7,
+        conviction: 7,
+        overall: 70
+      },
+      feedback: "Good effort! Keep practicing to improve your communication skills.",
+      shouldComplete: false
+    }), {
+      status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -58,7 +59,10 @@ export const useProgressTracking = () => {
           .gte('tracking_date', startDate.toISOString().split('T')[0])
           .order('tracking_date', { ascending: true });
 
-        if (error) throw error;
+        if (error) {
+          console.error(`Error fetching ${key} data:`, error);
+          continue;
+        }
 
         data[key as keyof ProgressDataByTimeframe] = progressData || [];
       }
@@ -74,9 +78,11 @@ export const useProgressTracking = () => {
         .order('created_at', { ascending: false })
         .limit(10);
 
-      if (achievementsError) throw achievementsError;
-
-      setAchievements(achievementsData || []);
+      if (achievementsError) {
+        console.error('Error fetching achievements:', achievementsError);
+      } else {
+        setAchievements(achievementsData || []);
+      }
     } catch (error) {
       console.error('Error fetching progress data:', error);
     }
@@ -88,18 +94,26 @@ export const useProgressTracking = () => {
     tests_retaken?: number;
     achievement_description?: string;
   }) => {
-    if (!user) throw new Error('User not authenticated');
+    if (!user) {
+      console.warn('User not authenticated, cannot track progress');
+      return;
+    }
 
     try {
       const today = new Date().toISOString().split('T')[0];
 
       // Check if there's already a record for today
-      const { data: existingData } = await supabase
+      const { data: existingData, error: fetchError } = await supabase
         .from('user_progress_tracking')
         .select('*')
         .eq('user_id', user.id)
         .eq('tracking_date', today)
         .single();
+
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        console.error('Error checking existing progress:', fetchError);
+        return;
+      }
 
       if (existingData) {
         // Update existing record
@@ -113,7 +127,9 @@ export const useProgressTracking = () => {
           })
           .eq('id', existingData.id);
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error updating progress:', error);
+        }
       } else {
         // Create new record
         const { error } = await supabase
@@ -129,13 +145,15 @@ export const useProgressTracking = () => {
             }
           ]);
 
-        if (error) throw error;
+        if (error) {
+          console.error('Error creating progress record:', error);
+        }
       }
 
+      // Refresh data after tracking
       await fetchProgressData();
     } catch (error) {
       console.error('Error tracking progress:', error);
-      throw error;
     }
   };
 
@@ -144,29 +162,36 @@ export const useProgressTracking = () => {
 
     setIsLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('export-progress-pdf', {
-        body: {
-          userId: user.id,
-          timeframe,
-          progressData: progressData[timeframe as keyof ProgressDataByTimeframe],
-          achievements
-        }
-      });
+      // For now, create a simple text-based report
+      const data = progressData[timeframe as keyof ProgressDataByTimeframe];
+      const totalSteps = data.reduce((sum, item) => sum + item.steps_completed, 0);
+      const totalMilestones = data.reduce((sum, item) => sum + item.milestones_reached, 0);
+      
+      const reportContent = `
+        Raport de Progres - ${timeframe}
+        ================================
+        
+        Statistici:
+        - Pași completați: ${totalSteps}
+        - Jaloane atinse: ${totalMilestones}
+        - Perioada: ${timeframe}
+        
+        Realizări recente:
+        ${achievements.slice(0, 5).map(a => `- ${a.achievement_description}`).join('\n')}
+      `;
 
-      if (error) throw error;
-
-      // Create download link
-      const blob = new Blob([data], { type: 'application/pdf' });
+      // Create download
+      const blob = new Blob([reportContent], { type: 'text/plain' });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = url;
-      link.download = `progress-report-${timeframe}.pdf`;
+      link.download = `progress-report-${timeframe}.txt`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error exporting PDF:', error);
+      console.error('Error exporting report:', error);
       throw error;
     } finally {
       setIsLoading(false);

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -38,7 +39,8 @@ export const useAISimulations = () => {
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        throw error;
+        console.error('Error fetching active simulation:', error);
+        return;
       }
 
       setActiveSimulation(data as AISimulation);
@@ -59,10 +61,15 @@ export const useAISimulations = () => {
         .eq('user_id', user.id)
         .eq('is_completed', false);
 
-      // Generate initial AI message using edge function
-      const { data: initialMessage } = await supabase.functions.invoke('start-simulation', {
+      // Generate initial AI message
+      const { data: initialMessage, error: messageError } = await supabase.functions.invoke('start-simulation', {
         body: { simulationType }
       });
+
+      if (messageError) {
+        console.error('Error starting simulation:', messageError);
+        throw messageError;
+      }
 
       // Create new simulation
       const { data, error } = await supabase
@@ -110,15 +117,19 @@ export const useAISimulations = () => {
       const updatedConversation = [...activeSimulation.conversation_log, userMessage];
       const updatedResponses = [...activeSimulation.user_responses, response];
 
-      // Get AI response using edge function
-      const { data: aiResponse } = await supabase.functions.invoke('process-simulation-response', {
+      // Get AI response
+      const { data: aiResponse, error: aiError } = await supabase.functions.invoke('process-simulation-response', {
         body: {
-          simulationType: activeSimulation.simulation_type,
-          conversationLog: updatedConversation,
           userResponse: response,
-          simulationId: activeSimulation.id
+          conversationLog: updatedConversation,
+          simulationType: activeSimulation.simulation_type
         }
       });
+
+      if (aiError) {
+        console.error('Error processing response:', aiError);
+        throw aiError;
+      }
 
       const aiMessage = {
         sender: 'ai',
@@ -134,8 +145,8 @@ export const useAISimulations = () => {
         updated_at: new Date().toISOString()
       };
 
-      // Check if simulation should be completed (after 3-5 exchanges)
-      if (updatedResponses.length >= 3 || aiResponse.shouldComplete) {
+      // Check if simulation should be completed
+      if (aiResponse.shouldComplete) {
         updates.is_completed = true;
         updates.completed_at = new Date().toISOString();
         updates.ai_feedback = aiResponse.feedback;

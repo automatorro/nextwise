@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -21,7 +22,6 @@ interface AIProgram {
 
 export const useAIPrograms = () => {
   const [activeProgram, setActiveProgram] = useState<AIProgram | null>(null);
-  const [availablePrograms, setAvailablePrograms] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const { user } = useAuth();
 
@@ -37,7 +37,8 @@ export const useAIPrograms = () => {
         .single();
 
       if (error && error.code !== 'PGRST116') {
-        throw error;
+        console.error('Error fetching active program:', error);
+        return;
       }
 
       setActiveProgram(data as AIProgram);
@@ -58,10 +59,15 @@ export const useAIPrograms = () => {
         .eq('user_id', user.id)
         .eq('is_active', true);
 
-      // Generate initial daily task using edge function
-      const { data: taskData } = await supabase.functions.invoke('generate-daily-task', {
+      // Generate initial daily task
+      const { data: taskData, error: taskError } = await supabase.functions.invoke('generate-daily-task', {
         body: { programType, day: 1 }
       });
+
+      if (taskError) {
+        console.error('Error generating task:', taskError);
+        throw taskError;
+      }
 
       // Create new program
       const { data, error } = await supabase
@@ -95,42 +101,45 @@ export const useAIPrograms = () => {
     setIsLoading(true);
     try {
       const currentDay = activeProgram.current_day;
+      
+      // Process reflection and get next task
+      const { data: reflectionData, error: reflectionError } = await supabase.functions.invoke('process-reflection', {
+        body: {
+          reflection,
+          programType: activeProgram.program_type,
+          day: currentDay
+        }
+      });
+
+      if (reflectionError) {
+        console.error('Error processing reflection:', reflectionError);
+        throw reflectionError;
+      }
+
       const updatedReflections = {
         ...activeProgram.daily_reflections,
         [currentDay]: reflection
       };
 
-      // Get feedback and next day's task
-      const { data: feedbackData } = await supabase.functions.invoke('process-reflection', {
-        body: {
-          programType: activeProgram.program_type,
-          day: currentDay,
-          reflection,
-          programId: activeProgram.id
-        }
-      });
-
       const nextDay = currentDay + 1;
-      const isCompleting = nextDay > 14;
+      const isCompleting = reflectionData.shouldComplete || nextDay > 14;
 
       const updates: any = {
         daily_reflections: updatedReflections,
         updated_at: new Date().toISOString()
       };
 
-      if (!isCompleting) {
+      if (!isCompleting && reflectionData.nextTask) {
         updates.current_day = nextDay;
-        updates.daily_tasks = [...activeProgram.daily_tasks, feedbackData.nextTask];
+        updates.daily_tasks = [...activeProgram.daily_tasks, reflectionData.nextTask];
       } else {
         updates.is_completed = true;
         updates.is_active = false;
         updates.completed_at = new Date().toISOString();
-        updates.final_feedback = feedbackData.finalFeedback;
-        updates.final_score = feedbackData.finalScore;
-      }
-
-      if (currentDay === 7) {
-        updates.intermediate_feedback = feedbackData.intermediateFeedback;
+        if (reflectionData.finalFeedback) {
+          updates.final_feedback = reflectionData.finalFeedback;
+          updates.final_score = reflectionData.finalScore || 85;
+        }
       }
 
       const { data, error } = await supabase
@@ -157,7 +166,6 @@ export const useAIPrograms = () => {
 
   return {
     activeProgram,
-    availablePrograms,
     startProgram,
     submitReflection,
     isLoading,

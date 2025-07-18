@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useProgressSheets } from '@/hooks/useProgressSheets';
@@ -5,6 +6,8 @@ import { useToast } from '@/hooks/use-toast';
 import QuestionForm from './progress-sheets/QuestionForm';
 import ProgressSheetCard from './progress-sheets/ProgressSheetCard';
 import SavedSheetsList from './progress-sheets/SavedSheetsList';
+import { Card, CardContent } from '@/components/ui/card';
+import { FileText, Lightbulb } from 'lucide-react';
 
 const AIProgressSheets = () => {
   const { t } = useLanguage();
@@ -18,12 +21,13 @@ const AIProgressSheets = () => {
       setCurrentSheet(sheet);
       toast({
         title: t('common.success'),
-        description: t('premiumFeatures.progressSheets.generateSheet'),
+        description: 'Fișa de progres a fost generată cu succes!',
       });
     } catch (error) {
+      console.error('Error generating sheet:', error);
       toast({
         title: t('common.error'),
-        description: t('premiumFeatures.progressSheets.error'),
+        description: 'Eroare la generarea fișei de progres',
         variant: 'destructive',
       });
     }
@@ -37,12 +41,13 @@ const AIProgressSheets = () => {
       setCurrentSheet(null);
       toast({
         title: t('common.success'),
-        description: t('premiumFeatures.progressSheets.saveSheet'),
+        description: 'Fișa de progres a fost salvată!',
       });
     } catch (error) {
+      console.error('Error saving sheet:', error);
       toast({
         title: t('common.error'),
-        description: 'Error saving sheet',
+        description: 'Eroare la salvarea fișei',
         variant: 'destructive',
       });
     }
@@ -53,46 +58,85 @@ const AIProgressSheets = () => {
       await deleteSheet(sheetId);
       toast({
         title: t('common.success'),
-        description: t('premiumFeatures.progressSheets.deleteSheet'),
+        description: 'Fișa de progres a fost ștearsă!',
       });
     } catch (error) {
+      console.error('Error deleting sheet:', error);
       toast({
         title: t('common.error'),
-        description: 'Error deleting sheet',
+        description: 'Eroare la ștergerea fișei',
         variant: 'destructive',
       });
     }
   };
 
+  if (isLoading && !currentSheet && sheets.length === 0) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">{t('premiumFeatures.progressSheets.title')}</h2>
-        <p className="text-muted-foreground">{t('premiumFeatures.progressSheets.subtitle')}</p>
+        <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
+          <FileText className="w-8 h-8 text-primary" />
+          Fișe de Progres AI
+        </h2>
+        <p className="text-muted-foreground">
+          Pune întrebări despre cariera ta și primește analize AI personalizate cu planuri de acțiune
+        </p>
       </div>
 
-      <QuestionForm 
-        onGenerateSheet={handleGenerateSheet}
-        isLoading={isLoading}
-      />
-
-      {currentSheet && (
-        <div>
-          <h3 className="text-lg font-medium mb-4">Generated Sheet</h3>
-          <ProgressSheetCard 
-            sheet={currentSheet} 
-            isPreview={true} 
-            onSave={handleSaveSheet}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <div className="space-y-6">
+          <QuestionForm 
+            onGenerateSheet={handleGenerateSheet}
+            isLoading={isLoading}
           />
-        </div>
-      )}
 
-      <div>
-        <h3 className="text-lg font-medium mb-4">{t('premiumFeatures.progressSheets.mySheets')}</h3>
-        <SavedSheetsList 
-          sheets={sheets}
-          onDeleteSheet={handleDeleteSheet}
-        />
+          {/* Example questions */}
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <Lightbulb className="w-4 h-4 text-yellow-500" />
+                <h3 className="font-medium">Întrebări de exemplu:</h3>
+              </div>
+              <div className="space-y-2 text-sm text-muted-foreground">
+                <p>• "Cum mă pot dezvolta pentru un rol de leadership?"</p>
+                <p>• "Care sunt următorii pași în cariera mea în IT?"</p>
+                <p>• "Cum îmi îmbunătățesc abilitățile de comunicare?"</p>
+                <p>• "Ce competențe noi ar trebui să învăț?"</p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="space-y-6">
+          {currentSheet && (
+            <div>
+              <h3 className="text-lg font-medium mb-4 flex items-center gap-2">
+                <FileText className="w-5 h-5 text-primary" />
+                Fișa Ta de Progres
+              </h3>
+              <ProgressSheetCard 
+                sheet={currentSheet} 
+                isPreview={true} 
+                onSave={handleSaveSheet}
+              />
+            </div>
+          )}
+
+          <div>
+            <h3 className="text-lg font-medium mb-4">Fișele Tale Salvate</h3>
+            <SavedSheetsList 
+              sheets={sheets}
+              onDeleteSheet={handleDeleteSheet}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

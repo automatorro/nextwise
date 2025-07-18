@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -6,13 +7,13 @@ import { Textarea } from '@/components/ui/textarea';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAIPrograms } from '@/hooks/useAIPrograms';
 import { useProgressTracking } from '@/hooks/useProgressTracking';
-import { Calendar, Clock, CheckCircle, Play, ArrowRight } from 'lucide-react';
+import { Calendar, Clock, CheckCircle, Play, Target, BookOpen } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const AIPrograms14Days = () => {
   const { t } = useLanguage();
   const { toast } = useToast();
-  const { activeProgram, availablePrograms, startProgram, submitReflection, isLoading } = useAIPrograms();
+  const { activeProgram, startProgram, submitReflection, isLoading } = useAIPrograms();
   const { trackProgress } = useProgressTracking();
   const [reflection, setReflection] = useState('');
 
@@ -20,22 +21,30 @@ const AIPrograms14Days = () => {
     {
       id: 'motivation_reset',
       icon: '🎯',
-      color: 'bg-blue-500'
+      color: 'bg-blue-500',
+      title: 'Resetare Motivație',
+      description: 'Program de 14 zile pentru redescoperirea motivației și entuziasmului în carieră'
     },
     {
       id: 'leadership_transition',
       icon: '👑',
-      color: 'bg-purple-500'
+      color: 'bg-purple-500',
+      title: 'Tranziție în Leadership',
+      description: 'Dezvoltă abilitățile de leadership și pregătește-te pentru roluri de conducere'
     },
     {
       id: 'interview_training',
       icon: '💼',
-      color: 'bg-green-500'
+      color: 'bg-green-500',
+      title: 'Pregătire Interviuri',
+      description: 'Antrenament intensiv pentru interviul perfect și comunicare eficientă'
     },
     {
       id: 'career_clarity',
       icon: '🔍',
-      color: 'bg-orange-500'
+      color: 'bg-orange-500',
+      title: 'Claritate în Carieră',
+      description: 'Descoperă-ți pasiunea și direcția clară pentru dezvoltarea carierei'
     }
   ];
 
@@ -44,12 +53,13 @@ const AIPrograms14Days = () => {
       await startProgram(programType);
       toast({
         title: t('common.success'),
-        description: t('premiumFeatures.aiPrograms.startProgram'),
+        description: 'Programul a fost pornit cu succes!',
       });
     } catch (error) {
+      console.error('Error starting program:', error);
       toast({
         title: t('common.error'),
-        description: 'Error starting program',
+        description: 'Eroare la pornirea programului',
         variant: 'destructive',
       });
     }
@@ -70,62 +80,73 @@ const AIPrograms14Days = () => {
       
       toast({
         title: t('common.success'),
-        description: t('premiumFeatures.aiPrograms.reflectionSubmitted'),
+        description: 'Reflecția a fost trimisă cu succes!',
       });
     } catch (error) {
+      console.error('Error submitting reflection:', error);
       toast({
         title: t('common.error'),
-        description: 'Error submitting reflection',
+        description: 'Eroare la trimiterea reflecției',
         variant: 'destructive',
       });
     }
   };
 
+  if (isLoading && !activeProgram) {
+    return (
+      <div className="flex items-center justify-center min-h-[400px]">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
   if (activeProgram) {
     const currentDay = activeProgram.current_day;
     const isCompleted = activeProgram.is_completed;
     const dailyTask = activeProgram.daily_tasks[currentDay - 1];
+    const programConfig = programTypes.find(p => p.id === activeProgram.program_type);
 
     return (
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-foreground">
-              {t(`premiumFeatures.aiPrograms.${activeProgram.program_type}`)}
+            <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
+              <span className="text-3xl">{programConfig?.icon}</span>
+              {programConfig?.title || activeProgram.program_type}
             </h2>
             <p className="text-muted-foreground">
-              Day {currentDay} of 14
+              Ziua {currentDay} din 14
             </p>
           </div>
           {isCompleted && (
             <Badge variant="secondary" className="bg-green-100 text-green-800">
               <CheckCircle className="w-4 h-4 mr-1" />
-              {t('premiumFeatures.aiPrograms.completed')}
+              Finalizat
             </Badge>
           )}
         </div>
 
         {/* Progress Bar */}
         <Card>
-          <CardContent className="p-4">
+          <CardContent className="p-6">
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">{t('premiumFeatures.aiPrograms.progress')}</span>
+              <span className="text-sm font-medium">Progres Program</span>
               <span className="text-sm text-muted-foreground">{Math.round((currentDay / 14) * 100)}%</span>
             </div>
-            <div className="w-full bg-muted rounded-full h-2">
+            <div className="w-full bg-muted rounded-full h-3 mb-4">
               <div 
-                className="bg-primary h-2 rounded-full transition-all duration-300" 
+                className="bg-primary h-3 rounded-full transition-all duration-300" 
                 style={{ width: `${(currentDay / 14) * 100}%` }}
               ></div>
             </div>
-            <div className="grid grid-cols-7 gap-1 mt-3">
+            <div className="grid grid-cols-14 gap-1">
               {Array.from({ length: 14 }, (_, i) => (
                 <div
                   key={i}
                   className={`h-2 rounded-full ${
-                    i < currentDay ? 'bg-primary' : i === currentDay ? 'bg-primary/50' : 'bg-muted'
+                    i < currentDay ? 'bg-primary' : i === currentDay - 1 ? 'bg-primary/50' : 'bg-muted'
                   }`}
-                  title={`Day ${i + 1}`}
+                  title={`Ziua ${i + 1}`}
                 />
               ))}
             </div>
@@ -136,61 +157,42 @@ const AIPrograms14Days = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Clock className="w-5 h-5" />
-                {t('premiumFeatures.aiPrograms.dailyTask')}
+                <Target className="w-5 h-5" />
+                Sarcina Zilei {currentDay}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="p-4 bg-muted rounded-lg">
-                <h3 className="font-medium mb-2">{dailyTask.title}</h3>
-                <p className="text-foreground">{dailyTask.task}</p>
+              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 className="font-medium mb-2 text-blue-900">{dailyTask.title}</h3>
+                <p className="text-blue-800 leading-relaxed">{dailyTask.task}</p>
                 {dailyTask.estimated_duration && (
-                  <div className="flex items-center gap-1 mt-2 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1 mt-3 text-sm text-blue-600">
                     <Clock className="w-4 h-4" />
-                    {dailyTask.estimated_duration}
+                    Timp estimat: {dailyTask.estimated_duration}
                   </div>
                 )}
               </div>
               
-              <div>
-                <h4 className="font-medium mb-2">{t('premiumFeatures.aiPrograms.reflection')}</h4>
-                <p className="text-sm text-muted-foreground mb-3">{dailyTask.reflection_question}</p>
+              <div className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <BookOpen className="w-4 h-4 text-primary" />
+                  <h4 className="font-medium">Reflecția ta</h4>
+                </div>
+                <p className="text-sm text-muted-foreground">{dailyTask.reflection_question}</p>
                 <Textarea
                   value={reflection}
                   onChange={(e) => setReflection(e.target.value)}
-                  placeholder={t('premiumFeatures.aiPrograms.reflectionPlaceholder')}
-                  className="min-h-[100px]"
+                  placeholder="Scrie aici reflecția ta despre sarcina de astăzi..."
+                  className="min-h-[120px]"
                 />
                 <Button 
                   onClick={handleSubmitReflection}
                   disabled={!reflection.trim() || isLoading}
-                  className="mt-3"
+                  className="w-full"
                 >
-                  {isLoading ? t('premiumFeatures.aiPrograms.processing') : t('premiumFeatures.aiPrograms.submitReflection')}
+                  {isLoading ? 'Se procesează...' : 'Trimite Reflecția'}
                 </Button>
               </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {!isCompleted && !dailyTask && (
-          <Card>
-            <CardContent className="py-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-muted-foreground">{t('premiumFeatures.aiPrograms.generatingTask')}</p>
-            </CardContent>
-          </Card>
-        )}
-
-        {currentDay === 7 && !activeProgram.intermediate_feedback && (
-          <Card>
-            <CardHeader>
-              <CardTitle>{t('premiumFeatures.aiPrograms.intermediateEvaluation')}</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                {t('premiumFeatures.aiPrograms.feedback')}
-              </p>
             </CardContent>
           </Card>
         )}
@@ -198,17 +200,20 @@ const AIPrograms14Days = () => {
         {isCompleted && activeProgram.final_feedback && (
           <Card>
             <CardHeader>
-              <CardTitle>{t('premiumFeatures.aiPrograms.finalEvaluation')}</CardTitle>
+              <CardTitle className="flex items-center gap-2 text-green-700">
+                <CheckCircle className="w-5 h-5" />
+                Evaluare Finală
+              </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <h4 className="font-medium">{t('premiumFeatures.aiPrograms.feedback')}</h4>
-                <p className="text-muted-foreground">{activeProgram.final_feedback}</p>
+              <div className="p-4 bg-green-50 rounded-lg border border-green-200">
+                <h4 className="font-medium text-green-900 mb-2">Feedback-ul tău</h4>
+                <p className="text-green-800">{activeProgram.final_feedback}</p>
               </div>
               {activeProgram.final_score && (
-                <div>
-                  <h4 className="font-medium">{t('premiumFeatures.aiPrograms.score')}</h4>
-                  <div className="text-2xl font-bold text-primary">{activeProgram.final_score}/100</div>
+                <div className="text-center p-4 bg-primary/10 rounded-lg">
+                  <div className="text-3xl font-bold text-primary mb-1">{activeProgram.final_score}/100</div>
+                  <div className="text-sm text-muted-foreground">Scor Final</div>
                 </div>
               )}
             </CardContent>
@@ -221,49 +226,48 @@ const AIPrograms14Days = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">{t('premiumFeatures.aiPrograms.title')}</h2>
-        <p className="text-muted-foreground">{t('premiumFeatures.aiPrograms.subtitle')}</p>
+        <h2 className="text-2xl font-bold text-foreground">Programe AI de 14 Zile</h2>
+        <p className="text-muted-foreground">
+          Alege un program structurat pentru dezvoltarea ta profesională cu ghidaj AI personalizat zilnic
+        </p>
       </div>
 
-      <div>
-        <h3 className="text-lg font-medium mb-4">{t('premiumFeatures.aiPrograms.selectProgram')}</h3>
-        <div className="grid gap-4 md:grid-cols-2">
-          {programTypes.map((program) => (
-            <Card key={program.id} className="cursor-pointer hover:shadow-md transition-shadow">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <div className={`w-10 h-10 rounded-full ${program.color} flex items-center justify-center text-white text-lg`}>
-                    {program.icon}
-                  </div>
-                  {t(`premiumFeatures.aiPrograms.${program.id}`)}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <p className="text-sm text-muted-foreground">
-                  {t(`premiumFeatures.aiPrograms.programDescription.${program.id}`)}
-                </p>
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    14 {t('dashboard.stats.days')}
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Clock className="w-4 h-4" />
-                    10 min/day
-                  </div>
+      <div className="grid gap-6 md:grid-cols-2">
+        {programTypes.map((program) => (
+          <Card key={program.id} className="cursor-pointer hover:shadow-lg transition-all duration-200">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-3">
+                <div className={`w-12 h-12 rounded-full ${program.color} flex items-center justify-center text-white text-xl`}>
+                  {program.icon}
                 </div>
-                <Button 
-                  onClick={() => handleStartProgram(program.id)}
-                  disabled={isLoading}
-                  className="w-full"
-                >
-                  <Play className="w-4 h-4 mr-2" />
-                  {t('premiumFeatures.aiPrograms.startProgram')}
-                </Button>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                {program.title}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-muted-foreground leading-relaxed">
+                {program.description}
+              </p>
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <Calendar className="w-4 h-4" />
+                  14 zile
+                </div>
+                <div className="flex items-center gap-1">
+                  <Clock className="w-4 h-4" />
+                  15-30 min/zi
+                </div>
+              </div>
+              <Button 
+                onClick={() => handleStartProgram(program.id)}
+                disabled={isLoading}
+                className="w-full"
+              >
+                <Play className="w-4 h-4 mr-2" />
+                Începe Programul
+              </Button>
+            </CardContent>
+          </Card>
+        ))}
       </div>
     </div>
   );
