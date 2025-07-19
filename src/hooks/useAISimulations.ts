@@ -17,6 +17,7 @@ interface AISimulation {
   overall_score?: number;
   is_completed: boolean;
   created_at: string;
+  updated_at?: string;
   completed_at?: string;
 }
 
@@ -38,7 +39,7 @@ export const useAISimulations = () => {
         .eq('is_completed', false)
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
+        .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {
         console.error('Error fetching active simulation:', error);
@@ -63,7 +64,10 @@ export const useAISimulations = () => {
       // Complete any existing active simulations
       await supabase
         .from('ai_simulations')
-        .update({ is_completed: true })
+        .update({ 
+          is_completed: true,
+          updated_at: new Date().toISOString()
+        })
         .eq('user_id', user.id)
         .eq('is_completed', false);
 

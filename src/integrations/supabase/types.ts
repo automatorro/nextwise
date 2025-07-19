@@ -118,6 +118,7 @@ export type Database = {
           overall_score: number | null
           simulation_type: string
           structure_score: number | null
+          updated_at: string | null
           user_id: string
           user_responses: Json
         }
@@ -134,6 +135,7 @@ export type Database = {
           overall_score?: number | null
           simulation_type: string
           structure_score?: number | null
+          updated_at?: string | null
           user_id: string
           user_responses?: Json
         }
@@ -150,6 +152,7 @@ export type Database = {
           overall_score?: number | null
           simulation_type?: string
           structure_score?: number | null
+          updated_at?: string | null
           user_id?: string
           user_responses?: Json
         }

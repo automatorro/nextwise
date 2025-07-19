@@ -222,6 +222,8 @@ const AISimulations = () => {
             {!isCompleted && (
               <div className="mt-4 space-y-3">
                 <Textarea
+                  id="user-response"
+                  name="userResponse"
                   value={userResponse}
                   onChange={(e) => setUserResponse(e.target.value)}
                   placeholder="Scrie răspunsul tău aici..."
