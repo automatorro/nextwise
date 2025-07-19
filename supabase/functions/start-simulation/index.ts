@@ -23,20 +23,20 @@ serve(async (req) => {
 
     const simulationConfigs = {
       'job_interview': {
-        role: 'Interviewer',
-        opening: 'Hello! Thank you for coming in today. I\'m excited to learn more about you and your experience. Could you start by telling me a bit about yourself and what interests you about this position?'
+        role: 'Intervievator',
+        opening: 'Bună ziua! Vă mulțumesc că ați venit astăzi la acest interviu. Sunt bucuros să vă cunosc și să aflu mai multe despre experiența dumneavoastră. Ați putea să începeți prin a-mi spune puțin despre dumneavoastră și ce vă interesează la această poziție?'
       },
       'management_promotion': {
-        role: 'Senior Manager',
-        opening: 'Hi there! Thanks for meeting with me today for your promotion interview. I\'d like to start by discussing your leadership experience. Can you tell me about a time when you had to lead a team through a challenging situation?'
+        role: 'Manager Senior',
+        opening: 'Bună ziua! Vă mulțumesc că ați acceptat să discutăm despre oportunitatea de promovare. Aș dori să încep prin a discuta despre experiența dumneavoastră de leadership. Îmi puteți povesti despre o situație în care a trebuit să conduceți o echipă printr-o provocare dificilă?'
       },
       'team_conflict': {
-        role: 'Team Member',
-        opening: 'I\'m glad we could sit down to talk about this. I\'ve been feeling frustrated about some recent team dynamics, and I think we need to address what happened in our last project meeting.'
+        role: 'Coleg de Echipă',
+        opening: 'Mă bucur că am putut să ne facem timp pentru această discuție. M-am simțit frustrat în legătură cu dinamica echipei din ultima vreme și cred că trebuie să abordăm ce s-a întâmplat în ultima noastră ședință de proiect.'
       },
       'salary_negotiation': {
-        role: 'HR Manager',
-        opening: 'Thank you for requesting this meeting. I understand you\'d like to discuss your compensation. I\'ve reviewed your performance and contributions to the team. What specific aspects would you like to discuss?'
+        role: 'Manager HR',
+        opening: 'Vă mulțumesc că ați solicitat această întâlnire. Înțeleg că doriți să discutăm despre compensația dumneavoastră. Am analizat performanța și contribuțiile dumneavoastră la echipă. Ce aspecte specifice ați dori să discutăm?'
       }
     };
 
@@ -57,8 +57,8 @@ serve(async (req) => {
     console.error('Error in start-simulation:', error);
     return new Response(JSON.stringify({ 
       error: error.message,
-      message: "Hello! Let's begin our practice session. How can I help you today?",
-      role: "Assistant"
+      message: "Bună ziua! Să începem sesiunea noastră de practică. Cum vă pot ajuta astăzi?",
+      role: "Asistent"
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

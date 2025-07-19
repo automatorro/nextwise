@@ -29,28 +29,28 @@ serve(async (req) => {
     const shouldComplete = messageCount >= 8; // Complete after 4 exchanges (8 messages total)
 
     const simulationRoles = {
-      'job_interview': 'experienced HR recruiter conducting a job interview',
-      'management_promotion': 'senior manager discussing promotion opportunities',
-      'team_conflict': 'colleague involved in a workplace conflict that needs resolution',
-      'salary_negotiation': 'HR manager in a salary negotiation meeting'
+      'job_interview': 'recrutor HR experimentat care desfășoară un interviu de angajare',
+      'management_promotion': 'manager senior care discută despre oportunități de promovare',
+      'team_conflict': 'coleg implicat într-un conflict de la locul de muncă care necesită rezolvare',
+      'salary_negotiation': 'manager HR într-o întâlnire de negociere salarială'
     };
 
-    const role = simulationRoles[simulationType as keyof typeof simulationRoles] || 'professional colleague';
+    const role = simulationRoles[simulationType as keyof typeof simulationRoles] || 'coleg profesional';
 
-    let systemPrompt = `You are a ${role}. You are having a realistic professional conversation.
+    let systemPrompt = `Ești un ${role}. Conduci o conversație profesională realistă în limba română.
     
-    Based on the user's response: "${userResponse}"
+    Pe baza răspunsului utilizatorului: "${userResponse}"
     
-    Conversation history: ${JSON.stringify(conversationLog)}
+    Istoricul conversației: ${JSON.stringify(conversationLog)}
     
     ${shouldComplete ? 
-      `This conversation is ending. Provide a natural conclusion and detailed feedback with scores.
+      `Această conversație se încheie. Oferă o concluzie naturală și un feedback detaliat cu scoruri.
       
-      Respond with a JSON object with this exact structure:
+      Răspunde cu un obiect JSON cu această structură exactă:
       {
-        "message": "Your final response to conclude the conversation",
+        "message": "Răspunsul tău final pentru a încheia conversația",
         "shouldComplete": true,
-        "feedback": "Detailed feedback on the user's performance throughout the conversation",
+        "feedback": "Feedback detaliat despre performanța utilizatorului de-a lungul conversației",
         "scores": {
           "clarity": 8,
           "empathy": 7,
@@ -59,14 +59,16 @@ serve(async (req) => {
           "overall": 82
         }
       }` :
-      `Continue the conversation naturally. Ask relevant follow-up questions or respond appropriately to move the conversation forward.
+      `Continuă conversația în mod natural. Pune întrebări de urmărire relevante sau răspunde corespunzător pentru a avansa conversația.
       
-      Respond with a JSON object with this exact structure:
+      Răspunde cu un obiect JSON cu această structură exactă:
       {
-        "message": "Your response to continue the conversation",
+        "message": "Răspunsul tău pentru a continua conversația",
         "shouldComplete": false
       }`
-    }`;
+    }
+    
+    IMPORTANT: Răspunde ÎNTOTDEAUNA în limba română. Toate mesajele, întrebările și feedback-ul trebuie să fie în română.`;
 
     console.log('Calling Gemini API...');
 
@@ -120,13 +122,13 @@ serve(async (req) => {
           throw new Error('No JSON found');
         }
       } catch {
-        // Third try: create a fallback response
+        // Third try: create a fallback response in Romanian
         console.warn('Could not parse AI response as JSON, creating fallback');
         responseContent = {
-          message: aiResponse.length > 10 ? aiResponse : "Thank you for your response. That's interesting. Can you tell me more about that?",
+          message: aiResponse.length > 10 ? aiResponse : "Mulțumesc pentru răspunsul dumneavoastră. Este interesant. Îmi puteți spune mai multe despre acest lucru?",
           shouldComplete: shouldComplete,
           ...(shouldComplete && {
-            feedback: "Thank you for participating in this simulation. You showed good communication skills.",
+            feedback: "Mulțumesc pentru participarea la această simulare. Ați demonstrat abilități bune de comunicare.",
             scores: {
               clarity: 7,
               empathy: 7,
@@ -141,7 +143,7 @@ serve(async (req) => {
 
     // Validate response structure
     if (!responseContent.message || typeof responseContent.message !== 'string') {
-      responseContent.message = "Thank you for your response. Let me think about that...";
+      responseContent.message = "Mulțumesc pentru răspunsul dumneavoastră. Să mă gândesc la asta...";
     }
 
     if (typeof responseContent.shouldComplete !== 'boolean') {
@@ -158,9 +160,9 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in process-simulation-response:', error);
     
-    // Return a proper fallback response instead of throwing
+    // Return a proper fallback response in Romanian
     const fallbackResponse = {
-      message: "Thank you for your response. I'm processing your input and will continue our conversation.",
+      message: "Mulțumesc pentru răspunsul dumneavoastră. Procesez informațiile și voi continua conversația noastră.",
       shouldComplete: false
     };
     
