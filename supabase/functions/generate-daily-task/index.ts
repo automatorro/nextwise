@@ -1,4 +1,5 @@
 
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -21,32 +22,34 @@ serve(async (req) => {
       throw new Error('GEMINI_API_KEY not configured');
     }
 
-    // Define program-specific prompts
+    // Define program-specific prompts in Romanian
     const programPrompts = {
-      'motivation_reset': `Generate a practical daily task for day ${day} of a 14-day motivation reset program. Focus on building confidence, setting clear goals, and developing positive habits.`,
-      'leadership_transition': `Generate a practical daily task for day ${day} of a 14-day leadership transition program. Focus on leadership skills, team management, and decision-making.`,
-      'interview_training': `Generate a practical daily task for day ${day} of a 14-day interview training program. Focus on interview preparation, communication skills, and confidence building.`,
-      'career_clarity': `Generate a practical daily task for day ${day} of a 14-day career clarity program. Focus on self-discovery, career exploration, and goal setting.`
+      'motivation_reset': `Generează o sarcină practică pentru ziua ${day} dintr-un program de 14 zile pentru resetarea motivației. Concentrează-te pe construirea încrederii, stabilirea obiectivelor clare și dezvoltarea obiceiurilor pozitive.`,
+      'leadership_transition': `Generează o sarcină practică pentru ziua ${day} dintr-un program de 14 zile pentru tranziția în leadership. Concentrează-te pe abilitățile de leadership, managementul echipei și luarea deciziilor.`,
+      'interview_training': `Generează o sarcină practică pentru ziua ${day} dintr-un program de 14 zile pentru pregătirea interviurilor. Concentrează-te pe pregătirea pentru interviuri, abilitățile de comunicare și construirea încrederii.`,
+      'career_clarity': `Generează o sarcină practică pentru ziua ${day} dintr-un program de 14 zile pentru claritatea în carieră. Concentrează-te pe autodescoperire, explorarea carierei și stabilirea obiectivelor.`
     };
 
     const systemPrompt = programPrompts[programType as keyof typeof programPrompts] || 
-      `Generate a practical daily task for day ${day} of a 14-day professional development program.`;
+      `Generează o sarcină practică pentru ziua ${day} dintr-un program de 14 zile pentru dezvoltare profesională.`;
 
     const fullPrompt = `${systemPrompt}
 
-    Create a specific and actionable task for day ${day}. The task should:
-    - Be completable in 15-30 minutes
-    - Be practical and applicable to real work situations
-    - Include clear instructions and expected outcomes
-    - Build on previous days' learning
-    - Be engaging and motivating
+    Creează o sarcină specifică și acționabilă pentru ziua ${day}. Sarcina trebuie să:
+    - Poată fi completată în 15-30 de minute
+    - Fie practică și aplicabilă în situații de lucru reale
+    - Includă instrucțiuni clare și rezultate așteptate
+    - Se bazeze pe învățarea din zilele anterioare
+    - Fie captivantă și motivantă
 
-    Respond with a JSON object with this exact structure:
+    IMPORTANT: Răspunde DOAR în limba română. Toate textele, instrucțiunile și întrebările trebuie să fie în română.
+
+    Răspunde cu un obiect JSON cu această structură exactă:
     {
-      "title": "Task title",
-      "task": "Detailed task description with clear instructions",
-      "estimated_duration": "15-20 minutes",
-      "reflection_question": "Question for end-of-day reflection"
+      "title": "Titlul sarcinii",
+      "task": "Descrierea detaliată a sarcinii cu instrucțiuni clare",
+      "estimated_duration": "15-20 minute",
+      "reflection_question": "Întrebare pentru reflecția de la sfârșitul zilei"
     }`;
 
     const response = await fetch(
@@ -94,13 +97,14 @@ serve(async (req) => {
     console.error('Error in generate-daily-task:', error);
     return new Response(JSON.stringify({ 
       error: error.message,
-      title: "Daily Task",
-      task: "Take 15 minutes to reflect on your professional goals and write down three specific actions you can take this week to move closer to achieving them.",
-      estimated_duration: "15 minutes",
-      reflection_question: "What did you learn about yourself today, and how will you apply this insight?"
+      title: "Sarcina Zilei",
+      task: "Ia 15 minute să reflectezi asupra obiectivelor tale profesionale și scrie trei acțiuni specifice pe care le poți întreprinde în această săptămână pentru a te apropia de atingerea lor.",
+      estimated_duration: "15 minute",
+      reflection_question: "Ce ai învățat despre tine astăzi și cum vei aplica această perspectivă?"
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });
+

@@ -1,4 +1,5 @@
 
+
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
@@ -21,25 +22,27 @@ serve(async (req) => {
       throw new Error('GEMINI_API_KEY not configured');
     }
 
-    const fullPrompt = `You are an expert career coach analyzing a daily reflection for a ${programType} program.
+    const fullPrompt = `Ești un expert coach de carieră care analizează o reflecție zilnică pentru un program ${programType}.
     
-    Day ${day} reflection: "${reflection}"
+    Reflecția pentru ziua ${day}: "${reflection}"
     
-    Provide constructive and encouraging feedback that:
-    - Acknowledges their efforts and insights
-    - Identifies key learnings and growth areas
-    - Offers specific suggestions for improvement
-    - Connects today's learning to career development
-    - Maintains a supportive and motivational tone
+    Oferă feedback constructiv și încurajator care:
+    - Recunoaște eforturile și perspectivele lor
+    - Identifică învățămintele cheie și zonele de creștere
+    - Oferă sugestii specifice pentru îmbunătățire
+    - Conectează învățarea de astăzi cu dezvoltarea carierei
+    - Menține un ton de susținere și motivant
 
-    ${day < 14 ? 'Also generate the next day task.' : 'This is the final day, provide completion feedback.'}
+    ${day < 14 ? 'De asemenea, generează sarcina pentru ziua următoare.' : 'Aceasta este ziua finală, oferă feedback pentru finalizarea programului.'}
 
-    Respond with a JSON object with this exact structure:
+    IMPORTANT: Răspunde ÎNTOTDEAUNA în limba română. Toate mesajele, feedback-ul și sarcinile trebuie să fie în română.
+
+    Răspunde cu un obiect JSON cu această structură exactă:
     {
-      "feedback": "Personalized feedback message",
-      "nextTask": ${day < 14 ? '{"title": "Next task title", "task": "Next task description", "estimated_duration": "15-20 minutes", "reflection_question": "Next reflection question"}' : 'null'},
+      "feedback": "Mesaj personalizat de feedback",
+      "nextTask": ${day < 14 ? '{"title": "Titlul sarcinii următoare", "task": "Descrierea sarcinii următoare", "estimated_duration": "15-20 minute", "reflection_question": "Întrebarea pentru reflecția următoare"}' : 'null'},
       "shouldComplete": ${day >= 14 ? 'true' : 'false'},
-      "finalFeedback": ${day >= 14 ? '"Final program completion feedback and score"' : 'null'},
+      "finalFeedback": ${day >= 14 ? '"Feedback final pentru finalizarea programului și scor"' : 'null'},
       "finalScore": ${day >= 14 ? '85' : 'null'}
     }`;
 
@@ -87,15 +90,15 @@ serve(async (req) => {
     console.error('Error in process-reflection:', error);
     return new Response(JSON.stringify({ 
       error: error.message,
-      feedback: "Thank you for your reflection. Continue with your development journey tomorrow!",
+      feedback: "Mulțumesc pentru reflecția ta. Continuă cu parcursul tău de dezvoltare mâine!",
       nextTask: day < 14 ? {
-        title: "Daily Reflection",
-        task: "Take time to reflect on your progress and plan for tomorrow.",
-        estimated_duration: "10 minutes",
-        reflection_question: "What will you focus on tomorrow?"
+        title: "Reflecție Zilnică",
+        task: "Ia-ți timp să reflectezi asupra progresului tău și să planifici pentru mâine.",
+        estimated_duration: "10 minute",
+        reflection_question: "Pe ce te vei concentra mâine?"
       } : null,
       shouldComplete: day >= 14,
-      finalFeedback: day >= 14 ? "Congratulations on completing the program!" : null,
+      finalFeedback: day >= 14 ? "Felicitări pentru finalizarea programului!" : null,
       finalScore: day >= 14 ? 85 : null
     }), {
       status: 200,
@@ -103,3 +106,4 @@ serve(async (req) => {
     });
   }
 });
+

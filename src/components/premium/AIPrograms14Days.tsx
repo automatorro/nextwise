@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -123,13 +122,13 @@ const AIPrograms14Days = () => {
               className="flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
-              {t('premiumFeatures.aiPrograms.backToPrograms')}
+              Înapoi la Programe
             </Button>
           </div>
           {isCompleted && (
             <Badge variant="secondary" className="bg-green-100 text-green-800">
               <CheckCircle className="w-4 h-4 mr-1" />
-              {t('premiumFeatures.aiPrograms.completed')}
+              Program Finalizat
             </Badge>
           )}
         </div>
@@ -144,29 +143,69 @@ const AIPrograms14Days = () => {
           </p>
         </div>
 
-        {/* Progress Bar */}
+        {/* Improved Progress Section */}
         <Card>
           <CardContent className="p-6">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-sm font-medium">Progres Program</span>
-              <span className="text-sm text-muted-foreground">{Math.round((currentDay / 14) * 100)}%</span>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="font-semibold text-lg">Progresul tău în program</h3>
+              <span className="text-sm text-muted-foreground">{Math.round((currentDay / 14) * 100)}% completat</span>
             </div>
-            <div className="w-full bg-muted rounded-full h-3 mb-4">
+            
+            {/* Main progress bar */}
+            <div className="w-full bg-muted rounded-full h-4 mb-6">
               <div 
-                className="bg-primary h-3 rounded-full transition-all duration-300" 
+                className="bg-primary h-4 rounded-full transition-all duration-300 flex items-center justify-end pr-2" 
                 style={{ width: `${(currentDay / 14) * 100}%` }}
-              ></div>
+              >
+                {currentDay > 0 && (
+                  <span className="text-xs text-white font-medium">Ziua {currentDay}</span>
+                )}
+              </div>
             </div>
-            <div className="grid grid-cols-14 gap-1">
-              {Array.from({ length: 14 }, (_, i) => (
-                <div
-                  key={i}
-                  className={`h-2 rounded-full ${
-                    i < currentDay ? 'bg-primary' : i === currentDay - 1 ? 'bg-primary/50' : 'bg-muted'
-                  }`}
-                  title={`Ziua ${i + 1}`}
-                />
-              ))}
+
+            {/* Days visualization */}
+            <div className="space-y-3">
+              <h4 className="text-sm font-medium text-muted-foreground">Zilele programului:</h4>
+              <div className="grid grid-cols-7 gap-2">
+                {Array.from({ length: 14 }, (_, i) => {
+                  const dayNumber = i + 1;
+                  const isCurrentDay = dayNumber === currentDay;
+                  const isCompleted = dayNumber < currentDay;
+                  const isFuture = dayNumber > currentDay;
+                  
+                  return (
+                    <div
+                      key={i}
+                      className={`
+                        h-8 w-8 rounded-full flex items-center justify-center text-xs font-medium border-2 transition-all
+                        ${isCurrentDay 
+                          ? 'bg-primary text-white border-primary shadow-lg scale-110' 
+                          : isCompleted 
+                          ? 'bg-green-100 text-green-700 border-green-300' 
+                          : 'bg-muted text-muted-foreground border-muted'
+                        }
+                      `}
+                      title={`Ziua ${dayNumber}${isCurrentDay ? ' (astăzi)' : isCompleted ? ' (completată)' : ' (viitoare)'}`}
+                    >
+                      {isCompleted ? '✓' : dayNumber}
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 bg-green-100 border border-green-300 rounded-full"></div>
+                  <span>Completate</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 bg-primary rounded-full"></div>
+                  <span>Astăzi</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <div className="w-3 h-3 bg-muted border border-muted rounded-full"></div>
+                  <span>Viitoare</span>
+                </div>
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -198,6 +237,8 @@ const AIPrograms14Days = () => {
                 </div>
                 <p className="text-sm text-muted-foreground">{dailyTask.reflection_question}</p>
                 <Textarea
+                  id="reflection"
+                  name="reflection"
                   value={reflection}
                   onChange={(e) => setReflection(e.target.value)}
                   placeholder="Scrie aici reflecția ta despre sarcina de astăzi..."
