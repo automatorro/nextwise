@@ -193,15 +193,27 @@ export const fallbackTranslations: Record<Language, Translations> = {
       completedOn: "Completat pe",
       scoredPoints: "Puncte obținute",
       maxPoints: "Puncte maxime",
-      overallScoreTitle: "Scor General"
+      overallScoreTitle: "Scor General",
+      actions: {
+        shareResult: "Partajează Rezultatul",
+        downloadPDF: "Descarcă PDF",
+        backToTests: "Înapoi la Teste"
+      }
     },
     careerPaths: {
-      title: "Planurile tale de carieră personalizate",
+      title: "Planul tău de carieră personalizat",
       subtitle: "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale, oferindu-ți un drumul clar către obiectivele profesionale.",
       tabs: {
         dashboard: "Dashboard",
         create: "Plan Nou",
         mentoring: "Mentoring AI"
+      },
+      dashboard: {
+        welcome: "Bun venit în secțiunea de planificare a carierei",
+        subtitle: "Aici poți gestiona planurile tale de carieră și urmări progresul",
+        createFirst: "Creează primul tău plan de carieră",
+        noPlans: "Nu ai încă planuri de carieră create",
+        createPlan: "Creează Plan Nou"
       }
     },
     careerJourney: {
@@ -504,7 +516,12 @@ export const fallbackTranslations: Record<Language, Translations> = {
       completedOn: "Completed on",
       scoredPoints: "Points scored",
       maxPoints: "Maximum points",
-      overallScoreTitle: "Overall Score"
+      overallScoreTitle: "Overall Score",
+      actions: {
+        shareResult: "Share Result",
+        downloadPDF: "Download PDF",
+        backToTests: "Back to Tests"
+      }
     },
     careerPaths: {
       title: "Your Personalized Career Plans",
@@ -513,6 +530,13 @@ export const fallbackTranslations: Record<Language, Translations> = {
         dashboard: "Dashboard",
         create: "Create Plan",
         mentoring: "AI Mentoring"
+      },
+      dashboard: {
+        welcome: "Welcome to the career planning section",
+        subtitle: "Here you can manage your career plans and track your progress",
+        createFirst: "Create your first career plan",
+        noPlans: "You don't have any career plans created yet",
+        createPlan: "Create New Plan"
       }
     },
     careerJourney: {
