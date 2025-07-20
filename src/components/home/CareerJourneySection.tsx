@@ -1,40 +1,35 @@
+
 import React from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
-import { Card, CardContent } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Target, TrendingUp, Award } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
 
 const CareerJourneySection = () => {
   const { t } = useLanguage();
 
   const steps = [
     {
-      number: '1',
+      id: 1,
+      icon: <CheckCircle className="w-8 h-8 text-blue-600" />,
       title: t('careerJourney.step1.title'),
-      description: t('careerJourney.step1.description'),
-      icon: CheckCircle,
-      color: 'bg-blue-100 text-blue-600'
+      description: t('careerJourney.step1.description')
     },
     {
-      number: '2',
+      id: 2,
+      icon: <Target className="w-8 h-8 text-green-600" />,
       title: t('careerJourney.step2.title'),
-      description: t('careerJourney.step2.description'),
-      icon: Target,
-      color: 'bg-green-100 text-green-600'
+      description: t('careerJourney.step2.description')
     },
     {
-      number: '3',
+      id: 3,
+      icon: <TrendingUp className="w-8 h-8 text-purple-600" />,
       title: t('careerJourney.step3.title'),
-      description: t('careerJourney.step3.description'),
-      icon: TrendingUp,
-      color: 'bg-purple-100 text-purple-600'
+      description: t('careerJourney.step3.description')
     },
     {
-      number: '4',
+      id: 4,
+      icon: <Award className="w-8 h-8 text-orange-600" />,
       title: t('careerJourney.step4.title'),
-      description: t('careerJourney.step4.description'),
-      icon: Award,
-      color: 'bg-orange-100 text-orange-600'
+      description: t('careerJourney.step4.description')
     }
   ];
 
@@ -46,52 +41,47 @@ const CareerJourneySection = () => {
   ];
 
   return (
-    <section className="py-20 px-4 bg-gradient-to-br from-slate-50 to-blue-50">
-      <div className="max-w-7xl mx-auto">
-        {/* Header */}
+    <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+      <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-slate-900 mb-4">
+          <h2 className="text-4xl font-bold text-gray-900 mb-4">
             {t('careerJourney.title')}
           </h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
             {t('careerJourney.subtitle')}
           </p>
         </div>
 
-        {/* Steps */}
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {steps.map((step) => (
-            <Card key={step.number} className="border-0 shadow-lg hover:shadow-xl transition-all duration-300 group">
-              <CardContent className="p-6 text-center">
-                <div className={`w-16 h-16 rounded-full ${step.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  <step.icon className="w-8 h-8" />
-                </div>
-                <Badge variant="outline" className="mb-3 text-sm font-semibold">
-                  {step.number}
-                </Badge>
-                <h3 className="text-lg font-semibold text-slate-900 mb-3">
+            <div key={step.id} className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+              <div className="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4 mx-auto">
+                {step.icon}
+              </div>
+              <div className="text-center">
+                <span className="inline-block bg-blue-600 text-white text-sm font-semibold px-3 py-1 rounded-full mb-3">
+                  {step.id}
+                </span>
+                <h3 className="text-xl font-semibold text-gray-900 mb-3">
                   {step.title}
                 </h3>
-                <p className="text-slate-600 text-sm leading-relaxed">
+                <p className="text-gray-600">
                   {step.description}
                 </p>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           ))}
         </div>
 
-        {/* Benefits */}
         <div className="bg-white rounded-2xl p-8 shadow-lg">
-          <h3 className="text-2xl font-bold text-slate-900 text-center mb-8">
+          <h3 className="text-2xl font-bold text-gray-900 text-center mb-8">
             {t('careerJourney.benefits.title')}
           </h3>
           <div className="grid md:grid-cols-2 gap-6">
             {benefits.map((benefit, index) => (
               <div key={index} className="flex items-start space-x-3">
-                <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                </div>
-                <p className="text-slate-700 leading-relaxed">{benefit}</p>
+                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                <span className="text-gray-700">{benefit}</span>
               </div>
             ))}
           </div>

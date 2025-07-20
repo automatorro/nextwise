@@ -66,7 +66,9 @@ export const fallbackTranslations: Record<Language, Translations> = {
       wellness: "Bunăstare",
       cognitive: "Cognitiv",
       digital: "Digital",
-      sensory: "Senzorial"
+      sensory: "Senzorial",
+      psychologicalWellness: "Bunăstare Psihologică",
+      cognitiveAbilities: "Abilități Cognitive"
     },
     plans: {
       basic: {
@@ -114,10 +116,37 @@ export const fallbackTranslations: Record<Language, Translations> = {
         tests: "teste"
       },
       welcome: "Bun venit",
+      welcomeSubtext: "Aici poți gestiona progresul tău și accesa toate instrumentele de dezvoltare profesională.",
       recentTests: "Teste Recente",
       quickActions: "Acțiuni Rapide",
-      stats: "Statistici",
-      progress: "Progres"
+      stats: {
+        testsCompleted: "Teste Completate",
+        careerPlans: "Planuri de Carieră",
+        timeSaved: "Timp Economisit",
+        careerProgress: "Progres Carieră"
+      },
+      progress: "Progres",
+      actions: {
+        startFirstTest: "Începe Primul Test",
+        startFirstTestDesc: "Descoperă-ți personalitatea cu primul nostru test gratuit",
+        exploreTests: "Explorează Testele",
+        planCareer: "Planifică Cariera",
+        planCareerDesc: "Creează un plan personalizat de dezvoltare profesională",
+        startCareerPlan: "Începe Planul de Carieră"
+      },
+      categories: {
+        title: "Categorii de Teste Disponibile",
+        subtitle: "Explorează diferite tipuri de evaluări pentru dezvoltarea ta profesională",
+        emotionalIntelligence: "Inteligență Emoțională",
+        emotionalIntelligenceDesc: "Evaluează-ți capacitatea de a înțelege și gestiona emoțiile",
+        personality: "Personalitate",
+        personalityDesc: "Descoperă-ți trăsăturile de personalitate dominante",
+        leadership: "Leadership",
+        leadershipDesc: "Evaluează-ți potențialul și stilul de leadership",
+        wellness: "Bunăstare",
+        wellnessDesc: "Analizează nivelul tău de stres și bunăstare mentală",
+        viewAllTests: "Vezi Toate Testele"
+      }
     },
     profile: {
       title: "Profilul Meu",
@@ -131,12 +160,16 @@ export const fallbackTranslations: Record<Language, Translations> = {
     },
     tests: {
       title: "Teste Disponibile",
+      subtitle: "Explorează testele noastre psihologice pentru a-ți înțelege mai bine personalitatea și abilitățile",
       startTest: "Începe Testul",
       viewResult: "Vezi Rezultatul",
       minutes: "minute",
       questions: "întrebări",
       completed: "Completat",
-      available: "Disponibil"
+      available: "Disponibil",
+      takeTest: "Ia Testul",
+      free: "Gratuit",
+      professionalPlan: "Plan Profesional"
     },
     testRunner: {
       questionsLabel: "Întrebări",
@@ -161,6 +194,42 @@ export const fallbackTranslations: Record<Language, Translations> = {
       scoredPoints: "Puncte obținute",
       maxPoints: "Puncte maxime",
       overallScoreTitle: "Scor General"
+    },
+    careerPaths: {
+      title: "Planurile tale de carieră personalizate",
+      subtitle: "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale, oferindu-ți un drumul clar către obiectivele profesionale.",
+      tabs: {
+        dashboard: "Dashboard",
+        create: "Plan Nou",
+        mentoring: "Mentoring AI"
+      }
+    },
+    careerJourney: {
+      title: "Călătoria Ta în Carieră",
+      subtitle: "Descoperă cum poți să îți construiești o carieră de succes prin pași simpli și eficienți",
+      step1: {
+        title: "Evaluare Completă",
+        description: "Completează testele noastre psihologice pentru a-ți înțelege personalitatea și abilitățile"
+      },
+      step2: {
+        title: "Plan Personalizat",
+        description: "Primești un plan de carieră personalizat bazat pe rezultatele tale și obiectivele dorite"
+      },
+      step3: {
+        title: "Urmărire Progres",
+        description: "Monitorizează-ți progresul și primește recomandări pentru îmbunătățiri continue"
+      },
+      step4: {
+        title: "Succes Profesional",
+        description: "Atingi obiectivele profesionale cu încredere și claritate în direcția ta de carieră"
+      },
+      benefits: {
+        title: "Beneficiile Platformei Noastre",
+        benefit1: "Analiză psihologică avansată cu AI",
+        benefit2: "Planuri de carieră personalizate",
+        benefit3: "Urmărirea progresului în timp real",
+        benefit4: "Recomandări bazate pe date"
+      }
     },
     premiumFeatures: {
       aiPrograms: {
@@ -234,6 +303,14 @@ export const fallbackTranslations: Record<Language, Translations> = {
         score: "Scor",
         viewDetails: "Vezi Detalii"
       }
+    },
+    testNames: {
+      gad7AnxietyAssessment: "Evaluarea Anxietății GAD-7",
+      cognitiveAbilitiesTest: "Testul Abilitaților Cognitive"
+    },
+    testDescriptions: {
+      gad7AnxietyAssessment: "Un instrument standardizat pentru evaluarea nivelului de anxietate generalizată",
+      cognitiveAbilitiesTest: "Evaluarea abilitaților cognitive fundamentale și a capacității de rezolvare a problemelor"
     }
   },
   en: {
@@ -300,7 +377,9 @@ export const fallbackTranslations: Record<Language, Translations> = {
       wellness: "Wellness",
       cognitive: "Cognitive",
       digital: "Digital",
-      sensory: "Sensory"
+      sensory: "Sensory",
+      psychologicalWellness: "Psychological Wellness",
+      cognitiveAbilities: "Cognitive Abilities"
     },
     plans: {
       basic: {
@@ -348,10 +427,37 @@ export const fallbackTranslations: Record<Language, Translations> = {
         tests: "tests"
       },
       welcome: "Welcome",
+      welcomeSubtext: "Here you can manage your progress and access all professional development tools.",
       recentTests: "Recent Tests",
       quickActions: "Quick Actions",
-      stats: "Statistics",
-      progress: "Progress"
+      stats: {
+        testsCompleted: "Tests Completed",
+        careerPlans: "Career Plans",
+        timeSaved: "Time Saved",
+        careerProgress: "Career Progress"
+      },
+      progress: "Progress",
+      actions: {
+        startFirstTest: "Start First Test",
+        startFirstTestDesc: "Discover your personality with our first free test",
+        exploreTests: "Explore Tests",
+        planCareer: "Plan Career",
+        planCareerDesc: "Create a personalized professional development plan",
+        startCareerPlan: "Start Career Plan"
+      },
+      categories: {
+        title: "Available Test Categories",
+        subtitle: "Explore different types of assessments for your professional development",
+        emotionalIntelligence: "Emotional Intelligence",
+        emotionalIntelligenceDesc: "Assess your ability to understand and manage emotions",
+        personality: "Personality",
+        personalityDesc: "Discover your dominant personality traits",
+        leadership: "Leadership",
+        leadershipDesc: "Evaluate your leadership potential and style",
+        wellness: "Wellness",
+        wellnessDesc: "Analyze your stress level and mental wellbeing",
+        viewAllTests: "View All Tests"
+      }
     },
     profile: {
       title: "My Profile",
@@ -365,12 +471,16 @@ export const fallbackTranslations: Record<Language, Translations> = {
     },
     tests: {
       title: "Available Tests",
+      subtitle: "Explore our psychological tests to better understand your personality and abilities",
       startTest: "Start Test",
       viewResult: "View Result",
       minutes: "minutes",
       questions: "questions",
       completed: "Completed",
-      available: "Available"
+      available: "Available",
+      takeTest: "Take Test",
+      free: "Free",
+      professionalPlan: "Professional Plan"
     },
     testRunner: {
       questionsLabel: "Questions",
@@ -395,6 +505,42 @@ export const fallbackTranslations: Record<Language, Translations> = {
       scoredPoints: "Points scored",
       maxPoints: "Maximum points",
       overallScoreTitle: "Overall Score"
+    },
+    careerPaths: {
+      title: "Your Personalized Career Plans",
+      subtitle: "AI creates career plans based on your test results, giving you a clear path to your professional goals.",
+      tabs: {
+        dashboard: "Dashboard",
+        create: "Create Plan",
+        mentoring: "AI Mentoring"
+      }
+    },
+    careerJourney: {
+      title: "Your Career Journey",
+      subtitle: "Discover how you can build a successful career through simple and efficient steps",
+      step1: {
+        title: "Complete Assessment",
+        description: "Complete our psychological tests to understand your personality and abilities"
+      },
+      step2: {
+        title: "Personalized Plan",
+        description: "Receive a personalized career plan based on your results and desired goals"
+      },
+      step3: {
+        title: "Track Progress",
+        description: "Monitor your progress and receive recommendations for continuous improvement"
+      },
+      step4: {
+        title: "Professional Success",
+        description: "Achieve professional goals with confidence and clarity in your career direction"
+      },
+      benefits: {
+        title: "Benefits of Our Platform",
+        benefit1: "Advanced AI psychological analysis",
+        benefit2: "Personalized career plans",
+        benefit3: "Real-time progress tracking",
+        benefit4: "Data-driven recommendations"
+      }
     },
     premiumFeatures: {
       aiPrograms: {
@@ -468,6 +614,14 @@ export const fallbackTranslations: Record<Language, Translations> = {
         score: "Score",
         viewDetails: "View Details"
       }
+    },
+    testNames: {
+      gad7AnxietyAssessment: "GAD-7 Anxiety Assessment",
+      cognitiveAbilitiesTest: "Cognitive Abilities Test"
+    },
+    testDescriptions: {
+      gad7AnxietyAssessment: "A standardized tool for assessing generalized anxiety disorder levels",
+      cognitiveAbilitiesTest: "Assessment of fundamental cognitive abilities and problem-solving capacity"
     }
   }
 };
