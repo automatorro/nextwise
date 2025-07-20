@@ -145,12 +145,12 @@ const AISimulations = () => {
               className="flex items-center gap-2"
             >
               <ArrowLeft className="w-4 h-4" />
-              Înapoi la Simulări
+              {t('premiumFeatures.simulations.backToSimulations')}
             </Button>
           </div>
           {isCompleted && (
             <Badge variant="secondary" className="bg-green-100 text-green-800">
-              Finalizat
+              {t('premiumFeatures.simulations.completed')}
             </Badge>
           )}
         </div>
@@ -162,7 +162,7 @@ const AISimulations = () => {
           </h2>
           <p className="text-muted-foreground flex items-center gap-2">
             <Target className="w-4 h-4" />
-            Rol AI: {config?.role}
+            {t('premiumFeatures.simulations.aiRole')}: {config?.role}
           </p>
         </div>
 
@@ -177,7 +177,7 @@ const AISimulations = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <MessageSquare className="w-5 h-5" />
-              Conversația de Simulare
+              {t('premiumFeatures.simulations.conversation')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -241,7 +241,7 @@ const AISimulations = () => {
                   className="w-full"
                 >
                   <Send className="w-4 h-4 mr-2" />
-                  {isLoading ? 'Se trimite...' : 'Trimite Răspunsul'}
+                  {isLoading ? 'Se trimite...' : t('premiumFeatures.simulations.sendResponse')}
                 </Button>
               </div>
             )}
@@ -253,7 +253,7 @@ const AISimulations = () => {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <BarChart3 className="w-5 h-5" />
-                Feedback și Evaluare
+                {t('premiumFeatures.simulations.feedback')}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -266,10 +266,10 @@ const AISimulations = () => {
                 <h4 className="font-medium mb-4">Scorurile Tale</h4>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                   {[
-                    { key: 'clarity', label: 'Claritate', score: activeSimulation.clarity_score },
-                    { key: 'empathy', label: 'Empatie', score: activeSimulation.empathy_score },
-                    { key: 'conviction', label: 'Convingere', score: activeSimulation.conviction_score },
-                    { key: 'structure', label: 'Structură', score: activeSimulation.structure_score },
+                    { key: 'clarity', label: t('premiumFeatures.simulations.clarity'), score: activeSimulation.clarity_score },
+                    { key: 'empathy', label: t('premiumFeatures.simulations.empathy'), score: activeSimulation.empathy_score },
+                    { key: 'conviction', label: t('premiumFeatures.simulations.conviction'), score: activeSimulation.conviction_score },
+                    { key: 'structure', label: t('premiumFeatures.simulations.structure'), score: activeSimulation.structure_score },
                   ].map(({ key, label, score }) => (
                     <div key={key} className="text-center p-3 bg-muted rounded-lg">
                       <div className="text-2xl font-bold text-primary">{score || 0}/10</div>
@@ -280,7 +280,7 @@ const AISimulations = () => {
                 
                 <div className="text-center p-4 bg-primary/10 rounded-lg">
                   <div className="text-3xl font-bold text-primary">{activeSimulation.overall_score || 0}/100</div>
-                  <div className="text-sm text-muted-foreground">Scor General</div>
+                  <div className="text-sm text-muted-foreground">{t('premiumFeatures.simulations.overallScore')}</div>
                 </div>
               </div>
             </CardContent>
@@ -293,9 +293,9 @@ const AISimulations = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-2xl font-bold text-foreground">Simulări AI Interactive</h2>
+        <h2 className="text-2xl font-bold text-foreground">{t('premiumFeatures.simulations.title')}</h2>
         <p className="text-muted-foreground">
-          Exersează situații profesionale reale cu AI și primește feedback personalizat
+          {t('premiumFeatures.simulations.description')}
         </p>
       </div>
 
@@ -323,7 +323,7 @@ const AISimulations = () => {
               </p>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Bot className="w-4 h-4" />
-                Rol AI: {simulation.role}
+                {t('premiumFeatures.simulations.aiRole')}: {simulation.role}
               </div>
               <Button 
                 onClick={() => handleStartSimulation(simulation.id)}
@@ -331,7 +331,7 @@ const AISimulations = () => {
                 className="w-full"
               >
                 <Play className="w-4 h-4 mr-2" />
-                {isLoading ? 'Se încarcă...' : 'Începe Simularea'}
+                {isLoading ? t('common.loading') : t('premiumFeatures.simulations.startSimulation')}
               </Button>
             </CardContent>
           </Card>
