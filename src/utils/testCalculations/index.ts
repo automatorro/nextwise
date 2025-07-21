@@ -25,7 +25,10 @@ export const calculateTestScore = (testName: string, answers: Record<string, num
     case 'Test Cattell 16PF':
       return calculateCattellScore(answers);
     case 'Enneagram':
-      return calculateEnneagramScore(answers);
+      return {
+        ...calculateEnneagramScore(answers),
+        dimensions: calculateEnneagramScore(answers)
+      };
     default:
       return { total: 0 };
   }

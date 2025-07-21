@@ -6,6 +6,7 @@ import { useToast } from '@/hooks/use-toast';
 import { calculateCognitiveAbilitiesScore, calculateCognitiveAbilitiesScoreFromDB } from '@/utils/testResultFormatters';
 import { calculateBeckDepressionScore } from '@/utils/beckDepressionInventoryCalculator';
 import { calculateBelbinTeamRolesScore, calculateBelbinTeamRolesScoreFromDB } from '@/utils/belbinTeamRolesCalculator';
+import { calculateEnneagramScore } from '@/utils/testCalculations/enneagramCalculation';
 import { isCognitiveAbilitiesTest, isBeckDepressionInventory, isBelbinTeamRoles } from '@/utils/testLabels';
 
 export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
@@ -65,6 +66,14 @@ export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
           console.warn('Database calculation failed, using fallback:', dbError);
           calculatedScore = calculateBelbinTeamRolesScore(testData.answers);
         }
+      } else if (testType.name.includes('Enneagram')) {
+        console.log('Calculating Enneagram score...');
+        const enneagramScore = calculateEnneagramScore(testData.answers);
+        calculatedScore = {
+          overall: Math.max(...Object.values(enneagramScore)),
+          dimensions: enneagramScore,
+          interpretation: 'Rezultat Enneagram'
+        };
       } else {
         // Default scoring for other tests (placeholder)
         console.log('Using default scoring...');

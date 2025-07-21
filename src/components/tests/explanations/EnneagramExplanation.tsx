@@ -38,10 +38,10 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
 
   // Find the dominant type
   const dominantType = Object.entries(dimensions).reduce((a, b) => 
-    dimensions[a[0]] > dimensions[b[0]] ? a : b
+    (dimensions[a[0]] || 0) > (dimensions[b[0]] || 0) ? a : b
   )[0];
 
-  // Get type names in Romanian
+  // Get type names in Romanian and English
   const typeNames = {
     type1: 'Reformatorul',
     type2: 'Ajutătorul', 
@@ -100,7 +100,7 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
               {dominantTypeName}
             </Badge>
             <span className="text-2xl font-bold text-blue-600">
-              {Math.round(dimensions[dominantType])} {language === 'en' ? 'points' : 'puncte'}
+              {Math.round(dimensions[dominantType] || 0)} {language === 'en' ? 'points' : 'puncte'}
             </span>
           </div>
           <p className="text-gray-700 mb-4">
@@ -114,7 +114,7 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
           </h3>
           <div className="space-y-3">
             {Object.entries(dimensions)
-              .sort(([,a], [,b]) => b - a)
+              .sort(([,a], [,b]) => (b || 0) - (a || 0))
               .map(([type, score]) => {
                 const typeName = currentTypeNames[type as keyof typeof currentTypeNames] || type;
                 const scoreValue = typeof score === 'number' ? score : 0;

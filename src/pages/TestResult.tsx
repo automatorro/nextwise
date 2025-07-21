@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -22,6 +21,7 @@ import TestExplanations from '@/components/tests/TestExplanations';
 import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
 import { useCognitiveAbilitiesCalculation } from '@/hooks/useCognitiveAbilitiesCalculation';
 import { useCattell16PFCalculation } from '@/hooks/useCattell16PFCalculation';
+import { useEnneagramCalculation } from '@/hooks/useEnneagramCalculation';
 import { isCognitiveAbilitiesTest, isBelbinTeamRoles } from '@/utils/testLabels';
 import { translateInterpretation, getResultLabels } from '@/utils/testResultTranslations';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -154,6 +154,7 @@ const TestResult = () => {
   const calculatedBigFiveDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
   const calculatedCognitiveDimensions = useCognitiveAbilitiesCalculation(isCognitiveTest ? result?.answers : undefined);
   const calculatedCattell16PFDimensions = useCattell16PFCalculation(isCattell16PFTest ? result?.answers : undefined);
+  const calculatedEnneagramDimensions = useEnneagramCalculation(isEnneagramTest ? result?.answers : undefined);
 
   // Get properly typed dimensions based on test type
   const testSpecificDimensions = React.useMemo(() => {
@@ -169,16 +170,16 @@ const TestResult = () => {
       return calculatedCattell16PFDimensions;
     }
 
+    if (isEnneagramTest && calculatedEnneagramDimensions) {
+      return calculatedEnneagramDimensions;
+    }
+
     if (isBelbinTest) {
       return result?.score.role_scores || result?.score.dimensions || {};
     }
-
-    if (isEnneagramTest) {
-      return result?.score.dimensions || {};
-    }
     
     return result?.score.dimensions || {};
-  }, [isBigFiveTest, isCognitiveTest, isCattell16PFTest, isBelbinTest, isEnneagramTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, calculatedCattell16PFDimensions, result?.score]);
+  }, [isBigFiveTest, isCognitiveTest, isCattell16PFTest, isEnneagramTest, isBelbinTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, calculatedCattell16PFDimensions, calculatedEnneagramDimensions, result?.score]);
 
   const hasValidTestSpecificDimensions = Object.values(testSpecificDimensions).some(value => value > 0);
 
@@ -239,7 +240,7 @@ const TestResult = () => {
           {/* Test Explanations - NEW SECTION */}
           <TestExplanations 
             testName={result.test_types.name}
-            score={result.score}
+            score={{ ...result.score, dimensions: testSpecificDimensions }}
             language={language}
           />
 
