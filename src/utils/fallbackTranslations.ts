@@ -1,651 +1,542 @@
-
-import type { Language, Translations } from '@/types/language';
-
-export const fallbackTranslations: Record<Language, Translations> = {
+export const fallbackTranslations = {
   ro: {
     common: {
-      poweredByAI: "Alimentat de AI",
-      success: "Succes",
-      error: "Eroare",
-      loading: "Se încarcă...",
-      save: "Salvează",
-      cancel: "Anulează",
-      delete: "Șterge",
-      edit: "Editează",
-      view: "Vizualizează",
-      back: "Înapoi",
-      next: "Următor",
-      previous: "Anterior",
-      close: "Închide",
-      confirm: "Confirmă",
-      yes: "Da",
-      no: "Nu"
+      points: "Puncte",
     },
-    nav: {
-      login: "Autentificare",
-      logout: "Deconectare",
-      startFree: "Începe Gratuit",
-      dashboard: "Tablou de Bord",
-      tests: "Teste",
-      career: "Carieră",
-      profile: "Profil",
-      subscriptionSettings: "Setări Abonament"
-    },
-    home: {
-      title: "Descoperă-ți potențialul și dezvoltă-ți cariera",
-      subtitle: "Platforma AI care te ajută să îți înțelegi personalitatea, să îți identifici punctele forte și să îți construiești calea ideală în carieră prin evaluări psihologice avansate.",
-      ctaButton: "Începe Evaluarea Gratuită",
-      demoButton: "Vezi Demo",
-      featuresTitle: "De ce să alegi EmpowerCareer?",
-      featuresSubtitle: "Descoperă cum tehnologia AI poate transforma modul în care îți înțelegi personalitatea și îți planifici cariera.",
-      categoriesTitle: "Categorii de Teste Disponibile",
-      categoriesSubtitle: "Explorează o gamă variată de evaluări psihologice și teste de personalitate pentru a-ți înțelege mai bine punctele forte și preferințele.",
-      pricingTitle: "Planuri de Abonament",
-      pricingSubtitle: "Alege planul care se potrivește cel mai bine nevoilor tale de dezvoltare profesională.",
-      ctaFinalTitle: "Gata să îți transformi cariera?",
-      ctaFinalSubtitle: "Începe astăzi cu evaluarea gratuită și descoperă-ți adevăratul potențial.",
-      ctaFinalButton: "Începe Acum",
-      footerText: "Platforma AI care te ajută să îți descoperi potențialul și să îți construiești cariera ideală.",
-      footerCopyright: "© 2024 EmpowerCareer. Toate drepturile rezervate."
-    },
-    features: {
-      psychologicalEvaluations: "Evaluări Psihologice AI",
-      psychologicalEvaluationsDesc: "Teste avansate de personalitate și inteligență emoțională analizate de algoritmi AI",
-      personalizedCareerPlans: "Planuri de Carieră Personalizate",
-      personalizedCareerPlansDesc: "Recomandări de carieră bazate pe rezultatele testelor și preferințele tale",
-      advancedAnalytics: "Analiză Avansată",
-      advancedAnalyticsDesc: "Vizualizări detaliate și interpretări pentru rezultatele testelor tale",
-      aiMentoring: "Mentoring AI",
-      aiMentoringDesc: "Consiliere inteligentă și ghidare pentru dezvoltarea carierei tale"
-    },
-    testCategories: {
-      emotionalIntelligence: "Inteligență Emoțională",
-      personality: "Personalitate",
-      leadership: "Leadership",
-      technicalSkills: "Abilități Tehnice",
-      wellness: "Bunăstare",
-      cognitive: "Cognitiv",
-      digital: "Digital",
-      sensory: "Senzorial",
-      psychologicalWellness: "Bunăstare Psihologică",
-      cognitiveAbilities: "Abilități Cognitive"
-    },
-    plans: {
-      basic: {
-        name: "Planul Basic",
-        price: "Gratuit",
-        description: "Perfect pentru începători",
-        features: [
-          "3 teste gratuite pe lună",
-          "Rezultate de bază",
-          "Suport email"
-        ],
-        button: "Începe Gratuit"
+    components: {
+      mobileMenu: {
+        home: "Acasă",
+        tests: "Teste",
+        careerPaths: "Cariere",
+        careerPlanning: "Planificare",
       },
-      professional: {
-        name: "Planul Professional",
-        price: "29 lei/lună",
-        description: "Ideal pentru profesioniști",
-        features: [
-          "Teste nelimitate",
-          "Analiză detaliată AI",
-          "Planuri de carieră personalizate",
-          "Mentoring AI",
-          "Suport prioritar"
-        ],
-        button: "Începe Perioada de Probă"
-      },
-      premium: {
-        name: "Planul Premium",
-        price: "49 lei/lună",
-        description: "Pentru organizații și echipe",
-        features: [
-          "Toate beneficiile Professional",
-          "Rapoarte pentru echipă",
-          "Analiză comparativă",
-          "Dashboard manager",
-          "Consultanță specializată"
-        ],
-        button: "Contactează-ne"
-      },
-      mostPopular: "Cel mai popular"
     },
-    dashboard: {
-      categories: {
-        test: "test",
-        tests: "teste"
+    pages: {
+      home: {
+        hero: {
+          title: "Găsește-ți drumul în carieră cu AI",
+          description:
+            "Explorează-ți potențialul cu teste psihometrice, planuri de carieră personalizate și simulări AI. Începe azi călătoria spre jobul ideal!",
+          startButton: "Începe Evaluarea Gratuită",
+        },
+        features: {
+          title: "Ce oferim",
+          testSection: {
+            title: "Teste Psihometrice Avansate",
+            description:
+              "Descoperă-ți punctele forte și potențialul cu teste validate științific. Alege dintr-o varietate de evaluări pentru a-ți înțelege personalitatea, abilitățile și aptitudinile.",
+          },
+          careerPathSection: {
+            title: "Planuri de Cariera Personalizate",
+            description:
+              "Primește recomandări de carieră adaptate profilului tău unic. Explorează roluri, industrii și căi de dezvoltare care se potrivesc cu adevărat cu cine ești.",
+          },
+          aiSimulationSection: {
+            title: "Simulări de Interviu cu AI",
+            description:
+              "Pregătește-te pentru succes cu simulări realiste de interviu. Exersează-ți abilitățile de comunicare și primește feedback instant pentru a-ți îmbunătăți performanța.",
+          },
+        },
+        testimonials: {
+          title: "Ce spun utilizatorii",
+          quote1:
+            "Platforma m-a ajutat să identific punctele mele forte și să găsesc o carieră care mi se potrivește perfect. Recomand cu încredere!",
+          quote2:
+            "Simulările de interviu cu AI au fost incredibil de utile. Am primit feedback valoros și m-am simțit mult mai pregătită pentru interviurile reale.",
+        },
+        pricing: {
+          title: "Planuri de abonament",
+          basicPlan: {
+            title: "Basic",
+            description: "Acces limitat la teste și planuri de carieră.",
+            price: "Gratuit",
+            features: [
+              "Acces la teste de bază",
+              "Planuri de carieră limitate",
+              "Suport comunitar",
+            ],
+          },
+          premiumPlan: {
+            title: "Premium",
+            description: "Acces complet la toate funcțiile și conținutul.",
+            price: "99 RON / lună",
+            features: [
+              "Acces la toate testele",
+              "Planuri de carieră personalizate",
+              "Simulări de interviu AI",
+              "Suport prioritar",
+            ],
+          },
+        },
+        faq: {
+          title: "Întrebări frecvente",
+          question1: "Cum mă ajută platforma să-mi găsesc cariera potrivită?",
+          answer1:
+            "Platforma folosește teste psihometrice și AI pentru a-ți evalua abilitățile și interesele, oferind recomandări de carieră personalizate.",
+          question2: "Cât de precise sunt simulările de interviu cu AI?",
+          answer2:
+            "Simulările sunt concepute pentru a imita interviurile reale și oferă feedback detaliat bazat pe răspunsurile tale.",
+        },
       },
-      welcome: "Bun venit",
-      welcomeSubtext: "Aici poți gestiona progresul tău și accesa toate instrumentele de dezvoltare profesională.",
-      recentTests: "Teste Recente",
-      quickActions: "Acțiuni Rapide",
-      stats: {
-        testsCompleted: "Teste Completate",
-        careerPlans: "Planuri de Carieră",
-        timeSaved: "Timp Economisit",
-        careerProgress: "Progres Carieră"
-      },
-      progress: "Progres",
-      actions: {
-        startFirstTest: "Începe Primul Test",
-        startFirstTestDesc: "Descoperă-ți personalitatea cu primul nostru test gratuit",
-        exploreTests: "Explorează Testele",
-        planCareer: "Planifică Cariera",
-        planCareerDesc: "Creează un plan personalizat de dezvoltare profesională",
-        startCareerPlan: "Începe Planul de Carieră"
-      },
-      categories: {
-        title: "Categorii de Teste Disponibile",
-        subtitle: "Explorează diferite tipuri de evaluări pentru dezvoltarea ta profesională",
-        emotionalIntelligence: "Inteligență Emoțională",
-        emotionalIntelligenceDesc: "Evaluează-ți capacitatea de a înțelege și gestiona emoțiile",
-        personality: "Personalitate",
-        personalityDesc: "Descoperă-ți trăsăturile de personalitate dominante",
-        leadership: "Leadership",
-        leadershipDesc: "Evaluează-ți potențialul și stilul de leadership",
-        wellness: "Bunăstare",
-        wellnessDesc: "Analizează nivelul tău de stres și bunăstare mentală",
-        viewAllTests: "Vezi Toate Testele"
-      }
-    },
-    profile: {
-      title: "Profilul Meu",
-      administrator: "Administrator",
-      welcome: "Bun venit",
-      welcomeMessage: "Aici poți gestiona setările contului tău și vizualiza progresul.",
-      personalInfo: "Informații Personale",
-      accountSettings: "Setări Cont",
-      testResults: "Rezultate Teste",
-      progressOverview: "Vedere Generală Progres"
     },
     tests: {
-      title: "Teste Disponibile",
-      subtitle: "Explorează testele noastre psihologice pentru a-ți înțelege mai bine personalitatea și abilitățile",
-      startTest: "Începe Testul",
-      viewResult: "Vezi Rezultatul",
-      minutes: "minute",
-      questions: "întrebări",
-      completed: "Completat",
-      available: "Disponibil",
-      takeTest: "Ia Testul",
-      free: "Gratuit",
-      professionalPlan: "Plan Profesional"
-    },
-    testRunner: {
-      questionsLabel: "Întrebări",
-      durationLabel: "Durata estimată",
-      startButton: "Începe Testul",
-      nextQuestion: "Următoarea Întrebare",
-      previousQuestion: "Întrebarea Anterioară",
-      submitTest: "Finalizează Testul",
-      question: "Întrebarea",
-      of: "din"
-    },
-    testResult: {
-      title: "Rezultatul Testului",
-      overallScore: "Scor General",
-      detailedAnalysis: "Analiză Detaliată",
-      recommendations: "Recomandări",
-      shareResult: "Partajează Rezultatul",
-      downloadPDF: "Descarcă PDF",
-      backToTests: "Înapoi la Teste",
-      testResult: "Rezultatul Testului",
-      completedOn: "Completat pe",
-      scoredPoints: "Puncte obținute",
-      maxPoints: "Puncte maxime",
-      overallScoreTitle: "Scor General",
-      actions: {
-        shareResult: "Partajează Rezultatul",
-        downloadPDF: "Descarcă PDF",
-        backToTests: "Înapoi la Teste"
-      }
-    },
-    careerPaths: {
-      title: "Planul tău de carieră personalizat",
-      subtitle: "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale, oferindu-ți un drumul clar către obiectivele profesionale.",
-      tabs: {
-        dashboard: "Dashboard",
-        create: "Plan Nou",
-        mentoring: "Mentoring AI"
-      },
-      dashboard: {
-        welcome: "Bun venit în secțiunea de planificare a carierei",
-        subtitle: "Aici poți gestiona planurile tale de carieră și urmări progresul",
-        createFirst: "Creează primul tău plan de carieră",
-        noPlans: "Nu ai încă planuri de carieră create",
-        createPlan: "Creează Plan Nou"
-      }
-    },
-    careerJourney: {
-      title: "Călătoria Ta în Carieră",
-      subtitle: "Descoperă cum poți să îți construiești o carieră de succes prin pași simpli și eficienți",
-      step1: {
-        title: "Evaluare Completă",
-        description: "Completează testele noastre psihologice pentru a-ți înțelege personalitatea și abilitățile"
-      },
-      step2: {
-        title: "Plan Personalizat",
-        description: "Primești un plan de carieră personalizat bazat pe rezultatele tale și obiectivele dorite"
-      },
-      step3: {
-        title: "Urmărire Progres",
-        description: "Monitorizează-ți progresul și primește recomandări pentru îmbunătățiri continue"
-      },
-      step4: {
-        title: "Succes Profesional",
-        description: "Atingi obiectivele profesionale cu încredere și claritate în direcția ta de carieră"
-      },
-      benefits: {
-        title: "Beneficiile Platformei Noastre",
-        benefit1: "Analiză psihologică avansată cu AI",
-        benefit2: "Planuri de carieră personalizate",
-        benefit3: "Urmărirea progresului în timp real",
-        benefit4: "Recomandări bazate pe date"
-      }
-    },
-    premiumFeatures: {
-      aiPrograms: {
-        title: "Programe AI de 14 Zile",
-        subtitle: "Mini-intervenții ghidate pentru dezvoltare rapidă",
-        description: "Participă la programe intensive de dezvoltare personală cu ghidaj AI",
-        startProgram: "Începe Programul",
-        continueProgram: "Continuă Programul",
-        programCompleted: "Program Completat",
-        availablePrograms: "Programe Disponibile",
-        motivationReset: "Resetarea Motivației",
-        leadershipTransition: "Tranziția în Leadership",
-        interviewTraining: "Pregătire pentru Interviuri",
-        careerClarity: "Claritate în Carieră",
-        day: "Ziua",
+      common: {
+        takeTest: "Dă Testul",
+        testResults: "Rezultate Test",
+        testAnalysis: "Analiza Testului",
+        recommendations: "Recomandări",
+        retakeTest: "Refă Testul",
+        questions: "Întrebări",
+        minutes: "minute",
+        minute: "minut",
+        points: "puncte",
+        noQuestionsAvailable: "Nu există întrebări disponibile pentru acest test.",
+        loadingQuestions: "Se încarcă întrebările...",
+        completed: "Complet",
         of: "din",
-        currentTask: "Sarcina Curentă",
-        reflection: "Reflecție",
-        submitReflection: "Trimite Reflecția",
-        programProgress: "Progresul Programului",
-        legend: "Legendă",
-        completed: "Completat",
-        current: "Curent",
-        upcoming: "Viitor"
-      },
-      progressSheets: {
-        title: "Fișe de Progres AI",
-        subtitle: "Evaluări vizuale și feedback personalizat",
-        description: "Creează și salvează fișe de progres personalizate cu analiza AI",
-        createNew: "Creează Fișă Nouă",
-        savedSheets: "Fișe Salvate",
-        generateSheet: "Generează Fișă",
-        saveSheet: "Salvează Fișa",
-        viewSheet: "Vezi Fișa",
-        deleteSheet: "Șterge Fișa",
+        next: "Următoarea",
+        previous: "Înapoi",
+        submit: "Finalizare",
+        timeRemaining: "Timp rămas",
+        testCompleted: "Test finalizat!",
+        yourScore: "Scorul tău",
+        testType: "Tipul Testului",
         category: "Categorie",
-        question: "Întrebare",
-        answer: "Răspuns",
-        aiAnalysis: "Analiză AI",
-        createdOn: "Creat pe"
+        estimatedDuration: "Durată Estimată",
+        subscriptionRequired: "Abonament Necesar",
+        basic: "Basic",
+        professional: "Professional",
+        premium: "Premium",
+        description: "Descriere",
       },
-      simulations: {
-        title: "Simulări AI",
-        subtitle: "Exersează scenarii profesionale cu AI",
-        description: "Participă la simulări interactive pentru a-ți îmbunătăți abilitățile profesionale",
-        startSimulation: "Începe Simularea",
-        backToSimulations: "Înapoi la Simulări",
-        conversation: "Conversația de Simulare",
-        sendResponse: "Trimite Răspunsul",
-        feedback: "Feedback și Evaluare",
-        aiRole: "Rol AI",
-        completed: "Finalizat",
-        overallScore: "Scor General",
-        clarity: "Claritate",
+      bigFive: {
+        agreeableness: "Agreabilitate",
+        conscientiousness: "Conștiinciozitate",
+        extraversion: "Extraversiune",
+        neuroticism: "Nevrotism",
+        openness: "Deschidere",
+        agreeablenessDescription:
+          "Măsoară tendința de a fi compătimitor și cooperant.",
+        conscientiousnessDescription:
+          "Măsoară eficiența și organizarea unei persoane.",
+        extraversionDescription: "Măsoară sociabilitatea și energia socială.",
+        neuroticismDescription: "Măsoară stabilitatea emoțională și anxietatea.",
+        opennessDescription: "Măsoară curiozitatea și creativitatea.",
+        low: "Scăzut",
+        average: "Mediu",
+        high: "Ridicat",
+      },
+      gad7: {
+        minimalAnxiety: "Anxietate Minimală",
+        mildAnxiety: "Anxietate Ușoară",
+        moderateAnxiety: "Anxietate Moderată",
+        severeAnxiety: "Anxietate Severă",
+        interpretation: "Interpretare",
+        recommendations: "Recomandări",
+        minimalAnxietyDescription:
+          "Simptome minime de anxietate. Nu este necesară intervenția.",
+        mildAnxietyDescription:
+          "Anxietate ușoară. Monitorizează simptomele și aplică tehnici de relaxare.",
+        moderateAnxietyDescription:
+          "Anxietate moderată. Consultă un specialist pentru evaluare și suport.",
+        severeAnxietyDescription:
+          "Anxietate severă. Consultă urgent un specialist pentru tratament.",
+      },
+      disc: {
+        dominance: "Dominanță",
+        influence: "Influență",
+        steadiness: "Stabilitate",
+        conscientiousness: "Conștiinciozitate",
+        dominanceDescription: "Măsoară tendința de a controla și conduce.",
+        influenceDescription: "Măsoară abilitatea de a influența și convinge.",
+        steadinessDescription: "Măsoară preferința pentru stabilitate și cooperare.",
+        conscientiousnessDescription:
+          "Măsoară atenția la detalii și respectarea regulilor.",
+      },
+      belbin: {
+        shaper: "Modelator",
+        coordinator: "Coordonator",
+        plant: "Sursă de Idei",
+        resourceInvestigator: "Investigator de Resurse",
+        monitorEvaluator: "Monitor Evaluator",
+        teamworker: "Lucrător în Echipă",
+        completerFinisher: "Finalizator",
+        specialist: "Specialist",
+        shaperDescription:
+          "Dinamic și orientat spre provocări, transformă ideile în acțiuni.",
+        coordinatorDescription:
+          "Matur și încrezător, coordonează eforturile echipei.",
+        plantDescription:
+          "Creativ și imaginativ, generează idei noi și soluții.",
+        resourceInvestigatorDescription:
+          "Entuziast și comunicativ, explorează oportunități externe.",
+        monitorEvaluatorDescription:
+          "Obiectiv și strategic, analizează opțiunile și ia decizii.",
+        teamworkerDescription:
+          "Cooperant și empatic, susține armonia și colaborarea.",
+        completerFinisherDescription:
+          "Atent la detalii și perfecționist, asigură finalizarea sarcinilor.",
+        specialistDescription:
+          "Dedicat și expert, oferă cunoștințe și abilități specializate.",
+      },
+      cognitive: {
+        verbalReasoning: "Raționament Verbal",
+        numericalReasoning: "Raționament Numeric",
+        abstractReasoning: "Raționament Abstract",
+        spatialReasoning: "Raționament Spațial",
+        verbalReasoningDescription:
+          "Măsoară abilitatea de a înțelege și analiza informații verbale.",
+        numericalReasoningDescription:
+          "Măsoară abilitatea de a lucra cu numere și date.",
+        abstractReasoningDescription:
+          "Măsoară abilitatea de a identifica modele și relații logice.",
+        spatialReasoningDescription:
+          "Măsoară abilitatea de a vizualiza și manipula obiecte în spațiu.",
+        low: "Scăzut",
+        average: "Mediu",
+        high: "Ridicat",
+      },
+      emotionalIntelligence: {
+        selfAwareness: "Conștientizare de Sine",
+        selfRegulation: "Autoreglare",
+        motivation: "Motivație",
         empathy: "Empatie",
-        conviction: "Convingere",
-        structure: "Structură"
+        socialSkills: "Abilități Sociale",
+        selfAwarenessDescription:
+          "Măsoară capacitatea de a înțelege propriile emoții.",
+        selfRegulationDescription:
+          "Măsoară capacitatea de a gestiona emoțiile și impulsurile.",
+        motivationDescription: "Măsoară motivația intrinsecă și ambiția.",
+        empathyDescription: "Măsoară capacitatea de a înțelege emoțiile altora.",
+        socialSkillsDescription:
+          "Măsoară abilitățile de comunicare și relaționare.",
+        low: "Scăzut",
+        average: "Mediu",
+        high: "Ridicat",
       },
-      progressTracking: {
-        title: "Analiza Progresului",
-        subtitle: "Urmărește-ți evoluția în timp",
-        description: "Vezi statistici detaliate despre progresul tău și realizările obținute",
-        totalTests: "Total Teste",
-        averageScore: "Scor Mediu",
-        hoursSpent: "Ore Petrecute",
-        achievements: "Realizări",
-        progressOverTime: "Progresul în Timp",
-        testPerformance: "Performanța la Teste",
-        recentAchievements: "Realizări Recente",
-        month: "Luna",
-        score: "Scor",
-        viewDetails: "Vezi Detalii"
+      cattell: {
+        warmth: "Cordialitate",
+        reasoning: "Raționament",
+        emotionalStability: "Stabilitate Emoțională",
+        dominance: "Dominanță",
+        liveliness: "Entuziasm",
+        ruleConsciousness: "Conștiinciozitate",
+        socialBoldness: "Îndrăzneală Socială",
+        sensitivity: "Sensibilitate",
+        vigilance: "Vigilență",
+        abstractedness: "Abstractizare",
+        privateness: "Intimitate",
+        apprehension: "Îngrijorare",
+        opennessToChange: "Deschidere la Schimbare",
+        selfReliance: "Încredere în Sine",
+        perfectionism: "Perfecționism",
+        tension: "Tensiune",
+        warmthDescription: "Măsoară gradul de sociabilitate și căldură umană.",
+        reasoningDescription: "Măsoară capacitatea de a rezolva probleme abstracte.",
+        emotionalStabilityDescription: "Măsoară stabilitatea emoțională și calmul.",
+        dominanceDescription: "Măsoară tendința de a conduce și influența.",
+        livelinessDescription: "Măsoară nivelul de energie și entuziasm.",
+        ruleConsciousnessDescription: "Măsoară respectul pentru reguli și norme.",
+        socialBoldnessDescription: "Măsoară confortul în situații sociale noi.",
+        sensitivityDescription: "Măsoară empatia și sensibilitatea emoțională.",
+        vigilanceDescription: "Măsoară gradul de suspiciune și precauție.",
+        abstractednessDescription: "Măsoară interesul pentru idei abstracte.",
+        privatenessDescription: "Măsoară tendința de a fi rezervat și discret.",
+        apprehensionDescription: "Măsoară gradul de anxietate și îngrijorare.",
+        opennessToChangeDescription: "Măsoară disponibilitatea de a accepta noul.",
+        selfRelianceDescription: "Măsoară încrederea în propriile forțe.",
+        perfectionismDescription: "Măsoară atenția la detalii și dorința de perfecțiune.",
+        tensionDescription: "Măsoară nivelul de stres și tensiune internă.",
+        low: "Scăzut",
+        average: "Mediu",
+        high: "Ridicat",
+      },
+      enneagram: {
+        dominantType: "Tipul Dominant",
+        strengths: "Puncte Forte",
+        challenges: "Provocări",
+        growthPath: "Calea de Dezvoltare",
+        allTypes: "Toate Tipurile Enneagram",
+        allTypesDescription: "Distribuția scorurilor tale pe toate cele 9 tipuri de personalitate",
+        interpretation: "Interpretarea Rezultatelor",
+        coreFear: "Teama Fundamentală",
+        coreDesire: "Dorința Fundamentală",
+        developmentTips: "Sfaturi pentru Dezvoltare",
+        tip1: "Practică autocompasiunea și acceptă imperfecțiunea",
+        tip2: "Concentrează-te pe dezvoltarea personală și recunoașterea propriilor nevoi",
+        tip3: "Dezvoltă relații autentice și valorifică procesul, nu doar rezultatul",
+        tip4: "Lucrează la stabilitatea emoțională și aprecierea prezentului"
       }
-    },
-    testNames: {
-      gad7AnxietyAssessment: "Evaluarea Anxietății GAD-7",
-      cognitiveAbilitiesTest: "Testul Abilitaților Cognitive"
-    },
-    testDescriptions: {
-      gad7AnxietyAssessment: "Un instrument standardizat pentru evaluarea nivelului de anxietate generalizată",
-      cognitiveAbilitiesTest: "Evaluarea abilitaților cognitive fundamentale și a capacității de rezolvare a problemelor"
     }
   },
   en: {
     common: {
-      poweredByAI: "Powered by AI",
-      success: "Success",
-      error: "Error",
-      loading: "Loading...",
-      save: "Save",
-      cancel: "Cancel",
-      delete: "Delete",
-      edit: "Edit",
-      view: "View",
-      back: "Back",
-      next: "Next",
-      previous: "Previous",
-      close: "Close",
-      confirm: "Confirm",
-      yes: "Yes",
-      no: "No"
+      points: "Points",
     },
-    nav: {
-      login: "Login",
-      logout: "Logout",
-      startFree: "Start Free",
-      dashboard: "Dashboard",
-      tests: "Tests",
-      career: "Career",
-      profile: "Profile",
-      subscriptionSettings: "Subscription Settings"
-    },
-    home: {
-      title: "Discover Your Potential and Grow Your Career",
-      subtitle: "The AI platform that helps you understand your personality, identify your strengths, and build your ideal career path through advanced psychological assessments.",
-      ctaButton: "Start Free Assessment",
-      demoButton: "View Demo",
-      featuresTitle: "Why Choose EmpowerCareer?",
-      featuresSubtitle: "Discover how AI technology can transform the way you understand your personality and plan your career.",
-      categoriesTitle: "Available Test Categories",
-      categoriesSubtitle: "Explore a diverse range of psychological assessments and personality tests to better understand your strengths and preferences.",
-      pricingTitle: "Subscription Plans",
-      pricingSubtitle: "Choose the plan that best fits your professional development needs.",
-      ctaFinalTitle: "Ready to transform your career?",
-      ctaFinalSubtitle: "Start today with a free assessment and discover your true potential.",
-      ctaFinalButton: "Start Now",
-      footerText: "The AI platform that helps you discover your potential and build your ideal career.",
-      footerCopyright: "© 2024 EmpowerCareer. All rights reserved."
-    },
-    features: {
-      psychologicalEvaluations: "AI Psychological Evaluations",
-      psychologicalEvaluationsDesc: "Advanced personality and emotional intelligence tests analyzed by AI algorithms",
-      personalizedCareerPlans: "Personalized Career Plans",
-      personalizedCareerPlansDesc: "Career recommendations based on your test results and preferences",
-      advancedAnalytics: "Advanced Analytics",
-      advancedAnalyticsDesc: "Detailed visualizations and interpretations for your test results",
-      aiMentoring: "AI Mentoring",
-      aiMentoringDesc: "Intelligent counseling and guidance for your career development"
-    },
-    testCategories: {
-      emotionalIntelligence: "Emotional Intelligence",
-      personality: "Personality",
-      leadership: "Leadership",
-      technicalSkills: "Technical Skills",
-      wellness: "Wellness",
-      cognitive: "Cognitive",
-      digital: "Digital",
-      sensory: "Sensory",
-      psychologicalWellness: "Psychological Wellness",
-      cognitiveAbilities: "Cognitive Abilities"
-    },
-    plans: {
-      basic: {
-        name: "Basic Plan",
-        price: "Free",
-        description: "Perfect for beginners",
-        features: [
-          "3 free tests per month",
-          "Basic results",
-          "Email support"
-        ],
-        button: "Start Free"
+    components: {
+      mobileMenu: {
+        home: "Home",
+        tests: "Tests",
+        careerPaths: "Career Paths",
+        careerPlanning: "Career Planning",
       },
-      professional: {
-        name: "Professional Plan",
-        price: "$7/month",
-        description: "Ideal for professionals",
-        features: [
-          "Unlimited tests",
-          "Detailed AI analysis",
-          "Personalized career plans",
-          "AI mentoring",
-          "Priority support"
-        ],
-        button: "Start Trial"
-      },
-      premium: {
-        name: "Premium Plan",
-        price: "$12/month",
-        description: "For organizations and teams",
-        features: [
-          "All Professional benefits",
-          "Team reports",
-          "Comparative analysis",
-          "Manager dashboard",
-          "Specialized consulting"
-        ],
-        button: "Contact Us"
-      },
-      mostPopular: "Most Popular"
     },
-    dashboard: {
-      categories: {
-        test: "test",
-        tests: "tests"
+    pages: {
+      home: {
+        hero: {
+          title: "Find Your Career Path with AI",
+          description:
+            "Explore your potential with psychometric tests, personalized career plans, and AI simulations. Start your journey to the ideal job today!",
+          startButton: "Start Free Assessment",
+        },
+        features: {
+          title: "What We Offer",
+          testSection: {
+            title: "Advanced Psychometric Tests",
+            description:
+              "Discover your strengths and potential with scientifically validated tests. Choose from a variety of assessments to understand your personality, skills, and aptitudes.",
+          },
+          careerPathSection: {
+            title: "Personalized Career Plans",
+            description:
+              "Receive career recommendations tailored to your unique profile. Explore roles, industries, and development paths that truly match who you are.",
+          },
+          aiSimulationSection: {
+            title: "AI Interview Simulations",
+            description:
+              "Prepare for success with realistic interview simulations. Practice your communication skills and receive instant feedback to improve your performance.",
+          },
+        },
+        testimonials: {
+          title: "What Users Say",
+          quote1:
+            "The platform helped me identify my strengths and find a career that fits me perfectly. I highly recommend it!",
+          quote2:
+            "The AI interview simulations were incredibly helpful. I received valuable feedback and felt much more prepared for real interviews.",
+        },
+        pricing: {
+          title: "Subscription Plans",
+          basicPlan: {
+            title: "Basic",
+            description: "Limited access to tests and career plans.",
+            price: "Free",
+            features: [
+              "Access to basic tests",
+              "Limited career plans",
+              "Community support",
+            ],
+          },
+          premiumPlan: {
+            title: "Premium",
+            description: "Full access to all features and content.",
+            price: "$20 / month",
+            features: [
+              "Access to all tests",
+              "Personalized career plans",
+              "AI interview simulations",
+              "Priority support",
+            ],
+          },
+        },
+        faq: {
+          title: "Frequently Asked Questions",
+          question1: "How does the platform help me find the right career?",
+          answer1:
+            "The platform uses psychometric tests and AI to assess your skills and interests, providing personalized career recommendations.",
+          question2: "How accurate are the AI interview simulations?",
+          answer2:
+            "The simulations are designed to mimic real interviews and provide detailed feedback based on your responses.",
+        },
       },
-      welcome: "Welcome",
-      welcomeSubtext: "Here you can manage your progress and access all professional development tools.",
-      recentTests: "Recent Tests",
-      quickActions: "Quick Actions",
-      stats: {
-        testsCompleted: "Tests Completed",
-        careerPlans: "Career Plans",
-        timeSaved: "Time Saved",
-        careerProgress: "Career Progress"
-      },
-      progress: "Progress",
-      actions: {
-        startFirstTest: "Start First Test",
-        startFirstTestDesc: "Discover your personality with our first free test",
-        exploreTests: "Explore Tests",
-        planCareer: "Plan Career",
-        planCareerDesc: "Create a personalized professional development plan",
-        startCareerPlan: "Start Career Plan"
-      },
-      categories: {
-        title: "Available Test Categories",
-        subtitle: "Explore different types of assessments for your professional development",
-        emotionalIntelligence: "Emotional Intelligence",
-        emotionalIntelligenceDesc: "Assess your ability to understand and manage emotions",
-        personality: "Personality",
-        personalityDesc: "Discover your dominant personality traits",
-        leadership: "Leadership",
-        leadershipDesc: "Evaluate your leadership potential and style",
-        wellness: "Wellness",
-        wellnessDesc: "Analyze your stress level and mental wellbeing",
-        viewAllTests: "View All Tests"
-      }
-    },
-    profile: {
-      title: "My Profile",
-      administrator: "Administrator",
-      welcome: "Welcome",
-      welcomeMessage: "Here you can manage your account settings and view your progress.",
-      personalInfo: "Personal Information",
-      accountSettings: "Account Settings",
-      testResults: "Test Results",
-      progressOverview: "Progress Overview"
     },
     tests: {
-      title: "Available Tests",
-      subtitle: "Explore our psychological tests to better understand your personality and abilities",
-      startTest: "Start Test",
-      viewResult: "View Result",
-      minutes: "minutes",
-      questions: "questions",
-      completed: "Completed",
-      available: "Available",
-      takeTest: "Take Test",
-      free: "Free",
-      professionalPlan: "Professional Plan"
-    },
-    testRunner: {
-      questionsLabel: "Questions",
-      durationLabel: "Estimated duration",
-      startButton: "Start Test",
-      nextQuestion: "Next Question",
-      previousQuestion: "Previous Question",
-      submitTest: "Submit Test",
-      question: "Question",
-      of: "of"
-    },
-    testResult: {
-      title: "Test Result",
-      overallScore: "Overall Score",
-      detailedAnalysis: "Detailed Analysis",
-      recommendations: "Recommendations",
-      shareResult: "Share Result",
-      downloadPDF: "Download PDF",
-      backToTests: "Back to Tests",
-      testResult: "Test Result",
-      completedOn: "Completed on",
-      scoredPoints: "Points scored",
-      maxPoints: "Maximum points",
-      overallScoreTitle: "Overall Score",
-      actions: {
-        shareResult: "Share Result",
-        downloadPDF: "Download PDF",
-        backToTests: "Back to Tests"
-      }
-    },
-    careerPaths: {
-      title: "Your Personalized Career Plans",
-      subtitle: "AI creates career plans based on your test results, giving you a clear path to your professional goals.",
-      tabs: {
-        dashboard: "Dashboard",
-        create: "Create Plan",
-        mentoring: "AI Mentoring"
-      },
-      dashboard: {
-        welcome: "Welcome to the career planning section",
-        subtitle: "Here you can manage your career plans and track your progress",
-        createFirst: "Create your first career plan",
-        noPlans: "You don't have any career plans created yet",
-        createPlan: "Create New Plan"
-      }
-    },
-    careerJourney: {
-      title: "Your Career Journey",
-      subtitle: "Discover how you can build a successful career through simple and efficient steps",
-      step1: {
-        title: "Complete Assessment",
-        description: "Complete our psychological tests to understand your personality and abilities"
-      },
-      step2: {
-        title: "Personalized Plan",
-        description: "Receive a personalized career plan based on your results and desired goals"
-      },
-      step3: {
-        title: "Track Progress",
-        description: "Monitor your progress and receive recommendations for continuous improvement"
-      },
-      step4: {
-        title: "Professional Success",
-        description: "Achieve professional goals with confidence and clarity in your career direction"
-      },
-      benefits: {
-        title: "Benefits of Our Platform",
-        benefit1: "Advanced AI psychological analysis",
-        benefit2: "Personalized career plans",
-        benefit3: "Real-time progress tracking",
-        benefit4: "Data-driven recommendations"
-      }
-    },
-    premiumFeatures: {
-      aiPrograms: {
-        title: "14-Day AI Programs",
-        subtitle: "Guided mini-interventions for rapid development",
-        description: "Participate in intensive personal development programs with AI guidance",
-        startProgram: "Start Program",
-        continueProgram: "Continue Program",
-        programCompleted: "Program Completed",
-        availablePrograms: "Available Programs",
-        motivationReset: "Motivation Reset",
-        leadershipTransition: "Leadership Transition",
-        interviewTraining: "Interview Training",
-        careerClarity: "Career Clarity",
-        day: "Day",
+      common: {
+        takeTest: "Take Test",
+        testResults: "Test Results",
+        testAnalysis: "Test Analysis",
+        recommendations: "Recommendations",
+        retakeTest: "Retake Test",
+        questions: "Questions",
+        minutes: "minutes",
+        minute: "minute",
+        points: "points",
+        noQuestionsAvailable: "No questions available for this test.",
+        loadingQuestions: "Loading questions...",
+        completed: "Completed",
         of: "of",
-        currentTask: "Current Task",
-        reflection: "Reflection",
-        submitReflection: "Submit Reflection",
-        programProgress: "Program Progress",
-        legend: "Legend",
-        completed: "Completed",
-        current: "Current",
-        upcoming: "Upcoming"
-      },
-      progressSheets: {
-        title: "AI Progress Sheets",
-        subtitle: "Visual assessments and personalized feedback",
-        description: "Create and save personalized progress sheets with AI analysis",
-        createNew: "Create New Sheet",
-        savedSheets: "Saved Sheets",
-        generateSheet: "Generate Sheet",
-        saveSheet: "Save Sheet",
-        viewSheet: "View Sheet",
-        deleteSheet: "Delete Sheet",
+        next: "Next",
+        previous: "Previous",
+        submit: "Submit",
+        timeRemaining: "Time remaining",
+        testCompleted: "Test completed!",
+        yourScore: "Your Score",
+        testType: "Test Type",
         category: "Category",
-        question: "Question",
-        answer: "Answer",
-        aiAnalysis: "AI Analysis",
-        createdOn: "Created on"
+        estimatedDuration: "Estimated Duration",
+        subscriptionRequired: "Subscription Required",
+        basic: "Basic",
+        professional: "Professional",
+        premium: "Premium",
+        description: "Description",
       },
-      simulations: {
-        title: "AI Simulations",
-        subtitle: "Practice professional scenarios with AI",
-        description: "Participate in interactive simulations to improve your professional skills",
-        startSimulation: "Start Simulation",
-        backToSimulations: "Back to Simulations",
-        conversation: "Simulation Conversation",
-        sendResponse: "Send Response",
-        feedback: "Feedback and Evaluation",
-        aiRole: "AI Role",
-        completed: "Completed",
-        overallScore: "Overall Score",
-        clarity: "Clarity",
+      bigFive: {
+        agreeableness: "Agreeableness",
+        conscientiousness: "Conscientiousness",
+        extraversion: "Extraversion",
+        neuroticism: "Neuroticism",
+        openness: "Openness",
+        agreeablenessDescription:
+          "Measures the tendency to be compassionate and cooperative.",
+        conscientiousnessDescription:
+          "Measures the efficiency and organization of a person.",
+        extraversionDescription: "Measures sociability and social energy.",
+        neuroticismDescription: "Measures emotional stability and anxiety.",
+        opennessDescription: "Measures curiosity and creativity.",
+        low: "Low",
+        average: "Average",
+        high: "High",
+      },
+      gad7: {
+        minimalAnxiety: "Minimal Anxiety",
+        mildAnxiety: "Mild Anxiety",
+        moderateAnxiety: "Moderate Anxiety",
+        severeAnxiety: "Severe Anxiety",
+        interpretation: "Interpretation",
+        recommendations: "Recommendations",
+        minimalAnxietyDescription:
+          "Minimal symptoms of anxiety. No intervention needed.",
+        mildAnxietyDescription:
+          "Mild anxiety. Monitor symptoms and apply relaxation techniques.",
+        moderateAnxietyDescription:
+          "Moderate anxiety. Consult a specialist for evaluation and support.",
+        severeAnxietyDescription:
+          "Severe anxiety. Consult a specialist urgently for treatment.",
+      },
+      disc: {
+        dominance: "Dominance",
+        influence: "Influence",
+        steadiness: "Steadiness",
+        conscientiousness: "Conscientiousness",
+        dominanceDescription: "Measures the tendency to control and lead.",
+        influenceDescription: "Measures the ability to influence and persuade.",
+        steadinessDescription: "Measures the preference for stability and cooperation.",
+        conscientiousnessDescription:
+          "Measures attention to detail and compliance with rules.",
+      },
+      belbin: {
+        shaper: "Shaper",
+        coordinator: "Coordinator",
+        plant: "Plant",
+        resourceInvestigator: "Resource Investigator",
+        monitorEvaluator: "Monitor Evaluator",
+        teamworker: "Teamworker",
+        completerFinisher: "Completer Finisher",
+        specialist: "Specialist",
+        shaperDescription:
+          "Dynamic and challenge-oriented, transforms ideas into actions.",
+        coordinatorDescription:
+          "Mature and confident, coordinates team efforts.",
+        plantDescription:
+          "Creative and imaginative, generates new ideas and solutions.",
+        resourceInvestigatorDescription:
+          "Enthusiastic and communicative, explores external opportunities.",
+        monitorEvaluatorDescription:
+          "Objective and strategic, analyzes options and makes decisions.",
+        teamworkerDescription:
+          "Cooperative and empathetic, supports harmony and collaboration.",
+        completerFinisherDescription:
+          "Attentive to detail and perfectionist, ensures task completion.",
+        specialistDescription:
+          "Dedicated and expert, provides specialized knowledge and skills.",
+      },
+      cognitive: {
+        verbalReasoning: "Verbal Reasoning",
+        numericalReasoning: "Numerical Reasoning",
+        abstractReasoning: "Abstract Reasoning",
+        spatialReasoning: "Spatial Reasoning",
+        verbalReasoningDescription:
+          "Measures the ability to understand and analyze verbal information.",
+        numericalReasoningDescription:
+          "Measures the ability to work with numbers and data.",
+        abstractReasoningDescription:
+          "Measures the ability to identify patterns and logical relationships.",
+        spatialReasoningDescription:
+          "Measures the ability to visualize and manipulate objects in space.",
+        low: "Low",
+        average: "Average",
+        high: "High",
+      },
+      emotionalIntelligence: {
+        selfAwareness: "Self-Awareness",
+        selfRegulation: "Self-Regulation",
+        motivation: "Motivation",
         empathy: "Empathy",
-        conviction: "Conviction",
-        structure: "Structure"
+        socialSkills: "Social Skills",
+        selfAwarenessDescription:
+          "Measures the ability to understand one's own emotions.",
+        selfRegulationDescription:
+          "Measures the ability to manage emotions and impulses.",
+        motivationDescription: "Measures intrinsic motivation and ambition.",
+        empathyDescription: "Measures the ability to understand others' emotions.",
+        socialSkillsDescription:
+          "Measures communication and relationship skills.",
+        low: "Low",
+        average: "Average",
+        high: "High",
       },
-      progressTracking: {
-        title: "Progress Analytics",
-        subtitle: "Track your evolution over time",
-        description: "View detailed statistics about your progress and achievements",
-        totalTests: "Total Tests",
-        averageScore: "Average Score",
-        hoursSpent: "Hours Spent",
-        achievements: "Achievements",
-        progressOverTime: "Progress Over Time",
-        testPerformance: "Test Performance",
-        recentAchievements: "Recent Achievements",
-        month: "Month",
-        score: "Score",
-        viewDetails: "View Details"
+      cattell: {
+        warmth: "Warmth",
+        reasoning: "Reasoning",
+        emotionalStability: "Emotional Stability",
+        dominance: "Dominance",
+        liveliness: "Liveliness",
+        ruleConsciousness: "Rule-Consciousness",
+        socialBoldness: "Social Boldness",
+        sensitivity: "Sensitivity",
+        vigilance: "Vigilance",
+        abstractedness: "Abstractedness",
+        privateness: "Privateness",
+        apprehension: "Apprehension",
+        opennessToChange: "Openness to Change",
+        selfReliance: "Self-Reliance",
+        perfectionism: "Perfectionism",
+        tension: "Tension",
+        warmthDescription: "Measures the degree of sociability and human warmth.",
+        reasoningDescription: "Measures the ability to solve abstract problems.",
+        emotionalStabilityDescription: "Measures emotional stability and calmness.",
+        dominanceDescription: "Measures the tendency to lead and influence.",
+        livelinessDescription: "Measures the level of energy and enthusiasm.",
+        ruleConsciousnessDescription: "Measures respect for rules and norms.",
+        socialBoldnessDescription: "Measures comfort in new social situations.",
+        sensitivityDescription: "Measures empathy and emotional sensitivity.",
+        vigilanceDescription: "Measures the degree of suspicion and caution.",
+        abstractednessDescription: "Measures interest in abstract ideas.",
+        privatenessDescription: "Measures the tendency to be reserved and discreet.",
+        apprehensionDescription: "Measures the degree of anxiety and worry.",
+        opennessToChangeDescription: "Measures willingness to accept the new.",
+        selfRelianceDescription: "Measures confidence in one's own strength.",
+        perfectionismDescription: "Measures attention to detail and desire for perfection.",
+        tensionDescription: "Measures the level of stress and internal tension.",
+        low: "Low",
+        average: "Average",
+        high: "High",
+      },
+      enneagram: {
+        dominantType: "Dominant Type",
+        strengths: "Strengths",
+        challenges: "Challenges",
+        growthPath: "Growth Path",
+        allTypes: "All Enneagram Types",
+        allTypesDescription: "Your score distribution across all 9 personality types",
+        interpretation: "Results Interpretation",
+        coreFear: "Core Fear",
+        coreDesire: "Core Desire",
+        developmentTips: "Development Tips",
+        tip1: "Practice self-compassion and accept imperfection",
+        tip2: "Focus on personal development and recognizing your own needs",
+        tip3: "Develop authentic relationships and value the process, not just the result",
+        tip4: "Work on emotional stability and appreciating the present"
       }
-    },
-    testNames: {
-      gad7AnxietyAssessment: "GAD-7 Anxiety Assessment",
-      cognitiveAbilitiesTest: "Cognitive Abilities Test"
-    },
-    testDescriptions: {
-      gad7AnxietyAssessment: "A standardized tool for assessing generalized anxiety disorder levels",
-      cognitiveAbilitiesTest: "Assessment of fundamental cognitive abilities and problem-solving capacity"
     }
   }
 };
