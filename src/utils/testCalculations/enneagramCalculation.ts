@@ -30,14 +30,14 @@ export const calculateEnneagramScore = (answers: Record<string, number>): Enneag
     
     // Maparea întrebărilor la tipuri (bazat pe structura din SQL)
     const questionTypeMap: Record<number, keyof EnneagramScore> = {
-      1: 'type1', 2: 'type1', 3: 'type1', 4: 'type1', // Perfecționistul
+      1: 'type1', 2: 'type1', 3: 'type1', 4: 'type1', // Reformatorul
       5: 'type2', 6: 'type2', 7: 'type2', 8: 'type2', // Ajutătorul
       9: 'type3', 10: 'type3', 11: 'type3', 12: 'type3', // Realizatorul
       13: 'type4', 14: 'type4', 15: 'type4', 16: 'type4', // Individualistul
       17: 'type5', 18: 'type5', 19: 'type5', 20: 'type5', // Investigatorul
-      21: 'type6', 22: 'type6', 23: 'type6', 24: 'type6', // Loialistul
+      21: 'type6', 22: 'type6', 23: 'type6', 24: 'type6', // Loyalul
       25: 'type7', 26: 'type7', 27: 'type7', 28: 'type7', // Entuziastul
-      29: 'type8', 30: 'type8', 31: 'type8', 32: 'type8', // Contestatarul
+      29: 'type8', 30: 'type8', 31: 'type8', 32: 'type8', // Provocatorul
       33: 'type9', 34: 'type9', 35: 'type9', 36: 'type9'  // Mediatorul
     };
 
@@ -59,8 +59,8 @@ export const getEnneagramDominantType = (scores: EnneagramScore): string => {
 export const getEnneagramTypeDescription = (type: string, language: 'ro' | 'en' = 'ro') => {
   const descriptions = {
     type1: {
-      ro: 'Perfecționistul - Orientat spre principii, ordine și perfecțiune',
-      en: 'The Perfectionist - Principled, orderly, and perfectionistic'
+      ro: 'Reformatorul - Orientat spre principii, ordine și perfecțiune',
+      en: 'The Reformer - Principled, orderly, and perfectionistic'
     },
     type2: {
       ro: 'Ajutătorul - Empatic, sincer și orientat spre relații',
@@ -79,7 +79,7 @@ export const getEnneagramTypeDescription = (type: string, language: 'ro' | 'en' 
       en: 'The Investigator - Intense, cerebral, and isolated'
     },
     type6: {
-      ro: 'Loialistul - Angajat, orientat spre securitate și anxios',
+      ro: 'Loyalul - Angajat, orientat spre securitate și anxios',
       en: 'The Loyalist - Committed, security-oriented, and anxious'
     },
     type7: {
@@ -87,7 +87,7 @@ export const getEnneagramTypeDescription = (type: string, language: 'ro' | 'en' 
       en: 'The Enthusiast - Spontaneous, versatile, and acquisitive'
     },
     type8: {
-      ro: 'Contestatarul - Autopossesiv, autoritar și orientat spre control',
+      ro: 'Provocatorul - Autopossesiv, autoritar și orientat spre control',
       en: 'The Challenger - Self-confident, decisive, and controlling'
     },
     type9: {

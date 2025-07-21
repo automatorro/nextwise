@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Loader2, Brain } from 'lucide-react';
@@ -33,6 +32,44 @@ const DetailedAnalysisSection = ({ dimensions, resultId, testType, score }: Deta
 - Scor general: ${score.overall}% (${score.raw_score}/${score.max_score} puncte)
 - Interpretare: ${score.interpretation}
 `;
+
+    if (testType.includes('Enneagram')) {
+      const typeNames = {
+        type1: 'Reformatorul',
+        type2: 'Ajutătorul', 
+        type3: 'Realizatorul',
+        type4: 'Individualistul',
+        type5: 'Investigatorul',
+        type6: 'Loyalul',
+        type7: 'Entuziastul',
+        type8: 'Provocatorul',
+        type9: 'Mediatorul'
+      };
+
+      const dominantType = Object.entries(dimensions).reduce((a, b) => 
+        dimensions[a[0]] > dimensions[b[0]] ? a : b
+      )[0];
+
+      const dominantTypeName = typeNames[dominantType as keyof typeof typeNames] || 'Necunoscut';
+
+      return `Ești un coach certificat în Enneagram cu experiență vastă în psihologia personalității. Analizează aceste rezultate și oferă o interpretare profundă și personalizată.
+
+${baseInfo}
+- Tip dominant: ${dominantTypeName} (${dominantType})
+- Scoruri pentru toate tipurile: ${Object.entries(dimensions).map(([key, value]) => `${typeNames[key as keyof typeof typeNames] || key}: ${value} puncte`).join(', ')}
+
+Generează o analiză structurată în 5 secțiuni:
+1. **Tipul de Personalitate Dominant** - Explică în detaliu tipul principal (${dominantTypeName}) și caracteristicile sale distinctive
+2. **Motivații și Frici Profunde** - Analizează driverii inconștienți, temerile de bază și dorințele centrale
+3. **Punctele Forte și Resurse** - Identifică talentele naturale și capacitățile pozitive
+4. **Zonele de Creștere** - Direcțiile de dezvoltare sănătoasă și provocările de depășit
+5. **Aplicații Practice** - Cum să folosești aceste insight-uri în relații, carieră și dezvoltare personală
+
+Concentrează-te pe tipurile cu scoruri mai mari și explică cum se manifestă combinațiile. Oferă sfaturi concrete și acționabile.
+Ton profund și introspectiv, concentrează-te pe autocunoaștere și creștere personală. Minimum 1200-1500 cuvinte.
+
+Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru o citire ușoară.`;
+    }
 
     if (testType.includes('Big Five')) {
       const safeDimensions = {
@@ -96,21 +133,6 @@ Generează o analiză structurată în 4 secțiuni:
 Ton profesional și practic, concentrează-te pe aplicații în mediul de lucru. Minimum 800-1000 cuvinte.`;
     }
 
-    if (testType.includes('Enneagram')) {
-      return `Ești un coach certificat în Enneagram cu experiență vastă. Analizează aceste rezultate și oferă o interpretare profundă.
-
-${baseInfo}
-- Dimensiuni: ${Object.entries(dimensions).map(([key, value]) => `Tip ${key}: ${value}%`).join(', ')}
-
-Generează o analiză structurată în 4 secțiuni:
-1. **Tipul de Personalitate Dominant** - Explică tipul principal și caracteristicile sale
-2. **Motivații și Frici Profunde** - Analizează driverii inconștienți
-3. **Căile de Creștere** - Direcțiile de dezvoltare sănătoasă
-4. **Relații și Comunicare** - Cum interacționezi cu alții și cum să îmbunătățești relațiile
-
-Ton profund și introspectiv, concentrează-te pe autocunoaștere și creștere personală. Minimum 1000-1200 cuvinte.`;
-    }
-
     if (testType.includes('Inteligență Emoțională') || testType.includes('Emotional Intelligence')) {
       return `Ești un expert în inteligența emoțională și dezvoltare personală. Analizează aceste rezultate și oferă o interpretare detaliată.
 
@@ -165,7 +187,7 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
         setDetailedAnalysis(data.analysis);
         toast({
           title: t('common.success'),
-          description: t('testResult.loadingAnalysis')
+          description: 'Analiza detaliată a fost generată cu succes!'
         });
       } else {
         throw new Error('No analysis returned from function');
@@ -174,7 +196,7 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
       console.error('Error generating analysis:', error);
       toast({
         title: t('common.error'),
-        description: t('testResult.noAnalysis'),
+        description: 'A apărut o eroare la generarea analizei. Te rugăm să încerci din nou.',
         variant: "destructive"
       });
     } finally {
@@ -218,12 +240,12 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
           {isGeneratingAnalysis ? (
             <>
               <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-              {t('testResult.loadingAnalysis')}
+              Se generează analiza...
             </>
           ) : (
             <>
               <Brain className="w-5 h-5 mr-2" />
-              {t('testResult.detailedAnalysis')}
+              Generează Analiză Detaliată
             </>
           )}
         </Button>
@@ -237,7 +259,7 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
         <div className="mt-8 p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg border border-blue-200">
           <div className="flex items-center mb-4">
             <Brain className="w-5 h-5 mr-2 text-blue-600" />
-            <h3 className="text-lg font-semibold text-gray-800">{t('testResult.aiAnalysis')}</h3>
+            <h3 className="text-lg font-semibold text-gray-800">Analiza AI Personalizată</h3>
           </div>
           <div className="prose prose-gray max-w-none">
             {formatMarkdownToJSX(detailedAnalysis)}

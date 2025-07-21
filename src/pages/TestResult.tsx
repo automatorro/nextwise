@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -17,6 +18,7 @@ import CorrectAnswersSection from '@/components/test-result/CorrectAnswersSectio
 import TestResultHeader from '@/components/test-result/TestResultHeader';
 import TestResultCharts from '@/components/test-result/TestResultCharts';
 import TestResultActions from '@/components/test-result/TestResultActions';
+import TestExplanations from '@/components/tests/TestExplanations';
 import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
 import { useCognitiveAbilitiesCalculation } from '@/hooks/useCognitiveAbilitiesCalculation';
 import { useCattell16PFCalculation } from '@/hooks/useCattell16PFCalculation';
@@ -147,6 +149,7 @@ const TestResult = () => {
   const isCognitiveTest = result ? isCognitiveAbilitiesTest(result.test_types.name) : false;
   const isBelbinTest = result ? isBelbinTeamRoles(result.test_types.name) : false;
   const isCattell16PFTest = result?.test_types.name.includes('Cattell') || result?.test_types.name.includes('16PF');
+  const isEnneagramTest = result?.test_types.name.includes('Enneagram');
   
   const calculatedBigFiveDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
   const calculatedCognitiveDimensions = useCognitiveAbilitiesCalculation(isCognitiveTest ? result?.answers : undefined);
@@ -169,9 +172,13 @@ const TestResult = () => {
     if (isBelbinTest) {
       return result?.score.role_scores || result?.score.dimensions || {};
     }
+
+    if (isEnneagramTest) {
+      return result?.score.dimensions || {};
+    }
     
     return result?.score.dimensions || {};
-  }, [isBigFiveTest, isCognitiveTest, isCattell16PFTest, isBelbinTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, calculatedCattell16PFDimensions, result?.score]);
+  }, [isBigFiveTest, isCognitiveTest, isCattell16PFTest, isBelbinTest, isEnneagramTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, calculatedCattell16PFDimensions, result?.score]);
 
   const hasValidTestSpecificDimensions = Object.values(testSpecificDimensions).some(value => value > 0);
 
@@ -229,6 +236,13 @@ const TestResult = () => {
             completedAt={result.completed_at}
           />
 
+          {/* Test Explanations - NEW SECTION */}
+          <TestExplanations 
+            testName={result.test_types.name}
+            score={result.score}
+            language={language}
+          />
+
           {/* Belbin Test Results - Special handling */}
           {isBelbinTest ? (
             <>
@@ -252,7 +266,7 @@ const TestResult = () => {
           ) : (
             <>
               {/* Overall Score - only for non-Belbin tests */}
-              <OverallScoreCard score={result.score} />
+              {!isEnneagramTest && <OverallScoreCard score={result.score} />}
 
               {/* Scoring Explanation - ALWAYS SHOW WITH DIMENSIONS */}
               <ScoringExplanation 

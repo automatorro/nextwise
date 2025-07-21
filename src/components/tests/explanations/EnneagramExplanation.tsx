@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useTranslation } from 'react-i18next';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
@@ -11,7 +11,7 @@ interface EnneagramExplanationProps {
 }
 
 const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, language }) => {
-  const { t } = useTranslation();
+  const { t } = useLanguage();
 
   // Calculăm tipul dominant
   const dominantType = Object.entries(score).reduce((a, b) => 
@@ -29,7 +29,7 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
   const getTypeInfo = (type: string) => {
     const typeMap: Record<string, any> = {
       type1: {
-        name: { ro: 'Perfecționistul', en: 'The Perfectionist' },
+        name: { ro: 'Reformatorul', en: 'The Reformer' },
         core: { ro: 'Dorința de a fi bun, corect și perfect', en: 'The desire to be good, right, and perfect' },
         fear: { ro: 'Să fie greșit, rău sau imperfect', en: 'Being wrong, bad, or imperfect' },
         strengths: { 
@@ -114,7 +114,7 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
         }
       },
       type6: {
-        name: { ro: 'Loialistul', en: 'The Loyalist' },
+        name: { ro: 'Loyalul', en: 'The Loyalist' },
         core: { ro: 'Dorința de a avea securitate și sprijin', en: 'The desire to have security and support' },
         fear: { ro: 'Să fie fără sprijin sau îndrumare', en: 'Being without support or guidance' },
         strengths: { 
@@ -139,7 +139,7 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
           en: ['Optimistic', 'Adventurous', 'Spontaneous', 'Versatile', 'Enthusiastic']
         },
         challenges: { 
-          ro: ['Impulsiv', 'Superficial', 'Nerabdator', 'Nefocusat', 'Egocentrik'],
+          ro: ['Impulsiv', 'Superficial', 'Nerabdator', 'Nefocusat', 'Egocentric'],
           en: ['Impulsive', 'Superficial', 'Impatient', 'Unfocused', 'Self-centered']
         },
         growth: { 
@@ -148,7 +148,7 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
         }
       },
       type8: {
-        name: { ro: 'Contestatarul', en: 'The Challenger' },
+        name: { ro: 'Provocatorul', en: 'The Challenger' },
         core: { ro: 'Dorința de a fi autonom și în control', en: 'The desire to be autonomous and in control' },
         fear: { ro: 'Să fie controlat sau vulnerabil', en: 'Being controlled or vulnerable' },
         strengths: { 
@@ -198,7 +198,7 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
               {dominantInfo.name[language as 'ro' | 'en']}
             </CardTitle>
             <Badge variant="default" className="text-lg px-4 py-2">
-              {t('tests.enneagram.dominantType')}
+              {language === 'en' ? 'Dominant Type' : 'Tip Dominant'}
             </Badge>
           </div>
           <CardDescription className="text-lg">
@@ -209,7 +209,7 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
           <div className="grid md:grid-cols-2 gap-4">
             <div>
               <h4 className="font-semibold text-green-600 mb-2">
-                {t('tests.enneagram.strengths')}
+                {language === 'en' ? 'Strengths' : 'Puncte Forte'}
               </h4>
               <ul className="space-y-1">
                 {dominantInfo.strengths[language as 'ro' | 'en'].map((strength: string, index: number) => (
@@ -222,7 +222,7 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
             </div>
             <div>
               <h4 className="font-semibold text-orange-600 mb-2">
-                {t('tests.enneagram.challenges')}
+                {language === 'en' ? 'Challenges' : 'Provocări'}
               </h4>
               <ul className="space-y-1">
                 {dominantInfo.challenges[language as 'ro' | 'en'].map((challenge: string, index: number) => (
@@ -236,7 +236,7 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
           </div>
           <div className="bg-blue-50 p-4 rounded-lg">
             <h4 className="font-semibold text-blue-600 mb-2">
-              {t('tests.enneagram.growthPath')}
+              {language === 'en' ? 'Growth Path' : 'Calea de Dezvoltare'}
             </h4>
             <p className="text-blue-800">
               {dominantInfo.growth[language as 'ro' | 'en']}
@@ -248,9 +248,11 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
       {/* Graficul cu toate tipurile */}
       <Card>
         <CardHeader>
-          <CardTitle>{t('tests.enneagram.allTypes')}</CardTitle>
+          <CardTitle>{language === 'en' ? 'All Types' : 'Toate Tipurile'}</CardTitle>
           <CardDescription>
-            {t('tests.enneagram.allTypesDescription')}
+            {language === 'en' 
+              ? 'Your scores across all 9 Enneagram types' 
+              : 'Scorurile tale pentru toate cele 9 tipuri Enneagram'}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -264,52 +266,13 @@ const EnneagramExplanation: React.FC<EnneagramExplanationProps> = ({ score, lang
                       {info.name[language as 'ro' | 'en']}
                     </span>
                     <span className="text-sm text-gray-600">
-                      {score} {t('tests.common.points')} ({percentage}%)
+                      {score} {language === 'en' ? 'points' : 'puncte'} ({percentage}%)
                     </span>
                   </div>
                   <Progress value={percentage} className="h-2" />
                 </div>
               );
             })}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Interpretarea rezultatelor */}
-      <Card>
-        <CardHeader>
-          <CardTitle>{t('tests.enneagram.interpretation')}</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-red-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-red-600 mb-2">
-                {t('tests.enneagram.coreFear')}
-              </h4>
-              <p className="text-red-800">
-                {dominantInfo.fear[language as 'ro' | 'en']}
-              </p>
-            </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <h4 className="font-semibold text-green-600 mb-2">
-                {t('tests.enneagram.coreDesire')}
-              </h4>
-              <p className="text-green-800">
-                {dominantInfo.core[language as 'ro' | 'en']}
-              </p>
-            </div>
-          </div>
-          
-          <div className="bg-purple-50 p-4 rounded-lg">
-            <h4 className="font-semibold text-purple-600 mb-2">
-              {t('tests.enneagram.developmentTips')}
-            </h4>
-            <ul className="space-y-2 text-purple-800">
-              <li>• {t('tests.enneagram.tip1')}</li>
-              <li>• {t('tests.enneagram.tip2')}</li>
-              <li>• {t('tests.enneagram.tip3')}</li>
-              <li>• {t('tests.enneagram.tip4')}</li>
-            </ul>
           </div>
         </CardContent>
       </Card>
