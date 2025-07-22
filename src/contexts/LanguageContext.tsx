@@ -26,22 +26,54 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const isChangingLanguage = useRef(false);
 
   // Function to validate translations object
-  const validateTranslations = (trans: Translations): boolean => {
+  const validateTranslations = (trans: Translations, lang: Language): boolean => {
     if (!trans || typeof trans !== 'object') {
-      console.warn('🚨 Invalid translations object:', trans);
+      console.warn(`🚨 Invalid translations object for ${lang}:`, trans);
       return false;
     }
     
-    // Check for essential keys that should exist
+    // Check for essential keys that should exist based on fallback structure
     const essentialKeys = ['nav', 'common', 'home'];
-    const hasEssentialKeys = essentialKeys.some(key => trans[key] && typeof trans[key] === 'object');
+    const hasEssentialKeys = essentialKeys.every(key => {
+      const hasKey = trans[key] && typeof trans[key] === 'object';
+      if (!hasKey) {
+        console.warn(`🚨 Missing essential key "${key}" in ${lang} translations`);
+      }
+      return hasKey;
+    });
     
     if (!hasEssentialKeys) {
-      console.warn('🚨 Translations missing essential keys:', Object.keys(trans));
+      console.warn(`🚨 ${lang} translations missing essential keys:`, Object.keys(trans));
       return false;
     }
     
+    console.log(`✅ ${lang} translations validation passed`);
     return true;
+  };
+
+  // Function to merge translations with fallback
+  const mergeWithFallback = (loadedTranslations: Translations, lang: Language): Translations => {
+    const fallback = fallbackTranslations[lang];
+    
+    // If loaded translations are invalid, use fallback
+    if (!validateTranslations(loadedTranslations, lang)) {
+      console.warn(`⚠️ Using fallback translations for ${lang} due to validation failure`);
+      return fallback;
+    }
+    
+    // Deep merge loaded translations with fallback
+    const merged = { ...fallback };
+    
+    Object.keys(loadedTranslations).forEach(key => {
+      if (typeof loadedTranslations[key] === 'object' && typeof fallback[key] === 'object') {
+        merged[key] = { ...fallback[key], ...loadedTranslations[key] };
+      } else {
+        merged[key] = loadedTranslations[key];
+      }
+    });
+    
+    console.log(`✅ Successfully merged ${lang} translations with fallback`);
+    return merged;
   };
 
   // Initialize translations and preload both languages
@@ -59,41 +91,39 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const savedLanguage = getStoredLanguage() as Language;
         const initialLanguage = savedLanguage && (savedLanguage === 'ro' || savedLanguage === 'en') ? savedLanguage : 'ro';
         
-        console.log(`🔄 Loading translations for: ${initialLanguage}`);
+        console.log(`🔄 Initializing with language: ${initialLanguage}`);
         
-        // Try to load fresh translations
-        let freshTranslations: Translations;
-        try {
-          freshTranslations = await loadTranslations(initialLanguage);
-          
-          // Validate the loaded translations
-          if (!validateTranslations(freshTranslations)) {
-            console.warn('⚠️ Loaded translations failed validation, using fallback');
-            freshTranslations = fallbackTranslations[initialLanguage];
-          }
-        } catch (error) {
-          console.error('❌ Failed to load translations, using fallback:', error);
-          freshTranslations = fallbackTranslations[initialLanguage];
-        }
-        
-        // Set language and translations
+        // Start with fallback translations immediately
+        let initialTranslations = fallbackTranslations[initialLanguage];
         setLanguage(initialLanguage);
-        setTranslations(freshTranslations);
-        globalTranslationsCache.set(initialLanguage, freshTranslations);
+        setTranslations(initialTranslations);
         
-        console.log(`✅ Translations initialized successfully for: ${initialLanguage}`);
-        console.log('🔍 Available translation keys:', Object.keys(freshTranslations));
+        console.log(`⚡ Set initial fallback translations for: ${initialLanguage}`);
+        
+        // Try to load fresh translations in background
+        try {
+          const freshTranslations = await loadTranslations(initialLanguage);
+          const mergedTranslations = mergeWithFallback(freshTranslations, initialLanguage);
+          
+          // Update with fresh translations
+          setTranslations(mergedTranslations);
+          globalTranslationsCache.set(initialLanguage, mergedTranslations);
+          
+          console.log(`✅ Updated with fresh translations for: ${initialLanguage}`);
+        } catch (error) {
+          console.warn(`⚠️ Failed to load fresh translations for ${initialLanguage}, using fallback:`, error);
+          globalTranslationsCache.set(initialLanguage, initialTranslations);
+        }
         
         // Preload the other language
         const otherLanguage = initialLanguage === 'ro' ? 'en' : 'ro';
         try {
           const otherTranslations = await loadTranslations(otherLanguage);
-          if (validateTranslations(otherTranslations)) {
-            globalTranslationsCache.set(otherLanguage, otherTranslations);
-            console.log(`✅ Preloaded translations for: ${otherLanguage}`);
-          }
+          const mergedOtherTranslations = mergeWithFallback(otherTranslations, otherLanguage);
+          globalTranslationsCache.set(otherLanguage, mergedOtherTranslations);
+          console.log(`✅ Preloaded translations for: ${otherLanguage}`);
         } catch (error) {
-          console.warn(`⚠️ Failed to preload ${otherLanguage}, will load on demand`);
+          console.warn(`⚠️ Failed to preload ${otherLanguage}, using fallback`);
           globalTranslationsCache.set(otherLanguage, fallbackTranslations[otherLanguage]);
         }
         
@@ -123,21 +153,22 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     isChangingLanguage.current = true;
 
     try {
-      // Check if translations are already cached and valid
+      // Check if translations are already cached
       let newTranslations = globalTranslationsCache.get(newLanguage);
       
-      if (!newTranslations || !validateTranslations(newTranslations)) {
+      if (!newTranslations || !validateTranslations(newTranslations, newLanguage)) {
         console.log(`📥 Loading fresh translations for ${newLanguage}...`);
+        
+        // Use fallback immediately while loading
+        const fallbackTranslation = fallbackTranslations[newLanguage];
+        setTranslations(fallbackTranslation);
+        
         try {
-          newTranslations = await loadTranslations(newLanguage);
-          
-          if (!validateTranslations(newTranslations)) {
-            console.warn(`⚠️ Loaded translations for ${newLanguage} failed validation, using fallback`);
-            newTranslations = fallbackTranslations[newLanguage];
-          }
+          const freshTranslations = await loadTranslations(newLanguage);
+          newTranslations = mergeWithFallback(freshTranslations, newLanguage);
         } catch (error) {
           console.error(`❌ Failed to load translations for ${newLanguage}:`, error);
-          newTranslations = fallbackTranslations[newLanguage];
+          newTranslations = fallbackTranslation;
         }
         
         globalTranslationsCache.set(newLanguage, newTranslations);
@@ -145,7 +176,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         console.log(`⚡ Using cached translations for ${newLanguage}`);
       }
 
-      // Update state immediately
+      // Update state
       setLanguage(newLanguage);
       setTranslations(newTranslations);
       setStoredLanguage(newLanguage);
@@ -154,7 +185,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       clearTranslationResultCache();
       
       console.log(`✅ Language changed to ${newLanguage} successfully`);
-      console.log('🔍 Current translation keys:', Object.keys(newTranslations));
+      console.log('🔍 Available translation keys:', Object.keys(newTranslations));
       
     } catch (error) {
       console.error(`❌ Critical error changing language to ${newLanguage}:`, error);
@@ -170,15 +201,34 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [language]);
 
   const t = useCallback((key: string) => {
-    const result = translateKey(translations, key);
-    
-    // Additional debugging for missing translations
-    if (result === key) {
-      console.warn(`🔍 Translation key "${key}" returned as-is. Available top-level keys:`, Object.keys(translations));
+    try {
+      const result = translateKey(translations, key);
+      
+      // Additional debugging for missing translations
+      if (result === key) {
+        console.warn(`🔍 Translation key "${key}" returned as-is.`);
+        console.warn('Current translations structure:', {
+          language,
+          topLevelKeys: Object.keys(translations),
+          hasNav: !!translations.nav,
+          hasCommon: !!translations.common,
+          hasHome: !!translations.home
+        });
+        
+        // Try fallback translation
+        const fallbackResult = translateKey(fallbackTranslations[language], key);
+        if (fallbackResult !== key) {
+          console.log(`✅ Found fallback translation for "${key}": ${fallbackResult}`);
+          return fallbackResult;
+        }
+      }
+      
+      return result;
+    } catch (error) {
+      console.error(`❌ Error translating key "${key}":`, error);
+      return key;
     }
-    
-    return result;
-  }, [translations]);
+  }, [translations, language]);
 
   const contextValue: LanguageContextType = {
     language,

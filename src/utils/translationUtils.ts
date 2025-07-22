@@ -41,7 +41,8 @@ export const translateKey = (translations: Translations, key: string): any => {
         currentValue: value,
         valueType: typeof value,
         availableKeys: value && typeof value === 'object' ? Object.keys(value) : 'not an object',
-        pathSoFar: keys.slice(0, i).join('.')
+        pathSoFar: keys.slice(0, i).join('.'),
+        remainingPath: keys.slice(i).join('.')
       });
       
       // Cache the failed result to avoid repeated lookups
