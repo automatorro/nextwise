@@ -15,125 +15,118 @@ interface LanguageContextType {
 
 const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
-// Global cache for translations - shared across all components
-const globalTranslationsCache = new Map<Language, Translations>();
-
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguage] = useState<Language>('ro');
   const [translations, setTranslations] = useState<Translations>(fallbackTranslations.ro);
   const [loading, setLoading] = useState(true);
   const isInitializing = useRef(true);
-  const isChangingLanguage = useRef(false);
 
-  // Function to validate translations object
-  const validateTranslations = (trans: Translations, lang: Language): boolean => {
+  // Funcție pentru a reseta complet sistemul de traduceri
+  const resetTranslationSystem = useCallback(() => {
+    console.log('🔄 Resetting complete translation system...');
+    clearTranslationsCache();
+    clearTranslationResultCache();
+    
+    // Șterge și cache-ul din localStorage dacă există
+    try {
+      const keys = Object.keys(localStorage);
+      keys.forEach(key => {
+        if (key.includes('translation') || key.includes('cache')) {
+          localStorage.removeItem(key);
+        }
+      });
+    } catch (error) {
+      console.warn('Could not clear localStorage cache:', error);
+    }
+  }, []);
+
+  // Funcție pentru validarea structurii de traduceri
+  const validateTranslationStructure = useCallback((trans: Translations, lang: Language): boolean => {
     if (!trans || typeof trans !== 'object') {
-      console.warn(`🚨 Invalid translations object for ${lang}:`, trans);
+      console.error(`❌ Invalid translations structure for ${lang}:`, trans);
       return false;
     }
-    
-    // Check for essential keys that should exist based on fallback structure
-    const essentialKeys = ['nav', 'common', 'home'];
-    const hasEssentialKeys = essentialKeys.every(key => {
-      const hasKey = trans[key] && typeof trans[key] === 'object';
-      if (!hasKey) {
-        console.warn(`🚨 Missing essential key "${key}" in ${lang} translations`);
-      }
-      return hasKey;
-    });
-    
-    if (!hasEssentialKeys) {
-      console.warn(`🚨 ${lang} translations missing essential keys:`, Object.keys(trans));
-      return false;
-    }
-    
-    console.log(`✅ ${lang} translations validation passed`);
-    return true;
-  };
 
-  // Function to merge translations with fallback
-  const mergeWithFallback = (loadedTranslations: Translations, lang: Language): Translations => {
+    // Verifică cheile esențiale din fallback
     const fallback = fallbackTranslations[lang];
+    const requiredKeys = Object.keys(fallback);
     
-    // If loaded translations are invalid, use fallback
-    if (!validateTranslations(loadedTranslations, lang)) {
-      console.warn(`⚠️ Using fallback translations for ${lang} due to validation failure`);
-      return fallback;
+    const missingKeys = requiredKeys.filter(key => !trans[key] || typeof trans[key] !== 'object');
+    
+    if (missingKeys.length > 0) {
+      console.warn(`⚠️ Missing keys in ${lang} translations:`, missingKeys);
+      return false;
     }
-    
-    // Deep merge loaded translations with fallback
-    const merged = { ...fallback };
-    
-    Object.keys(loadedTranslations).forEach(key => {
-      if (typeof loadedTranslations[key] === 'object' && typeof fallback[key] === 'object') {
-        merged[key] = { ...fallback[key], ...loadedTranslations[key] };
-      } else {
-        merged[key] = loadedTranslations[key];
-      }
-    });
-    
-    console.log(`✅ Successfully merged ${lang} translations with fallback`);
-    return merged;
-  };
 
-  // Initialize translations and preload both languages
+    console.log(`✅ Translation structure valid for ${lang}`);
+    return true;
+  }, []);
+
+  // Funcție pentru încărcarea sigură a traducerilor
+  const loadSafeTranslations = useCallback(async (lang: Language): Promise<Translations> => {
+    console.log(`📥 Loading safe translations for: ${lang}`);
+    
+    try {
+      // Încarcă traducerile din fișier
+      const loadedTranslations = await loadTranslations(lang);
+      console.log(`📊 Loaded translations for ${lang}:`, {
+        keys: Object.keys(loadedTranslations),
+        hasTestDescriptions: !!loadedTranslations.testDescriptions,
+        hasTests: !!loadedTranslations.tests,
+        hasDashboard: !!loadedTranslations.dashboard
+      });
+      
+      // Validează structura
+      if (validateTranslationStructure(loadedTranslations, lang)) {
+        return loadedTranslations;
+      } else {
+        console.warn(`⚠️ Using fallback for ${lang} due to invalid structure`);
+        return fallbackTranslations[lang];
+      }
+    } catch (error) {
+      console.error(`❌ Error loading translations for ${lang}:`, error);
+      return fallbackTranslations[lang];
+    }
+  }, [validateTranslationStructure]);
+
+  // Inițializare
   useEffect(() => {
     const initializeTranslations = async () => {
+      if (!isInitializing.current) return;
+      
+      console.log('🚀 Initializing translation system...');
+      
+      // Reset complet
+      resetTranslationSystem();
+      
       try {
-        console.log('🌐 Initializing translations system...');
-        
-        // Clear all caches to start fresh
-        globalTranslationsCache.clear();
-        clearTranslationsCache();
-        clearTranslationResultCache();
-        
-        // Get stored language or default to 'ro'
+        // Obține limba salvată
         const savedLanguage = getStoredLanguage() as Language;
-        const initialLanguage = savedLanguage && (savedLanguage === 'ro' || savedLanguage === 'en') ? savedLanguage : 'ro';
+        const initialLanguage = (savedLanguage === 'ro' || savedLanguage === 'en') ? savedLanguage : 'ro';
         
-        console.log(`🔄 Initializing with language: ${initialLanguage}`);
+        console.log(`🔄 Setting initial language: ${initialLanguage}`);
         
-        // Start with fallback translations immediately
-        let initialTranslations = fallbackTranslations[initialLanguage];
+        // Setează limba imediat
         setLanguage(initialLanguage);
-        setTranslations(initialTranslations);
         
-        console.log(`⚡ Set initial fallback translations for: ${initialLanguage}`);
+        // Folosește fallback imediat pentru UX rapid
+        setTranslations(fallbackTranslations[initialLanguage]);
+        console.log(`⚡ Set fallback translations for ${initialLanguage}`);
         
-        // Try to load fresh translations in background
-        try {
-          const freshTranslations = await loadTranslations(initialLanguage);
-          const mergedTranslations = mergeWithFallback(freshTranslations, initialLanguage);
-          
-          // Update with fresh translations
-          setTranslations(mergedTranslations);
-          globalTranslationsCache.set(initialLanguage, mergedTranslations);
-          
-          console.log(`✅ Updated with fresh translations for: ${initialLanguage}`);
-        } catch (error) {
-          console.warn(`⚠️ Failed to load fresh translations for ${initialLanguage}, using fallback:`, error);
-          globalTranslationsCache.set(initialLanguage, initialTranslations);
-        }
+        // Încarcă traducerile reale în background
+        const realTranslations = await loadSafeTranslations(initialLanguage);
         
-        // Preload the other language
-        const otherLanguage = initialLanguage === 'ro' ? 'en' : 'ro';
-        try {
-          const otherTranslations = await loadTranslations(otherLanguage);
-          const mergedOtherTranslations = mergeWithFallback(otherTranslations, otherLanguage);
-          globalTranslationsCache.set(otherLanguage, mergedOtherTranslations);
-          console.log(`✅ Preloaded translations for: ${otherLanguage}`);
-        } catch (error) {
-          console.warn(`⚠️ Failed to preload ${otherLanguage}, using fallback`);
-          globalTranslationsCache.set(otherLanguage, fallbackTranslations[otherLanguage]);
-        }
+        // Actualizează cu traducerile reale
+        setTranslations(realTranslations);
+        console.log(`✅ Updated with real translations for ${initialLanguage}`);
+        console.log('📋 Final translation keys:', Object.keys(realTranslations));
         
       } catch (error) {
-        console.error('❌ Critical error in translation initialization:', error);
-        // Emergency fallback
-        const emergencyLanguage = 'ro';
-        setLanguage(emergencyLanguage);
-        setTranslations(fallbackTranslations[emergencyLanguage]);
-        globalTranslationsCache.set(emergencyLanguage, fallbackTranslations[emergencyLanguage]);
+        console.error('❌ Critical error in initialization:', error);
+        // Fallback de urgență
+        const emergencyLang = 'ro';
+        setLanguage(emergencyLang);
+        setTranslations(fallbackTranslations[emergencyLang]);
       } finally {
         setLoading(false);
         isInitializing.current = false;
@@ -141,91 +134,61 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
 
     initializeTranslations();
-  }, []);
+  }, [resetTranslationSystem, loadSafeTranslations]);
 
+  // Schimbarea limbii
   const changeLanguage = useCallback(async (newLanguage: Language) => {
-    if (newLanguage === language || isChangingLanguage.current) {
-      console.log('🔄 Language change skipped - same language or already changing');
+    if (newLanguage === language) {
+      console.log('🔄 Language change skipped - same language');
       return;
     }
 
     console.log(`🔄 Changing language from ${language} to ${newLanguage}`);
-    isChangingLanguage.current = true;
-
+    
     try {
-      // Check if translations are already cached
-      let newTranslations = globalTranslationsCache.get(newLanguage);
-      
-      if (!newTranslations || !validateTranslations(newTranslations, newLanguage)) {
-        console.log(`📥 Loading fresh translations for ${newLanguage}...`);
-        
-        // Use fallback immediately while loading
-        const fallbackTranslation = fallbackTranslations[newLanguage];
-        setTranslations(fallbackTranslation);
-        
-        try {
-          const freshTranslations = await loadTranslations(newLanguage);
-          newTranslations = mergeWithFallback(freshTranslations, newLanguage);
-        } catch (error) {
-          console.error(`❌ Failed to load translations for ${newLanguage}:`, error);
-          newTranslations = fallbackTranslation;
-        }
-        
-        globalTranslationsCache.set(newLanguage, newTranslations);
-      } else {
-        console.log(`⚡ Using cached translations for ${newLanguage}`);
-      }
-
-      // Update state
+      // Folosește fallback imediat pentru UX
+      setTranslations(fallbackTranslations[newLanguage]);
       setLanguage(newLanguage);
-      setTranslations(newTranslations);
       setStoredLanguage(newLanguage);
       
-      // Clear translation result cache to ensure fresh results
+      // Clear cache pentru a forța încărcarea fresh
       clearTranslationResultCache();
       
+      // Încarcă traducerile reale
+      const realTranslations = await loadSafeTranslations(newLanguage);
+      
+      // Actualizează cu traducerile reale
+      setTranslations(realTranslations);
+      
       console.log(`✅ Language changed to ${newLanguage} successfully`);
-      console.log('🔍 Available translation keys:', Object.keys(newTranslations));
+      console.log('📋 Available translation keys:', Object.keys(realTranslations));
       
     } catch (error) {
-      console.error(`❌ Critical error changing language to ${newLanguage}:`, error);
-      // Emergency fallback
-      const emergencyTranslations = fallbackTranslations[newLanguage];
-      setTranslations(emergencyTranslations);
-      globalTranslationsCache.set(newLanguage, emergencyTranslations);
-      setLanguage(newLanguage);
-      setStoredLanguage(newLanguage);
-    } finally {
-      isChangingLanguage.current = false;
+      console.error(`❌ Error changing language to ${newLanguage}:`, error);
+      // Fallback de urgență
+      setTranslations(fallbackTranslations[newLanguage]);
     }
-  }, [language]);
+  }, [language, loadSafeTranslations]);
 
+  // Funcția de traducere
   const t = useCallback((key: string) => {
     try {
       const result = translateKey(translations, key);
       
-      // Additional debugging for missing translations
+      // Dacă nu găsește traducerea, încearcă din fallback
       if (result === key) {
-        console.warn(`🔍 Translation key "${key}" returned as-is.`);
-        console.warn('Current translations structure:', {
-          language,
-          topLevelKeys: Object.keys(translations),
-          hasNav: !!translations.nav,
-          hasCommon: !!translations.common,
-          hasHome: !!translations.home
-        });
-        
-        // Try fallback translation
+        console.warn(`🔍 Key "${key}" not found, trying fallback...`);
         const fallbackResult = translateKey(fallbackTranslations[language], key);
         if (fallbackResult !== key) {
-          console.log(`✅ Found fallback translation for "${key}": ${fallbackResult}`);
+          console.log(`✅ Found in fallback: "${key}" = "${fallbackResult}"`);
           return fallbackResult;
         }
+        console.warn(`❌ Key "${key}" not found in fallback either`);
       }
       
       return result;
     } catch (error) {
-      console.error(`❌ Error translating key "${key}":`, error);
+      console.error(`❌ Error translating "${key}":`, error);
       return key;
     }
   }, [translations, language]);
