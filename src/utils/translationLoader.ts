@@ -16,6 +16,17 @@ const isCacheValid = (entry: CacheEntry): boolean => {
   return Date.now() - entry.timestamp < CACHE_DURATION;
 };
 
+// Funcție pentru testarea conectivității la fișierele JSON
+const testJsonConnectivity = async (lang: Language): Promise<boolean> => {
+  try {
+    const response = await fetch(`/locales/${lang}.json`, { method: 'HEAD' });
+    return response.ok;
+  } catch (error) {
+    console.warn(`🔗 Connectivity test failed for ${lang}:`, error);
+    return false;
+  }
+};
+
 export const loadTranslations = async (lang: Language): Promise<Translations> => {
   console.log(`📥 Loading translations for: ${lang}`);
   
@@ -26,43 +37,13 @@ export const loadTranslations = async (lang: Language): Promise<Translations> =>
     return cached.data;
   }
 
-  try {
-    const response = await fetch(`/locales/${lang}.json`);
-    if (!response.ok) {
-      console.warn(`⚠️ Failed to load translations for ${lang}, using fallback`);
-      const fallbackData = fallbackTranslations[lang];
-      
-      // Cache fallback-ul pentru a evita request-urile repetate
-      translationsCache.set(lang, {
-        data: fallbackData,
-        timestamp: Date.now()
-      });
-      
-      return fallbackData;
-    }
-    
-    const data = await response.json();
-    console.log(`✅ Successfully loaded translations for: ${lang}`);
-    
-    // Cache rezultatul
-    translationsCache.set(lang, {
-      data: data,
-      timestamp: Date.now()
-    });
-    
-    return data;
-  } catch (error) {
-    console.error(`❌ Error loading translations for ${lang}:`, error);
-    
-    // Încearcă să folosești cache-ul expirat dacă există
-    if (cached) {
-      console.warn(`⚠️ Using expired cache for ${lang}`);
-      return cached.data;
-    }
-    
-    // Fallback final
-    console.log(`🔄 Using fallback translations for ${lang}`);
+  // Test connectivity first
+  const canConnect = await testJsonConnectivity(lang);
+  if (!canConnect) {
+    console.warn(`⚠️ Cannot connect to translation file for ${lang}, using fallback`);
     const fallbackData = fallbackTranslations[lang];
+    
+    // Cache fallback-ul pentru a evita request-urile repetate
     translationsCache.set(lang, {
       data: fallbackData,
       timestamp: Date.now()
@@ -70,6 +51,82 @@ export const loadTranslations = async (lang: Language): Promise<Translations> =>
     
     return fallbackData;
   }
+
+  let retryCount = 0;
+  const maxRetries = 3;
+  
+  while (retryCount < maxRetries) {
+    try {
+      console.log(`🔄 Attempting to load ${lang}.json (attempt ${retryCount + 1}/${maxRetries})`);
+      
+      const response = await fetch(`/locales/${lang}.json`, {
+        cache: 'no-cache', // Force fresh load to avoid stale cache
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache'
+        }
+      });
+      
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      
+      // Validate the loaded data
+      if (!data || typeof data !== 'object') {
+        throw new Error('Invalid JSON structure');
+      }
+      
+      // Check for essential translation keys
+      const essentialKeys = ['nav', 'common', 'home'];
+      const hasEssentialKeys = essentialKeys.some(key => data[key] && typeof data[key] === 'object');
+      
+      if (!hasEssentialKeys) {
+        console.warn(`⚠️ Translation file for ${lang} missing essential keys:`, Object.keys(data));
+        // Don't throw error, but log warning and continue
+      }
+      
+      console.log(`✅ Successfully loaded translations for: ${lang}`);
+      console.log(`🔍 Available keys in ${lang}:`, Object.keys(data));
+      
+      // Cache rezultatul
+      translationsCache.set(lang, {
+        data: data,
+        timestamp: Date.now()
+      });
+      
+      return data;
+      
+    } catch (error) {
+      retryCount++;
+      console.error(`❌ Error loading translations for ${lang} (attempt ${retryCount}):`, error);
+      
+      if (retryCount < maxRetries) {
+        console.log(`⏳ Retrying in ${retryCount * 1000}ms...`);
+        await new Promise(resolve => setTimeout(resolve, retryCount * 1000));
+      }
+    }
+  }
+  
+  // All retries failed, use fallback
+  console.error(`❌ All ${maxRetries} attempts failed for ${lang}, using fallback`);
+  
+  // Încearcă să folosești cache-ul expirat dacă există
+  if (cached) {
+    console.warn(`⚠️ Using expired cache for ${lang}`);
+    return cached.data;
+  }
+  
+  // Fallback final
+  console.log(`🔄 Using fallback translations for ${lang}`);
+  const fallbackData = fallbackTranslations[lang];
+  translationsCache.set(lang, {
+    data: fallbackData,
+    timestamp: Date.now()
+  });
+  
+  return fallbackData;
 };
 
 // Funcție pentru preîncărcarea traducerilor
