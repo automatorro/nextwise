@@ -21,73 +21,46 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [loading, setLoading] = useState(true);
   const isInitializing = useRef(true);
 
-  // Funcție pentru a reseta complet sistemul de traduceri
-  const resetTranslationSystem = useCallback(() => {
-    console.log('🔄 Resetting complete translation system...');
+  // Funcție pentru resetarea completă a sistemului
+  const resetSystem = useCallback(() => {
+    console.log('🔄 Resetting translation system...');
     clearTranslationsCache();
     clearTranslationResultCache();
-    
-    // Șterge și cache-ul din localStorage dacă există
-    try {
-      const keys = Object.keys(localStorage);
-      keys.forEach(key => {
-        if (key.includes('translation') || key.includes('cache')) {
-          localStorage.removeItem(key);
-        }
-      });
-    } catch (error) {
-      console.warn('Could not clear localStorage cache:', error);
-    }
   }, []);
 
-  // Funcție pentru validarea structurii de traduceri
-  const validateTranslationStructure = useCallback((trans: Translations, lang: Language): boolean => {
-    if (!trans || typeof trans !== 'object') {
-      console.error(`❌ Invalid translations structure for ${lang}:`, trans);
-      return false;
-    }
-
-    // Verifică cheile esențiale din fallback
-    const fallback = fallbackTranslations[lang];
-    const requiredKeys = Object.keys(fallback);
-    
-    const missingKeys = requiredKeys.filter(key => !trans[key] || typeof trans[key] !== 'object');
+  // Funcție pentru validarea traducerilor
+  const validateTranslations = useCallback((trans: Translations, lang: Language): boolean => {
+    const requiredKeys = ['common', 'nav', 'home', 'dashboard', 'tests', 'profile'];
+    const missingKeys = requiredKeys.filter(key => !trans[key]);
     
     if (missingKeys.length > 0) {
-      console.warn(`⚠️ Missing keys in ${lang} translations:`, missingKeys);
+      console.warn(`⚠️ Missing keys in ${lang}:`, missingKeys);
       return false;
     }
-
-    console.log(`✅ Translation structure valid for ${lang}`);
+    
+    console.log(`✅ Translation validation passed for ${lang}`);
     return true;
   }, []);
 
   // Funcție pentru încărcarea sigură a traducerilor
   const loadSafeTranslations = useCallback(async (lang: Language): Promise<Translations> => {
-    console.log(`📥 Loading safe translations for: ${lang}`);
+    console.log(`🔄 Loading safe translations for: ${lang}`);
     
     try {
-      // Încarcă traducerile din fișier
       const loadedTranslations = await loadTranslations(lang);
-      console.log(`📊 Loaded translations for ${lang}:`, {
-        keys: Object.keys(loadedTranslations),
-        hasTestDescriptions: !!loadedTranslations.testDescriptions,
-        hasTests: !!loadedTranslations.tests,
-        hasDashboard: !!loadedTranslations.dashboard
-      });
       
-      // Validează structura
-      if (validateTranslationStructure(loadedTranslations, lang)) {
+      if (validateTranslations(loadedTranslations, lang)) {
+        console.log(`✅ Loaded and validated translations for ${lang}`);
         return loadedTranslations;
       } else {
-        console.warn(`⚠️ Using fallback for ${lang} due to invalid structure`);
+        console.warn(`⚠️ Validation failed for ${lang}, using fallback`);
         return fallbackTranslations[lang];
       }
     } catch (error) {
       console.error(`❌ Error loading translations for ${lang}:`, error);
       return fallbackTranslations[lang];
     }
-  }, [validateTranslationStructure]);
+  }, [validateTranslations]);
 
   // Inițializare
   useEffect(() => {
@@ -96,37 +69,30 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       
       console.log('🚀 Initializing translation system...');
       
-      // Reset complet
-      resetTranslationSystem();
+      // Reset sistem
+      resetSystem();
       
       try {
         // Obține limba salvată
         const savedLanguage = getStoredLanguage() as Language;
         const initialLanguage = (savedLanguage === 'ro' || savedLanguage === 'en') ? savedLanguage : 'ro';
         
-        console.log(`🔄 Setting initial language: ${initialLanguage}`);
+        console.log(`🔄 Initial language: ${initialLanguage}`);
         
-        // Setează limba imediat
+        // Setează limba și fallback-ul imediat
         setLanguage(initialLanguage);
-        
-        // Folosește fallback imediat pentru UX rapid
         setTranslations(fallbackTranslations[initialLanguage]);
-        console.log(`⚡ Set fallback translations for ${initialLanguage}`);
         
-        // Încarcă traducerile reale în background
-        const realTranslations = await loadSafeTranslations(initialLanguage);
+        // Încarcă traducerile complete
+        const completeTranslations = await loadSafeTranslations(initialLanguage);
+        setTranslations(completeTranslations);
         
-        // Actualizează cu traducerile reale
-        setTranslations(realTranslations);
-        console.log(`✅ Updated with real translations for ${initialLanguage}`);
-        console.log('📋 Final translation keys:', Object.keys(realTranslations));
+        console.log(`✅ Translation system initialized for ${initialLanguage}`);
         
       } catch (error) {
         console.error('❌ Critical error in initialization:', error);
-        // Fallback de urgență
-        const emergencyLang = 'ro';
-        setLanguage(emergencyLang);
-        setTranslations(fallbackTranslations[emergencyLang]);
+        setLanguage('ro');
+        setTranslations(fallbackTranslations.ro);
       } finally {
         setLoading(false);
         isInitializing.current = false;
@@ -134,7 +100,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     };
 
     initializeTranslations();
-  }, [resetTranslationSystem, loadSafeTranslations]);
+  }, [resetSystem, loadSafeTranslations]);
 
   // Schimbarea limbii
   const changeLanguage = useCallback(async (newLanguage: Language) => {
@@ -146,44 +112,37 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     console.log(`🔄 Changing language from ${language} to ${newLanguage}`);
     
     try {
-      // Folosește fallback imediat pentru UX
-      setTranslations(fallbackTranslations[newLanguage]);
+      // Schimbare imediată cu fallback
       setLanguage(newLanguage);
+      setTranslations(fallbackTranslations[newLanguage]);
       setStoredLanguage(newLanguage);
       
-      // Clear cache pentru a forța încărcarea fresh
+      // Clear cache pentru traduceri fresh
       clearTranslationResultCache();
       
-      // Încarcă traducerile reale
-      const realTranslations = await loadSafeTranslations(newLanguage);
+      // Încarcă traducerile complete
+      const completeTranslations = await loadSafeTranslations(newLanguage);
+      setTranslations(completeTranslations);
       
-      // Actualizează cu traducerile reale
-      setTranslations(realTranslations);
-      
-      console.log(`✅ Language changed to ${newLanguage} successfully`);
-      console.log('📋 Available translation keys:', Object.keys(realTranslations));
+      console.log(`✅ Language changed to ${newLanguage}`);
       
     } catch (error) {
       console.error(`❌ Error changing language to ${newLanguage}:`, error);
-      // Fallback de urgență
       setTranslations(fallbackTranslations[newLanguage]);
     }
   }, [language, loadSafeTranslations]);
 
-  // Funcția de traducere
+  // Funcția de traducere optimizată
   const t = useCallback((key: string) => {
     try {
       const result = translateKey(translations, key);
       
-      // Dacă nu găsește traducerea, încearcă din fallback
+      // Dacă nu găsește cheia, încearcă din fallback
       if (result === key) {
-        console.warn(`🔍 Key "${key}" not found, trying fallback...`);
         const fallbackResult = translateKey(fallbackTranslations[language], key);
         if (fallbackResult !== key) {
-          console.log(`✅ Found in fallback: "${key}" = "${fallbackResult}"`);
           return fallbackResult;
         }
-        console.warn(`❌ Key "${key}" not found in fallback either`);
       }
       
       return result;
