@@ -2,9 +2,11 @@
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useCareerPlans } from '@/hooks/useCareerPlans';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useIsMobile } from '@/hooks/use-mobile';
 import HomeNavigation from '@/components/home/HomeNavigation';
 import Footer from '@/components/home/Footer';
 import CareerDashboardReal from '@/components/career/CareerDashboardReal';
@@ -21,6 +23,7 @@ const CareerPaths = () => {
   const { subscription } = useSubscription();
   const { careerPlans } = useCareerPlans();
   const { t } = useLanguage();
+  const isMobile = useIsMobile();
 
   // If we have a planId in the route, show the details page
   if (planId) {
@@ -65,19 +68,53 @@ const CareerPaths = () => {
           </div>
 
           <Tabs defaultValue="my-plans" className="space-y-6">
-            <TabsList className={`grid w-full ${features.hasAI ? 'grid-cols-7' : 'grid-cols-3'}`}>
-              <TabsTrigger value="my-plans">{t('careerPaths.tabs.dashboard')}</TabsTrigger>
-              <TabsTrigger value="create-plan">{t('careerPaths.tabs.create')}</TabsTrigger>
-              <TabsTrigger value="ai-mentoring">{t('careerPaths.tabs.mentoring')}</TabsTrigger>
-              {features.hasAI && (
-                <>
-                  <TabsTrigger value="ai-programs">{t('premiumFeatures.aiPrograms.title')}</TabsTrigger>
-                  <TabsTrigger value="progress-sheets">{t('premiumFeatures.progressSheets.title')}</TabsTrigger>
-                  <TabsTrigger value="ai-simulations">{t('premiumFeatures.simulations.title')}</TabsTrigger>
-                  <TabsTrigger value="progress-analytics">{t('premiumFeatures.progressTracking.title')}</TabsTrigger>
-                </>
-              )}
-            </TabsList>
+            {isMobile ? (
+              // Mobile layout: horizontal scroll
+              <div className="overflow-x-auto">
+                <TabsList className="flex w-max min-w-full space-x-1 p-1">
+                  <TabsTrigger value="my-plans" className="whitespace-nowrap">
+                    {t('careerPaths.tabs.dashboard')}
+                  </TabsTrigger>
+                  <TabsTrigger value="create-plan" className="whitespace-nowrap">
+                    {t('careerPaths.tabs.create')}
+                  </TabsTrigger>
+                  <TabsTrigger value="ai-mentoring" className="whitespace-nowrap">
+                    {t('careerPaths.tabs.mentoring')}
+                  </TabsTrigger>
+                  {features.hasAI && (
+                    <>
+                      <TabsTrigger value="ai-programs" className="whitespace-nowrap">
+                        {t('premiumFeatures.aiPrograms.title')}
+                      </TabsTrigger>
+                      <TabsTrigger value="progress-sheets" className="whitespace-nowrap">
+                        {t('premiumFeatures.progressSheets.title')}
+                      </TabsTrigger>
+                      <TabsTrigger value="ai-simulations" className="whitespace-nowrap">
+                        {t('premiumFeatures.simulations.title')}
+                      </TabsTrigger>
+                      <TabsTrigger value="progress-analytics" className="whitespace-nowrap">
+                        {t('premiumFeatures.progressTracking.title')}
+                      </TabsTrigger>
+                    </>
+                  )}
+                </TabsList>
+              </div>
+            ) : (
+              // Desktop layout: grid
+              <TabsList className={`grid w-full ${features.hasAI ? 'grid-cols-7' : 'grid-cols-3'}`}>
+                <TabsTrigger value="my-plans">{t('careerPaths.tabs.dashboard')}</TabsTrigger>
+                <TabsTrigger value="create-plan">{t('careerPaths.tabs.create')}</TabsTrigger>
+                <TabsTrigger value="ai-mentoring">{t('careerPaths.tabs.mentoring')}</TabsTrigger>
+                {features.hasAI && (
+                  <>
+                    <TabsTrigger value="ai-programs">{t('premiumFeatures.aiPrograms.title')}</TabsTrigger>
+                    <TabsTrigger value="progress-sheets">{t('premiumFeatures.progressSheets.title')}</TabsTrigger>
+                    <TabsTrigger value="ai-simulations">{t('premiumFeatures.simulations.title')}</TabsTrigger>
+                    <TabsTrigger value="progress-analytics">{t('premiumFeatures.progressTracking.title')}</TabsTrigger>
+                  </>
+                )}
+              </TabsList>
+            )}
 
             <TabsContent value="my-plans" className="space-y-6">
               <CareerDashboardReal />

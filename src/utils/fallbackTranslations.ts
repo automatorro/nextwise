@@ -203,6 +203,26 @@ export const fallbackTranslations: Record<'ro' | 'en', Translations> = {
       unlimitedAccess: "Administrator (Acces Nelimitat)",
       active: "Activ",
       upgradeSubscription: "Upgrade abonament"
+    },
+    premiumFeatures: {
+      aiPrograms: {
+        title: "Programe AI de 14 Zile",
+        subtitle: "Mini-intervenții ghidate pentru dezvoltare rapidă"
+      },
+      progressSheets: {
+        title: "Fișe de Progres AI",
+        subtitle: "Evaluări vizuale și feedback personalizat"
+      },
+      simulations: {
+        title: "Simulări AI",
+        subtitle: "Exersează scenarii profesionale cu AI"
+      },
+      progressTracking: {
+        title: "Analiza Progresului",
+        subtitle: "Urmărește-ți evoluția în timp"
+      },
+      accessRestricted: "Această funcționalitate este disponibilă doar pentru utilizatorii Premium.",
+      upgradeNow: "Upgrade la Premium"
     }
   },
   en: {
@@ -406,6 +426,26 @@ export const fallbackTranslations: Record<'ro' | 'en', Translations> = {
       unlimitedAccess: "Administrator (Unlimited Access)",
       active: "Active",
       upgradeSubscription: "Upgrade subscription"
+    },
+    premiumFeatures: {
+      aiPrograms: {
+        title: "14-Day AI Programs",
+        subtitle: "Guided mini-interventions for rapid development"
+      },
+      progressSheets: {
+        title: "AI Progress Sheets",
+        subtitle: "Visual assessments and personalized feedback"
+      },
+      simulations: {
+        title: "AI Simulations",
+        subtitle: "Practice professional scenarios with AI"
+      },
+      progressTracking: {
+        title: "Progress Analytics",
+        subtitle: "Track your evolution over time"
+      },
+      accessRestricted: "This feature is only available for Premium users.",
+      upgradeNow: "Upgrade to Premium"
     }
   }
 };
