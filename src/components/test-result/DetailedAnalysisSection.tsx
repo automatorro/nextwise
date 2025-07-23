@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Loader2, Brain } from 'lucide-react';
+import { Loader2, Brain, Copy, Check, Info } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from '@/hooks/useLanguage';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 
 interface DetailedAnalysisSectionProps {
   dimensions: {
@@ -22,8 +23,37 @@ interface DetailedAnalysisSectionProps {
 const DetailedAnalysisSection = ({ dimensions, resultId, testType, score }: DetailedAnalysisSectionProps) => {
   const [detailedAnalysis, setDetailedAnalysis] = useState<string>('');
   const [isGeneratingAnalysis, setIsGeneratingAnalysis] = useState(false);
+  const [isAnalysisGenerated, setIsAnalysisGenerated] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const { toast } = useToast();
   const { t } = useLanguage();
+
+  // Check if analysis already exists on component mount
+  useEffect(() => {
+    const checkExistingAnalysis = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('test_results')
+          .select('ai_analysis')
+          .eq('id', resultId)
+          .single();
+
+        if (error) {
+          console.error('Error checking existing analysis:', error);
+          return;
+        }
+
+        if (data?.ai_analysis) {
+          setDetailedAnalysis(data.ai_analysis);
+          setIsAnalysisGenerated(true);
+        }
+      } catch (error) {
+        console.error('Error checking existing analysis:', error);
+      }
+    };
+
+    checkExistingAnalysis();
+  }, [resultId]);
 
   const generatePromptForTestType = (testType: string, score: any, dimensions: any) => {
     const baseInfo = `
@@ -166,12 +196,21 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
   };
 
   const generateDetailedAnalysis = async () => {
+    if (isAnalysisGenerated) {
+      toast({
+        title: t('common.info'),
+        description: 'Analiza detaliată a fost deja generată pentru acest rezultat.',
+        variant: "default"
+      });
+      return;
+    }
+
     setIsGeneratingAnalysis(true);
     
     try {
       const prompt = generatePromptForTestType(testType, score, dimensions);
 
-      const { data, error } = await supabase.functions.invoke('analyze-big-five-result', {
+      const { data, error } = await supabase.functions.invoke('analyze-test-result', {
         body: { 
           prompt,
           testResultId: resultId 
@@ -185,9 +224,10 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
 
       if (data && data.analysis) {
         setDetailedAnalysis(data.analysis);
+        setIsAnalysisGenerated(true);
         toast({
           title: t('common.success'),
-          description: 'Analiza detaliată a fost generată cu succes!'
+          description: 'Analiza detaliată a fost generată și salvată cu succes!'
         });
       } else {
         throw new Error('No analysis returned from function');
@@ -201,6 +241,29 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
       });
     } finally {
       setIsGeneratingAnalysis(false);
+    }
+  };
+
+  const copyAnalysisToClipboard = async () => {
+    if (!detailedAnalysis) return;
+
+    try {
+      await navigator.clipboard.writeText(detailedAnalysis);
+      setIsCopied(true);
+      toast({
+        title: t('common.success'),
+        description: 'Analiza a fost copiată în clipboard!'
+      });
+      
+      // Reset copied state after 2 seconds
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (error) {
+      console.error('Error copying to clipboard:', error);
+      toast({
+        title: t('common.error'),
+        description: 'Nu s-a putut copia analiza în clipboard.',
+        variant: "destructive"
+      });
     }
   };
 
@@ -229,37 +292,94 @@ Formatează răspunsul folosind Markdown cu titluri clare (##) și liste pentru 
 
   return (
     <>
-      {/* Generate Analysis Button */}
+      {/* Information Alert */}
+      {!isAnalysisGenerated && (
+        <Alert className="mb-6 border-amber-200 bg-amber-50">
+          <Info className="h-4 w-4 text-amber-600" />
+          <AlertDescription className="text-amber-800">
+            <strong>Informație importantă:</strong> Analiza detaliată AI se poate genera o singură dată pentru fiecare rezultat de test. 
+            După generare, vei putea copia conținutul și îl vei găsi salvat permanent în istoricul rezultatelor tale.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {/* Generate Analysis Button or Copy Button */}
       <div className="text-center">
-        <Button
-          onClick={generateDetailedAnalysis}
-          disabled={isGeneratingAnalysis}
-          size="lg"
-          className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-lg shadow-lg transform transition hover:scale-105"
-        >
-          {isGeneratingAnalysis ? (
-            <>
-              <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-              Se generează analiza...
-            </>
-          ) : (
-            <>
-              <Brain className="w-5 h-5 mr-2" />
-              Generează Analiză Detaliată
-            </>
-          )}
-        </Button>
+        {!isAnalysisGenerated ? (
+          <Button
+            onClick={generateDetailedAnalysis}
+            disabled={isGeneratingAnalysis}
+            size="lg"
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 px-8 rounded-lg shadow-lg transform transition hover:scale-105"
+          >
+            {isGeneratingAnalysis ? (
+              <>
+                <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                Se generează analiza...
+              </>
+            ) : (
+              <>
+                <Brain className="w-5 h-5 mr-2" />
+                Generează Analiză Detaliată
+              </>
+            )}
+          </Button>
+        ) : (
+          <Button
+            onClick={copyAnalysisToClipboard}
+            variant="outline"
+            size="lg"
+            className="font-semibold py-4 px-8 rounded-lg shadow-lg border-2 border-blue-500 text-blue-600 hover:bg-blue-50"
+          >
+            {isCopied ? (
+              <>
+                <Check className="w-5 h-5 mr-2 text-green-600" />
+                Copiat!
+              </>
+            ) : (
+              <>
+                <Copy className="w-5 h-5 mr-2" />
+                Copiază Analiza
+              </>
+            )}
+          </Button>
+        )}
+        
         <p className="text-sm text-gray-500 mt-2">
-          Primește o analiză personalizată extrem de detaliată și recomandări specifice pentru rezultatele tale
+          {!isAnalysisGenerated ? (
+            'Primește o analiză personalizată extrem de detaliată și recomandări specifice pentru rezultatele tale'
+          ) : (
+            'Analiza a fost generată și salvată permanent în istoricul tău. Poți copia conținutul oricând.'
+          )}
         </p>
       </div>
 
       {/* Detailed Analysis Display */}
       {detailedAnalysis && (
         <div className="mt-8 p-6 bg-gradient-to-br from-blue-50 to-purple-50 rounded-lg border border-blue-200">
-          <div className="flex items-center mb-4">
-            <Brain className="w-5 h-5 mr-2 text-blue-600" />
-            <h3 className="text-lg font-semibold text-gray-800">Analiza AI Personalizată</h3>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center">
+              <Brain className="w-5 h-5 mr-2 text-blue-600" />
+              <h3 className="text-lg font-semibold text-gray-800">Analiza AI Personalizată</h3>
+            </div>
+            <Button
+              onClick={copyAnalysisToClipboard}
+              variant="ghost"
+              size="sm"
+              className="text-blue-600 hover:text-blue-800"
+            >
+              {isCopied ? (
+                <>
+                  <Check className="w-4 h-4 mr-1" />
+                  Copiat
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4 mr-1" />
+                  Copiază
+                </>
+              )}
+            </Button>
           </div>
           <div className="prose prose-gray max-w-none">
             {formatMarkdownToJSX(detailedAnalysis)}
