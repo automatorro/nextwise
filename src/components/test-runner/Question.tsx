@@ -16,6 +16,17 @@ interface QuestionProps {
 }
 
 const Question: React.FC<QuestionProps> = ({ question, selectedAnswer, onAnswerChange }) => {
+  // Helper function to ensure we always get a string from options
+  const getOptionText = (option: any, index: number): string => {
+    if (typeof option === 'string') {
+      return option;
+    }
+    if (typeof option === 'object' && option !== null) {
+      return option.label || option.text || option.value || `Option ${index + 1}`;
+    }
+    return String(option || `Option ${index + 1}`);
+  };
+
   return (
     <Card className="mb-6">
       <CardHeader>
@@ -32,7 +43,7 @@ const Question: React.FC<QuestionProps> = ({ question, selectedAnswer, onAnswerC
             <div key={index} className="flex items-center space-x-2">
               <RadioGroupItem value={index.toString()} id={`${question.id}-${index}`} />
               <Label htmlFor={`${question.id}-${index}`} className="cursor-pointer">
-                {option}
+                {getOptionText(option, index)}
               </Label>
             </div>
           ))}
