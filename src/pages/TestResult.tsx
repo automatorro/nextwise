@@ -11,7 +11,7 @@ import OverallScoreCard from '@/components/test-result/OverallScoreCard';
 import DimensionsAnalysis from '@/components/test-result/DimensionsAnalysis';
 import DetailedAnalysisSection from '@/components/test-result/DetailedAnalysisSection';
 import DetailedInterpretations from '@/components/test-result/DetailedInterpretations';
-import ScoringExplanation from '@/components/test-result/ScoringExplanation';
+import { ScoringExplanation } from '@/components/test-result/ScoringExplanation';
 import DimensionExplanations from '@/components/test-result/DimensionExplanations';
 import CorrectAnswersSection from '@/components/test-result/CorrectAnswersSection';
 import TestResultHeader from '@/components/test-result/TestResultHeader';

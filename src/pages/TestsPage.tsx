@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -16,10 +17,9 @@ interface TestType {
   id: string;
   name: string;
   description: string;
-  estimated_time_minutes: number;
-  min_participants: number;
-  max_participants: number;
-  is_premium: boolean;
+  estimated_duration: number;
+  questions_count: number;
+  subscription_required: 'basic' | 'professional' | 'premium';
 }
 
 const TestsPage = () => {
@@ -62,6 +62,10 @@ const TestsPage = () => {
     return <div>Eroare la încărcarea testelor.</div>;
   }
 
+  const isPremiumTest = (subscriptionRequired: string) => {
+    return subscriptionRequired === 'professional' || subscriptionRequired === 'premium';
+  };
+
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-2xl font-bold mb-4">Teste disponibile</h1>
@@ -75,13 +79,13 @@ const TestsPage = () => {
             <CardContent className="space-y-2">
               <div className="flex items-center text-sm text-muted-foreground">
                 <Clock className="mr-2 h-4 w-4" />
-                <span>{test.estimated_time_minutes} minute</span>
+                <span>{test.estimated_duration} minute</span>
               </div>
               <div className="flex items-center text-sm text-muted-foreground">
                 <Users className="mr-2 h-4 w-4" />
-                <span>{test.min_participants}-{test.max_participants} participanți</span>
+                <span>{test.questions_count} întrebări</span>
               </div>
-              {test.is_premium && (
+              {isPremiumTest(test.subscription_required) && (
                 <div className="flex items-center text-sm text-yellow-500">
                   <Star className="mr-2 h-4 w-4" />
                   <span>Premium</span>
@@ -89,9 +93,9 @@ const TestsPage = () => {
               )}
               <div className="flex justify-between items-center">
                 <TestExplanations testName={test.name} />
-                <Button asChild variant="secondary" disabled={test.is_premium && !canTakeTest()}>
+                <Button asChild variant="secondary" disabled={isPremiumTest(test.subscription_required) && !canTakeTest()}>
                   <Link to={`/test/${test.id}`}>
-                    {test.is_premium ? (canTakeTest() ? 'Începe testul' : `Necesită Premium (${getRemainingTests()} teste rămase)`) : 'Începe testul'}
+                    {isPremiumTest(test.subscription_required) ? (canTakeTest() ? 'Începe testul' : `Necesită Premium (${getRemainingTests()} teste rămase)`) : 'Începe testul'}
                   </Link>
                 </Button>
               </div>
