@@ -35,17 +35,27 @@ export const useSJTCalculation = (answers?: Record<string, number>, questions?: 
       }
     });
 
+    // Găsirea scorului maxim posibil pentru normalizare
+    const maxPossibleScore = Math.max(...Object.values(profileScores));
+    const minScore = Math.min(...Object.values(profileScores));
+    
     // Normalizarea scorurilor la 0-100
     const normalizedScores: Record<string, number> = {};
-    const maxPossibleScore = questions.length * 2; // Fiecare întrebare poate avea max +2 puncte
     
     Object.entries(profileScores).forEach(([profile, score]) => {
-      // Convertim de la range [-10, +20] la [0, 100]
-      const normalizedScore = Math.max(0, Math.min(100, Math.round(((score + 10) / 30) * 100)));
-      normalizedScores[profile] = normalizedScore;
+      if (maxPossibleScore === minScore) {
+        // Dacă toate scorurile sunt egale
+        normalizedScores[profile] = 50;
+      } else {
+        // Normalizare la 0-100
+        const normalizedScore = Math.round(((score - minScore) / (maxPossibleScore - minScore)) * 100);
+        normalizedScores[profile] = Math.max(0, Math.min(100, normalizedScore));
+      }
     });
 
     console.log('SJT calculated scores:', normalizedScores);
+    console.log('Raw profile scores:', profileScores);
+    
     return normalizedScores;
   }, [answers, questions]);
 };

@@ -1,58 +1,63 @@
 
 import React from 'react';
-import BelbinExplanation from './explanations/BelbinExplanation';
-import BigFiveExplanation from './explanations/BigFiveExplanation';
-import CattellExplanation from './explanations/CattellExplanation';
-import CognitiveExplanation from './explanations/CognitiveExplanation';
-import DISCExplanation from './explanations/DISCExplanation';
-import EmotionalIntelligenceExplanation from './explanations/EmotionalIntelligenceExplanation';
-import EnneagramExplanation from './explanations/EnneagramExplanation';
-import GADExplanation from './explanations/GADExplanation';
-import HexacoExplanation from './explanations/HexacoExplanation';
+import { BigFiveExplanation } from './explanations/BigFiveExplanation';
+import { BelbinExplanation } from './explanations/BelbinExplanation';
+import { CattellExplanation } from './explanations/CattellExplanation';
+import { CognitiveExplanation } from './explanations/CognitiveExplanation';
+import { DISCExplanation } from './explanations/DISCExplanation';
+import { EmotionalIntelligenceExplanation } from './explanations/EmotionalIntelligenceExplanation';
+import { EnneagramExplanation } from './explanations/EnneagramExplanation';
+import { GADExplanation } from './explanations/GADExplanation';
+import { HexacoExplanation } from './explanations/HexacoExplanation';
+import { SJTExplanation } from './explanations/SJTExplanation';
 
 interface TestExplanationsProps {
   testName: string;
-  score?: any;
+  score: any;
   language?: string;
 }
 
 export const TestExplanations: React.FC<TestExplanationsProps> = ({ testName, score, language = 'ro' }) => {
-  const normalizedTestName = testName.toLowerCase();
+  const testKey = testName.toLowerCase();
   
-  if (normalizedTestName.includes('belbin')) {
-    return <BelbinExplanation score={score} language={language} />;
-  }
-  
-  if (normalizedTestName.includes('big five') || normalizedTestName.includes('big-five')) {
+  if (testKey.includes('big five') || testKey.includes('big-five')) {
     return <BigFiveExplanation score={score} language={language} />;
   }
   
-  if (normalizedTestName.includes('cattell') || normalizedTestName.includes('16pf')) {
+  if (testKey.includes('belbin')) {
+    return <BelbinExplanation score={score} language={language} />;
+  }
+  
+  if (testKey.includes('cattell') || testKey.includes('16pf')) {
     return <CattellExplanation score={score} language={language} />;
   }
   
-  if (normalizedTestName.includes('cognitive') || normalizedTestName.includes('cognitiv')) {
+  if (testKey.includes('cognitive') || testKey.includes('cognitiv')) {
     return <CognitiveExplanation score={score} language={language} />;
   }
   
-  if (normalizedTestName.includes('disc')) {
+  if (testKey.includes('disc')) {
     return <DISCExplanation score={score} language={language} />;
   }
   
-  if (normalizedTestName.includes('emotional') || normalizedTestName.includes('emotiona')) {
+  if (testKey.includes('emotional') || testKey.includes('emotiona')) {
     return <EmotionalIntelligenceExplanation score={score} language={language} />;
   }
   
-  if (normalizedTestName.includes('enneagram')) {
+  if (testKey.includes('enneagram')) {
     return <EnneagramExplanation score={score} language={language} />;
   }
   
-  if (normalizedTestName.includes('gad') || normalizedTestName.includes('anxietate')) {
+  if (testKey.includes('gad') || testKey.includes('anxietate')) {
     return <GADExplanation score={score} language={language} />;
   }
   
-  if (normalizedTestName.includes('hexaco')) {
+  if (testKey.includes('hexaco')) {
     return <HexacoExplanation score={score} language={language} />;
+  }
+  
+  if (testKey.includes('sjt') || testKey.includes('situational judgment')) {
+    return <SJTExplanation score={score} language={language} />;
   }
   
   return null;

@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import BigFiveRadarChart from '../charts/BigFiveRadarChart';
 import BelbinRadarChart from '../charts/BelbinRadarChart';
-import HexacoRadarChart from '../charts/HexacoRadarChart';
+import { HexacoRadarChart } from '../charts/HexacoRadarChart';
 import { SJTRadarChart } from '../charts/SJTRadarChart';
 
 interface TestResultChartsProps {
@@ -19,11 +19,11 @@ export const TestResultCharts: React.FC<TestResultChartsProps> = ({ testName, sc
   const testKey = testName.toLowerCase();
   
   if (testKey.includes('big five')) {
-    return <BigFiveRadarChart data={score.dimensions || {}} />;
+    return <BigFiveRadarChart dimensions={score.dimensions || {}} />;
   }
   
   if (testKey.includes('belbin')) {
-    return <BelbinRadarChart data={score.role_scores || score.dimensions || {}} />;
+    return <BelbinRadarChart roleScores={score.role_scores || score.dimensions || {}} />;
   }
   
   if (testKey.includes('hexaco')) {

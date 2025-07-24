@@ -70,6 +70,7 @@ export const useTestSubmission = () => {
         score = calculateGADScore(answers);
       } else if (testName.includes('sjt') || testName.includes('situational judgment')) {
         console.log('Calculating SJT score for answers:', answers);
+        console.log('Using questions for SJT:', questions);
         score = calculateSJTScore(answers, questions);
         console.log('SJT score calculated:', score);
       } else {
