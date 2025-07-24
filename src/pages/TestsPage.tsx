@@ -45,9 +45,21 @@ const TestsPage = () => {
         console.error('Error fetching tests:', error);
         throw error;
       }
+      
+      console.log('Fetched tests from database:', data);
       return data as TestType[];
     }
   });
+
+  // Debug logging pentru a vedea ce teste sunt disponibile
+  useEffect(() => {
+    if (tests) {
+      console.log('All tests:', tests);
+      console.log('SJT test found:', tests.find(t => t.name.toLowerCase().includes('sjt')));
+      console.log('Tests containing "orientare":', tests.filter(t => t.name.toLowerCase().includes('orientare')));
+      console.log('Tests containing "career":', tests.filter(t => t.name.toLowerCase().includes('career')));
+    }
+  }, [tests]);
 
   useEffect(() => {
     if (!canTakeTest() && subscription && !subscription.is_admin) {
@@ -101,7 +113,7 @@ const TestsPage = () => {
     return subscriptionRequired === 'professional' || subscriptionRequired === 'premium';
   };
 
-  // Categorize tests with proper translation
+  // Categorize tests with proper translation - updated to include more SJT variations
   const personalityTests = tests?.filter(test => 
     test.name.toLowerCase().includes('big five') || 
     test.name.toLowerCase().includes('cattell') || 
@@ -114,7 +126,9 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('belbin') ||
     test.name.toLowerCase().includes('aptitudini') ||
     test.name.toLowerCase().includes('sjt') ||
-    test.name.toLowerCase().includes('orientare în carieră')
+    test.name.toLowerCase().includes('situational') ||
+    test.name.toLowerCase().includes('orientare') ||
+    test.name.toLowerCase().includes('career')
   ) || [];
 
   const emotionalTests = tests?.filter(test => 
@@ -134,6 +148,10 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('cognitive') || 
     test.name.toLowerCase().includes('cognitiv')
   ) || [];
+
+  // Debug logging pentru categorii
+  console.log('Professional tests:', professionalTests);
+  console.log('Personality tests:', personalityTests);
 
   const TestCard = ({ test }: { test: TestType }) => {
     const translation = getTestTranslation(test.name, language);
@@ -196,6 +214,7 @@ const TestsPage = () => {
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
         <p className="text-gray-600">{description}</p>
+        <p className="text-sm text-gray-500 mt-1">({tests.length} teste disponibile)</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tests.map((test) => (
@@ -314,6 +333,16 @@ const TestsPage = () => {
               tests={clinicalTests}
               description={categoryDescriptions.clinical[language]}
             />
+          )}
+
+          {/* Debug section - doar pentru development */}
+          {process.env.NODE_ENV === 'development' && (
+            <div className="mt-8 p-4 bg-gray-100 rounded-lg">
+              <h3 className="font-bold mb-2">Debug Info:</h3>
+              <p>Total tests: {tests?.length || 0}</p>
+              <p>Professional tests: {professionalTests.length}</p>
+              <p>All test names: {tests?.map(t => t.name).join(', ')}</p>
+            </div>
           )}
         </div>
       </div>
