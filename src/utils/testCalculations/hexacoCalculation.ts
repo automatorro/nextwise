@@ -68,7 +68,7 @@ const calculateDimensionScore = (answers: number[], startIndex: number, length: 
   return Math.round((sum / length) * 20); // Normalizare la 0-100
 };
 
-const generateOverallInterpretation = (overallScore: number, dimensions: any): string => {
+const generateOverallInterpretation = (overallScore: number, dimensions: HexacoScore['dimensions']): string => {
   const dominant = getDominantDimensions(dimensions);
   
   if (overallScore >= 80) {
@@ -82,7 +82,7 @@ const generateOverallInterpretation = (overallScore: number, dimensions: any): s
   }
 };
 
-const getDominantDimensions = (dimensions: any): string[] => {
+const getDominantDimensions = (dimensions: HexacoScore['dimensions']): string[] => {
   const dimensionNames = {
     honesty_humility: 'Onestitate-Umilința',
     emotionality: 'Emotivitate',
@@ -93,12 +93,12 @@ const getDominantDimensions = (dimensions: any): string[] => {
   };
   
   return Object.entries(dimensions)
-    .sort(([,a], [,b]) => b - a)
+    .sort(([,a], [,b]) => (b as number) - (a as number))
     .slice(0, 2)
     .map(([key]) => dimensionNames[key as keyof typeof dimensionNames]);
 };
 
-const generateDetailedInterpretations = (dimensions: any) => {
+const generateDetailedInterpretations = (dimensions: HexacoScore['dimensions']) => {
   return {
     honesty_humility: interpretHonestyHumility(dimensions.honesty_humility),
     emotionality: interpretEmotionality(dimensions.emotionality),
@@ -151,7 +151,7 @@ const interpretOpenness = (score: number): string => {
   return "Tendință conservatoare. Preferi experiențele familiare și abordările tradiționale, fiind mai puțin interesat de abstracte.";
 };
 
-const generateRecommendations = (dimensions: any): string[] => {
+const generateRecommendations = (dimensions: HexacoScore['dimensions']): string[] => {
   const recommendations: string[] = [];
   
   // Recomandări bazate pe punctele slabe
@@ -181,7 +181,7 @@ const generateRecommendations = (dimensions: any): string[] => {
   
   // Recomandări pentru punctele forte
   const strongDimensions = Object.entries(dimensions)
-    .filter(([, score]) => score >= 80)
+    .filter(([, score]) => (score as number) >= 80)
     .map(([key]) => key);
   
   if (strongDimensions.length > 0) {
