@@ -1,108 +1,75 @@
 
-// Mapping functions to convert database content to translation keys
-
-export const getCategoryTranslationKey = (categoryName: string): string => {
-  const categoryMap: { [key: string]: string } = {
-    'Sănătate Mentală': 'testCategories.mentalHealth',
-    'Mental Health': 'testCategories.mentalHealth',
-    'Aptitudini Cognitive': 'testCategories.cognitiveAbilities',
-    'Cognitive Abilities': 'testCategories.cognitiveAbilities',
-    'Roluri în Echipă': 'testCategories.teamRoles',
-    'Team Roles': 'testCategories.teamRoles',
-    'Personalitate': 'testCategories.personality',
-    'Personality': 'testCategories.personality',
-    'Teste de Personalitate': 'testCategories.personality',
-    'Personality Tests': 'testCategories.personality',
-    'Leadership': 'testCategories.leadership',
-    'Inteligență Emoțională': 'testCategories.emotionalIntelligence',
-    'Emotional Intelligence': 'testCategories.emotionalIntelligence',
-    'Dezvoltare Personală': 'testCategories.emotionalIntelligence', // This maps to emotional intelligence category
-    'Personal Development': 'testCategories.emotionalIntelligence',
-    'Bunăstare': 'testCategories.wellness',
-    'Wellness': 'testCategories.wellness',
-    'Wellness Psihologic': 'testCategories.psychologicalWellness',
-    'Psychological Wellness': 'testCategories.psychologicalWellness',
-    'Cognitiv': 'testCategories.cognitive',
-    'Cognitive': 'testCategories.cognitive',
-    'Abilități Tehnice': 'testCategories.technicalSkills',
-    'Technical Skills': 'testCategories.technicalSkills',
-    'Digital': 'testCategories.digital',
-    'Senzorial': 'testCategories.sensory',
-    'Sensory': 'testCategories.sensory'
-  };
-
-  return categoryMap[categoryName] || categoryName;
+export const testTranslationMapping: Record<string, { ro: string; en: string; description_ro: string; description_en: string }> = {
+  'Big Five Personalitate': {
+    ro: 'Big Five Personalitate',
+    en: 'Big Five Personality',
+    description_ro: 'Testul Big Five evaluează personalitatea pe cinci dimensiuni fundamentale: Extraversiune, Agreabilitate, Conștiinciozitate, Neuroticism și Deschidere către experiență.',
+    description_en: 'The Big Five test evaluates personality across five fundamental dimensions: Extraversion, Agreeableness, Conscientiousness, Neuroticism, and Openness to Experience.'
+  },
+  'Cattell 16PF': {
+    ro: 'Cattell 16PF',
+    en: 'Cattell 16PF',
+    description_ro: 'Testul Cattell 16PF evaluează 16 factori primari de personalitate, oferind o analiză detaliată a trăsăturilor tale de personalitate.',
+    description_en: 'The Cattell 16PF test evaluates 16 primary personality factors, providing a detailed analysis of your personality traits.'
+  },
+  'Test de Personalitate HEXACO': {
+    ro: 'Test de Personalitate HEXACO',
+    en: 'HEXACO Personality Test',
+    description_ro: 'Evaluează personalitatea pe baza modelului HEXACO cu 6 dimensiuni principale: Onestitate-Umilință, Emotivitate, Extraversiune, Agreabilitate, Conștiinciozitate și Deschidere.',
+    description_en: 'Evaluates personality based on the HEXACO model with 6 main dimensions: Honesty-Humility, Emotionality, Extraversion, Agreeableness, Conscientiousness, and Openness.'
+  },
+  'Test Enneagram': {
+    ro: 'Test Enneagram',
+    en: 'Enneagram Test',
+    description_ro: 'Testul Enneagram identifică tipul tău de personalitate dominant dintr-un sistem de 9 tipuri, explorând motivațiile și fricile tale de bază.',
+    description_en: 'The Enneagram test identifies your dominant personality type from a system of 9 types, exploring your basic motivations and fears.'
+  },
+  'Test DISC': {
+    ro: 'Test DISC',
+    en: 'DISC Test',
+    description_ro: 'Testul DISC evaluează stilul tău de comportament în patru domenii: Dominanță, Influență, Stabilitate și Conștiinciozitate.',
+    description_en: 'The DISC test evaluates your behavioral style in four domains: Dominance, Influence, Steadiness, and Conscientiousness.'
+  },
+  'Inteligența Emoțională': {
+    ro: 'Inteligența Emoțională',
+    en: 'Emotional Intelligence',
+    description_ro: 'Testul de Inteligență Emoțională evaluează capacitatea ta de a percepe, înțelege, gestiona și utiliza emoțiile în mod eficient.',
+    description_en: 'The Emotional Intelligence test evaluates your ability to perceive, understand, manage, and use emotions effectively.'
+  },
+  'Roluri în Echipă Belbin': {
+    ro: 'Roluri în Echipă Belbin',
+    en: 'Belbin Team Roles',
+    description_ro: 'Testul Belbin identifică rolurile tale preferate în echipă și modul în care contribui la succesul grupului.',
+    description_en: 'The Belbin test identifies your preferred team roles and how you contribute to group success.'
+  },
+  'Test Aptitudini Cognitive': {
+    ro: 'Test Aptitudini Cognitive',
+    en: 'Cognitive Abilities Test',
+    description_ro: 'Evaluează abilitățile tale cognitive în diverse domenii: verbal, numeric, logic, spațial și abstract.',
+    description_en: 'Evaluates your cognitive abilities in various domains: verbal, numerical, logical, spatial, and abstract.'
+  },
+  'Scala GAD-7 pentru Anxietate': {
+    ro: 'Scala GAD-7 pentru Anxietate',
+    en: 'GAD-7 Anxiety Scale',
+    description_ro: 'GAD-7 este un instrument de screening pentru anxietatea generalizată, evaluând nivelul de anxietate pe baza a 7 întrebări.',
+    description_en: 'GAD-7 is a screening tool for generalized anxiety, evaluating anxiety levels based on 7 questions.'
+  },
+  'Beck Depression Inventory': {
+    ro: 'Inventarul Beck pentru Depresie',
+    en: 'Beck Depression Inventory',
+    description_ro: 'Instrumentul Beck evaluează severitatea simptomelor depresive și este utilizat în screening-ul clinic.',
+    description_en: 'The Beck instrument evaluates the severity of depressive symptoms and is used in clinical screening.'
+  }
 };
 
-export const getTestNameTranslationKey = (testName: string): string => {
-  const testNameMap: { [key: string]: string } = {
-    'Beck Depression Inventory': 'testNames.beckDepressionInventory',
-    'Beck Depression Inventory (BDI-II)': 'testNames.beckDepressionInventory',
-    'Test de Aptitudini Cognitive': 'testNames.cognitiveAbilitiesTest',
-    'Cognitive Abilities Test': 'testNames.cognitiveAbilitiesTest',
-    'Test Aptitudini Cognitive': 'testNames.cognitiveAbilitiesTest',
-    'Rolurile de Echipă Belbin': 'testNames.belbinTeamRoles',
-    'Belbin Team Roles': 'testNames.belbinTeamRoles',
-    'Roluri în Echipă Belbin': 'testNames.belbinTeamRoles',
-    'Test de Personalitate Big Five': 'testNames.bigFivePersonality',
-    'Big Five Personality Test': 'testNames.bigFivePersonality',
-    'Test de Inteligență Emoțională': 'testNames.emotionalIntelligenceTest',
-    'Emotional Intelligence Test': 'testNames.emotionalIntelligenceTest',
-    'Inteligență Emoțională': 'testNames.emotionalIntelligenceTest',
-    'Test de Leadership': 'testNames.leadershipTest',
-    'Leadership Test': 'testNames.leadershipTest',
-    'Test de Burnout Maslach': 'testNames.maslachBurnoutTest',
-    'Maslach Burnout Test': 'testNames.maslachBurnoutTest',
-    'Test de Stres Perceput': 'testNames.perceivedStressTest',
-    'Perceived Stress Test': 'testNames.perceivedStressTest',
-    'Test de Reziliență': 'testNames.resilienceTest',
-    'Resilience Test': 'testNames.resilienceTest',
-    'Evaluare Anxietate GAD-7': 'testNames.gad7AnxietyAssessment',
-    'GAD-7 Anxiety Assessment': 'testNames.gad7AnxietyAssessment',
-    'Test DISC - Stiluri de Comportament': 'testNames.discBehavioralStyles',
-    'DISC Behavioral Styles Test': 'testNames.discBehavioralStyles',
-    'DISC - Stiluri de Comportament': 'testNames.discBehavioralStyles',
-    'Cattell 16PF': 'testNames.cattell16PF',
-    '16PF Personality Test': 'testNames.cattell16PF',
-    'Cattell 16PF Personality Test': 'testNames.cattell16PF'
+export const getTestTranslation = (testName: string, language: 'ro' | 'en' = 'ro'): { name: string; description: string } => {
+  const mapping = testTranslationMapping[testName];
+  if (!mapping) {
+    return { name: testName, description: '' };
+  }
+  
+  return {
+    name: mapping[language],
+    description: language === 'ro' ? mapping.description_ro : mapping.description_en
   };
-
-  return testNameMap[testName] || testName;
 };
-
-export const getTestDescriptionTranslationKey = (testName: string): string => {
-  const descriptionMap: { [key: string]: string } = {
-    'Beck Depression Inventory': 'testDescriptions.beckDepressionInventory',
-    'Beck Depression Inventory (BDI-II)': 'testDescriptions.beckDepressionInventory',
-    'Test de Aptitudini Cognitive': 'testDescriptions.cognitiveAbilitiesTest',
-    'Cognitive Abilities Test': 'testDescriptions.cognitiveAbilitiesTest',
-    'Test Aptitudini Cognitive': 'testDescriptions.cognitiveAbilitiesTest',
-    'Rolurile de Echipă Belbin': 'testDescriptions.belbinTeamRoles',
-    'Belbin Team Roles': 'testDescriptions.belbinTeamRoles',
-    'Roluri în Echipă Belbin': 'testDescriptions.belbinTeamRoles',
-    'Test de Personalitate Big Five': 'testDescriptions.bigFivePersonality',
-    'Big Five Personality Test': 'testDescriptions.bigFivePersonality',
-    'Test de Inteligență Emoțională': 'testDescriptions.emotionalIntelligenceTest',
-    'Emotional Intelligence Test': 'testDescriptions.emotionalIntelligenceTest',
-    'Inteligență Emoțională': 'testDescriptions.emotionalIntelligenceTest',
-    'Test de Leadership': 'testDescriptions.leadershipTest',
-    'Leadership Test': 'testDescriptions.leadershipTest',
-    'Test de Burnout Maslach': 'testDescriptions.maslachBurnoutTest',
-    'Maslach Burnout Test': 'testDescriptions.maslachBurnoutTest',
-    'Test de Stres Perceput': 'testDescriptions.perceivedStressTest',
-    'Perceived Stress Test': 'testDescriptions.perceivedStressTest',
-    'Test de Reziliență': 'testDescriptions.resilienceTest',
-    'Resilience Test': 'testDescriptions.resilienceTest',
-    'Evaluare Anxietate GAD-7': 'testDescriptions.gad7AnxietyAssessment',
-    'GAD-7 Anxiety Assessment': 'testDescriptions.gad7AnxietyAssessment',
-    'Test DISC - Stiluri de Comportament': 'testDescriptions.discBehavioralStyles',
-    'DISC Behavioral Styles Test': 'testDescriptions.discBehavioralStyles',
-    'DISC - Stiluri de Comportament': 'testDescriptions.discBehavioralStyles',
-    'Cattell 16PF': 'testDescriptions.cattell16PF',
-    '16PF Personality Test': 'testDescriptions.cattell16PF',
-    'Cattell 16PF Personality Test': 'testDescriptions.cattell16PF'
-  };
-
-  return descriptionMap[testName] || testName;
-};
-

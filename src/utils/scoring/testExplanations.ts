@@ -1,3 +1,4 @@
+
 import { getGenericDimensionExplanation } from './scoreInterpretations';
 
 interface ScoreRange {
@@ -39,6 +40,18 @@ export const getTestScoringExplanation = (testName: string): TestScoringExplanat
     };
   }
   
+  if (normalizedName.includes('hexaco')) {
+    return {
+      description: 'Testul HEXACO evaluează personalitatea pe 6 dimensiuni principale: Onestitate-Umilința, Emotivitate, Extraversiune, Agreabilitate, Conștiinciozitate și Deschidere către Experiență. Acest test oferă o perspectivă extinsă asupra personalității tale, inclusiv aspecte morale și emoționale.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
+        { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
+        { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
+      ],
+      whatItMeans: 'Rezultatele HEXACO îți arată cum te pozitionezi pe 6 dimensiuni fundamentale ale personalității. Fiecare dimensiune reflectă aspecte diferite ale comportamentului tău social, emoțional și moral. Aceste informații te pot ajuta să înțelegi mai bine cum interacționezi cu alții și cum abordezi diverse situații din viață.'
+    };
+  }
+  
   if (normalizedName.includes('gad-7') || normalizedName.includes('anxietate')) {
     return {
       description: 'GAD-7 este un instrument de screening pentru anxietatea generalizată. Acesta evaluează nivelul de anxietate pe baza răspunsurilor tale la 7 întrebări. Este utilizat pentru a identifica posibile cazuri de anxietate și pentru a monitoriza evoluția simptomelor.',
@@ -61,6 +74,18 @@ export const getTestScoringExplanation = (testName: string): TestScoringExplanat
         { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
       ],
       whatItMeans: 'Scorul tău de Inteligență Emoțională îți arată cât de bine te descurci în gestionarea emoțiilor tale și în interacțiunea cu ceilalți. Un scor mai mare sugerează o inteligență emoțională mai dezvoltată și abilități mai bune de a face față situațiilor dificile.'
+    };
+  }
+  
+  if (normalizedName.includes('enneagram')) {
+    return {
+      description: 'Testul Enneagram evaluează tipul tău de personalitate dominant, identificând motivațiile și fricile tale de bază. Acest test oferă o perspectivă asupra modului în care te percepi pe tine însuți și asupra modului în care interacționezi cu ceilalți.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
+        { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
+        { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
+      ],
+      whatItMeans: 'Rezultatele Enneagram îți arată care este tipul tău de personalitate dominant și cum te poziționezi pe cele nouă tipuri principale. Aceste informații te pot ajuta să înțelegi mai bine motivațiile și fricile tale de bază, precum și modul în care interacționezi cu ceilalți.'
     };
   }
   
@@ -97,30 +122,6 @@ export const getTestScoringExplanation = (testName: string): TestScoringExplanat
         { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
       ],
       whatItMeans: 'Rezultatele DISC îți arată care este stilul tău de comportament dominant și cum te poziționezi pe cele patru dimensiuni principale. Aceste informații te pot ajuta să înțelegi mai bine cum comunici cu ceilalți și cum abordezi diverse situații din viață.'
-    };
-  }
-  
-  if (normalizedName.includes('enneagram')) {
-    return {
-      description: 'Testul Enneagram evaluează tipul tău de personalitate dominant, identificând motivațiile și fricile tale de bază. Acest test oferă o perspectivă asupra modului în care te percepi pe tine însuți și asupra modului în care interacționezi cu ceilalți.',
-      scoreRanges: [
-        { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
-        { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
-        { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
-      ],
-      whatItMeans: 'Rezultatele Enneagram îți arată care este tipul tău de personalitate dominant și cum te poziționezi pe cele nouă tipuri principale. Aceste informații te pot ajuta să înțelegi mai bine motivațiile și fricile tale de bază, precum și modul în care interacționezi cu ceilalți.'
-    };
-  }
-  
-  if (normalizedName.includes('hexaco')) {
-    return {
-      description: 'Testul HEXACO este un model de personalitate care măsoară 6 dimensiuni principale: Onestitate-Umilință, Emotivitate, Extraversiune, Agreabilitate, Conștiinciozitate și Deschidere către Experiență. Acest test oferă o perspectivă extinsă asupra personalității tale, inclusiv aspecte morale și emoționale.',
-      scoreRanges: [
-        { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
-        { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
-        { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
-      ],
-      whatItMeans: 'Rezultatele HEXACO îți arată cum te pozitionezi pe 6 dimensiuni fundamentale ale personalității. Fiecare dimensiune reflectă aspecte diferite ale comportamentului tău social, emoțional și moral. Aceste informații te pot ajuta să înțelegi mai bine cum interacționezi cu alții și cum abordezi diverse situații din viață.'
     };
   }
   
