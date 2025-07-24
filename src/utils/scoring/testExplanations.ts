@@ -1,177 +1,136 @@
+import { getGenericDimensionExplanation } from './scoreInterpretations';
 
-interface TestExplanation {
+interface ScoreRange {
+  range: string;
+  label: string;
+  variant: 'default' | 'secondary' | 'outline' | 'destructive';
+}
+
+interface TestScoringExplanation {
   description: string;
-  scoreRanges?: Array<{
-    range: string;
-    label: string;
-    variant: 'default' | 'secondary' | 'destructive' | 'outline';
-  }>;
+  scoreRanges?: ScoreRange[];
   whatItMeans?: string;
-  discSpecific?: {
-    dimensions: {
-      [key: string]: {
-        name: string;
-        description: string;
-        highTrait: string;
-        lowTrait: string;
-      };
-    };
-    combinations?: string;
-  };
-  belbinSpecific?: {
-    roles: any;
-    categories: {
-      [key: string]: {
-        name: string;
-        description: string;
-      };
-    };
-    primaryVsSecondary: string;
-  };
-  clinicalSpecific?: {
-    limitations: string;
-    recommendations: string;
-    clinicalRanges: any[];
-  };
 }
 
-import { getDISCExplanation } from '../testSpecificExplanations/discExplanations';
-import { getBelbinExplanation } from '../testSpecificExplanations/belbinExplanations';
-import { getClinicalTestExplanation } from '../testSpecificExplanations/clinicalExplanations';
-
-export function getTestScoringExplanation(testName: string, language: 'en' | 'ro' = 'ro'): TestExplanation {
-  const testKey = testName.toLowerCase();
+export const getTestScoringExplanation = (testName: string): TestScoringExplanation => {
+  const normalizedName = testName.toLowerCase();
   
-  // DISC Test - explicații specifice
-  if (testKey.includes('disc') || testKey.includes('comportament')) {
-    const discExplanation = getDISCExplanation(language);
+  if (normalizedName.includes('big five') || normalizedName.includes('big-five')) {
     return {
-      description: discExplanation.description,
-      scoreRanges: discExplanation.scoreRanges,
-      whatItMeans: discExplanation.whatItMeans,
-      discSpecific: {
-        dimensions: discExplanation.dimensions,
-        combinations: discExplanation.combinations
-      }
+      description: 'Testul Big Five evaluează personalitatea pe cinci dimensiuni fundamentale: Extraversiune, Agreabilitate, Conștiinciozitate, Neuroticism și Deschidere către experiență. Acest test oferă o perspectivă generală asupra trăsăturilor tale de personalitate.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
+        { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
+        { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
+      ],
+      whatItMeans: 'Scorul tău Big Five îți arată cum te poziționezi pe cele cinci dimensiuni principale ale personalității. Aceste informații te pot ajuta să înțelegi mai bine cum interacționezi cu ceilalți și cum abordezi diverse situații din viață.'
     };
   }
   
-  // Belbin Test - explicații specifice  
-  if (testKey.includes('belbin') || testKey.includes('echipa') || testKey.includes('team')) {
-    const belbinExplanation = getBelbinExplanation(language);
+  if (normalizedName.includes('cattell') || normalizedName.includes('16pf')) {
     return {
-      description: belbinExplanation.description,
-      whatItMeans: belbinExplanation.whatItMeans,
-      belbinSpecific: {
-        roles: belbinExplanation.roles,
-        categories: belbinExplanation.categories,
-        primaryVsSecondary: belbinExplanation.primaryVsSecondary
-      }
+      description: 'Testul Cattell 16PF evaluează 16 factori primari de personalitate, oferind o analiză detaliată a trăsăturilor tale de personalitate. Acest test este utilizat în diverse contexte, inclusiv consiliere vocațională și dezvoltare personală.',
+      scoreRanges: [
+        { range: '1-3', label: 'Scăzut', variant: 'outline' as const },
+        { range: '4-7', label: 'Mediu', variant: 'secondary' as const },
+        { range: '8-10', label: 'Ridicat', variant: 'default' as const }
+      ],
+      whatItMeans: 'Scorul tău Cattell 16PF îți oferă o perspectivă detaliată asupra celor 16 factori primari de personalitate. Aceste informații te pot ajuta să înțelegi mai bine punctele tale forte și punctele slabe, precum și modul în care te comporți în diverse situații.'
     };
   }
   
-  // Clinical Tests - explicații specifice
-  if (testKey.includes('gad-7') || testKey.includes('anxietate') || 
-      testKey.includes('phq-9') || testKey.includes('depresie') ||
-      testKey.includes('beck')) {
-    const clinicalExplanation = getClinicalTestExplanation(testName, language);
+  if (normalizedName.includes('gad-7') || normalizedName.includes('anxietate')) {
     return {
-      description: clinicalExplanation.description,
-      scoreRanges: clinicalExplanation.clinicalRanges.map(range => ({
-        range: range.range,
-        label: range.label,
-        variant: range.variant
-      })),
-      whatItMeans: clinicalExplanation.whatItMeans,
-      clinicalSpecific: {
-        limitations: clinicalExplanation.limitations,
-        recommendations: clinicalExplanation.recommendations,
-        clinicalRanges: clinicalExplanation.clinicalRanges
-      }
+      description: 'GAD-7 este un instrument de screening pentru anxietatea generalizată. Acesta evaluează nivelul de anxietate pe baza răspunsurilor tale la 7 întrebări. Este utilizat pentru a identifica posibile cazuri de anxietate și pentru a monitoriza evoluția simptomelor.',
+      scoreRanges: [
+        { range: '0-4', label: 'Minimă', variant: 'default' as const },
+        { range: '5-9', label: 'Ușoară', variant: 'secondary' as const },
+        { range: '10-14', label: 'Moderată', variant: 'outline' as const },
+        { range: '15-21', label: 'Severă', variant: 'destructive' as const }
+      ],
+      whatItMeans: 'Scorul tău GAD-7 indică nivelul tău de anxietate generalizată. Un scor mai mare sugerează un nivel mai ridicat de anxietate și poate indica necesitatea de a căuta ajutor specializat.'
     };
   }
   
-  // CORECTARE CRITICĂ: Explicație corectă pentru GAD-7
-  if (testKey.includes('gad-7') || testKey.includes('anxietate')) {
-    return language === 'en' ? {
-      description: `GAD-7 (Generalized Anxiety Disorder scale) measures anxiety symptoms over the past two weeks. Scores range from 0-21, with higher scores indicating more severe anxiety symptoms that may require professional attention.`,
+  if (normalizedName.includes('emotional') || normalizedName.includes('emotiona')) {
+    return {
+      description: 'Testul de Inteligență Emoțională evaluează capacitatea ta de a percepe, înțelege, gestiona și utiliza emoțiile. Acesta măsoară cinci componente principale: auto-conștientizare, auto-reglare, motivație, empatie și abilități sociale.',
       scoreRanges: [
-        { range: '0-23%', label: 'Minimal', variant: 'default' },
-        { range: '24-47%', label: 'Mild', variant: 'secondary' },
-        { range: '48-70%', label: 'Moderate', variant: 'outline' },
-        { range: '71-100%', label: 'Severe', variant: 'destructive' }
+        { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
+        { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
+        { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
       ],
-      whatItMeans: 'Higher scores indicate more significant anxiety symptoms. Scores above 70% suggest seeking professional support may be beneficial.'
-    } : {
-      description: `GAD-7 (Scala Tulburării de Anxietate Generalizată) măsoară simptomele de anxietate din ultimele două săptămâni. Scorurile variază de la 0-21, unde scoruri mai mari indică simptome de anxietate mai severe care pot necesita atenție profesională.`,
-      scoreRanges: [
-        { range: '0-23%', label: 'Minimal', variant: 'default' },
-        { range: '24-47%', label: 'Ușor', variant: 'secondary' },
-        { range: '48-70%', label: 'Moderat', variant: 'outline' },
-        { range: '71-100%', label: 'Sever', variant: 'destructive' }
-      ],
-      whatItMeans: 'Scorurile mai mari indică simptome de anxietate mai semnificative. Scorurile peste 70% sugerează că ar putea fi benefic să cauți sprijin profesional.'
+      whatItMeans: 'Scorul tău de Inteligență Emoțională îți arată cât de bine te descurci în gestionarea emoțiilor tale și în interacțiunea cu ceilalți. Un scor mai mare sugerează o inteligență emoțională mai dezvoltată și abilități mai bune de a face față situațiilor dificile.'
     };
   }
   
-  if (testKey.includes('big five')) {
-    return language === 'en' ? {
-      description: `The Big Five test measures five fundamental personality dimensions: Openness to Experience, Conscientiousness, Extraversion, Agreeableness, and Neuroticism. Each dimension is rated on a scale from 1 to 100, where higher scores indicate a stronger presence of that trait.`,
+  if (normalizedName.includes('leadership')) {
+    return {
+      description: 'Testul de Leadership evaluează competențele tale manageriale și capacitatea de a conduce o echipă. Acesta măsoară diverse aspecte ale leadership-ului, inclusiv viziune, comunicare, luarea deciziilor și gestionarea conflictelor.',
       scoreRanges: [
-        { range: '0-39%', label: 'Low', variant: 'outline' },
-        { range: '40-69%', label: 'Moderate', variant: 'secondary' },
-        { range: '70-100%', label: 'High', variant: 'default' }
+        { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
+        { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
+        { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
       ],
-      whatItMeans: 'The results provide insight into your personality characteristics and can be used for personal and professional development.'
-    } : {
-      description: `Testul Big Five măsoară cinci dimensiuni fundamentale ale personalității: Deschiderea la experiență, Conștiinciozitatea, Extraversia, Agreabilitatea și Neuroticismul. Fiecare dimensiune este evaluată pe o scală de la 1 la 100, unde scorurile mai mari indică o prezență mai puternică a trăsăturii respective.`,
-      scoreRanges: [
-        { range: '0-39%', label: 'Scăzut', variant: 'outline' },
-        { range: '40-69%', label: 'Moderat', variant: 'secondary' },
-        { range: '70-100%', label: 'Ridicat', variant: 'default' }
-      ],
-      whatItMeans: 'Rezultatele oferă o perspectivă asupra caracteristicilor tale de personalitate și pot fi folosite pentru dezvoltare personală și profesională.'
+      whatItMeans: 'Scorul tău de Leadership îți arată cât de bine te descurci în rolul de lider și care sunt punctele tale forte și punctele slabe. Aceste informații te pot ajuta să-ți îmbunătățești abilitățile de leadership și să devii un lider mai eficient.'
     };
   }
   
-  if (testKey.includes('aptitudini cognitive')) {
-    return language === 'en' ? {
-      description: `The Cognitive Abilities Test evaluates five fundamental types of reasoning: verbal, numerical, logical, spatial, and abstract. The test contains 40 questions (8 per dimension) and measures mental processing capacity and problem-solving skills.`,
+  if (normalizedName.includes('stress') || normalizedName.includes('stresului')) {
+    return {
+      description: 'Testul de Gestionare a Stresului evaluează capacitatea ta de a face față presiunii și de a gestiona situațiile stresante. Acesta măsoară diverse aspecte ale gestionării stresului, inclusiv reziliența, optimismul și abilitățile de coping.',
       scoreRanges: [
-        { range: '0-19%', label: 'Low', variant: 'destructive' },
-        { range: '20-39%', label: 'Below average', variant: 'outline' },
-        { range: '40-59%', label: 'Average', variant: 'secondary' },
-        { range: '60-79%', label: 'Good', variant: 'default' },
-        { range: '80-100%', label: 'Excellent', variant: 'default' }
+        { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
+        { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
+        { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
       ],
-      whatItMeans: 'Cognitive abilities are fundamental for learning, problem-solving, and adapting to new situations.'
-    } : {
-      description: `Testul de Aptitudini Cognitive evaluează cinci tipuri fundamentale de raționament: verbal, numeric, logic, spațial și abstract. Testul conține 40 de întrebări (8 per dimensiune) și măsoară capacitatea de procesare mentală și rezolvare de probleme.`,
-      scoreRanges: [
-        { range: '0-19%', label: 'Scăzut', variant: 'destructive' },
-        { range: '20-39%', label: 'Sub mediu', variant: 'outline' },
-        { range: '40-59%', label: 'Mediu', variant: 'secondary' },
-        { range: '60-79%', label: 'Bun', variant: 'default' },
-        { range: '80-100%', label: 'Excelent', variant: 'default' }
-      ],
-      whatItMeans: 'Aptitudinile cognitive sunt fundamentale pentru învățare, rezolvarea problemelor și adaptarea la situații noi.'
+      whatItMeans: 'Scorul tău de Gestionare a Stresului îți arată cât de bine te descurci în situații stresante și care sunt punctele tale forte și punctele slabe. Aceste informații te pot ajuta să-ți îmbunătățești abilitățile de gestionare a stresului și să devii mai rezilient.'
     };
   }
   
-  // Default explanation
-  return language === 'en' ? {
-    description: `This psychological test was designed to evaluate various aspects of personality and behavior. The results provide insight into your psychological characteristics and can be used for personal and professional development.`,
+  if (normalizedName.includes('disc')) {
+    return {
+      description: 'Testul DISC evaluează stilul tău de comportament dominant, identificând trăsăturile tale principale în patru domenii: Dominanță, Influență, Stabilitate și Conștiinciozitate. Acest test oferă o perspectivă asupra modului în care preferi să interacționezi cu ceilalți și să abordezi diverse situații.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
+        { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
+        { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
+      ],
+      whatItMeans: 'Rezultatele DISC îți arată care este stilul tău de comportament dominant și cum te poziționezi pe cele patru dimensiuni principale. Aceste informații te pot ajuta să înțelegi mai bine cum comunici cu ceilalți și cum abordezi diverse situații din viață.'
+    };
+  }
+  
+  if (normalizedName.includes('enneagram')) {
+    return {
+      description: 'Testul Enneagram evaluează tipul tău de personalitate dominant, identificând motivațiile și fricile tale de bază. Acest test oferă o perspectivă asupra modului în care te percepi pe tine însuți și asupra modului în care interacționezi cu ceilalți.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
+        { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
+        { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
+      ],
+      whatItMeans: 'Rezultatele Enneagram îți arată care este tipul tău de personalitate dominant și cum te poziționezi pe cele nouă tipuri principale. Aceste informații te pot ajuta să înțelegi mai bine motivațiile și fricile tale de bază, precum și modul în care interacționezi cu ceilalți.'
+    };
+  }
+  
+  if (normalizedName.includes('hexaco')) {
+    return {
+      description: 'Testul HEXACO este un model de personalitate care măsoară 6 dimensiuni principale: Onestitate-Umilință, Emotivitate, Extraversiune, Agreabilitate, Conștiinciozitate și Deschidere către Experiență. Acest test oferă o perspectivă extinsă asupra personalității tale, inclusiv aspecte morale și emoționale.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
+        { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
+        { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
+      ],
+      whatItMeans: 'Rezultatele HEXACO îți arată cum te pozitionezi pe 6 dimensiuni fundamentale ale personalității. Fiecare dimensiune reflectă aspecte diferite ale comportamentului tău social, emoțional și moral. Aceste informații te pot ajuta să înțelegi mai bine cum interacționezi cu alții și cum abordezi diverse situații din viață.'
+    };
+  }
+  
+  return {
+    description: 'Acest test evaluează diverse aspecte ale personalității sau abilităților tale.',
     scoreRanges: [
-      { range: '0-39%', label: 'Low', variant: 'outline' },
-      { range: '40-69%', label: 'Moderate', variant: 'secondary' },
-      { range: '70-100%', label: 'High', variant: 'default' }
-    ]
-  } : {
-    description: `Acest test psihologic a fost conceput pentru a evalua diverse aspecte ale personalității și comportamentului. Rezultatele oferă o perspectivă asupra caracteristicilor tale psihologice și pot fi folosite pentru dezvoltare personală și profesională.`,
-    scoreRanges: [
-      { range: '0-39%', label: 'Scăzut', variant: 'outline' },
-      { range: '40-69%', label: 'Moderat', variant: 'secondary' },
-      { range: '70-100%', label: 'Ridicat', variant: 'default' }
-    ]
+      { range: '0-39%', label: 'Scăzut', variant: 'outline' as const },
+      { range: '40-69%', label: 'Moderat', variant: 'secondary' as const },
+      { range: '70-100%', label: 'Ridicat', variant: 'default' as const }
+    ],
+    whatItMeans: 'Scorul tău reflectă nivelul tău în domeniile evaluate de acest test.'
   };
-}
+};

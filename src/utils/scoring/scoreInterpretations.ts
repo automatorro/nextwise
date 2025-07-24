@@ -1,117 +1,96 @@
-export const getGADInterpretation = (score: number): string => {
-  if (score >= 15) return 'Simptome severe de anxietate - Se recomandă consult medical';
-  if (score >= 10) return 'Simptome moderate de anxietate - Ia în considerare consiliere sau terapie';
-  if (score >= 5) return 'Simptome ușoare de anxietate - Monitorizează și aplică tehnici de relaxare';
-  return 'Simptome minime de anxietate - Menține un stil de viață sănătos';
-};
-
-export const getPHQInterpretation = (score: number): string => {
-  if (score >= 20) return 'Simptome severe de depresie - Consult medical urgent';
-  if (score >= 15) return 'Simptome moderate de depresie - Ia în considerare consiliere sau tratament';
-  if (score >= 10) return 'Simptome ușoare de depresie - Monitorizează și caută suport emoțional';
-  if (score >= 5) return 'Simptome minime de depresie - Menține activități pozitive și sociale';
-  return 'Fără simptome depresive semnificative - Continuă cu un stil de viață echilibrat';
-};
-
-export const getPersonalityInterpretation = (score: number): string => {
-  if (score >= 80) return 'Personalitate puternic definită - Puncte forte clare și abilități bine dezvoltate';
-  if (score >= 65) return 'Personalitate echilibrată - Abilități solide cu potențial de creștere';
-  if (score >= 50) return 'Personalitate moderată - Oportunități de dezvoltare și explorare';
-  if (score >= 35) return 'Personalitate în formare - Necesită explorare și dezvoltare personală';
-  return 'Personalitate în dezvoltare - Se recomandă focus pe autocunoaștere și dezvoltare';
-};
-
-export const getCognitiveInterpretation = (score: number): string => {
-  if (score >= 80) return 'Aptitudini cognitive foarte dezvoltate - Performanță excelentă în toate domeniile';
-  if (score >= 65) return 'Aptitudini cognitive bune - Performanță solidă cu puncte forte în anumite domenii';
-  if (score >= 50) return 'Aptitudini cognitive moderate - Oportunități de îmbunătățire în mai multe domenii';
-  if (score >= 35) return 'Aptitudini cognitive în dezvoltare - Se recomandă antrenament suplimentar';
-  return 'Aptitudini cognitive de bază - Necesită antrenament specific și suport';
-};
-
-export const getEmotionalIntelligenceInterpretation = (score: number): string => {
-  if (score >= 80) return 'Inteligență emoțională foarte dezvoltată - Excelente abilități de management emoțional';
-  if (score >= 65) return 'Inteligență emoțională bună - Abilități solide cu oportunități de îmbunătățire';
-  if (score >= 50) return 'Inteligență emoțională moderată - Necesită dezvoltare în mai multe domenii';
-  if (score >= 35) return 'Inteligență emoțională în dezvoltare - Se recomandă focus pe dezvoltarea abilităților emoționale';
-  return 'Inteligență emoțională de bază - Necesită suport și antrenament specific';
-};
-
-export const getScoreInterpretation = (score: number, testName: string): string => {
+export const getDimensionExplanation = (testName: string, dimensionKey: string, score: number): string => {
   const normalizedTestName = testName.toLowerCase();
   
-  // Clinical tests (GAD-7, PHQ-9, etc.)
-  if (normalizedTestName.includes('gad-7') || normalizedTestName.includes('anxietate')) {
-    return getGADInterpretation(score);
-  }
-  
-  if (normalizedTestName.includes('phq-9') || normalizedTestName.includes('depresie')) {
-    return getPHQInterpretation(score);
-  }
-  
-  // HEXACO specific interpretations
   if (normalizedTestName.includes('hexaco')) {
-    if (score >= 80) return 'Personalitate foarte echilibrată cu puncte forte în multiple dimensiuni';
-    if (score >= 65) return 'Personalitate echilibrată cu oportunități de dezvoltare în anumite dimensiuni';
-    if (score >= 50) return 'Personalitate moderată cu variații între dimensiuni';
-    if (score >= 35) return 'Personalitate cu diferențe semnificative între dimensiuni';
-    return 'Personalitate cu variații mari între dimensiuni - consultă interpretările detaliate';
-  }
-  
-  // Personality tests (Big Five, DISC, etc.)
-  if (normalizedTestName.includes('big five') || normalizedTestName.includes('disc') || 
-      normalizedTestName.includes('belbin') || normalizedTestName.includes('cattell')) {
-    return getPersonalityInterpretation(score);
-  }
-  
-  // Cognitive tests
-  if (normalizedTestName.includes('cognitive') || normalizedTestName.includes('cognitiv')) {
-    return getCognitiveInterpretation(score);
-  }
-  
-  // Emotional intelligence
-  if (normalizedTestName.includes('emotional') || normalizedTestName.includes('emotiona')) {
-    return getEmotionalIntelligenceInterpretation(score);
-  }
-  
-  // Default personality interpretation
-  return getPersonalityInterpretation(score);
-};
+    const dimensionExplanations: Record<string, any> = {
+      honesty_humility: {
+        description: 'Onestitate-Umilința măsoară sinceritatea, fairplay-ul și modestia în relațiile cu alții.',
+        interpretations: {
+          high: 'Scoruri ridicate indică o persoană sinceră, modestă și care valorează echitatea în relațiile cu alții.',
+          low: 'Scoruri scăzute pot indica o tendință spre autopromovare și competitivitate în obținerea avantajelor.'
+        },
+        yourScore: {
+          high: 'Ești o persoană onestă și modestă care valorează relațiile echitabile cu alții.',
+          moderate: 'Ai un echilibru între modestie și încredere în sine, fiind capabil să-ți promovezi interesele când este necesar.',
+          low: 'Tinde să fii mai competitiv și să-ți promovezi mai direct realizările și interesele.'
+        }
+      },
+      emotionality: {
+        description: 'Emotivitatea măsoară sensibilitatea emoțională, empatia și atașamentul față de alții.',
+        interpretations: {
+          high: 'Scoruri ridicate indică o sensibilitate emoțională puternică și capacitatea de a forma legături profunde.',
+          low: 'Scoruri scăzute pot indica o abordare mai detașată și mai puțin emoțională în relații.'
+        },
+        yourScore: {
+          high: 'Ești foarte sensibil la emoțiile proprii și ale altora, formând legături emoționale profunde.',
+          moderate: 'Ai un echilibru între sensibilitatea emoțională și controlul rațional.',
+          low: 'Ai o abordare mai detașată și mai puțin afectată de fluctuațiile emoționale.'
+        }
+      },
+      extraversion: {
+        description: 'Extraversiunea măsoară sociabilitatea, încrederea socială și tendința spre energie pozitivă.',
+        interpretations: {
+          high: 'Scoruri ridicate indică o persoană foarte sociabilă care se simte energizată în compania altora.',
+          low: 'Scoruri scăzute pot indica o preferință pentru activități mai liniștite și grupuri mai mici.'
+        },
+        yourScore: {
+          high: 'Ești foarte sociabil și te simți energizat în grupuri mari și situații sociale.',
+          moderate: 'Ai un echilibru între socialitate și momentele de solitudine, adaptându-te la diferite situații.',
+          low: 'Preferi interacțiunile mai intime și ai nevoie de timp pentru a te reîncărca singur.'
+        }
+      },
+      agreeableness: {
+        description: 'Agreabilitatea măsoară cooperarea, răbdarea și tendința de a evita conflictele.',
+        interpretations: {
+          high: 'Scoruri ridicate indică o persoană foarte cooperantă care valorează armonia în relații.',
+          low: 'Scoruri scăzute pot indica o abordare mai directă și mai puțin îngăduitoare în conflicte.'
+        },
+        yourScore: {
+          high: 'Ești foarte cooperant și cauți să menții armonia în relațiile cu alții.',
+          moderate: 'Știi când să fii cooperant și când să fii mai ferm, adaptându-te la situație.',
+          low: 'Ai o abordare mai directă și ești dispus să confrontezi problemele când este necesar.'
+        }
+      },
+      conscientiousness: {
+        description: 'Conștiinciozitatea măsoară organizarea, disciplina și perseverența în atingerea obiectivelor.',
+        interpretations: {
+          high: 'Scoruri ridicate indică o persoană foarte organizată cu standarde înalte de performanță.',
+          low: 'Scoruri scăzute pot indica o preferință pentru flexibilitate și spontaneitate.'
+        },
+        yourScore: {
+          high: 'Ești foarte organizat și disciplinat, cu standarde înalte pentru tot ceea ce faci.',
+          moderate: 'Ai un echilibru între structură și flexibilitate în abordarea sarcinilor.',
+          low: 'Preferi să improvizezi și să te adaptezi decât să urmezi planuri rigide.'
+        }
+      },
+      openness: {
+        description: 'Deschiderea măsoară creativitatea, curiozitatea intelectuală și deschiderea către experiențe noi.',
+        interpretations: {
+          high: 'Scoruri ridicate indică o persoană foarte creativă și deschisă la experiențe noi.',
+          low: 'Scoruri scăzute pot indica o preferință pentru familiar și tradițional.'
+        },
+        yourScore: {
+          high: 'Ești foarte creativ și curios, apreciind noutatea și experiențele diverse.',
+          moderate: 'Ai un echilibru între aprecierea noutății și confortul familiarului.',
+          low: 'Preferi experiențele familiare și abordările tradiționale, fiind mai conservator.'
+        }
+      }
+    };
 
-export const getTestTypeInterpretation = (testName: string): string => {
-  const normalizedTestName = testName.toLowerCase();
-  
-  if (normalizedTestName.includes('gad-7') || normalizedTestName.includes('anxietate')) {
-    return 'Test de anxietate GAD-7 - Evaluează nivelul de anxietate generalizată';
+    const explanation = dimensionExplanations[dimensionKey];
+    if (explanation) {
+      let interpretation = '';
+      if (score >= 70) {
+        interpretation = explanation.yourScore.high || explanation.interpretations.high;
+      } else if (score >= 40) {
+        interpretation = explanation.yourScore.moderate || 'Ai un nivel moderat pentru această dimensiune.';
+      } else {
+        interpretation = explanation.yourScore.low || explanation.interpretations.low;
+      }
+      
+      return `${explanation.description} ${interpretation}`;
+    }
   }
   
-  if (normalizedTestName.includes('phq-9') || normalizedTestName.includes('depresie')) {
-    return 'Test de depresie PHQ-9 - Evaluează severitatea simptomelor depresive';
-  }
-  
-  if (normalizedTestName.includes('big five')) {
-    return 'Testul Big Five - Evaluează cele cinci dimensiuni majore ale personalității';
-  }
-  
-  if (normalizedTestName.includes('disc')) {
-    return 'Testul DISC - Evaluează stilul de personalitate și comportamentul dominant';
-  }
-  
-  if (normalizedTestName.includes('belbin')) {
-    return 'Testul Belbin - Identifică rolurile preferate într-o echipă';
-  }
-  
-  if (normalizedTestName.includes('cattell')) {
-    return 'Testul Cattell 16PF - Evaluează 16 factori primari ai personalității';
-  }
-  
-  if (normalizedTestName.includes('cognitive')) {
-    return 'Test de aptitudini cognitive - Evaluează abilitățile cognitive generale';
-  }
-  
-  if (normalizedTestName.includes('emotional')) {
-    return 'Test de inteligență emoțională - Evaluează abilitățile emoționale și sociale';
-  }
-  
-  return 'Test de personalitate - Evaluează trăsăturile și caracteristicile personale';
+  return getGenericDimensionExplanation(dimensionKey, score);
 };

@@ -11,7 +11,8 @@ import {
   calculateEmotionalIntelligenceScore, 
   calculateCognitiveScore, 
   calculateBelbinScore,
-  calculateHexacoScore
+  calculateHexacoScore,
+  calculateGADScore
 } from '@/utils/testCalculations';
 
 export const useTestSubmission = () => {
@@ -61,7 +62,11 @@ export const useTestSubmission = () => {
       } else if (testName.includes('belbin')) {
         score = calculateBelbinScore(answers);
       } else if (testName.includes('hexaco')) {
+        console.log('Calculating HEXACO score for answers:', answers);
         score = calculateHexacoScore(answers);
+        console.log('HEXACO score calculated:', score);
+      } else if (testName.includes('gad') || testName.includes('anxietate')) {
+        score = calculateGADScore(answers);
       } else {
         // Default scoring
         score = { overall: 0, interpretation: 'Scor calculat automat' };

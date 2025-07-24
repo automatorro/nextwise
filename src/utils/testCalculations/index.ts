@@ -1,3 +1,4 @@
+
 export { calculateBigFiveScore } from './bigFiveCalculation';
 export { calculateCattellScore } from './cattellCalculation';
 export { calculateDISCScore } from './discCalculation';
@@ -5,6 +6,8 @@ export { calculateEmotionalIntelligenceScore } from './emotionalIntelligenceCalc
 export { calculateCognitiveScore } from './cognitiveCalculation';
 export { calculateBelbinScore } from './belbinCalculation';
 export { calculateEnneagramScore, getEnneagramDominantType, getEnneagramTypeDescription } from './enneagramCalculation';
+export { calculateHexacoScore } from './hexacoCalculation';
+export { calculateGADScore } from './gadCalculation';
 export type { BigFiveScore } from './bigFiveCalculation';
 export type { CattellScore } from './cattellCalculation';
 export type { DISCScore } from './discCalculation';
@@ -12,6 +15,5 @@ export type { EmotionalIntelligenceScore } from './emotionalIntelligenceCalculat
 export type { CognitiveScore } from './cognitiveCalculation';
 export type { BelbinScore } from './belbinCalculation';
 export type { EnneagramScore } from './enneagramCalculation';
-
-export { calculateHexacoScore } from './hexacoCalculation';
 export type { HexacoScore } from './hexacoCalculation';
+export type { GADScore } from './gadCalculation';
