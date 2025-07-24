@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '@/contexts/AuthContext';
@@ -113,7 +112,9 @@ const TestsPage = () => {
   const professionalTests = tests?.filter(test => 
     test.name.toLowerCase().includes('disc') || 
     test.name.toLowerCase().includes('belbin') ||
-    test.name.toLowerCase().includes('aptitudini')
+    test.name.toLowerCase().includes('aptitudini') ||
+    test.name.toLowerCase().includes('sjt') ||
+    test.name.toLowerCase().includes('orientare în carieră')
   ) || [];
 
   const emotionalTests = tests?.filter(test => 
