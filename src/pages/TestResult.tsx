@@ -313,12 +313,8 @@ const TestResult = () => {
 
           {/* Charts Section */}
           <TestResultCharts
-            isBigFiveTest={isBigFiveTest}
-            isCognitiveTest={isCognitiveTest}
-            isBelbinTest={isBelbinTest}
-            isCattell16PFTest={isCattell16PFTest}
-            hasValidTestSpecificDimensions={hasValidTestSpecificDimensions}
-            testSpecificDimensions={testSpecificDimensions}
+            testName={result.test_types.name}
+            score={{ ...result.score, dimensions: testSpecificDimensions }}
           />
 
           {/* Detailed Analysis Section - AVAILABLE FOR ALL TESTS */}

@@ -52,7 +52,7 @@ export const TestExplanations: React.FC<TestExplanationsProps> = ({ testName, sc
   }
   
   if (normalizedTestName.includes('hexaco')) {
-    return <HexacoExplanation />;
+    return <HexacoExplanation score={score} language={language} />;
   }
   
   return null;

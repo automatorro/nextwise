@@ -11,11 +11,11 @@ interface TestResultChartsProps {
 
 export const TestResultCharts: React.FC<TestResultChartsProps> = ({ testName, score }) => {
   if (testName.toLowerCase().includes('belbin')) {
-    return <BelbinRadarChart data={score.dimensions} />;
+    return <BelbinRadarChart roleScores={score.dimensions} />;
   }
   
   if (testName.toLowerCase().includes('big five') || testName.toLowerCase().includes('big-five')) {
-    return <BigFiveRadarChart data={score.dimensions} />;
+    return <BigFiveRadarChart dimensions={score.dimensions} />;
   }
   
   if (testName.toLowerCase().includes('hexaco')) {

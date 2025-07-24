@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -13,6 +14,7 @@ interface QuestionType {
   id: string;
   text: string;
   options: string[];
+  question_order: number;
   correct_answer?: number;
   scoring_weights?: { [key: string]: number[] };
 }
@@ -44,18 +46,30 @@ const TestRunner = () => {
     queryFn: async () => {
       if (!testId) throw new Error("Test ID is required");
       const { data, error } = await supabase
-        .from('questions')
+        .from('test_questions')
         .select('*')
-        .eq('test_type_id', testId);
+        .eq('test_type_id', testId)
+        .order('question_order');
 
       if (error) throw error;
       return data;
     },
-    onSuccess: (data) => {
-      setQuestions(data);
-    },
     enabled: !!testId,
   });
+
+  useEffect(() => {
+    if (questionsData) {
+      const formattedQuestions = questionsData.map(q => ({
+        id: q.id,
+        text: q.question_text_ro || q.question_text_en || '',
+        options: q.options || [],
+        question_order: q.question_order,
+        correct_answer: q.correct_answer,
+        scoring_weights: q.scoring_weights
+      }));
+      setQuestions(formattedQuestions);
+    }
+  }, [questionsData]);
 
   useEffect(() => {
     if (questions) {
