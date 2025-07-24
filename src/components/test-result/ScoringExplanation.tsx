@@ -5,6 +5,10 @@ import { getTestScoringExplanation } from '@/utils/scoring/testExplanations';
 
 interface ScoringExplanationProps {
   testName: string;
+  overallScore?: number;
+  scoreType?: string;
+  dimensions?: { [key: string]: number };
+  roleScores?: { [key: string]: number };
 }
 
 export const ScoringExplanation = ({ testName }: ScoringExplanationProps) => {
