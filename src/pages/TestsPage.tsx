@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,7 +10,7 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { useSubscription } from '@/hooks/useSubscription';
-import { Footer } from '@/components/home/Footer';
+import Footer from '@/components/home/Footer';
 import { getTestTranslation } from '@/utils/testTranslationMapping';
 
 interface TestType {
@@ -29,7 +28,7 @@ const TestsPage = () => {
   const { language } = useLanguage();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { data: subscription } = useSubscription();
+  const { subscription } = useSubscription();
   const [showPremiumAlert, setShowPremiumAlert] = useState(false);
 
   const { data: tests, isLoading, error } = useQuery({
