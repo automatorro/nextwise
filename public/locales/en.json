@@ -138,15 +138,15 @@
     "mostPopular": "Most Popular"
   },
   "dashboard": {
-  "welcome": "Welcome",
-  "welcomeSubtext": "Start your personal and professional development journey with our AI tests.",
-  "stats": {
-    "testsCompleted": "Tests Completed",
-    "careerPlans": "Career Plans",
-    "timeSaved": "Time Saved",
-    "careerProgress": "Career Progress",
-    "days": "Days" // ← adaugă această linie
-  },
+    "welcome": "Welcome",
+    "welcomeSubtext": "Start your personal and professional development journey with our AI tests.",
+    "stats": {
+      "testsCompleted": "Tests Completed",
+      "careerPlans": "Career Plans",
+      "timeSaved": "Time Saved",
+      "careerProgress": "Career Progress",
+      "days": "Days"
+    },
     "actions": {
       "startFirstTest": "Start Your First Test",
       "startFirstTestDesc": "Discover your personality and strengths with our first AI test.",
@@ -199,6 +199,16 @@
       "dashboard": "My Plans",
       "create": "Create Plan",
       "mentoring": "AI Mentoring"
+    },
+    "dashboard": {
+      "title": "Career Dashboard",
+      "subtitle": "Track progress and plan your next steps",
+      "createPlan": "Create New Plan",
+      "noPlans": "You don't have any career plans yet",
+      "createFirstPlan": "Create your first career plan",
+      "progress": "Progress",
+      "created": "Created",
+      "viewDetails": "View Details"
     },
     "noPlans": "You don't have any career plans yet",
     "createFirst": "Create your first career plan",
@@ -277,7 +287,19 @@
     "interpretation": "Interpretation",
     "backToTests": "Back to Tests",
     "downloadResults": "Download Results",
-    "shareResults": "Share Results"
+    "shareResults": "Share Results",
+    "overallScore": "Overall Score",
+    "detailedAnalysis": "Detailed Analysis",
+    "dimensions": "Dimensions",
+    "explanations": "Explanations",
+    "aiAnalysis": "AI Analysis",
+    "chartTitle": "Results Chart",
+    "noAnalysis": "AI analysis is not available for this test.",
+    "loadingAnalysis": "Generating AI analysis...",
+    "correctAnswers": "Correct Answers",
+    "questionAnalysis": "Question Analysis",
+    "performanceSummary": "Performance Summary",
+    "scoringExplanation": "Score Explanation"
   },
   "belbin": {
     "roles": {
@@ -296,20 +318,6 @@
       "peopleOriented": "People-Oriented Roles",
       "thinkingOriented": "Thinking-Oriented Roles"
     }
-  },
-  "testResult": {
-    "overallScore": "Overall Score",
-    "detailedAnalysis": "Detailed Analysis",
-    "dimensions": "Dimensions",
-    "explanations": "Explanations",
-    "aiAnalysis": "AI Analysis",
-    "chartTitle": "Results Chart",
-    "noAnalysis": "AI analysis is not available for this test.",
-    "loadingAnalysis": "Generating AI analysis...",
-    "correctAnswers": "Correct Answers",
-    "questionAnalysis": "Question Analysis",
-    "performanceSummary": "Performance Summary",
-    "scoringExplanation": "Score Explanation"
   },
   "profile": {
     "title": "Profile",

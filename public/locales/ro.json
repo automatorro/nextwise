@@ -204,6 +204,16 @@
       "simulations": "Simulări AI",
       "analytics": "Analiza Progresului"
     },
+    "dashboard": {
+      "title": "Dashboard Carieră",
+      "subtitle": "Monitorizează progresul și planifică următorii pași",
+      "createPlan": "Creează Plan Nou",
+      "noPlans": "Nu ai încă planuri de carieră",
+      "createFirstPlan": "Începe prin a crea primul tău plan personalizat",
+      "progress": "Progres",
+      "created": "Creat",
+      "viewDetails": "Vezi Detalii"
+    },
     "noPlans": "Nu ai încă planuri de carieră",
     "createFirst": "Creează primul tău plan de carieră",
     "createPlan": "Creează Plan",
