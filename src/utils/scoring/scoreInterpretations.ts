@@ -1,3 +1,4 @@
+
 export const getDimensionExplanation = (testName: string, dimensionKey: string, score: number): string => {
   const normalizedTestName = testName.toLowerCase();
   
@@ -93,4 +94,32 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string, 
   }
   
   return getGenericDimensionExplanation(dimensionKey, score);
+};
+
+export const getGenericDimensionExplanation = (dimensionKey: string, score: number): string => {
+  const level = score >= 70 ? 'ridicat' : score >= 40 ? 'moderat' : 'scăzut';
+  return `Scorul tău pentru ${dimensionKey} este ${level} (${score}%).`;
+};
+
+export const getScoreInterpretation = (testName: string, score: number): string => {
+  const normalizedTestName = testName.toLowerCase();
+  
+  if (normalizedTestName.includes('hexaco')) {
+    if (score >= 70) {
+      return 'Scor ridicat - indică trăsături puternice în această dimensiune.';
+    } else if (score >= 40) {
+      return 'Scor moderat - indică un echilibru în această dimensiune.';
+    } else {
+      return 'Scor scăzut - indică trăsături mai puțin pronunțate în această dimensiune.';
+    }
+  }
+  
+  // Generic interpretation for other tests
+  if (score >= 70) {
+    return 'Scor ridicat în această dimensiune.';
+  } else if (score >= 40) {
+    return 'Scor moderat în această dimensiune.';
+  } else {
+    return 'Scor scăzut în această dimensiune.';
+  }
 };
