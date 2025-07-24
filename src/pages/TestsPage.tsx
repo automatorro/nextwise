@@ -54,6 +54,14 @@ const TestsPage = () => {
       
       console.log('Raw test types from database:', testTypes);
       
+      // Special check for cognitive abilities test
+      const cognitiveTest = testTypes?.find(test => 
+        test.name === 'Test Aptitudini Cognitive' || 
+        test.name === 'Test de Aptitudini Cognitive' ||
+        test.name === 'Cognitive Abilities Test'
+      );
+      console.log('Found cognitive abilities test in raw data:', cognitiveTest);
+      
       // For each test type, count actual questions
       const testsWithQuestionCounts = await Promise.all(
         testTypes.map(async (testType) => {
@@ -82,6 +90,14 @@ const TestsPage = () => {
       
       console.log('Valid tests with questions:', validTests);
       console.log('Tests being returned for rendering:', validTests);
+      
+      // Final check for cognitive abilities test in valid tests
+      const cognitiveTestInValid = validTests.find(test => 
+        test.name === 'Test Aptitudini Cognitive' || 
+        test.name === 'Test de Aptitudini Cognitive' ||
+        test.name === 'Cognitive Abilities Test'
+      );
+      console.log('Cognitive abilities test in final valid tests:', cognitiveTestInValid);
       
       return validTests as TestType[];
     }
