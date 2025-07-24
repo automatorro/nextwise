@@ -1,49 +1,17 @@
+export { calculateBigFiveScore } from './bigFiveCalculation';
+export { calculateCattellScore } from './cattellCalculation';
+export { calculateDISCScore } from './discCalculation';
+export { calculateEmotionalIntelligenceScore } from './emotionalIntelligenceCalculation';
+export { calculateCognitiveScore } from './cognitiveCalculation';
+export { calculateBelbinScore } from './belbinCalculation';
+export { calculateEnneagramScore, getEnneagramDominantType, getEnneagramTypeDescription } from './enneagramCalculation';
+export type { BigFiveScore } from './bigFiveCalculation';
+export type { CattellScore } from './cattellCalculation';
+export type { DISCScore } from './discCalculation';
+export type { EmotionalIntelligenceScore } from './emotionalIntelligenceCalculation';
+export type { CognitiveScore } from './cognitiveCalculation';
+export type { BelbinScore } from './belbinCalculation';
+export type { EnneagramScore } from './enneagramCalculation';
 
-import { calculateBigFiveScore } from './bigFiveCalculation';
-import { calculateGADScore } from './gadCalculation';
-import { calculateDISCScore } from './discCalculation';
-import { calculateBelbinScore } from './belbinCalculation';
-import { calculateCognitiveScore } from './cognitiveCalculation';
-import { calculateEmotionalIntelligenceScore } from './emotionalIntelligenceCalculation';
-import { calculateCattellScore } from './cattellCalculation';
-import { calculateEnneagramScore } from './enneagramCalculation';
-import { calculateHexacoScore } from './hexacoCalculation';
-
-export const calculateTestScore = (testName: string, answers: Record<string, number>, questions: any[]) => {
-  switch (testName) {
-    case 'Big Five Personalitate':
-      return calculateBigFiveScore(answers, questions);
-    case 'Evaluare Anxietate GAD-7':
-      return calculateGADScore(answers);
-    case 'Test DISC - Stiluri de Comportament':
-      return calculateDISCScore(answers);
-    case 'Roluri în Echipă Belbin':
-      return calculateBelbinScore(answers);
-    case 'Test Aptitudini Cognitive':
-      return calculateCognitiveScore(answers, questions);
-    case 'Test Inteligență Emoțională EQ':
-      return calculateEmotionalIntelligenceScore(answers);
-    case 'Test Cattell 16PF':
-      return calculateCattellScore(answers);
-    case 'Test HEXACO':
-    case 'HEXACO Personalitate':
-      return calculateHexacoScore(answers);
-    case 'Enneagram':
-      return {
-        ...calculateEnneagramScore(answers),
-        dimensions: calculateEnneagramScore(answers)
-      };
-    default:
-      return { total: 0 };
-  }
-};
-
-export * from './bigFiveCalculation';
-export * from './gadCalculation';
-export * from './discCalculation';
-export * from './belbinCalculation';
-export * from './cognitiveCalculation';
-export * from './emotionalIntelligenceCalculation';
-export * from './cattellCalculation';
-export * from './enneagramCalculation';
-export * from './hexacoCalculation';
+export { calculateHexacoScore } from './hexacoCalculation';
+export type { HexacoScore } from './hexacoCalculation';

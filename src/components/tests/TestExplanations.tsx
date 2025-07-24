@@ -1,57 +1,57 @@
 
 import React from 'react';
-import BigFiveExplanation from './explanations/BigFiveExplanation';
-import GADExplanation from './explanations/GADExplanation';
-import DISCExplanation from './explanations/DISCExplanation';
-import BelbinExplanation from './explanations/BelbinExplanation';
-import CognitiveExplanation from './explanations/CognitiveExplanation';
-import EmotionalIntelligenceExplanation from './explanations/EmotionalIntelligenceExplanation';
-import CattellExplanation from './explanations/CattellExplanation';
-import EnneagramExplanation from './explanations/EnneagramExplanation';
+import { BelbinExplanation } from './explanations/BelbinExplanation';
+import { BigFiveExplanation } from './explanations/BigFiveExplanation';
+import { CattellExplanation } from './explanations/CattellExplanation';
+import { CognitiveExplanation } from './explanations/CognitiveExplanation';
+import { DISCExplanation } from './explanations/DISCExplanation';
+import { EmotionalIntelligenceExplanation } from './explanations/EmotionalIntelligenceExplanation';
+import { EnneagramExplanation } from './explanations/EnneagramExplanation';
+import { GADExplanation } from './explanations/GADExplanation';
+import { HexacoExplanation } from './explanations/HexacoExplanation';
 
 interface TestExplanationsProps {
   testName: string;
-  score: any;
-  language: string;
 }
 
-const TestExplanations: React.FC<TestExplanationsProps> = ({ testName, score, language }) => {
-  const renderExplanation = () => {
-    switch (testName) {
-      case 'Big Five Personalitate':
-        return <BigFiveExplanation score={score} language={language} />;
-      case 'Evaluare Anxietate GAD-7':
-        return <GADExplanation score={score} language={language} />;
-      case 'Test DISC - Stiluri de Comportament':
-        return <DISCExplanation score={score} language={language} />;
-      case 'Roluri în Echipă Belbin':
-        return <BelbinExplanation score={score} language={language} />;
-      case 'Test Aptitudini Cognitive':
-        return <CognitiveExplanation score={score} language={language} />;
-      case 'Test Inteligență Emoțională EQ':
-        return <EmotionalIntelligenceExplanation score={score} language={language} />;
-      case 'Test Cattell 16PF':
-        return <CattellExplanation score={score} language={language} />;
-      case 'Enneagram':
-        return <EnneagramExplanation score={score} language={language} />;
-      default:
-        return (
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <p className="text-gray-600">
-              {language === 'ro' 
-                ? 'Explicația pentru acest test va fi disponibilă în curând.'
-                : 'Explanation for this test will be available soon.'}
-            </p>
-          </div>
-        );
-    }
-  };
-
-  return (
-    <div className="mt-6">
-      {renderExplanation()}
-    </div>
-  );
+export const TestExplanations: React.FC<TestExplanationsProps> = ({ testName }) => {
+  const normalizedTestName = testName.toLowerCase();
+  
+  if (normalizedTestName.includes('belbin')) {
+    return <BelbinExplanation />;
+  }
+  
+  if (normalizedTestName.includes('big five') || normalizedTestName.includes('big-five')) {
+    return <BigFiveExplanation />;
+  }
+  
+  if (normalizedTestName.includes('cattell') || normalizedTestName.includes('16pf')) {
+    return <CattellExplanation />;
+  }
+  
+  if (normalizedTestName.includes('cognitive') || normalizedTestName.includes('cognitiv')) {
+    return <CognitiveExplanation />;
+  }
+  
+  if (normalizedTestName.includes('disc')) {
+    return <DISCExplanation />;
+  }
+  
+  if (normalizedTestName.includes('emotional') || normalizedTestName.includes('emotiona')) {
+    return <EmotionalIntelligenceExplanation />;
+  }
+  
+  if (normalizedTestName.includes('enneagram')) {
+    return <EnneagramExplanation />;
+  }
+  
+  if (normalizedTestName.includes('gad') || normalizedTestName.includes('anxietate')) {
+    return <GADExplanation />;
+  }
+  
+  if (normalizedTestName.includes('hexaco')) {
+    return <HexacoExplanation />;
+  }
+  
+  return null;
 };
-
-export default TestExplanations;
