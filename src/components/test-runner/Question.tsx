@@ -11,7 +11,7 @@ interface QuestionProps {
     options: string[];
     question_order: number;
   };
-  selectedAnswer: number;
+  selectedAnswer: number | undefined;
   onAnswerChange: (questionId: string, answer: number) => void;
 }
 
@@ -25,7 +25,7 @@ const Question: React.FC<QuestionProps> = ({ question, selectedAnswer, onAnswerC
       </CardHeader>
       <CardContent>
         <RadioGroup
-          value={selectedAnswer.toString()}
+          value={selectedAnswer !== undefined ? selectedAnswer.toString() : ''}
           onValueChange={(value) => onAnswerChange(question.id, parseInt(value))}
         >
           {question.options.map((option, index) => (
