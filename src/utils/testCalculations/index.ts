@@ -7,6 +7,7 @@ import { calculateCognitiveScore } from './cognitiveCalculation';
 import { calculateEmotionalIntelligenceScore } from './emotionalIntelligenceCalculation';
 import { calculateCattellScore } from './cattellCalculation';
 import { calculateEnneagramScore } from './enneagramCalculation';
+import { calculateHexacoScore } from './hexacoCalculation';
 
 export const calculateTestScore = (testName: string, answers: Record<string, number>, questions: any[]) => {
   switch (testName) {
@@ -24,6 +25,9 @@ export const calculateTestScore = (testName: string, answers: Record<string, num
       return calculateEmotionalIntelligenceScore(answers);
     case 'Test Cattell 16PF':
       return calculateCattellScore(answers);
+    case 'Test HEXACO':
+    case 'HEXACO Personalitate':
+      return calculateHexacoScore(answers);
     case 'Enneagram':
       return {
         ...calculateEnneagramScore(answers),
@@ -42,3 +46,4 @@ export * from './cognitiveCalculation';
 export * from './emotionalIntelligenceCalculation';
 export * from './cattellCalculation';
 export * from './enneagramCalculation';
+export * from './hexacoCalculation';

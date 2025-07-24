@@ -7,6 +7,7 @@ import { calculateCognitiveAbilitiesScore, calculateCognitiveAbilitiesScoreFromD
 import { calculateBeckDepressionScore } from '@/utils/beckDepressionInventoryCalculator';
 import { calculateBelbinTeamRolesScore, calculateBelbinTeamRolesScoreFromDB } from '@/utils/belbinTeamRolesCalculator';
 import { calculateEnneagramScore } from '@/utils/testCalculations/enneagramCalculation';
+import { calculateHexacoScore } from '@/utils/testCalculations/hexacoCalculation';
 import { isCognitiveAbilitiesTest, isBeckDepressionInventory, isBelbinTeamRoles } from '@/utils/testLabels';
 
 export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
@@ -74,6 +75,9 @@ export const useTestSubmission = (onSuccess?: (resultId: string) => void) => {
           dimensions: enneagramScore,
           interpretation: 'Rezultat Enneagram'
         };
+      } else if (testType.name.includes('HEXACO')) {
+        console.log('Calculating HEXACO score...');
+        calculatedScore = calculateHexacoScore(testData.answers);
       } else {
         // Default scoring for other tests (placeholder)
         console.log('Using default scoring...');

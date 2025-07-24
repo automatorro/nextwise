@@ -8,6 +8,53 @@ interface ScoreInterpretation {
 export function getScoreInterpretation(score: number, testName?: string, language: 'en' | 'ro' = 'ro'): ScoreInterpretation {
   const testKey = testName?.toLowerCase() || '';
   
+  // HEXACO Test interpretation
+  if (testKey.includes('hexaco')) {
+    if (language === 'en') {
+      if (score >= 80) return {
+        level: "Excellent personality profile",
+        description: "Very well-balanced personality with strong development across all dimensions",
+        variant: "default"
+      };
+      if (score >= 60) return {
+        level: "Good personality profile", 
+        description: "Well-developed personality with clear strengths in key areas",
+        variant: "secondary"
+      };
+      if (score >= 40) return {
+        level: "Moderate personality profile",
+        description: "Balanced personality with opportunities for growth in some areas",
+        variant: "outline"
+      };
+      return {
+        level: "Developing personality profile",
+        description: "Personality in development with potential for growth across multiple dimensions",
+        variant: "outline"
+      };
+    } else {
+      if (score >= 80) return {
+        level: "Profil de personalitate excelent",
+        description: "Personalitate foarte echilibrată cu dezvoltare puternică în toate dimensiunile",
+        variant: "default"
+      };
+      if (score >= 60) return {
+        level: "Profil de personalitate bun", 
+        description: "Personalitate bine dezvoltată cu puncte forte clare în domenii cheie",
+        variant: "secondary"
+      };
+      if (score >= 40) return {
+        level: "Profil de personalitate moderat",
+        description: "Personalitate echilibrată cu oportunități de creștere în unele domenii",
+        variant: "outline"
+      };
+      return {
+        level: "Profil de personalitate în dezvoltare",
+        description: "Personalitate în dezvoltare cu potențial de creștere în multiple dimensiuni",
+        variant: "outline"
+      };
+    }
+  }
+  
   // CORECTARE CRITICĂ: Algoritm corect pentru GAD-7
   if (testKey.includes('gad-7') || testKey.includes('anxietate')) {
     if (language === 'en') {
