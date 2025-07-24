@@ -20,7 +20,7 @@ export const useTestSubmission = () => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  const submitTest = useMutation({
+  const mutation = useMutation({
     mutationFn: async ({ testId, answers, questions }: {
       testId: string;
       answers: Record<string, number>;
@@ -61,7 +61,7 @@ export const useTestSubmission = () => {
       } else if (testName.includes('belbin')) {
         score = calculateBelbinScore(answers);
       } else if (testName.includes('hexaco')) {
-        score = calculateHexacoScore(answers, questions);
+        score = calculateHexacoScore(answers);
       } else {
         // Default scoring
         score = { overall: 0, interpretation: 'Scor calculat automat' };
@@ -85,16 +85,6 @@ export const useTestSubmission = () => {
       if (error) {
         console.error('Error saving test result:', error);
         throw error;
-      }
-
-      // Update subscription test count
-      const { error: updateError } = await supabase.rpc('increment_test_count', {
-        _user_id: user.id
-      });
-
-      if (updateError) {
-        console.error('Error updating test count:', updateError);
-        // Don't throw here as the test was already saved
       }
 
       return result;
@@ -122,5 +112,10 @@ export const useTestSubmission = () => {
     }
   });
 
-  return submitTest;
+  return {
+    mutate: mutation.mutate,
+    isLoading: mutation.isPending,
+    isError: mutation.isError,
+    error: mutation.error
+  };
 };

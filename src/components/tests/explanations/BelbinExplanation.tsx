@@ -2,11 +2,11 @@
 import React from 'react';
 
 interface BelbinExplanationProps {
-  score: any;
-  language: string;
+  score?: any;
+  language?: string;
 }
 
-const BelbinExplanation: React.FC<BelbinExplanationProps> = ({ score, language }) => {
+const BelbinExplanation: React.FC<BelbinExplanationProps> = ({ score, language = 'ro' }) => {
   return (
     <div className="p-4 bg-gray-50 rounded-lg">
       <p className="text-gray-600">

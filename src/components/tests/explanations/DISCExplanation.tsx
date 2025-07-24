@@ -2,11 +2,11 @@
 import React from 'react';
 
 interface DISCExplanationProps {
-  score: any;
-  language: string;
+  score?: any;
+  language?: string;
 }
 
-const DISCExplanation: React.FC<DISCExplanationProps> = ({ score, language }) => {
+const DISCExplanation: React.FC<DISCExplanationProps> = ({ score, language = 'ro' }) => {
   return (
     <div className="p-4 bg-gray-50 rounded-lg">
       <p className="text-gray-600">

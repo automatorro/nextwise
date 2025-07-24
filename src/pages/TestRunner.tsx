@@ -1,243 +1,112 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { useSubscription } from '@/hooks/useSubscription';
-import { useTestProgress } from '@/hooks/useTestProgress';
-import { useLanguage } from '@/hooks/useLanguage';
+import Question from '@/components/test-runner/Question';
+import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
 import { useTestSubmission } from '@/hooks/useTestSubmission';
 import HomeNavigation from '@/components/home/HomeNavigation';
 import Footer from '@/components/home/Footer';
-import TestStartScreen from '@/components/test/TestStartScreen';
-import TestQuestion from '@/components/test/TestQuestion';
-import TestErrorScreen from '@/components/test/TestErrorScreen';
-import TestProgressRestoreDialog from '@/components/test/TestProgressRestoreDialog';
-import type { Json } from '@/integrations/supabase/types';
 
-interface Question {
+interface QuestionType {
   id: string;
-  question_text: string;
-  question_order: number;
-  options: Json;
-  options_en?: Json;
-  scoring_weights?: Json;
-}
-
-interface TestType {
-  id: string;
-  name: string;
-  description: string;
-  estimated_duration: number;
-  questions_count: number;
+  text: string;
+  options: string[];
+  correct_answer?: number;
+  scoring_weights?: { [key: string]: number[] };
 }
 
 const TestRunner = () => {
   const { testId } = useParams<{ testId: string }>();
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const { canTakeTest } = useSubscription();
-  const { toast } = useToast();
-  const { language, t } = useLanguage();
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<{ [questionId: string]: number }>({});
-  const [isStarted, setIsStarted] = useState(false);
-  const [showProgressDialog, setShowProgressDialog] = useState(false);
+  const [questions, setQuestions] = useState<QuestionType[] | null>(null);
+  const [answers, setAnswers] = useState<Record<string, number>>({});
 
-  // Initialize progress management
-  const {
-    hasSavedProgress,
-    savedProgress,
-    saveProgress,
-    clearProgress,
-    restoreProgress
-  } = useTestProgress(testId || '');
-
-  // Initialize test submission hook with navigation callback
-  const { submitTest, isSubmitting, error } = useTestSubmission((resultId: string) => {
-    // Clear progress when test is successfully submitted
-    clearProgress();
-    navigate(`/test-result/${resultId}`);
-  });
-
-  // Fetch test type
-  const { data: testType, isLoading: testTypeLoading, error: testTypeError } = useQuery({
+  const { data: testType, isLoading: isTestTypeLoading, error: testTypeError } = useQuery({
     queryKey: ['testType', testId],
     queryFn: async () => {
-      if (!testId) throw new Error('Test ID is required');
-      
+      if (!testId) throw new Error("Test ID is required");
       const { data, error } = await supabase
         .from('test_types')
         .select('*')
         .eq('id', testId)
         .single();
-      
-      if (error) {
-        console.error('Error fetching test type:', error);
-        throw error;
-      }
-      
-      return data as TestType;
+
+      if (error) throw error;
+      return data;
     },
-    enabled: !!testId
+    enabled: !!testId,
   });
 
-  // Fetch questions with both Romanian and English text columns
-  const { data: questions, isLoading: questionsLoading, error: questionsError } = useQuery({
-    queryKey: ['questions', testId, language],
+  const { data: questionsData, isLoading: isQuestionsLoading, error: questionsError } = useQuery({
+    queryKey: ['questions', testId],
     queryFn: async () => {
-      if (!testId) throw new Error('Test ID is required');
-      
-      // Always select both language columns so we can handle fallbacks properly
+      if (!testId) throw new Error("Test ID is required");
       const { data, error } = await supabase
-        .from('test_questions')
-        .select('id, question_text_ro, question_text_en, question_order, options, options_en, scoring_weights')
-        .eq('test_type_id', testId)
-        .order('question_order');
-      
-      if (error) {
-        console.error('Error fetching questions:', error);
-        throw error;
-      }
-      
-      // Map the response to use the appropriate language with fallback
-      const mappedData = data.map(item => ({
-        id: item.id,
-        question_text: language === 'en' && item.question_text_en 
-          ? item.question_text_en 
-          : item.question_text_ro, // Fallback to Romanian
-        question_order: item.question_order,
-        options: item.options,
-        options_en: item.options_en,
-        scoring_weights: item.scoring_weights
-      }));
-      
-      console.log('Fetched questions for language:', language, mappedData);
-      return mappedData as Question[];
+        .from('questions')
+        .select('*')
+        .eq('test_type_id', testId);
+
+      if (error) throw error;
+      return data;
     },
-    enabled: !!testId && !!testType
+    onSuccess: (data) => {
+      setQuestions(data);
+    },
+    enabled: !!testId,
   });
 
-  // Check if user can take test
   useEffect(() => {
-    if (!canTakeTest()) {
-      toast({
-        title: t('testRunner.limitReached'),
-        description: t('testRunner.limitMessage'),
-        variant: "destructive"
+    if (questions) {
+      const initialAnswers: Record<string, number> = {};
+      questions.forEach(question => {
+        initialAnswers[question.id] = 0;
       });
-      navigate('/abonament');
+      setAnswers(initialAnswers);
     }
-  }, [canTakeTest, navigate, toast, t]);
+  }, [questions]);
 
-  // Check for saved progress when questions are loaded
-  useEffect(() => {
-    if (questions && hasSavedProgress && !isStarted) {
-      setShowProgressDialog(true);
-    }
-  }, [questions, hasSavedProgress, isStarted]);
-
-  // Save progress whenever answers or current question changes
-  useEffect(() => {
-    if (isStarted && testId) {
-      saveProgress(currentQuestionIndex, answers);
-    }
-  }, [currentQuestionIndex, answers, isStarted, testId, saveProgress]);
-
-  const handleRestoreProgress = () => {
-    const progress = restoreProgress();
-    if (progress) {
-      setCurrentQuestionIndex(progress.currentQuestionIndex);
-      setAnswers(progress.answers);
-      setIsStarted(true);
-      setShowProgressDialog(false);
-      
-      toast({
-        title: t('testRunner.progressRestored'),
-        description: `${t('testRunner.continueFrom')} ${progress.currentQuestionIndex + 1}`
-      });
-    }
-  };
-
-  const handleStartFresh = () => {
-    clearProgress();
-    setCurrentQuestionIndex(0);
-    setAnswers({});
-    setShowProgressDialog(false);
-    
-    toast({
-      title: t('testRunner.testRestarted'),
-      description: t('testRunner.startFromFirst')
-    });
-  };
-
-  const handleAnswerChange = (value: string) => {
-    const currentQuestion = questions![currentQuestionIndex];
-    setAnswers(prev => ({
-      ...prev,
-      [currentQuestion.id]: parseInt(value)
+  const handleAnswerChange = (questionId: string, answer: number) => {
+    setAnswers(prevAnswers => ({
+      ...prevAnswers,
+      [questionId]: answer,
     }));
   };
+  
+  const testSubmission = useTestSubmission();
 
-  const handleNext = () => {
-    if (currentQuestionIndex < questions!.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-    } else {
-      handleSubmit();
+  const handleSubmit = () => {
+    if (answers && questions) {
+      testSubmission.mutate({
+        testId: testId!,
+        answers,
+        questions
+      });
     }
   };
 
-  const handlePrevious = () => {
-    setCurrentQuestionIndex(prev => prev - 1);
-  };
-
-  const handleSubmit = () => {
-    if (!testId) return;
-    
-    submitTest({
-      test_type_id: testId,
-      answers
-    });
-  };
-
-  // Handle loading states and errors
-  if (testTypeLoading) {
+  if (isTestTypeLoading || isQuestionsLoading) {
     return (
       <div>
         <HomeNavigation />
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <Loader2 className="w-8 h-8 animate-spin" />
+        <div className="min-h-screen flex items-center justify-center">
+          <Loader2 className="w-10 h-10 animate-spin" />
         </div>
         <Footer />
       </div>
     );
   }
 
-  if (testTypeError || !testType) {
+  if (testTypeError || questionsError || !testType) {
     return (
       <div>
         <HomeNavigation />
-        <TestErrorScreen
-          title={t('testRunner.notFound')}
-          message={t('testRunner.testNotExists')}
-          onReturnToTests={() => navigate('/teste')}
-        />
-        <Footer />
-      </div>
-    );
-  }
-
-  if (questionsLoading) {
-    return (
-      <div>
-        <HomeNavigation />
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-          <div className="text-center">
-            <Loader2 className="w-8 h-8 animate-spin mx-auto mb-2" />
-            <p>{t('testRunner.loadingQuestions')}</p>
+        <div className="min-h-screen flex items-center justify-center text-center">
+          <div>
+            <h2 className="text-2xl font-bold mb-4">Error loading test</h2>
+            <p>Please check the test ID or try again later.</p>
+            <Button onClick={() => navigate('/teste')}>Back to Tests</Button>
           </div>
         </div>
         <Footer />
@@ -245,65 +114,34 @@ const TestRunner = () => {
     );
   }
 
-  if (questionsError || !questions || questions.length === 0) {
-    return (
-      <div>
-        <HomeNavigation />
-        <TestErrorScreen
-          title={t('testRunner.unavailable')}
-          message={`${testType.name} ${t('testRunner.noQuestions')}`}
-          onReturnToTests={() => navigate('/teste')}
-        />
-        <Footer />
-      </div>
-    );
-  }
-
-  // Show test start screen
-  if (!isStarted && !showProgressDialog) {
-    return (
-      <div>
-        <HomeNavigation />
-        <div className="pt-20">
-          <TestStartScreen
-            testType={testType}
-            questionsCount={questions.length}
-            onStartTest={() => setIsStarted(true)}
-          />
-        </div>
-        <Footer />
-      </div>
-    );
-  }
-
-  const currentQuestion = questions[currentQuestionIndex];
-
   return (
     <div>
       <HomeNavigation />
-      <div className="pt-20">
-        <TestProgressRestoreDialog
-          open={showProgressDialog}
-          testName={testType.name}
-          questionNumber={savedProgress?.currentQuestionIndex || 0}
-          totalQuestions={questions.length}
-          onRestore={handleRestoreProgress}
-          onStartFresh={handleStartFresh}
-        />
-        
-        {isStarted && (
-          <TestQuestion
-            testType={testType}
-            currentQuestion={currentQuestion}
-            currentQuestionIndex={currentQuestionIndex}
-            totalQuestions={questions.length}
-            answers={answers}
-            isSubmitting={isSubmitting}
-            onAnswerChange={handleAnswerChange}
-            onNext={handleNext}
-            onPrevious={handlePrevious}
-          />
-        )}
+      <div className="min-h-screen bg-gray-100 py-12">
+        <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-8">
+          <h1 className="text-3xl font-bold text-center mb-8">{testType.name}</h1>
+          {questions && questions.map(question => (
+            <Question
+              key={question.id}
+              question={question}
+              selectedAnswer={answers[question.id]}
+              onAnswerChange={handleAnswerChange}
+            />
+          ))}
+          <div className="flex justify-center mt-8">
+            <Button 
+              onClick={handleSubmit}
+              disabled={testSubmission.isLoading}
+            >
+              {testSubmission.isLoading ? (
+                <>
+                  Submitting...
+                  <Loader2 className="ml-2 w-4 h-4 animate-spin" />
+                </>
+              ) : 'Submit Test'}
+            </Button>
+          </div>
+        </div>
       </div>
       <Footer />
     </div>

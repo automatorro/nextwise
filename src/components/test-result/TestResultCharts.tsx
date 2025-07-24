@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { BelbinRadarChart } from '../charts/BelbinRadarChart';
-import { BigFiveRadarChart } from '../charts/BigFiveRadarChart';
+import BelbinRadarChart from '../charts/BelbinRadarChart';
+import BigFiveRadarChart from '../charts/BigFiveRadarChart';
 import { HexacoRadarChart } from '../charts/HexacoRadarChart';
 
 interface TestResultChartsProps {

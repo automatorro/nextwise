@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Info, TrendingUp } from 'lucide-react';
-import { getTestScoringExplanation, getScoreInterpretation } from '@/utils/testScoring';
+import { getTestScoringExplanation } from '@/utils/testScoring';
 import { useLanguage } from '@/hooks/useLanguage';
 
 interface ScoringExplanationProps {
@@ -23,7 +23,6 @@ const ScoringExplanation = ({
 }: ScoringExplanationProps) => {
   const { language } = useLanguage();
   const explanation = getTestScoringExplanation(testName, language);
-  const interpretation = getScoreInterpretation(overallScore, testName, language);
 
   if (!explanation) return null;
 
@@ -39,6 +38,16 @@ const ScoringExplanation = ({
     limitations: language === 'en' ? 'Important limitations:' : 'Limitări importante:',
     recommendations: language === 'en' ? 'Recommendations:' : 'Recomandări:'
   };
+
+  // Simple interpretation based on score
+  const getScoreInterpretation = (score: number) => {
+    if (score >= 80) return { level: 'Ridicat', variant: 'default' as const };
+    if (score >= 60) return { level: 'Mediu-ridicat', variant: 'outline' as const };
+    if (score >= 40) return { level: 'Mediu', variant: 'outline' as const };
+    return { level: 'Scăzut', variant: 'secondary' as const };
+  };
+
+  const interpretation = getScoreInterpretation(overallScore);
 
   const testKey = testName.toLowerCase();
   const isDISC = testKey.includes('disc') || testKey.includes('comportament');
@@ -73,108 +82,48 @@ const ScoringExplanation = ({
               </Badge>
               <span className="text-lg font-semibold text-gray-900">{overallScore}{scoreType === 'percentage' ? '%' : ''}</span>
             </div>
-            <p className="text-gray-700">{interpretation.description}</p>
+            <p className="text-gray-700">
+              {interpretation.level === 'Ridicat' ? 'Scor foarte bun în acest test.' : 
+               interpretation.level === 'Mediu-ridicat' ? 'Scor bun în acest test.' :
+               interpretation.level === 'Mediu' ? 'Scor satisfăcător în acest test.' :
+               'Scor care poate fi îmbunătățit.'}
+            </p>
           </div>
         )}
 
-        {/* DISC Specific Content */}
-        {isDISC && explanation.discSpecific && dimensions && (
+        {/* Show dimensions if available */}
+        {dimensions && Object.keys(dimensions).length > 0 && (
           <div>
             <h4 className="font-semibold text-gray-900 mb-2">{labels.dimensions}</h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
-              {Object.entries(explanation.discSpecific.dimensions).map(([key, dimInfo]) => {
-                const score = dimensions[key.toLowerCase()] || 0;
-                return (
-                  <div key={key} className="p-3 bg-white rounded border">
-                    <div className="flex items-center justify-between mb-1">
-                      <span className="font-medium text-blue-600">{dimInfo.name}</span>
-                      <span className="text-sm font-semibold">{score}%</span>
-                    </div>
-                    <p className="text-xs text-gray-600 mb-2">{dimInfo.description}</p>
-                    <div className="text-xs">
-                      <span className="text-green-600">Ridicat: </span>
-                      <span className="text-gray-600">{dimInfo.highTrait}</span>
-                    </div>
+              {Object.entries(dimensions).map(([key, value]) => (
+                <div key={key} className="p-3 bg-white rounded border">
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="font-medium text-blue-600">{key}</span>
+                    <span className="text-sm font-semibold">{value}%</span>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
-            {explanation.discSpecific.combinations && (
-              <div className="mt-3 p-3 bg-blue-100 rounded">
-                <p className="text-sm text-blue-800">{explanation.discSpecific.combinations}</p>
-              </div>
-            )}
           </div>
         )}
 
-        {/* Belbin Specific Content */}
-        {isBelbin && explanation.belbinSpecific && (
+        {/* Show role scores for Belbin */}
+        {isBelbin && roleScores && Object.keys(roleScores).length > 0 && (
           <div>
             <h4 className="font-semibold text-gray-900 mb-2">{labels.roles}</h4>
-            <div className="space-y-2 text-sm">
-              {Object.entries(explanation.belbinSpecific.categories).map(([key, category]) => (
-                <div key={key} className="p-3 bg-white rounded border">
-                  <h5 className="font-medium text-blue-600 mb-1">{category.name}</h5>
-                  <p className="text-gray-600">{category.description}</p>
-                </div>
-              ))}
-            </div>
-            
-            {/* Role Scores Display for Belbin */}
-            {roleScores && Object.keys(roleScores).length > 0 && (
-              <div className="mt-4">
-                <h5 className="font-medium text-gray-900 mb-2">
-                  {language === 'en' ? 'Your Role Scores:' : 'Scorurile Tale pe Roluri:'}
-                </h5>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
-                  {Object.entries(roleScores)
-                    .sort(([,a], [,b]) => b - a)
-                    .slice(0, 5)
-                    .map(([role, score]) => {
-                      const roleInfo = explanation.belbinSpecific.roles?.[role.replace('_', '-')];
-                      return (
-                        <div key={role} className="flex items-center justify-between p-2 bg-white rounded border">
-                          <span className="font-medium">
-                            {roleInfo?.name || role.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                          </span>
-                          <span className="font-semibold text-blue-600">{score} pts</span>
-                        </div>
-                      );
-                    })}
-                </div>
-              </div>
-            )}
-            
-            <div className="mt-3 p-3 bg-blue-100 rounded">
-              <p className="text-sm text-blue-800">{explanation.belbinSpecific.primaryVsSecondary}</p>
-            </div>
-          </div>
-        )}
-
-        {/* Clinical Tests Specific Content */}
-        {isClinical && explanation.clinicalSpecific && (
-          <div className="space-y-3">
-            <div className="p-3 bg-amber-50 border border-amber-200 rounded">
-              <h4 className="font-semibold text-amber-800 mb-1">{labels.limitations}</h4>
-              <p className="text-sm text-amber-700">{explanation.clinicalSpecific.limitations}</p>
-            </div>
-            <div className="p-3 bg-green-50 border border-green-200 rounded">
-              <h4 className="font-semibold text-green-800 mb-1">{labels.recommendations}</h4>
-              <p className="text-sm text-green-700">{explanation.clinicalSpecific.recommendations}</p>
-            </div>
-          </div>
-        )}
-
-        {explanation.scoreRanges && !isBelbin && (
-          <div>
-            <h4 className="font-semibold text-gray-900 mb-2">{labels.scoreRanges}</h4>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
-              {explanation.scoreRanges.map((range, index) => (
-                <div key={index} className="flex items-center justify-between p-2 bg-white rounded border">
-                  <span className="font-medium">{range.range}</span>
-                  <Badge variant={range.variant}>{range.label}</Badge>
-                </div>
-              ))}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+              {Object.entries(roleScores)
+                .sort(([,a], [,b]) => (b as number) - (a as number))
+                .slice(0, 5)
+                .map(([role, score]) => (
+                  <div key={role} className="flex items-center justify-between p-2 bg-white rounded border">
+                    <span className="font-medium">
+                      {role.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </span>
+                    <span className="font-semibold text-blue-600">{score} pts</span>
+                  </div>
+                ))}
             </div>
           </div>
         )}
