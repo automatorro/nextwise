@@ -15,8 +15,7 @@ interface QuestionType {
   text: string;
   options: string[];
   question_order: number;
-  correct_answer?: number;
-  scoring_weights?: { [key: string]: number[] };
+  scoring_weights?: { [key: string]: number[] } | null;
 }
 
 const TestRunner = () => {
@@ -62,10 +61,9 @@ const TestRunner = () => {
       const formattedQuestions = questionsData.map(q => ({
         id: q.id,
         text: q.question_text_ro || q.question_text_en || '',
-        options: q.options || [],
+        options: Array.isArray(q.options) ? q.options as string[] : [],
         question_order: q.question_order,
-        correct_answer: q.correct_answer,
-        scoring_weights: q.scoring_weights
+        scoring_weights: q.scoring_weights as { [key: string]: number[] } | null
       }));
       setQuestions(formattedQuestions);
     }
