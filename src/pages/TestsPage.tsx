@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -53,12 +54,6 @@ const TestsPage = () => {
       
       console.log('Raw test types from database:', testTypes);
       
-      // Log specific test we're looking for
-      const cognitiveTest = testTypes.find(test => 
-        test.name.toLowerCase().includes('aptitudini cognitive')
-      );
-      console.log('Found cognitive abilities test:', cognitiveTest);
-      
       // For each test type, count actual questions
       const testsWithQuestionCounts = await Promise.all(
         testTypes.map(async (testType) => {
@@ -86,13 +81,7 @@ const TestsPage = () => {
       );
       
       console.log('Valid tests with questions:', validTests);
-      console.log('Tests without questions:', testsWithQuestionCounts.filter(test => test.actual_questions_count === 0));
-      
-      // Special check for cognitive abilities test
-      const cognitiveTestInValid = validTests.find(test => 
-        test.name.toLowerCase().includes('aptitudini cognitive')
-      );
-      console.log('Cognitive abilities test in valid tests:', cognitiveTestInValid);
+      console.log('Tests being returned for rendering:', validTests);
       
       return validTests as TestType[];
     }
@@ -103,7 +92,11 @@ const TestsPage = () => {
       'brain': Brain,
       'users': Users,
       'target': Target,
-      'heart': Heart
+      'heart': Heart,
+      '🎯': Target,
+      '👤': Users,
+      '🧠': Brain,
+      '❤️': Heart
     };
     return icons[iconName] || Brain;
   }
@@ -189,14 +182,19 @@ const TestsPage = () => {
     );
   }
 
+  console.log('Tests data in render:', tests);
+
   const groupedTests = tests?.reduce((acc, test) => {
-    const categoryName = test.test_categories.name;
+    const categoryName = test.test_categories?.name || 'Unknown';
+    console.log(`Grouping test ${test.name} under category ${categoryName}`);
     if (!acc[categoryName]) {
       acc[categoryName] = [];
     }
     acc[categoryName].push(test);
     return acc;
   }, {} as { [key: string]: TestType[] }) || {};
+
+  console.log('Grouped tests:', groupedTests);
 
   return (
     <div>
@@ -217,13 +215,14 @@ const TestsPage = () => {
             </div>
 
             {Object.entries(groupedTests).map(([categoryName, categoryTests]) => {
+              console.log(`Rendering category ${categoryName} with ${categoryTests.length} tests`);
               const categoryTranslationKey = getCategoryTranslationKey(categoryName);
               const translatedCategoryName = t(categoryTranslationKey);
               
               return (
                 <div key={categoryName} className="mb-12">
                   <h2 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-                    {React.createElement(getIconComponent(categoryTests[0]?.test_categories.icon), {
+                    {React.createElement(getIconComponent(categoryTests[0]?.test_categories?.icon), {
                       className: "w-6 h-6 mr-2 text-blue-600"
                     })}
                     {translatedCategoryName}
@@ -231,6 +230,7 @@ const TestsPage = () => {
                   
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {categoryTests.map((test) => {
+                      console.log(`Rendering test: ${test.name} with ${test.actual_questions_count} questions`);
                       const userCanTake = canUserTakeTest(test);
                       const testNameTranslationKey = getTestNameTranslationKey(test.name);
                       const testDescriptionTranslationKey = getTestDescriptionTranslationKey(test.name);
@@ -252,7 +252,7 @@ const TestsPage = () => {
                                 test.subscription_required === 'professional' ? 'bg-blue-100' :
                                 'bg-purple-100'
                               }`}>
-                                {React.createElement(getIconComponent(test.test_categories.icon), {
+                                {React.createElement(getIconComponent(test.test_categories?.icon), {
                                   className: `w-5 h-5 ${
                                     test.subscription_required === 'basic' ? 'text-green-600' :
                                     test.subscription_required === 'professional' ? 'text-blue-600' :
@@ -294,7 +294,7 @@ const TestsPage = () => {
                                 <Button disabled className="w-full">
                                   {t('tests.upgradeRequired')}
                                 </Button>
-                                <Link to="/abonament">
+                                <Link to="/subscription">
                                   <Button variant="outline" size="sm" className="w-full">
                                     {t('subscription.upgradeSubscription')}
                                   </Button>
