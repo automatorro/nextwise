@@ -1,9 +1,9 @@
 
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { BigFiveRadarChart } from '../charts/BigFiveRadarChart';
-import { BelbinRadarChart } from '../charts/BelbinRadarChart';
-import { HexacoRadarChart } from '../charts/HexacoRadarChart';
+import BigFiveRadarChart from '../charts/BigFiveRadarChart';
+import BelbinRadarChart from '../charts/BelbinRadarChart';
+import HexacoRadarChart from '../charts/HexacoRadarChart';
 import { SJTRadarChart } from '../charts/SJTRadarChart';
 
 interface TestResultChartsProps {
@@ -27,7 +27,17 @@ export const TestResultCharts: React.FC<TestResultChartsProps> = ({ testName, sc
   }
   
   if (testKey.includes('hexaco')) {
-    return <HexacoRadarChart data={score.dimensions || {}} />;
+    // Convert the dimensions to the expected format for HexacoRadarChart
+    const hexacoData = score.dimensions || {};
+    const formattedHexacoData = {
+      honesty_humility: hexacoData.honesty_humility || 0,
+      emotionality: hexacoData.emotionality || 0,
+      extraversion: hexacoData.extraversion || 0,
+      agreeableness: hexacoData.agreeableness || 0,
+      conscientiousness: hexacoData.conscientiousness || 0,
+      openness: hexacoData.openness || 0
+    };
+    return <HexacoRadarChart data={formattedHexacoData} />;
   }
   
   if (testKey.includes('sjt') || testKey.includes('situational judgment')) {

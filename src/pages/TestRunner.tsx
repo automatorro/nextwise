@@ -85,7 +85,7 @@ const TestRunner = () => {
 
     // Auto-advance to next question after 500ms delay
     setTimeout(() => {
-      if (currentQuestionIndex < questions!.length - 1) {
+      if (questions && currentQuestionIndex < questions.length - 1) {
         setCurrentQuestionIndex(prev => prev + 1);
       }
     }, 500);
@@ -108,7 +108,7 @@ const TestRunner = () => {
   };
 
   const handleNext = () => {
-    if (currentQuestionIndex < questions!.length - 1) {
+    if (questions && currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     }
   };
@@ -128,7 +128,7 @@ const TestRunner = () => {
     );
   }
 
-  if (testTypeError || questionsError || !testType || !questions) {
+  if (testTypeError || questionsError || !testType || !questions || questions.length === 0) {
     return (
       <div>
         <HomeNavigation />
@@ -145,6 +145,24 @@ const TestRunner = () => {
   }
 
   const currentQuestion = questions[currentQuestionIndex];
+  
+  // Add safety check for currentQuestion
+  if (!currentQuestion) {
+    return (
+      <div>
+        <HomeNavigation />
+        <div className="min-h-screen flex items-center justify-center text-center">
+          <div>
+            <h2 className="text-2xl font-bold mb-4 text-red-600">Eroare la încărcarea întrebării</h2>
+            <p className="text-gray-600 mb-6">Nu s-a putut încărca întrebarea curentă.</p>
+            <Button onClick={() => navigate('/tests')}>Înapoi la Teste</Button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
   const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const isCurrentQuestionAnswered = answers[currentQuestion.id] !== undefined;

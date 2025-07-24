@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -47,6 +46,9 @@ interface ScoreData {
   primary_roles?: string[];
   secondary_roles?: string[];
   role_scores?: { [key: string]: number };
+  recommendations?: string[];
+  dominant_profile?: string;
+  secondary_profile?: string;
 }
 
 interface TestResultData {
@@ -271,7 +273,7 @@ const TestResult = () => {
                   dimensions: testSpecificDimensions,
                   interpretation: result.score.interpretation,
                   detailed_interpretations: result.score.detailed_interpretations,
-                  recommendations: result.score.recommendations,
+                  recommendations: result.score.recommendations || [],
                   dominant_profile: result.score.dominant_profile,
                   secondary_profile: result.score.secondary_profile
                 }}
