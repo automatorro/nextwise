@@ -1,19 +1,19 @@
 
 import React from 'react';
-import { BigFiveExplanation } from './explanations/BigFiveExplanation';
-import { BelbinExplanation } from './explanations/BelbinExplanation';
-import { CattellExplanation } from './explanations/CattellExplanation';
-import { CognitiveExplanation } from './explanations/CognitiveExplanation';
-import { DISCExplanation } from './explanations/DISCExplanation';
-import { EmotionalIntelligenceExplanation } from './explanations/EmotionalIntelligenceExplanation';
-import { EnneagramExplanation } from './explanations/EnneagramExplanation';
-import { GADExplanation } from './explanations/GADExplanation';
+import BigFiveExplanation from './explanations/BigFiveExplanation';
+import BelbinExplanation from './explanations/BelbinExplanation';
+import CattellExplanation from './explanations/CattellExplanation';
+import CognitiveExplanation from './explanations/CognitiveExplanation';
+import DISCExplanation from './explanations/DISCExplanation';
+import EmotionalIntelligenceExplanation from './explanations/EmotionalIntelligenceExplanation';
+import EnneagramExplanation from './explanations/EnneagramExplanation';
+import GADExplanation from './explanations/GADExplanation';
 import { HexacoExplanation } from './explanations/HexacoExplanation';
 import { SJTExplanation } from './explanations/SJTExplanation';
 
 interface TestExplanationsProps {
   testName: string;
-  score: any;
+  score?: any;
   language?: string;
 }
 

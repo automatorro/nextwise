@@ -6,7 +6,7 @@ interface GADExplanationProps {
   language?: string;
 }
 
-const GADExplanation: React.FC<GADExplanationProps> = ({ score, language = 'ro' }) => {
+export const GADExplanation: React.FC<GADExplanationProps> = ({ score, language = 'ro' }) => {
   return (
     <div className="p-4 bg-gray-50 rounded-lg">
       <p className="text-gray-600">

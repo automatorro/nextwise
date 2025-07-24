@@ -19,7 +19,15 @@ export const TestResultCharts: React.FC<TestResultChartsProps> = ({ testName, sc
   const testKey = testName.toLowerCase();
   
   if (testKey.includes('big five')) {
-    return <BigFiveRadarChart dimensions={score.dimensions || {}} />;
+    // Convert dimensions to the expected BigFive format
+    const bigFiveDimensions = {
+      openness: score.dimensions?.openness || 0,
+      conscientiousness: score.dimensions?.conscientiousness || 0,
+      extraversion: score.dimensions?.extraversion || 0,
+      agreeableness: score.dimensions?.agreeableness || 0,
+      neuroticism: score.dimensions?.neuroticism || 0
+    };
+    return <BigFiveRadarChart dimensions={bigFiveDimensions} />;
   }
   
   if (testKey.includes('belbin')) {
