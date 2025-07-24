@@ -1,20 +1,18 @@
-import { useState, useEffect } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { useAuth } from '@/contexts/AuthContext';
-import { useSubscription } from '@/hooks/useSubscription';
-import { useLanguage } from '@/hooks/useLanguage';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Clock, Users, Star, Lock } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { TestExplanations } from '@/components/tests/TestExplanations';
-import { useIsMobile } from '@/hooks/use-mobile';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Clock, Users, Star, Lock, CheckCircle } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
+import { useNavigate } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
+import { useSubscription } from '@/hooks/useSubscription';
+import { Footer } from '@/components/home/Footer';
 import { getTestTranslation } from '@/utils/testTranslationMapping';
-import HomeNavigation from '@/components/home/HomeNavigation';
-import Footer from '@/components/home/Footer';
 
 interface TestType {
   id: string;
@@ -23,15 +21,16 @@ interface TestType {
   estimated_duration: number;
   questions_count: number;
   subscription_required: 'basic' | 'professional' | 'premium';
-  category?: string;
+  category_id: string;
 }
 
 const TestsPage = () => {
   const { user } = useAuth();
-  const { subscription, canTakeTest, getRemainingTests } = useSubscription();
+  const { language } = useLanguage();
+  const navigate = useNavigate();
   const { toast } = useToast();
-  const isMobile = useIsMobile();
-  const { language, t } = useLanguage();
+  const { data: subscription } = useSubscription();
+  const [showPremiumAlert, setShowPremiumAlert] = useState(false);
 
   const { data: tests, isLoading, error } = useQuery({
     queryKey: ['tests'],
@@ -39,90 +38,79 @@ const TestsPage = () => {
       const { data, error } = await supabase
         .from('test_types')
         .select('*')
-        .order('name', { ascending: true });
-
+        .order('name');
+      
       if (error) {
         console.error('Error fetching tests:', error);
         throw error;
       }
       
-      console.log('Fetched tests from database:', data);
       return data as TestType[];
     }
   });
 
-  // Debug logging pentru a vedea ce teste sunt disponibile
-  useEffect(() => {
-    if (tests) {
-      console.log('All tests:', tests);
-      console.log('SJT test found:', tests.find(t => t.name.toLowerCase().includes('sjt')));
-      console.log('Tests containing "orientare":', tests.filter(t => t.name.toLowerCase().includes('orientare')));
-      console.log('Tests containing "career":', tests.filter(t => t.name.toLowerCase().includes('career')));
-    }
-  }, [tests]);
-
   useEffect(() => {
     if (!canTakeTest() && subscription && !subscription.is_admin) {
+      setShowPremiumAlert(true);
+    }
+  }, [subscription]);
+
+  const canTakeTest = () => {
+    if (!subscription) return false;
+    if (subscription.is_admin) return true;
+    
+    const limit = subscription.subscription_type === 'premium' ? 999 : 
+                  subscription.subscription_type === 'professional' ? 7 : 4;
+    
+    return (subscription.tests_taken_this_month || 0) < limit;
+  };
+
+  const handleStartTest = (testId: string, subscriptionRequired: string) => {
+    if (!user) {
       toast({
-        title: language === 'ro' ? "Ai atins limita de teste!" : "You've reached the test limit!",
-        description: language === 'ro' 
-          ? `Abonamentul tău permite doar ${subscription.subscription_type === 'basic' ? '4' : '7'} teste pe lună.`
-          : `Your subscription allows only ${subscription.subscription_type === 'basic' ? '4' : '7'} tests per month.`,
+        title: "Autentificare necesară",
+        description: "Te rugăm să te autentifici pentru a începe testul.",
         variant: "destructive"
       });
+      return;
     }
-  }, [canTakeTest, subscription, toast, language]);
 
-  if (isLoading) {
-    return (
-      <div>
-        <HomeNavigation />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-lg text-gray-600">
-              {language === 'ro' ? 'Se încarcă testele...' : 'Loading tests...'}
-            </p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
+    if (!canTakeTest()) {
+      toast({
+        title: "Limită atinsă",
+        description: "Ai atins limita de teste pentru luna aceasta. Upgrade la Premium pentru teste nelimitate.",
+        variant: "destructive"
+      });
+      return;
+    }
 
-  if (error) {
-    return (
-      <div>
-        <HomeNavigation />
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-red-600 mb-4">
-              {language === 'ro' ? 'Eroare la încărcarea testelor' : 'Error loading tests'}
-            </h2>
-            <p className="text-gray-600">
-              {language === 'ro' ? 'Te rugăm să încerci din nou mai târziu.' : 'Please try again later.'}
-            </p>
-          </div>
-        </div>
-        <Footer />
-      </div>
-    );
-  }
+    if (requiresPremium(subscriptionRequired) && subscription?.subscription_type === 'basic') {
+      toast({
+        title: "Abonament Premium necesar",
+        description: "Acest test necesită un abonament Premium sau Professional.",
+        variant: "destructive"
+      });
+      return;
+    }
 
-  const isPremiumTest = (subscriptionRequired: string) => {
+    navigate(`/test/${testId}`);
+  };
+
+  const requiresPremium = (subscriptionRequired: string) => {
     return subscriptionRequired === 'professional' || subscriptionRequired === 'premium';
   };
 
-  // Categorize tests with proper translation - updated to include more SJT variations
+  // Categorize tests with proper translation
   const personalityTests = tests?.filter(test => 
     test.name.toLowerCase().includes('big five') || 
     test.name.toLowerCase().includes('cattell') || 
-    test.name.toLowerCase().includes('hexaco') ||
-    test.name.toLowerCase().includes('enneagram')
+    test.name.toLowerCase().includes('enneagram') || 
+    test.name.toLowerCase().includes('hexaco')
   ) || [];
 
   const professionalTests = tests?.filter(test => 
     test.name.toLowerCase().includes('disc') || 
+    test.name.toLowerCase().includes('leadership') || 
     test.name.toLowerCase().includes('belbin') ||
     test.name.toLowerCase().includes('aptitudini') ||
     test.name.toLowerCase().includes('sjt') ||
@@ -133,15 +121,18 @@ const TestsPage = () => {
 
   const emotionalTests = tests?.filter(test => 
     test.name.toLowerCase().includes('emotional') || 
+    test.name.toLowerCase().includes('emotiona') ||
     test.name.toLowerCase().includes('inteligenta') ||
-    test.name.toLowerCase().includes('emotiona')
+    test.name.toLowerCase().includes('empatie') ||
+    test.name.toLowerCase().includes('stres')
   ) || [];
 
   const clinicalTests = tests?.filter(test => 
     test.name.toLowerCase().includes('gad') || 
+    test.name.toLowerCase().includes('beck') || 
+    test.name.toLowerCase().includes('anxiety') ||
     test.name.toLowerCase().includes('anxietate') ||
-    test.name.toLowerCase().includes('depresie') ||
-    test.name.toLowerCase().includes('beck')
+    test.name.toLowerCase().includes('depresie')
   ) || [];
 
   const cognitiveTests = tests?.filter(test => 
@@ -149,72 +140,73 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('cognitiv')
   ) || [];
 
-  // Debug logging pentru categorii
-  console.log('Professional tests:', professionalTests);
-  console.log('Personality tests:', personalityTests);
-
   const TestCard = ({ test }: { test: TestType }) => {
     const translation = getTestTranslation(test.name, language);
+    const isPremium = requiresPremium(test.subscription_required);
+    const canAccess = !isPremium || subscription?.subscription_type !== 'basic';
     
     return (
-      <Card className="h-full transition-all hover:shadow-lg flex flex-col">
-        <CardHeader className="flex-shrink-0">
+      <Card className={`transition-all duration-200 hover:shadow-lg ${canAccess ? 'hover:shadow-blue-100' : 'opacity-75'}`}>
+        <CardHeader className="pb-3">
           <div className="flex justify-between items-start">
-            <CardTitle className="text-lg leading-tight">{translation.name}</CardTitle>
-            {isPremiumTest(test.subscription_required) && (
-              <Badge variant="secondary" className="bg-yellow-100 text-yellow-800 flex-shrink-0">
-                <Star className="w-3 h-3 mr-1" />
+            <div className="flex-1">
+              <CardTitle className="text-lg mb-2 line-clamp-2">
+                {translation.name}
+              </CardTitle>
+              <CardDescription className="text-sm line-clamp-3">
+                {translation.description || test.description}
+              </CardDescription>
+            </div>
+            {isPremium && (
+              <Badge variant="secondary" className="ml-2 flex items-center gap-1">
+                <Star className="h-3 w-3" />
                 Premium
               </Badge>
             )}
           </div>
-          <CardDescription className="text-sm text-gray-600 line-clamp-3">
-            {translation.description || test.description}
-          </CardDescription>
         </CardHeader>
-        <CardContent className="flex-grow flex flex-col justify-between space-y-4">
-          <div className="flex items-center justify-between text-sm text-gray-500">
-            <div className="flex items-center">
-              <Clock className="w-4 h-4 mr-1" />
-              <span>{test.estimated_duration} {language === 'ro' ? 'min' : 'min'}</span>
+        <CardContent className="pt-0">
+          <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
+            <div className="flex items-center gap-1">
+              <Clock className="h-4 w-4" />
+              {test.estimated_duration} min
             </div>
-            <div className="flex items-center">
-              <Users className="w-4 h-4 mr-1" />
-              <span>{test.questions_count} {language === 'ro' ? 'întrebări' : 'questions'}</span>
+            <div className="flex items-center gap-1">
+              <Users className="h-4 w-4" />
+              {test.questions_count} întrebări
             </div>
           </div>
           
-          <div className="flex justify-between items-center">
-            <TestExplanations testName={test.name} />
-            <Button 
-              asChild 
-              variant={isPremiumTest(test.subscription_required) && !canTakeTest() ? "outline" : "default"}
-              disabled={isPremiumTest(test.subscription_required) && !canTakeTest()}
-              className="flex-shrink-0"
-            >
-              <Link to={`/test/${test.id}`}>
-                {isPremiumTest(test.subscription_required) && !canTakeTest() ? (
-                  <>
-                    <Lock className="w-4 h-4 mr-2" />
-                    {language === 'ro' ? 'Necesită Premium' : 'Requires Premium'}
-                  </>
-                ) : (
-                  language === 'ro' ? 'Începe testul' : 'Start test'
-                )}
-              </Link>
-            </Button>
-          </div>
+          <Button 
+            onClick={() => handleStartTest(test.id, test.subscription_required)}
+            disabled={!canAccess || (!canTakeTest() && !subscription?.is_admin)}
+            className="w-full"
+            variant={canAccess ? "default" : "outline"}
+          >
+            {!canAccess ? (
+              <>
+                <Lock className="h-4 w-4 mr-2" />
+                Premium necesar
+              </>
+            ) : (!canTakeTest() && !subscription?.is_admin) ? (
+              "Limită atinsă"
+            ) : (
+              <>
+                <CheckCircle className="h-4 w-4 mr-2" />
+                Începe testul
+              </>
+            )}
+          </Button>
         </CardContent>
       </Card>
     );
   };
 
-  const TestCategory = ({ title, tests, description }: { title: string; tests: TestType[]; description: string }) => (
+  const TestSection = ({ title, tests, description }: { title: string; tests: TestType[]; description: string }) => (
     <div className="mb-12">
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">{title}</h2>
         <p className="text-gray-600">{description}</p>
-        <p className="text-sm text-gray-500 mt-1">({tests.length} teste disponibile)</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {tests.map((test) => (
@@ -224,125 +216,112 @@ const TestsPage = () => {
     </div>
   );
 
-  const categoryTitles = {
-    personality: {
-      ro: 'Teste de Personalitate',
-      en: 'Personality Tests'
-    },
-    professional: {
-      ro: 'Teste Profesionale',
-      en: 'Professional Tests'
-    },
-    emotional: {
-      ro: 'Inteligența Emoțională',
-      en: 'Emotional Intelligence'
-    },
-    cognitive: {
-      ro: 'Aptitudini Cognitive',
-      en: 'Cognitive Abilities'
-    },
-    clinical: {
-      ro: 'Evaluări Clinice',
-      en: 'Clinical Assessments'
-    }
-  };
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <div className="container mx-auto px-4 py-8">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className="h-48 bg-gray-200 rounded-lg"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-red-600 mb-4">Eroare la încărcarea testelor</h2>
+          <p className="text-gray-600">Te rugăm să încerci din nou mai târziu.</p>
+        </div>
+      </div>
+    );
+  }
 
   const categoryDescriptions = {
     personality: {
-      ro: 'Descoperă trăsăturile tale de personalitate și comportamentele caracteristice',
-      en: 'Discover your personality traits and characteristic behaviors'
+      ro: "Testele de personalitate îți oferă o perspectivă profundă asupra trăsăturilor tale de personalitate.",
+      en: "Personality tests provide deep insights into your personality traits."
     },
     professional: {
-      ro: 'Evaluează-ți competențele profesionale și stilul de lucru în echipă',
-      en: 'Evaluate your professional skills and teamwork style'
+      ro: "Testele profesionale evaluează competențele și stilurile de lucru pentru dezvoltarea carierei.",
+      en: "Professional tests evaluate competencies and work styles for career development."
     },
     emotional: {
-      ro: 'Măsoară capacitatea ta de a înțelege și gestiona emoțiile',
-      en: 'Measure your ability to understand and manage emotions'
-    },
-    cognitive: {
-      ro: 'Testează abilitățile tale mentale și capacitatea de rezolvare a problemelor',
-      en: 'Test your mental abilities and problem-solving capacity'
+      ro: "Testele emoționale măsoară inteligența emoțională și gestionarea stresului.",
+      en: "Emotional tests measure emotional intelligence and stress management."
     },
     clinical: {
-      ro: 'Instrumente de screening pentru aspecte psihologice specifice',
-      en: 'Screening tools for specific psychological aspects'
+      ro: "Testele clinice oferă evaluări validate științific pentru aspecte de sănătate mentală.",
+      en: "Clinical tests provide scientifically validated assessments for mental health aspects."
+    },
+    cognitive: {
+      ro: "Testele cognitive evaluează abilitățile mentale și capacitățile de procesare.",
+      en: "Cognitive tests evaluate mental abilities and processing capabilities."
     }
   };
 
   return (
-    <div>
-      <HomeNavigation />
-      <div className="min-h-screen bg-gray-50 py-8">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">
-              {language === 'ro' ? 'Teste Psihologice' : 'Psychological Tests'}
-            </h1>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              {language === 'ro' 
-                ? 'Descoperă-ți personalitatea, aptitudinile și potențialul prin testele noastre validate științific.'
-                : 'Discover your personality, skills and potential through our scientifically validated tests.'}
-            </p>
-            {!canTakeTest() && subscription && (
-              <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg max-w-md mx-auto">
-                <p className="text-sm text-yellow-800">
-                  {language === 'ro' 
-                    ? `Ai rămas cu ${getRemainingTests()} teste în această lună.`
-                    : `You have ${getRemainingTests()} tests remaining this month.`}
-                </p>
-              </div>
-            )}
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+            {language === 'ro' ? 'Teste de Personalitate și Aptitudini' : 'Personality and Aptitude Tests'}
+          </h1>
+          <p className="text-gray-600 text-lg">
+            {language === 'ro' 
+              ? 'Descoperă-ți personalitatea și aptitudinile prin testele noastre validate științific.'
+              : 'Discover your personality and aptitudes through our scientifically validated tests.'
+            }
+          </p>
+        </div>
 
+        <div className="space-y-12">
           {personalityTests.length > 0 && (
-            <TestCategory 
-              title={categoryTitles.personality[language]} 
+            <TestSection 
+              title={language === 'ro' ? 'Teste de Personalitate' : 'Personality Tests'}
               tests={personalityTests}
               description={categoryDescriptions.personality[language]}
             />
           )}
 
           {professionalTests.length > 0 && (
-            <TestCategory 
-              title={categoryTitles.professional[language]} 
+            <TestSection 
+              title={language === 'ro' ? 'Teste Profesionale' : 'Professional Tests'}
               tests={professionalTests}
               description={categoryDescriptions.professional[language]}
             />
           )}
 
           {emotionalTests.length > 0 && (
-            <TestCategory 
-              title={categoryTitles.emotional[language]} 
+            <TestSection 
+              title={language === 'ro' ? 'Teste Emoționale' : 'Emotional Tests'}
               tests={emotionalTests}
               description={categoryDescriptions.emotional[language]}
             />
           )}
 
           {cognitiveTests.length > 0 && (
-            <TestCategory 
-              title={categoryTitles.cognitive[language]} 
+            <TestSection 
+              title={language === 'ro' ? 'Teste Cognitive' : 'Cognitive Tests'}
               tests={cognitiveTests}
               description={categoryDescriptions.cognitive[language]}
             />
           )}
 
           {clinicalTests.length > 0 && (
-            <TestCategory 
-              title={categoryTitles.clinical[language]} 
+            <TestSection 
+              title={language === 'ro' ? 'Teste Clinice' : 'Clinical Tests'}
               tests={clinicalTests}
               description={categoryDescriptions.clinical[language]}
             />
-          )}
-
-          {/* Debug section - doar pentru development */}
-          {process.env.NODE_ENV === 'development' && (
-            <div className="mt-8 p-4 bg-gray-100 rounded-lg">
-              <h3 className="font-bold mb-2">Debug Info:</h3>
-              <p>Total tests: {tests?.length || 0}</p>
-              <p>Professional tests: {professionalTests.length}</p>
-              <p>All test names: {tests?.map(t => t.name).join(', ')}</p>
-            </div>
           )}
         </div>
       </div>
