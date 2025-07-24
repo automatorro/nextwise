@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/hooks/useLanguage';
-import { getTestNameTranslationKey, getTestDescriptionTranslationKey } from '@/utils/testTranslationMapping';
+import { getTestTranslation } from '@/utils/testTranslationMapping';
 
 interface TestType {
   id: string;
@@ -24,13 +24,12 @@ const TestStartScreen: React.FC<TestStartScreenProps> = ({
   questionsCount,
   onStartTest
 }) => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   
   // Get translated test name and description
-  const testNameKey = getTestNameTranslationKey(testType.name);
-  const testDescriptionKey = getTestDescriptionTranslationKey(testType.name);
-  const translatedTestName = t(testNameKey);
-  const translatedTestDescription = t(testDescriptionKey);
+  const translation = getTestTranslation(testType.name, language);
+  const translatedTestName = translation.name;
+  const translatedTestDescription = translation.description;
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center">
