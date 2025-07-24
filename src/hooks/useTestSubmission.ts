@@ -12,7 +12,8 @@ import {
   calculateCognitiveScore, 
   calculateBelbinScore,
   calculateHexacoScore,
-  calculateGADScore
+  calculateGADScore,
+  calculateSJTScore
 } from '@/utils/testCalculations';
 
 export const useTestSubmission = () => {
@@ -67,6 +68,10 @@ export const useTestSubmission = () => {
         console.log('HEXACO score calculated:', score);
       } else if (testName.includes('gad') || testName.includes('anxietate')) {
         score = calculateGADScore(answers);
+      } else if (testName.includes('sjt') || testName.includes('situational judgment')) {
+        console.log('Calculating SJT score for answers:', answers);
+        score = calculateSJTScore(answers, questions);
+        console.log('SJT score calculated:', score);
       } else {
         // Default scoring
         score = { overall: 0, interpretation: 'Scor calculat automat' };
