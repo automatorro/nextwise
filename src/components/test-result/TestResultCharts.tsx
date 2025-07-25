@@ -18,6 +18,15 @@ interface TestResultChartsProps {
 export const TestResultCharts: React.FC<TestResultChartsProps> = ({ testName, score }) => {
   const testKey = testName.toLowerCase();
   
+  // Don't show charts for tests that don't have meaningful visualizations
+  if (testKey.includes('sjt') || testKey.includes('situational judgment') || 
+      testKey.includes('orientare') || testKey.includes('cariera') ||
+      testKey.includes('gad') || testKey.includes('anxietate') ||
+      testKey.includes('phq') || testKey.includes('depresie') ||
+      testKey.includes('cognitiv') || testKey.includes('cognitive')) {
+    return null;
+  }
+  
   if (testKey.includes('big five')) {
     // Convert dimensions to the expected BigFive format
     const bigFiveDimensions = {
@@ -48,23 +57,15 @@ export const TestResultCharts: React.FC<TestResultChartsProps> = ({ testName, sc
     return <HexacoRadarChart data={formattedHexacoData} />;
   }
   
-  if (testKey.includes('sjt') || testKey.includes('situational judgment')) {
+  if (testKey.includes('disc')) {
     return <SJTRadarChart data={score.dimensions || {}} />;
   }
   
-  // Default chart pentru alte teste
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Vizualizarea Rezultatelor</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="h-96 flex items-center justify-center">
-          <p className="text-muted-foreground">
-            Graficul nu este disponibil pentru acest tip de test.
-          </p>
-        </div>
-      </CardContent>
-    </Card>
-  );
+  // For tests with meaningful dimensions, show a generic radar chart
+  if (score.dimensions && Object.keys(score.dimensions).length > 0) {
+    return <SJTRadarChart data={score.dimensions} />;
+  }
+  
+  // If no meaningful chart can be displayed, don't show anything
+  return null;
 };

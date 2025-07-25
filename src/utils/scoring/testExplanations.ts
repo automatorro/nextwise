@@ -1,4 +1,3 @@
-
 import { getGenericDimensionExplanation } from './scoreInterpretations';
 
 interface ScoreRange {
@@ -13,8 +12,53 @@ interface TestScoringExplanation {
   whatItMeans?: string;
 }
 
+// SJT-specific dimension explanations
+const getSJTDimensionExplanation = (dimensionKey: string): string => {
+  const explanations: { [key: string]: string } = {
+    leadership: 'Această dimensiune evaluează capacitatea ta de a conduce echipe, de a lua decizii importante și de a inspira alții în situații profesionale complexe.',
+    communication: 'Măsoară abilitățile tale de comunicare eficientă, ascultare activă și capacitatea de a transmite mesaje clare în diverse contexte profesionale.',
+    teamwork: 'Evaluează capacitatea ta de a colabora eficient cu ceilalți, de a contribui la obiectivele echipei și de a menține relații profesionale constructive.',
+    problem_solving: 'Această dimensiune măsoară abilitățile tale de analiză, gândire critică și capacitatea de a găsi soluții creative la probleme complexe.',
+    adaptability: 'Evaluează flexibilitatea ta în fața schimbărilor, capacitatea de a învăța rapid și de a te adapta la noi situații și cerințe profesionale.',
+    decision_making: 'Măsoară capacitatea ta de a lua decizii informate și eficiente, de a evalua opțiunile disponibile și de a acționa decisiv când este necesar.',
+    stress_management: 'Evaluează capacitatea ta de a funcționa eficient sub presiune, de a gestiona stresul și de a menține performanța în situații dificile.',
+    customer_service: 'Această dimensiune măsoară abilitățile tale de a interacționa cu clienții, de a răspunde la nevoile lor și de a oferi servicii de calitate.',
+    ethics: 'Evaluează capacitatea ta de a lua decizii etice, de a respecta valorile organizaționale și de a acționa cu integritate în situații profesionale.',
+    innovation: 'Măsoară capacitatea ta de a gândi creativ, de a propune idei noi și de a contribui la inovația în mediul de lucru.',
+    time_management: 'Evaluează abilitățile tale de organizare, prioritizare și gestionare eficientă a timpului pentru îndeplinirea sarcinilor.',
+    conflict_resolution: 'Această dimensiune măsoară capacitatea ta de a identifica, aborda și rezolva conflictele într-un mod constructiv și profesional.'
+  };
+  
+  return explanations[dimensionKey] || `Această dimensiune evaluează aspecte importante ale performanței tale profesionale în contextul ${dimensionKey}.`;
+};
+
+export const getDimensionExplanation = (testName: string, dimensionKey: string): string => {
+  const testKey = testName.toLowerCase();
+  
+  if (testKey.includes('sjt') || testKey.includes('situational judgment') || 
+      testKey.includes('orientare') || testKey.includes('cariera')) {
+    return getSJTDimensionExplanation(dimensionKey);
+  }
+  
+  // For other tests, use the generic explanation
+  return getGenericDimensionExplanation(dimensionKey);
+};
+
 export const getTestScoringExplanation = (testName: string): TestScoringExplanation => {
   const normalizedName = testName.toLowerCase();
+  
+  if (normalizedName.includes('sjt') || normalizedName.includes('situational judgment') || 
+      normalizedName.includes('orientare') || normalizedName.includes('cariera')) {
+    return {
+      description: 'Testul de Evaluare Situațională (SJT) măsoară capacitatea ta de a lua decizii eficiente în diverse situații profesionale. Testul evaluează cum reacționezi la scenarii realiste din mediul de lucru și identifică punctele tale forte în diferite competențe profesionale.',
+      scoreRanges: [
+        { range: '0-39%', label: 'Dezvoltare necesară', variant: 'outline' as const },
+        { range: '40-69%', label: 'Competență moderată', variant: 'secondary' as const },
+        { range: '70-100%', label: 'Competență ridicată', variant: 'default' as const }
+      ],
+      whatItMeans: 'Scorurile tale SJT reflectă modul în care abordezi situații profesionale complexe. Competențele cu scoruri ridicate reprezintă punctele tale forte, în timp ce cele cu scoruri mai scăzute indică zone de dezvoltare. Aceste rezultate te pot ajuta să înțelegi mai bine stilul tău de lucru și să identifici oportunități de creștere profesională.'
+    };
+  }
   
   if (normalizedName.includes('big five') || normalizedName.includes('big-five')) {
     return {
