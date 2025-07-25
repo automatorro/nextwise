@@ -1,3 +1,4 @@
+
 export const bigFiveTranslations = {
   "Foarte nepotrivit": "Very Uncharacteristic",
   "Nepotrivit": "Uncharacteristic",
@@ -116,3 +117,26 @@ export const allTestTranslations = {
   ...professionalAptitudeTranslations,
   ...watsonGlaserTranslations,
 };
+
+// Test name and description translations
+export function getTestTranslation(testName: string, language: string): { name: string; description: string } {
+  const translations: { [key: string]: { ro: { name: string; description: string }, en: { name: string; description: string } } } = {
+    'Test Watson-Glaser Critical Thinking Appraisal': {
+      ro: {
+        name: 'Test Watson-Glaser Critical Thinking Appraisal',
+        description: 'Evaluează raționamentul critic și gândirea structurată prin 5 componente: inferențe, recunoașterea asumpțiilor, deducție, interpretarea și evaluarea argumentelor.'
+      },
+      en: {
+        name: 'Watson-Glaser Critical Thinking Appraisal Test',
+        description: 'Evaluates critical reasoning and structured thinking through 5 components: inferences, assumption recognition, deduction, interpretation, and argument evaluation.'
+      }
+    }
+  };
+
+  const translation = translations[testName];
+  if (translation) {
+    return translation[language as 'ro' | 'en'] || translation.ro;
+  }
+
+  return { name: testName, description: '' };
+}

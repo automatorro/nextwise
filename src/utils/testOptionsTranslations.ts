@@ -1,4 +1,4 @@
-import i18next from 'i18next';
+
 import { bigFiveTranslations } from './testTranslationMapping';
 import { cattellTranslations } from './testTranslationMapping';
 import { discTranslations } from './testTranslationMapping';
@@ -6,14 +6,37 @@ import { emotionalIntelligenceTranslations } from './testTranslationMapping';
 import { cognitiveTranslations } from './testTranslationMapping';
 import { belbinTranslations } from './testTranslationMapping';
 import { hexacoTranslations } from './testTranslationMapping';
-import { gadTranslations } from './testTranslationMapping';
+import { gad7Translations } from './testTranslationMapping';
 import { sjtTranslations } from './testTranslationMapping';
 import { professionalAptitudeTranslations } from './testTranslationMapping';
-import { beckDepressionInventoryTranslations } from './testTranslationMapping';
 import { watsonGlaserTranslations } from './testTranslationMapping';
 
+export function translateOptions(options: string[], targetLanguage: string): string[] {
+  const allTranslations = {
+    ...bigFiveTranslations,
+    ...cattellTranslations,
+    ...discTranslations,
+    ...emotionalIntelligenceTranslations,
+    ...cognitiveTranslations,
+    ...belbinTranslations,
+    ...hexacoTranslations,
+    ...gad7Translations,
+    ...sjtTranslations,
+    ...professionalAptitudeTranslations,
+    ...watsonGlaserTranslations,
+  };
+
+  if (targetLanguage === 'en') {
+    return options.map(option => {
+      return allTranslations[option as keyof typeof allTranslations] || option;
+    });
+  }
+  
+  return options;
+}
+
 export function translateTestOptions(testName: string, options: string[], targetLanguage: string): string[] {
-  if (targetLanguage === i18next.language) {
+  if (targetLanguage === 'ro') {
     return options;
   }
 
@@ -91,7 +114,7 @@ export function translateTestOptions(testName: string, options: string[], target
   if (testName.includes('GAD-7') || testName.includes('gad-7')) {
     return options.map(option => {
       if (targetLanguage === 'en') {
-        return gadTranslations[option as keyof typeof gadTranslations] || option;
+        return gad7Translations[option as keyof typeof gad7Translations] || option;
       }
       return option;
     });
@@ -116,16 +139,6 @@ export function translateTestOptions(testName: string, options: string[], target
       return option;
     });
   }
-
-    // Beck Depression Inventory translations
-    if (testName.includes('Beck Depression Inventory') || testName.includes('beck depression inventory')) {
-      return options.map(option => {
-        if (targetLanguage === 'en') {
-          return beckDepressionInventoryTranslations[option as keyof typeof beckDepressionInventoryTranslations] || option;
-        }
-        return option;
-      });
-    }
 
   // Watson-Glaser translations
   if (testName.includes('Watson-Glaser') || testName.includes('watson-glaser')) {
