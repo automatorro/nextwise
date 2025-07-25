@@ -45,6 +45,7 @@ const TestsPage = () => {
         throw error;
       }
       
+      console.log('Fetched tests:', data);
       return data as TestType[];
     }
   });
@@ -100,7 +101,6 @@ const TestsPage = () => {
     return subscriptionRequired === 'professional' || subscriptionRequired === 'premium';
   };
 
-  // Categorize tests with proper translation
   const personalityTests = tests?.filter(test => 
     test.name.toLowerCase().includes('big five') || 
     test.name.toLowerCase().includes('cattell') || 
@@ -116,6 +116,7 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('sjt') ||
     test.name.toLowerCase().includes('situational') ||
     test.name.toLowerCase().includes('orientare') ||
+    test.name.toLowerCase().includes('cariera') ||
     test.name.toLowerCase().includes('career')
   ) || [];
 

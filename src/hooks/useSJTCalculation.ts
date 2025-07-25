@@ -53,9 +53,21 @@ export const useSJTCalculation = (answers?: Record<string, number>, questions?: 
       }
     });
 
+    // Determinarea profilului dominant și secundar
+    const sortedProfiles = Object.entries(normalizedScores).sort((a, b) => b[1] - a[1]);
+    const dominantProfile = sortedProfiles[0]?.[0];
+    const secondaryProfile = sortedProfiles[1]?.[0];
+
     console.log('SJT calculated scores:', normalizedScores);
     console.log('Raw profile scores:', profileScores);
+    console.log('Dominant profile:', dominantProfile);
+    console.log('Secondary profile:', secondaryProfile);
     
-    return normalizedScores;
+    return {
+      dimensions: normalizedScores,
+      dominant_profile: dominantProfile,
+      secondary_profile: secondaryProfile,
+      overall: Math.round(Object.values(normalizedScores).reduce((a, b) => a + b, 0) / Object.values(normalizedScores).length)
+    };
   }, [answers, questions]);
 };

@@ -56,7 +56,7 @@ export const TestExplanations: React.FC<TestExplanationsProps> = ({ testName, sc
     return <HexacoExplanation score={score} language={language} />;
   }
   
-  if (testKey.includes('sjt') || testKey.includes('situational judgment')) {
+  if (testKey.includes('sjt') || testKey.includes('situational judgment') || testKey.includes('orientare') || testKey.includes('cariera')) {
     return <SJTExplanation score={score} language={language} />;
   }
   
