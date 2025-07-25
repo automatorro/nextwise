@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -29,11 +30,17 @@ const TestsPage = () => {
 
   // Fetch tests from database
   const { data: tests, isLoading, error } = useQuery({
-    queryKey: ['tests'],
+    queryKey: ['test_types'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('tests')
-        .select('*')
+        .from('test_types')
+        .select(`
+          *,
+          test_categories (
+            name,
+            description
+          )
+        `)
         .order('name');
       
       if (error) {
@@ -45,13 +52,26 @@ const TestsPage = () => {
       console.log('Total tests fetched:', data?.length || 0);
       console.log('All test names:', data?.map(t => t.name) || []);
       
+      // Transform data to match expected interface
+      const transformedTests = data?.map(test => ({
+        id: test.id,
+        name: test.name,
+        description: test.description || '',
+        category: test.test_categories?.name || '',
+        duration: test.estimated_duration || 15,
+        questions_count: test.questions_count || 20,
+        difficulty: 'Medium', // Default since not in database
+        created_at: test.created_at || '',
+        updated_at: test.created_at || ''
+      })) || [];
+      
       // Search for Watson-Glaser specifically
-      const watsonTests = data?.filter(t => 
+      const watsonTests = transformedTests.filter(t => 
         t.name.toLowerCase().includes('watson') ||
         t.name.toLowerCase().includes('glaser') ||
         t.name.toLowerCase().includes('critical') ||
         t.name.toLowerCase().includes('critic')
-      ) || [];
+      );
       
       console.log('Watson-Glaser related tests found:', watsonTests.length);
       watsonTests.forEach(test => {
@@ -64,17 +84,17 @@ const TestsPage = () => {
       });
       
       // Check if any test has "cognitive" in category
-      const cognitiveTests = data?.filter(t => 
+      const cognitiveTests = transformedTests.filter(t => 
         t.category?.toLowerCase().includes('cognitive') ||
         t.category?.toLowerCase().includes('cognitiv')
-      ) || [];
+      );
       
       console.log('Tests with cognitive category:', cognitiveTests.length);
       cognitiveTests.forEach(test => {
         console.log(`- "${test.name}" (Category: ${test.category})`);
       });
       
-      return data as TestType[];
+      return transformedTests as TestType[];
     }
   });
 
