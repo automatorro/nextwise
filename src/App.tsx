@@ -7,7 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
-import AuthPage from "./components/auth/AuthPage";
+import { AuthPage } from "./components/auth/AuthPage";
 import Dashboard from "./pages/Dashboard";
 import TestsPage from "./pages/TestsPage";
 import TestRunner from "./pages/TestRunner";

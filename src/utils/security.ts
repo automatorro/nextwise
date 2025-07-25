@@ -19,6 +19,21 @@ export const sanitizeInput = (input: string): string => {
     .trim();
 };
 
+// Text sanitization for display (XSS prevention)
+export const sanitizeText = (text: string): string => {
+  if (!text || typeof text !== 'string') {
+    return '';
+  }
+  
+  return text
+    .replace(/[<>]/g, '') // Remove HTML brackets
+    .replace(/javascript:/gi, '') // Remove javascript: protocols
+    .replace(/on\w+=/gi, '') // Remove event handlers
+    .replace(/data:/gi, '') // Remove data: protocols
+    .replace(/vbscript:/gi, '') // Remove vbscript: protocols
+    .trim();
+};
+
 // Email validation with additional security checks
 export const emailSchema = z
   .string()

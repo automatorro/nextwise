@@ -8,7 +8,6 @@ import { ArrowLeft } from 'lucide-react';
 import { SecureAuthForm } from './SecureAuthForm';
 
 export const AuthPage = () => {
-  const [isLogin, setIsLogin] = useState(true);
   const { loading } = useAuth();
   const navigate = useNavigate();
 
@@ -39,35 +38,7 @@ export const AuthPage = () => {
           Înapoi la pagina principală
         </Button>
         
-        <Card className="shadow-xl">
-          <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">
-              {isLogin ? 'Autentificare' : 'Înregistrare'}
-            </CardTitle>
-            <CardDescription className="text-center">
-              {isLogin 
-                ? 'Conectează-te la contul tău pentru a accesa testele' 
-                : 'Creează un cont nou pentru a începe testele psihologice'
-              }
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <SecureAuthForm isLogin={isLogin} />
-            
-            <div className="mt-4 text-center">
-              <Button
-                variant="link"
-                onClick={() => setIsLogin(!isLogin)}
-                className="text-sm text-gray-600 hover:text-gray-800"
-              >
-                {isLogin 
-                  ? 'Nu ai cont? Înregistrează-te aici' 
-                  : 'Ai deja cont? Conectează-te aici'
-                }
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        <SecureAuthForm />
       </div>
     </div>
   );
