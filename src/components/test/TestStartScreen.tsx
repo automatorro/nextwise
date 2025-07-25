@@ -32,7 +32,7 @@ const TestStartScreen: React.FC<TestStartScreenProps> = ({
   const translatedTestDescription = translation.description;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div className="flex items-center justify-center min-h-[60vh]">
       <Card className="max-w-2xl">
         <CardHeader>
           <CardTitle>{translatedTestName}</CardTitle>
