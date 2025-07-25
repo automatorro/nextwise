@@ -66,11 +66,16 @@ const TestRunner = () => {
       const { data: questionsData, error: questionsError } = await supabase
         .from('test_questions')
         .select('*')
-        .eq('test_type_id', testId);
+        .eq('test_type_id', testId)
+        .order('question_order');
 
       if (questionsError) {
         console.error('Error fetching questions:', questionsError);
         throw questionsError;
+      }
+
+      if (!questionsData || questionsData.length === 0) {
+        throw new Error("No questions found for this test");
       }
 
       const translatedQuestions = await translateQuestions(questionsData, language);
@@ -183,8 +188,9 @@ const TestRunner = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
+  // Add safety check for currentQuestion
   const currentQuestion = questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+  const progress = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
   const isLastQuestion = currentQuestionIndex === questions.length - 1;
   const allQuestionsAnswered = questions.every(q => answers[q.id] !== undefined);
 
@@ -210,6 +216,22 @@ const TestRunner = () => {
           <TestErrorScreen 
             title={language === 'ro' ? 'Eroare' : 'Error'}
             message={language === 'ro' ? 'A apărut o eroare la încărcarea testului.' : 'An error occurred while loading the test.'}
+            onReturnToTests={() => navigate('/tests')}
+          />
+        </div>
+      </div>
+    );
+  }
+
+  // Add check for empty questions array
+  if (questions.length === 0) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <HomeNavigation />
+        <div className="pt-24">
+          <TestErrorScreen 
+            title={language === 'ro' ? 'Test incomplet' : 'Incomplete test'}
+            message={language === 'ro' ? 'Acest test nu conține întrebări.' : 'This test does not contain any questions.'}
             onReturnToTests={() => navigate('/tests')}
           />
         </div>
@@ -265,37 +287,39 @@ const TestRunner = () => {
             />
           ) : (
             <div className="space-y-6">
-              {/* Current Question */}
-              <Card>
-                <CardHeader>
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <CardTitle className="text-lg mb-2">
-                        {language === 'ro' ? 'Întrebarea' : 'Question'} {currentQuestionIndex + 1}
-                      </CardTitle>
-                      <CardDescription>
-                        {currentQuestion.question_text}
-                      </CardDescription>
+              {/* Current Question - only render if currentQuestion exists */}
+              {currentQuestion && (
+                <Card>
+                  <CardHeader>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1">
+                        <CardTitle className="text-lg mb-2">
+                          {language === 'ro' ? 'Întrebarea' : 'Question'} {currentQuestionIndex + 1}
+                        </CardTitle>
+                        <CardDescription>
+                          {currentQuestion.question_text}
+                        </CardDescription>
+                      </div>
+                      <Badge variant="outline">
+                        {currentQuestionIndex + 1} / {questions.length}
+                      </Badge>
                     </div>
-                    <Badge variant="outline">
-                      {currentQuestionIndex + 1} / {questions.length}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <TestQuestion
-                    testType={testData}
-                    currentQuestion={currentQuestion}
-                    currentQuestionIndex={currentQuestionIndex}
-                    totalQuestions={questions.length}
-                    answers={answers}
-                    isSubmitting={isSubmitting}
-                    onAnswerChange={(value) => handleAnswer(currentQuestion.id, parseInt(value))}
-                    onNext={handleNext}
-                    onPrevious={handlePrevious}
-                  />
-                </CardContent>
-              </Card>
+                  </CardHeader>
+                  <CardContent>
+                    <TestQuestion
+                      testType={testData}
+                      currentQuestion={currentQuestion}
+                      currentQuestionIndex={currentQuestionIndex}
+                      totalQuestions={questions.length}
+                      answers={answers}
+                      isSubmitting={isSubmitting}
+                      onAnswerChange={(value) => handleAnswer(currentQuestion.id, parseInt(value))}
+                      onNext={handleNext}
+                      onPrevious={handlePrevious}
+                    />
+                  </CardContent>
+                </Card>
+              )}
 
               {/* Navigation */}
               <div className="flex justify-between items-center">
@@ -312,7 +336,7 @@ const TestRunner = () => {
                   {!isLastQuestion ? (
                     <Button
                       onClick={handleNext}
-                      disabled={answers[currentQuestion.id] === undefined}
+                      disabled={!currentQuestion || answers[currentQuestion.id] === undefined}
                     >
                       {language === 'ro' ? 'Următoarea' : 'Next'}
                       <ArrowRight className="h-4 w-4 ml-2" />
