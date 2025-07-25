@@ -1,3 +1,4 @@
+
 export interface FormattedTestResult {
   overall: number;
   dimensions: { [key: string]: number };
@@ -19,10 +20,15 @@ export function formatGeneralTestResult(testResult: any): FormattedTestResult {
   const score = testResult.score || {};
   
   // Extract overall score
-  const overall = score.overall || 0;
+  const overall = typeof score.overall === 'number' ? score.overall : 0;
   
-  // Extract dimensions
+  // Extract and sanitize dimensions
   const dimensions = score.dimensions || {};
+  const sanitizedDimensions: Record<string, number> = {};
+  
+  Object.entries(dimensions).forEach(([key, value]) => {
+    sanitizedDimensions[key] = typeof value === 'number' ? value : 0;
+  });
   
   // Generate interpretation based on score
   let interpretation = 'Scor calculat';
@@ -38,7 +44,7 @@ export function formatGeneralTestResult(testResult: any): FormattedTestResult {
   
   return {
     overall,
-    dimensions,
+    dimensions: sanitizedDimensions,
     interpretation,
     testName
   };

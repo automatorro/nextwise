@@ -13,8 +13,15 @@ export function formatTestResults(testResult: any) {
   }
 
   const testName = test_types?.name || '';
-  const overall = score.overall || 0;
+  const overall = typeof score.overall === 'number' ? score.overall : 0;
+  
+  // Ensure dimensions is always an object with numeric values
   const dimensions = score.dimensions || {};
+  const sanitizedDimensions: Record<string, number> = {};
+  
+  Object.entries(dimensions).forEach(([key, value]) => {
+    sanitizedDimensions[key] = typeof value === 'number' ? value : 0;
+  });
   
   // Simple interpretation based on score
   let interpretation = 'Scor calculat';
@@ -30,7 +37,7 @@ export function formatTestResults(testResult: any) {
   
   return {
     overall,
-    dimensions,
+    dimensions: sanitizedDimensions,
     interpretation,
     testName
   };

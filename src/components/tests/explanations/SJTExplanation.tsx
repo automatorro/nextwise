@@ -21,7 +21,11 @@ export const SJTExplanation: React.FC<SJTExplanationProps> = ({ score, language 
       'Creativ': 'Creativ',
       'Suport_Servicii': 'Suport/Servicii',
       'Antreprenor': 'Antreprenor',
-      'Vanzari': 'Vânzări'
+      'Vanzari': 'Vânzări',
+      'Recruiter': 'Recrutator',
+      'Manager': 'Manager',
+      'Team_Member': 'Membru Echipă',
+      'HR_Manager': 'Manager HR'
     };
     return labels[profile] || profile;
   };
@@ -33,10 +37,18 @@ export const SJTExplanation: React.FC<SJTExplanationProps> = ({ score, language 
       'Creativ': 'Persoana care îi place să găsească soluții inovatoare și să aducă perspective noi.',
       'Suport_Servicii': 'Persoana cu înclinație naturală către ajutorarea celorlalți și construirea relațiilor pozitive.',
       'Antreprenor': 'Persoana care îi place să își asume riscuri calculate și să creeze oportunități noi.',
-      'Vanzari': 'Persoana cu abilități naturale de persuasiune și care îi place să construiască relații cu clienții.'
+      'Vanzari': 'Persoana cu abilități naturale de persuasiune și care îi place să construiască relații cu clienții.',
+      'Recruiter': 'Persoana cu abilități de evaluare a talentelor și construirea echipelor.',
+      'Manager': 'Persoana cu abilități de coordonare și gestionare a resurselor și proceselor.',
+      'Team_Member': 'Persoana care colaborează eficient în echipe și contribuie la obiectivele comune.',
+      'HR_Manager': 'Persoana specializată în gestionarea resurselor umane și dezvoltarea organizațională.'
     };
     return descriptions[profile] || 'Descrierea nu este disponibilă';
   };
+
+  // Ensure we have valid dimensions object
+  const dimensions = score.dimensions || {};
+  const dimensionEntries = Object.entries(dimensions);
 
   return (
     <Card className="mb-6">
@@ -53,24 +65,15 @@ export const SJTExplanation: React.FC<SJTExplanationProps> = ({ score, language 
         </div>
 
         <div>
-          <h4 className="font-semibold mb-2">Cele 6 Profiluri de Carieră</h4>
+          <h4 className="font-semibold mb-2">Profilurile de Carieră</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {Object.entries({
-              'Leader': 'Lider',
-              'Specialist_Analitic': 'Specialist Analitic',
-              'Creativ': 'Creativ',
-              'Suport_Servicii': 'Suport/Servicii',
-              'Antreprenor': 'Antreprenor',
-              'Vanzari': 'Vânzări'
-            }).map(([key, label]) => (
+            {dimensionEntries.map(([key, value]) => (
               <div key={key} className="border rounded p-3">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium text-sm">{label}</span>
-                  {score.dimensions && (
-                    <Badge variant="outline" className="text-xs">
-                      {score.dimensions[key] || 0}%
-                    </Badge>
-                  )}
+                  <span className="font-medium text-sm">{getProfileLabel(key)}</span>
+                  <Badge variant="outline" className="text-xs">
+                    {typeof value === 'number' ? Math.round(value) : 0}%
+                  </Badge>
                 </div>
                 <p className="text-xs text-gray-600">
                   {getProfileDescription(key)}
@@ -83,8 +86,8 @@ export const SJTExplanation: React.FC<SJTExplanationProps> = ({ score, language 
         <div>
           <h4 className="font-semibold mb-2">Cum funcționează</h4>
           <p className="text-sm text-gray-600">
-            Testul prezintă 10 scenarii din mediul profesional, fiecare cu 4 opțiuni de răspuns. 
-            Alegerile tale sunt analizate și convertite în scoruri pentru cele 6 profiluri de carieră. 
+            Testul prezintă scenarii din mediul profesional, fiecare cu multiple opțiuni de răspuns. 
+            Alegerile tale sunt analizate și convertite în scoruri pentru diferitele profiluri de carieră. 
             Profilul cu cel mai mare scor reprezintă stilul tău dominant de lucru.
           </p>
         </div>
