@@ -1,3 +1,94 @@
+
+// Translation objects for test options
+export const bigFiveTranslations = {
+  'Complet dezacord': 'Strongly Disagree',
+  'Dezacord': 'Disagree',
+  'Neutru': 'Neutral',
+  'Acord': 'Agree',
+  'Complet de acord': 'Strongly Agree'
+};
+
+export const cattellTranslations = {
+  'Complet dezacord': 'Strongly Disagree',
+  'Dezacord': 'Disagree',
+  'Neutru': 'Neutral',
+  'Acord': 'Agree',
+  'Complet de acord': 'Strongly Agree'
+};
+
+export const discTranslations = {
+  'Complet dezacord': 'Strongly Disagree',
+  'Dezacord': 'Disagree',
+  'Neutru': 'Neutral',
+  'Acord': 'Agree',
+  'Complet de acord': 'Strongly Agree'
+};
+
+export const emotionalIntelligenceTranslations = {
+  'Complet dezacord': 'Strongly Disagree',
+  'Dezacord': 'Disagree',
+  'Neutru': 'Neutral',
+  'Acord': 'Agree',
+  'Complet de acord': 'Strongly Agree'
+};
+
+export const cognitiveTranslations = {
+  'Complet dezacord': 'Strongly Disagree',
+  'Dezacord': 'Disagree',
+  'Neutru': 'Neutral',
+  'Acord': 'Agree',
+  'Complet de acord': 'Strongly Agree'
+};
+
+export const belbinTranslations = {
+  'Complet dezacord': 'Strongly Disagree',
+  'Dezacord': 'Disagree',
+  'Neutru': 'Neutral',
+  'Acord': 'Agree',
+  'Complet de acord': 'Strongly Agree'
+};
+
+export const hexacoTranslations = {
+  'Complet dezacord': 'Strongly Disagree',
+  'Dezacord': 'Disagree',
+  'Neutru': 'Neutral',
+  'Acord': 'Agree',
+  'Complet de acord': 'Strongly Agree'
+};
+
+export const gad7Translations = {
+  'Deloc': 'Not at all',
+  'Câteva zile': 'Several days',
+  'Mai mult de jumătate din zile': 'More than half the days',
+  'Aproape zilnic': 'Nearly every day'
+};
+
+export const sjtTranslations = {
+  'Foarte eficient': 'Very effective',
+  'Eficient': 'Effective',
+  'Oarecum eficient': 'Somewhat effective',
+  'Ineficient': 'Ineffective',
+  'Foarte ineficient': 'Very ineffective'
+};
+
+export const professionalAptitudeTranslations = {
+  'Foarte eficient': 'Very effective',
+  'Eficient': 'Effective',
+  'Oarecum eficient': 'Somewhat effective',
+  'Ineficient': 'Ineffective',
+  'Foarte ineficient': 'Very ineffective'
+};
+
+export const watsonGlaserTranslations = {
+  'Adevărat': 'True',
+  'Fals': 'False',
+  'Probabil adevărat': 'Probably true',
+  'Probabil fals': 'Probably false',
+  'Date insuficiente': 'Insufficient data',
+  'Urmează logic': 'Follows logically',
+  'Nu urmează logic': 'Does not follow logically'
+};
+
 export const getTestTranslation = (testName: string, language: string) => {
   const translations: Record<string, { ro: { name: string; description: string }, en: { name: string; description: string } }> = {
     'Big Five Personality Test': {
