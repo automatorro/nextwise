@@ -100,13 +100,18 @@ export const useTestSubmission = () => {
 
     if (error) throw error;
 
-    // Update subscription usage with RPC call
-    const { error: updateError } = await supabase.rpc('increment_tests_taken', {
-      user_id: user.id
-    });
+    // Update subscription usage with edge function call
+    try {
+      const { error: updateError } = await supabase.functions.invoke('increment-tests-taken', {
+        body: { user_id: user.id }
+      });
 
-    if (updateError) {
-      console.error('Error updating subscription usage:', updateError);
+      if (updateError) {
+        console.error('Error updating subscription usage:', updateError);
+        // Don't throw here as the test was successfully submitted
+      }
+    } catch (error) {
+      console.error('Error calling increment-tests-taken function:', error);
       // Don't throw here as the test was successfully submitted
     }
 
