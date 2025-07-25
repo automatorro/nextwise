@@ -1,4 +1,3 @@
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -13,7 +12,8 @@ import {
   calculateBelbinScore,
   calculateHexacoScore,
   calculateGADScore,
-  calculateSJTScore
+  calculateSJTScore,
+  calculateProfessionalAptitudeScore
 } from '@/utils/testCalculations';
 
 export const useTestSubmission = () => {
@@ -73,6 +73,10 @@ export const useTestSubmission = () => {
         console.log('Using questions for SJT:', questions);
         score = calculateSJTScore(answers, questions);
         console.log('SJT score calculated:', score);
+      } else if (testName.includes('profesional') || testName.includes('aptitud')) {
+        console.log('Calculating Professional Aptitude score for answers:', answers);
+        score = calculateProfessionalAptitudeScore(answers, questions);
+        console.log('Professional Aptitude score calculated:', score);
       } else {
         // Default scoring
         score = { overall: 0, interpretation: 'Scor calculat automat' };

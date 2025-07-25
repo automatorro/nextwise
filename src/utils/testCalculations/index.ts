@@ -1,21 +1,23 @@
+import { calculateBigFiveScore } from './bigFiveCalculation';
+import { calculateCattellScore } from './cattellCalculation';
+import { calculateDISCScore } from './discCalculation';
+import { calculateEmotionalIntelligenceScore } from './emotionalIntelligenceCalculation';
+import { calculateCognitiveScore } from './cognitiveCalculation';
+import { calculateBelbinScore } from './belbinCalculation';
+import { calculateHexacoScore } from './hexacoCalculation';
+import { calculateGADScore } from './gadCalculation';
+import { calculateSJTScore } from './sjtCalculation';
+import { calculateProfessionalAptitudeScore } from './professionalAptitudeCalculation';
 
-export { calculateBigFiveScore } from './bigFiveCalculation';
-export { calculateCattellScore } from './cattellCalculation';
-export { calculateDISCScore } from './discCalculation';
-export { calculateEmotionalIntelligenceScore } from './emotionalIntelligenceCalculation';
-export { calculateCognitiveScore } from './cognitiveCalculation';
-export { calculateBelbinScore } from './belbinCalculation';
-export { calculateEnneagramScore, getEnneagramDominantType, getEnneagramTypeDescription } from './enneagramCalculation';
-export { calculateHexacoScore } from './hexacoCalculation';
-export { calculateGADScore } from './gadCalculation';
-export { calculateSJTScore } from './sjtCalculation';
-export type { BigFiveScore } from './bigFiveCalculation';
-export type { CattellScore } from './cattellCalculation';
-export type { DISCScore } from './discCalculation';
-export type { EmotionalIntelligenceScore } from './emotionalIntelligenceCalculation';
-export type { CognitiveScore } from './cognitiveCalculation';
-export type { BelbinScore } from './belbinCalculation';
-export type { EnneagramScore } from './enneagramCalculation';
-export type { HexacoScore } from './hexacoCalculation';
-export type { GADScore } from './gadCalculation';
-export type { SJTScore } from './sjtCalculation';
+export {
+  calculateBigFiveScore,
+  calculateCattellScore,
+  calculateDISCScore,
+  calculateEmotionalIntelligenceScore,
+  calculateCognitiveScore,
+  calculateBelbinScore,
+  calculateHexacoScore,
+  calculateGADScore,
+  calculateSJTScore,
+  calculateProfessionalAptitudeScore
+};
