@@ -47,6 +47,15 @@ const TestsPage = () => {
       }
       
       console.log('Fetched tests:', data);
+      console.log('Test names:', data?.map(t => t.name));
+      
+      // Check specifically for Watson-Glaser test
+      const watsonTest = data?.find(t => 
+        t.name.toLowerCase().includes('watson') || 
+        t.name.toLowerCase().includes('glaser')
+      );
+      console.log('Watson-Glaser test found:', watsonTest);
+      
       return data as TestType[];
     }
   });
@@ -147,7 +156,11 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('glaser') ||
     test.name.toLowerCase().includes('critical thinking') ||
     test.name.toLowerCase().includes('aptitudini cognitive') ||
-    test.name.toLowerCase().includes('watson-glaser')
+    test.name.toLowerCase().includes('watson-glaser') ||
+    test.name.toLowerCase().includes('gândire critică') ||
+    test.name.toLowerCase().includes('gandire critica') ||
+    test.name.toLowerCase().includes('raționament critic') ||
+    test.name.toLowerCase().includes('rationament critic')
   ) || [];
 
   const perceptionTests = tests?.filter(test => 
@@ -179,6 +192,11 @@ const TestsPage = () => {
   const uncategorizedTests = tests?.filter(test => 
     !categorizedTests.some(catTest => catTest.id === test.id)
   ) || [];
+
+  // Debug logging
+  console.log('Cognitive tests found:', cognitiveTests?.map(t => t.name));
+  console.log('Uncategorized tests found:', uncategorizedTests?.map(t => t.name));
+  console.log('Total tests:', tests?.length);
 
   const categoryDescriptions = {
     personality: {
