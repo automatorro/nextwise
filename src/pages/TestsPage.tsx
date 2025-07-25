@@ -45,21 +45,6 @@ const TestsPage = () => {
         throw error;
       }
       
-      console.log('Fetched tests:', data);
-      
-      // Debug: Let's specifically check for Watson-Glaser test
-      const watsonGlaserTest = data?.find(test => 
-        test.name.toLowerCase().includes('watson-glaser') || 
-        test.name.toLowerCase().includes('watson glaser')
-      );
-      
-      if (watsonGlaserTest) {
-        console.log('Watson-Glaser test found:', watsonGlaserTest);
-      } else {
-        console.log('Watson-Glaser test NOT found in database');
-        console.log('Available test names:', data?.map(t => t.name));
-      }
-      
       return data as TestType[];
     }
   });
@@ -159,9 +144,6 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('critical thinking') ||
     test.name.toLowerCase().includes('aptitudini cognitive')
   ) || [];
-
-  // Debug logging for cognitive tests
-  console.log('Cognitive tests found:', cognitiveTests.map(t => t.name));
 
   const categoryDescriptions = {
     personality: {

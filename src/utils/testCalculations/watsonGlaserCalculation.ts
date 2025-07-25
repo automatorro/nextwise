@@ -33,26 +33,26 @@ export function calculateWatsonGlaserScore(answers: { [key: string]: number }): 
     argument_evaluation: 0
   };
   
-  // Define correct answers for each question (0-indexed)
+  // Define correct answers for each question (1-indexed)
   const correctAnswers: { [key: number]: number } = {
     // Secțiunea 1: Inferențe (întrebările 1-8)
-    1: 3, // Probabil adevărat
-    2: 4, // Sigur adevărat
-    3: 2, // Insuficientă informație
-    4: 4, // Sigur adevărat
-    5: 3, // Probabil adevărat
-    6: 3, // Probabil adevărat
-    7: 4, // Sigur adevărat
-    8: 4, // Sigur adevărat
+    1: 3, // Insuficientă informație
+    2: 4, // Probabil adevărat
+    3: 2, // Probabil fals
+    4: 4, // Probabil adevărat
+    5: 3, // Insuficientă informație
+    6: 3, // Insuficientă informație
+    7: 4, // Probabil adevărat
+    8: 4, // Probabil adevărat
     
     // Secțiunea 2: Asumpții (întrebările 9-16)
     9: 1,  // Da
     10: 1, // Da
-    11: 1, // Da
+    11: 0, // Nu
     12: 1, // Da
-    13: 1, // Da
+    13: 0, // Nu
     14: 1, // Da
-    15: 1, // Da
+    15: 0, // Nu
     16: 1, // Da
     
     // Secțiunea 3: Deducție (întrebările 17-24)
@@ -63,17 +63,17 @@ export function calculateWatsonGlaserScore(answers: { [key: string]: number }): 
     21: 1, // Urmează logic
     22: 0, // Nu urmează logic
     23: 0, // Nu urmează logic
-    24: 0, // Nu urmează logic
+    24: 1, // Urmează logic
     
     // Secțiunea 4: Interpretarea (întrebările 25-32)
-    25: 1, // Concluzia este corectă
-    26: 0, // Concluzia nu este corectă
-    27: 0, // Concluzia nu este corectă
-    28: 1, // Concluzia este corectă
-    29: 1, // Concluzia este corectă
-    30: 0, // Concluzia nu este corectă
-    31: 1, // Concluzia este corectă
-    32: 1, // Concluzia este corectă
+    25: 1, // Concluzia urmează
+    26: 0, // Concluzia nu urmează
+    27: 0, // Concluzia nu urmează
+    28: 1, // Concluzia urmează
+    29: 1, // Concluzia urmează
+    30: 0, // Concluzia nu urmează
+    31: 1, // Concluzia urmează
+    32: 1, // Concluzia urmează
     
     // Secțiunea 5: Evaluarea argumentelor (întrebările 33-40)
     33: 1, // Puternic
