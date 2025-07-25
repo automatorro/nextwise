@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { useSubscription } from '@/hooks/useSubscription';
 import Footer from '@/components/home/Footer';
 import { getTestTranslation } from '@/utils/testTranslationMapping';
+import HomeNavigation from '@/components/home/HomeNavigation';
 
 interface TestType {
   id: string;
@@ -217,8 +218,9 @@ const TestsPage = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-24">
-        <div className="container mx-auto px-4 py-8">
+      <div className="min-h-screen bg-gray-50">
+        <HomeNavigation />
+        <div className="container mx-auto px-4 py-8 pt-24">
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded w-1/4 mb-4"></div>
             <div className="h-4 bg-gray-200 rounded w-1/2 mb-8"></div>
@@ -235,8 +237,9 @@ const TestsPage = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 pt-24 flex items-center justify-center">
-        <div className="text-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <HomeNavigation />
+        <div className="text-center pt-24">
           <h2 className="text-2xl font-bold text-red-600 mb-4">Eroare la încărcarea testelor</h2>
           <p className="text-gray-600">Te rugăm să încerci din nou mai târziu.</p>
         </div>
@@ -268,8 +271,9 @@ const TestsPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-24">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gray-50">
+      <HomeNavigation />
+      <div className="container mx-auto px-4 py-8 pt-24">
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
             {language === 'ro' ? 'Teste de Personalitate și Aptitudini' : 'Personality and Aptitude Tests'}
