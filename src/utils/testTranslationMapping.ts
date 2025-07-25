@@ -141,14 +141,14 @@ export const getTestTranslation = (testName: string, language: string) => {
         description: 'Evaluates your level of digital competencies in five key areas: information, communication, content creation, safety, and problem-solving.'
       }
     },
-    'Aptitudini Profesionale': {
+    'Test de Competențe Manageriale': {
       ro: {
-        name: 'Test Aptitudini Profesionale',
-        description: 'Evaluează aptitudinile tale profesionale în cinci domenii: analitice, creative, interpersonale, tehnice și de leadership.'
+        name: 'Test de Competențe Manageriale',
+        description: 'Evaluează competențele manageriale prin scenarii de judecată situațională. Testul măsoară abilitățile de leadership, luarea deciziilor și gestionarea echipei în diverse contexte profesionale.'
       },
       en: {
-        name: 'Professional Aptitudes Test',
-        description: 'Evaluates your professional aptitudes in five areas: analytical, creative, interpersonal, technical, and leadership.'
+        name: 'Managerial Competencies Test',
+        description: 'Evaluates managerial competencies through situational judgment scenarios. The test measures leadership abilities, decision-making, and team management in various professional contexts.'
       }
     },
     'Test Percepție Senzorială': {

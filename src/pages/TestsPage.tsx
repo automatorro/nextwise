@@ -112,7 +112,8 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('disc') || 
     test.name.toLowerCase().includes('leadership') || 
     test.name.toLowerCase().includes('belbin') ||
-    test.name.toLowerCase().includes('aptitudini') ||
+    test.name.toLowerCase().includes('competențe manageriale') ||
+    test.name.toLowerCase().includes('managerial') ||
     test.name.toLowerCase().includes('sjt') ||
     test.name.toLowerCase().includes('situational') ||
     test.name.toLowerCase().includes('orientare') ||
