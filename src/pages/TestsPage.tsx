@@ -45,8 +45,6 @@ const TestsPage = () => {
         throw error;
       }
       
-      console.log('All tests from database:', data);
-      
       return data as TestType[];
     }
   });
@@ -102,26 +100,6 @@ const TestsPage = () => {
     return subscriptionRequired === 'professional' || subscriptionRequired === 'premium';
   };
 
-  // Debug: Log all tests and their names
-  useEffect(() => {
-    if (tests) {
-      console.log('Total tests count:', tests.length);
-      console.log('All test names:', tests.map(t => t.name));
-      
-      const watsonTest = tests.find(t => 
-        t.name.toLowerCase().includes('watson') || 
-        t.name.toLowerCase().includes('glaser') || 
-        t.name.toLowerCase().includes('critical thinking')
-      );
-      
-      if (watsonTest) {
-        console.log('Watson-Glaser test found:', watsonTest);
-      } else {
-        console.log('Watson-Glaser test NOT found in database');
-      }
-    }
-  }, [tests]);
-
   const personalityTests = tests?.filter(test => 
     test.name.toLowerCase().includes('big five') || 
     test.name.toLowerCase().includes('cattell') || 
@@ -166,13 +144,6 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('critical thinking') ||
     test.name.toLowerCase().includes('aptitudini cognitive')
   ) || [];
-
-  // Debug cognitive tests
-  useEffect(() => {
-    if (cognitiveTests.length > 0) {
-      console.log('Cognitive tests found:', cognitiveTests.map(t => t.name));
-    }
-  }, [cognitiveTests]);
 
   const categoryDescriptions = {
     personality: {

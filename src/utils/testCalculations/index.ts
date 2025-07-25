@@ -1,3 +1,4 @@
+
 import { calculateBigFiveScore } from './bigFiveCalculation';
 import { calculateCattellScore } from './cattellCalculation';
 import { calculateDISCScore } from './discCalculation';
@@ -8,6 +9,7 @@ import { calculateHexacoScore } from './hexacoCalculation';
 import { calculateGADScore } from './gadCalculation';
 import { calculateSJTScore } from './sjtCalculation';
 import { calculateProfessionalAptitudeScore } from './professionalAptitudeCalculation';
+import { calculateWatsonGlaserScore } from './watsonGlaserCalculation';
 
 export {
   calculateBigFiveScore,
@@ -19,7 +21,6 @@ export {
   calculateHexacoScore,
   calculateGADScore,
   calculateSJTScore,
-  calculateProfessionalAptitudeScore
+  calculateProfessionalAptitudeScore,
+  calculateWatsonGlaserScore
 };
-
-export { calculateWatsonGlaserScore } from './watsonGlaserCalculation';

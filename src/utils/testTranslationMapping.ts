@@ -1,142 +1,144 @@
-
-export const bigFiveTranslations = {
-  "Foarte nepotrivit": "Very Uncharacteristic",
-  "Nepotrivit": "Uncharacteristic",
-  "Neutru": "Neutral",
-  "Potrivit": "Characteristic",
-  "Foarte potrivit": "Very Characteristic"
-};
-
-export const cattellTranslations = {
-  "Slabă": "Low",
-  "Medie": "Average",
-  "Înaltă": "High"
-};
-
-export const discTranslations = {
-  "Dominanță": "Dominance",
-  "Influență": "Influence",
-  "Stabilitate": "Steadiness",
-  "Conștiinciozitate": "Conscientiousness"
-};
-
-export const emotionalIntelligenceTranslations = {
-  "Foarte rar": "Very Rarely",
-  "Rar": "Rarely",
-  "Ocazional": "Occasionally",
-  "Frecvent": "Frequently",
-  "Foarte frecvent": "Very Frequently"
-};
-
-export const cognitiveTranslations = {
-  "Foarte dificil": "Very Difficult",
-  "Dificil": "Difficult",
-  "Mediu": "Medium",
-  "Ușor": "Easy",
-  "Foarte ușor": "Very Easy"
-};
-
-export const belbinTranslations = {
-  plant: 'Creativul',
-  resource_investigator: 'Investigatorul',
-  coordinator: 'Coordonatorul',
-  shaper: 'Modelatorul',
-  monitor_evaluator: 'Evaluatorul',
-  teamworker: 'Echipierul',
-  implementer: 'Implementatorul',
-  completer_finisher: 'Finalizatorul',
-  specialist: 'Specialistul'
-};
-
-export const hexacoTranslations = {
-  "Dezacord puternic": "Strongly Disagree",
-  "Dezacord": "Disagree",
-  "Neutru": "Neutral",
-  "Acord": "Agree",
-  "Acord puternic": "Strongly Agree"
-};
-
-export const gad7Translations = {
-  "Deloc": "Not at all",
-  "Câteva zile": "Several days",
-  "Mai mult de jumătate din zile": "More than half the days",
-  "Aproape în fiecare zi": "Nearly every day"
-};
-
-export const sjtTranslations = {
-  "Foarte ineficient": "Very Ineffective",
-  "Ineficient": "Ineffective",
-  "Neutru": "Neutral",
-  "Eficient": "Effective",
-  "Foarte eficient": "Very Effective"
-};
-
-export const professionalAptitudeTranslations = {
-  "Dezacord total": "Strongly Disagree",
-  "Dezacord": "Disagree",
-  "Neutru": "Neutral",
-  "Acord": "Agree",
-  "Acord total": "Strongly Agree"
-};
-
-export const watsonGlaserTranslations = {
-  // Inferențe - 5 opțiuni
-  "Sigur fals": "Definitely false",
-  "Probabil fals": "Probably false", 
-  "Insuficientă informație": "Insufficient information",
-  "Probabil adevărat": "Probably true",
-  "Sigur adevărat": "Definitely true",
-  
-  // Asumpții - 2 opțiuni
-  "Nu": "No",
-  "Da": "Yes",
-  
-  // Deducție - 2 opțiuni
-  "Nu urmează logic": "Does not follow logically",
-  "Urmează logic": "Follows logically",
-  
-  // Interpretarea - 2 opțiuni
-  "Concluzia nu este corectă": "The conclusion is not correct",
-  "Concluzia este corectă": "The conclusion is correct",
-  
-  // Evaluarea argumentelor - 2 opțiuni
-  "Slab": "Weak",
-  "Puternic": "Strong"
-};
-
-export const allTestTranslations = {
-  ...bigFiveTranslations,
-  ...cattellTranslations,
-  ...discTranslations,
-  ...emotionalIntelligenceTranslations,
-  ...cognitiveTranslations,
-  ...belbinTranslations,
-  ...hexacoTranslations,
-  ...gad7Translations,
-  ...sjtTranslations,
-  ...professionalAptitudeTranslations,
-  ...watsonGlaserTranslations,
-};
-
-// Test name and description translations
-export function getTestTranslation(testName: string, language: string): { name: string; description: string } {
-  const translations: { [key: string]: { ro: { name: string; description: string }, en: { name: string; description: string } } } = {
-    'Test Watson-Glaser Critical Thinking Appraisal': {
+export const getTestTranslation = (testName: string, language: string) => {
+  const translations: Record<string, { ro: { name: string; description: string }, en: { name: string; description: string } }> = {
+    'Big Five Personality Test': {
       ro: {
-        name: 'Test Watson-Glaser Critical Thinking Appraisal',
-        description: 'Evaluează raționamentul critic și gândirea structurată prin 5 componente: inferențe, recunoașterea asumpțiilor, deducție, interpretarea și evaluarea argumentelor.'
+        name: 'Testul Big Five de Personalitate',
+        description: 'Evaluează personalitatea pe baza celor cinci dimensiuni fundamentale: deschidere, conștiinciozitate, extraversiune, agreabilitate și neuroticismul.'
       },
       en: {
-        name: 'Watson-Glaser Critical Thinking Appraisal Test',
-        description: 'Evaluates critical reasoning and structured thinking through 5 components: inferences, assumption recognition, deduction, interpretation, and argument evaluation.'
+        name: 'Big Five Personality Test',
+        description: 'Assesses personality based on five fundamental dimensions: openness, conscientiousness, extraversion, agreeableness, and neuroticism.'
+      }
+    },
+    'Watson-Glaser Critical Thinking Appraisal': {
+      ro: {
+        name: 'Testul Watson-Glaser de Gândire Critică',
+        description: 'Evaluează abilitățile de gândire critică prin inferențe, recunoașterea asumpțiilor, deducție, interpretarea și evaluarea argumentelor.'
+      },
+      en: {
+        name: 'Watson-Glaser Critical Thinking Appraisal',
+        description: 'Assesses critical thinking abilities through inference, assumption recognition, deduction, interpretation, and argument evaluation.'
+      }
+    },
+    'Cattell 16PF': {
+      ro: {
+        name: 'Testul Cattell 16PF',
+        description: 'Măsoară 16 factori principali ai personalității pentru o evaluare comprehensivă a trăsăturilor individuale.'
+      },
+      en: {
+        name: 'Cattell 16PF Test',
+        description: 'Measures 16 primary personality factors for a comprehensive assessment of individual traits.'
+      }
+    },
+    'DISC Assessment': {
+      ro: {
+        name: 'Evaluarea DISC',
+        description: 'Analizează stilul comportamental pe baza dominanței, influenței, stabilității și conformității.'
+      },
+      en: {
+        name: 'DISC Assessment',
+        description: 'Analyzes behavioral style based on dominance, influence, steadiness, and compliance.'
+      }
+    },
+    'Emotional Intelligence Test': {
+      ro: {
+        name: 'Testul de Inteligență Emoțională',
+        description: 'Evaluează capacitatea de a înțelege, utiliza și gestiona emoțiile în mod eficient.'
+      },
+      en: {
+        name: 'Emotional Intelligence Test',
+        description: 'Assesses the ability to understand, use, and manage emotions effectively.'
+      }
+    },
+    'Belbin Team Roles': {
+      ro: {
+        name: 'Rolurile în Echipă Belbin',
+        description: 'Identifică rolurile preferate în echipă și stilurile de colaborare pentru o mai bună performanță în grup.'
+      },
+      en: {
+        name: 'Belbin Team Roles',
+        description: 'Identifies preferred team roles and collaboration styles for better group performance.'
+      }
+    },
+    'HEXACO Personality Test': {
+      ro: {
+        name: 'Testul de Personalitate HEXACO',
+        description: 'Evaluează personalitatea pe șase dimensiuni: sinceritate-umilință, emoționalitate, extraversiune, agreabilitate, conștiinciozitate și deschidere.'
+      },
+      en: {
+        name: 'HEXACO Personality Test',
+        description: 'Assesses personality across six dimensions: honesty-humility, emotionality, extraversion, agreeableness, conscientiousness, and openness.'
+      }
+    },
+    'GAD-7 Anxiety Scale': {
+      ro: {
+        name: 'Scala de Anxietate GAD-7',
+        description: 'Screeningul și monitorizarea simptomelor de anxietate generalizată.'
+      },
+      en: {
+        name: 'GAD-7 Anxiety Scale',
+        description: 'Screening and monitoring of generalized anxiety symptoms.'
+      }
+    },
+    'Competențe Manageriale': {
+      ro: {
+        name: 'Testul de Competențe Manageriale',
+        description: 'Evaluează abilitățile de leadership și management prin scenarii situaționale.'
+      },
+      en: {
+        name: 'Managerial Competencies Test',
+        description: 'Assesses leadership and management skills through situational scenarios.'
+      }
+    },
+    'Test Situational de Evaluare (SJT)': {
+      ro: {
+        name: 'Test Situational de Evaluare (SJT)',
+        description: 'Evaluează judgmentul și abilitățile de luare a deciziilor prin scenarii realiste de lucru.'
+      },
+      en: {
+        name: 'Situational Judgment Test (SJT)',
+        description: 'Assesses judgment and decision-making skills through realistic work scenarios.'
+      }
+    },
+    'Test de Orientare în Carieră': {
+      ro: {
+        name: 'Test de Orientare în Carieră',
+        description: 'Identifică interesele și aptitudinile pentru a ghida deciziile de carieră.'
+      },
+      en: {
+        name: 'Career Orientation Test',
+        description: 'Identifies interests and aptitudes to guide career decisions.'
+      }
+    },
+    'Enneagram Test': {
+      ro: {
+        name: 'Testul Enneagramă',
+        description: 'Explorează cele nouă tipuri de personalitate și motivațiile lor fundamentale.'
+      },
+      en: {
+        name: 'Enneagram Test',
+        description: 'Explores nine personality types and their fundamental motivations.'
+      }
+    },
+    'Aptitudini Cognitive': {
+      ro: {
+        name: 'Testul de Aptitudini Cognitive',
+        description: 'Evaluează abilitățile mentale generale și capacitățile de procesare cognitivă.'
+      },
+      en: {
+        name: 'Cognitive Aptitude Test',
+        description: 'Assesses general mental abilities and cognitive processing capabilities.'
       }
     }
   };
 
   const translation = translations[testName];
-  if (translation) {
-    return translation[language as 'ro' | 'en'] || translation.ro;
+  if (!translation) {
+    return {
+      name: testName,
+      description: ''
+    };
   }
 
-  return { name: testName, description: '' };
-}
+  return translation[language as keyof typeof translation] || translation.ro;
+};
