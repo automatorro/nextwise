@@ -10,6 +10,7 @@ import EnneagramExplanation from './explanations/EnneagramExplanation';
 import GADExplanation from './explanations/GADExplanation';
 import { HexacoExplanation } from './explanations/HexacoExplanation';
 import { SJTExplanation } from './explanations/SJTExplanation';
+import { WatsonGlaserExplanation } from './explanations/WatsonGlaserExplanation';
 
 interface TestExplanationsProps {
   testName: string;
@@ -30,6 +31,10 @@ export const TestExplanations: React.FC<TestExplanationsProps> = ({ testName, sc
   
   if (testKey.includes('cattell') || testKey.includes('16pf')) {
     return <CattellExplanation score={score} language={language} />;
+  }
+  
+  if (testKey.includes('watson') || testKey.includes('glaser') || testKey.includes('critical thinking')) {
+    return <WatsonGlaserExplanation score={score} language={language} />;
   }
   
   if (testKey.includes('cognitive') || testKey.includes('cognitiv')) {

@@ -45,6 +45,7 @@ const TestsPage = () => {
         throw error;
       }
       
+      console.log('Fetched tests:', data);
       return data as TestType[];
     }
   });
@@ -142,7 +143,8 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('watson') ||
     test.name.toLowerCase().includes('glaser') ||
     test.name.toLowerCase().includes('critical thinking') ||
-    test.name.toLowerCase().includes('aptitudini cognitive')
+    test.name.toLowerCase().includes('aptitudini cognitive') ||
+    test.name.toLowerCase().includes('watson-glaser')
   ) || [];
 
   const categoryDescriptions = {
