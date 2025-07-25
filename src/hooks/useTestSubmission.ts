@@ -41,7 +41,7 @@ export const useTestSubmission = () => {
       calculatedScore = calculateWatsonGlaserScore(answers);
     } else if (testName.includes('big five') || testName.includes('big-five')) {
       const { calculateBigFiveScore } = await import('@/utils/testCalculations/bigFiveCalculation');
-      calculatedScore = calculateBigFiveScore(answers);
+      calculatedScore = calculateBigFiveScore(answers, questions);
     } else if (testName.includes('hexaco')) {
       const { calculateHexacoScore } = await import('@/utils/testCalculations/hexacoCalculation');
       calculatedScore = calculateHexacoScore(answers);
@@ -65,10 +65,10 @@ export const useTestSubmission = () => {
       calculatedScore = calculateEmotionalIntelligenceScore(answers);
     } else if (testName.includes('sjt') || testName.includes('situational')) {
       const { calculateSJTScore } = await import('@/utils/testCalculations/sjtCalculation');
-      calculatedScore = calculateSJTScore(answers);
+      calculatedScore = calculateSJTScore(answers, questions);
     } else if (testName.includes('cognitive') || testName.includes('cognitiv')) {
       const { calculateCognitiveScore } = await import('@/utils/testCalculations/cognitiveCalculation');
-      calculatedScore = calculateCognitiveScore(answers);
+      calculatedScore = calculateCognitiveScore(answers, questions);
     } else {
       // Generic fallback calculation
       console.log('Using generic calculation for:', testName);
@@ -100,11 +100,11 @@ export const useTestSubmission = () => {
 
     if (error) throw error;
 
-    // Update subscription usage - using a simple update instead of RPC
+    // Update subscription usage using SQL expression
     const { error: updateError } = await supabase
       .from('subscriptions')
       .update({ 
-        tests_taken_this_month: supabase.raw('tests_taken_this_month + 1')
+        tests_taken_this_month: supabase.sql`tests_taken_this_month + 1`
       })
       .eq('user_id', user.id);
 
