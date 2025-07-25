@@ -7,7 +7,7 @@ import { Clock } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useTestSubmission } from '@/hooks/useTestSubmission';
 import { useSessionId } from '@/hooks/useSessionId';
-import TestQuestion from '@/components/test-runner/TestQuestion';
+import TestQuestion from '@/components/test/TestQuestion';
 
 const TestRunner = () => {
   const { testId } = useParams<{ testId: string }>();

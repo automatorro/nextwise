@@ -1,3 +1,4 @@
+
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -37,37 +38,37 @@ export const useTestSubmission = () => {
     if (testName.includes('watson') || testName.includes('glaser')) {
       console.log('Using Watson-Glaser calculator');
       const { calculateWatsonGlaserScore } = await import('@/utils/testCalculations/watsonGlaserCalculation');
-      calculatedScore = calculateWatsonGlaserScore(answers, questions);
+      calculatedScore = calculateWatsonGlaserScore(answers);
     } else if (testName.includes('big five') || testName.includes('big-five')) {
       const { calculateBigFiveScore } = await import('@/utils/testCalculations/bigFiveCalculation');
-      calculatedScore = calculateBigFiveScore(answers, questions);
+      calculatedScore = calculateBigFiveScore(answers);
     } else if (testName.includes('hexaco')) {
       const { calculateHexacoScore } = await import('@/utils/testCalculations/hexacoCalculation');
-      calculatedScore = calculateHexacoScore(answers, questions);
+      calculatedScore = calculateHexacoScore(answers);
     } else if (testName.includes('cattell') || testName.includes('16pf')) {
       const { calculateCattellScore } = await import('@/utils/testCalculations/cattellCalculation');
-      calculatedScore = calculateCattellScore(answers, questions);
+      calculatedScore = calculateCattellScore(answers);
     } else if (testName.includes('belbin')) {
       const { calculateBelbinScore } = await import('@/utils/testCalculations/belbinCalculation');
-      calculatedScore = calculateBelbinScore(answers, questions);
+      calculatedScore = calculateBelbinScore(answers);
     } else if (testName.includes('disc')) {
       const { calculateDISCScore } = await import('@/utils/testCalculations/discCalculation');
-      calculatedScore = calculateDISCScore(answers, questions);
+      calculatedScore = calculateDISCScore(answers);
     } else if (testName.includes('enneagram')) {
       const { calculateEnneagramScore } = await import('@/utils/testCalculations/enneagramCalculation');
-      calculatedScore = calculateEnneagramScore(answers, questions);
+      calculatedScore = calculateEnneagramScore(answers);
     } else if (testName.includes('gad') || testName.includes('anxiety')) {
       const { calculateGADScore } = await import('@/utils/testCalculations/gadCalculation');
-      calculatedScore = calculateGADScore(answers, questions);
+      calculatedScore = calculateGADScore(answers);
     } else if (testName.includes('emotional') || testName.includes('eq')) {
       const { calculateEmotionalIntelligenceScore } = await import('@/utils/testCalculations/emotionalIntelligenceCalculation');
-      calculatedScore = calculateEmotionalIntelligenceScore(answers, questions);
+      calculatedScore = calculateEmotionalIntelligenceScore(answers);
     } else if (testName.includes('sjt') || testName.includes('situational')) {
       const { calculateSJTScore } = await import('@/utils/testCalculations/sjtCalculation');
-      calculatedScore = calculateSJTScore(answers, questions);
+      calculatedScore = calculateSJTScore(answers);
     } else if (testName.includes('cognitive') || testName.includes('cognitiv')) {
       const { calculateCognitiveScore } = await import('@/utils/testCalculations/cognitiveCalculation');
-      calculatedScore = calculateCognitiveScore(answers, questions);
+      calculatedScore = calculateCognitiveScore(answers);
     } else {
       // Generic fallback calculation
       console.log('Using generic calculation for:', testName);
@@ -99,10 +100,18 @@ export const useTestSubmission = () => {
 
     if (error) throw error;
 
-    // Update subscription usage
-    await supabase.rpc('increment_tests_taken', {
-      user_id: user.id
-    });
+    // Update subscription usage - using a simple update instead of RPC
+    const { error: updateError } = await supabase
+      .from('subscriptions')
+      .update({ 
+        tests_taken_this_month: supabase.raw('tests_taken_this_month + 1')
+      })
+      .eq('user_id', user.id);
+
+    if (updateError) {
+      console.error('Error updating subscription usage:', updateError);
+      // Don't throw here as the test was successfully submitted
+    }
 
     return data;
   };
