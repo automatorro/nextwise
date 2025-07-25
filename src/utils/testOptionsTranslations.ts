@@ -60,15 +60,15 @@ export function translateTestOptions(testName: string, options: string[], target
     });
   }
 
-    // DISC translations
-    if (testName.includes('DISC')) {
-      return options.map(option => {
-        if (targetLanguage === 'en') {
-          return discTranslations[option as keyof typeof discTranslations] || option;
-        }
-        return option;
-      });
-    }
+  // DISC translations
+  if (testName.includes('DISC')) {
+    return options.map(option => {
+      if (targetLanguage === 'en') {
+        return discTranslations[option as keyof typeof discTranslations] || option;
+      }
+      return option;
+    });
+  }
 
   // Emotional Intelligence translations
   if (testName.includes('Emotional Intelligence') || testName.includes('emotional intelligence')) {
@@ -141,7 +141,7 @@ export function translateTestOptions(testName: string, options: string[], target
   }
 
   // Watson-Glaser translations
-  if (testName.includes('Watson-Glaser') || testName.includes('watson-glaser')) {
+  if (testName.includes('Watson-Glaser') || testName.includes('watson-glaser') || testName.includes('watson') || testName.includes('glaser')) {
     return options.map(option => {
       if (targetLanguage === 'en') {
         return watsonGlaserTranslations[option as keyof typeof watsonGlaserTranslations] || option;

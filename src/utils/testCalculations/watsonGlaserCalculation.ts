@@ -33,57 +33,57 @@ export function calculateWatsonGlaserScore(answers: { [key: string]: number }): 
     argument_evaluation: 0
   };
   
-  // Define correct answers for each question (1-indexed)
+  // Define correct answers for each question (0-indexed for options array)
   const correctAnswers: { [key: number]: number } = {
     // Secțiunea 1: Inferențe (întrebările 1-8)
-    1: 3, // Insuficientă informație
-    2: 4, // Probabil adevărat
-    3: 2, // Probabil fals
-    4: 4, // Probabil adevărat
-    5: 3, // Insuficientă informație
-    6: 3, // Insuficientă informație
-    7: 4, // Probabil adevărat
-    8: 4, // Probabil adevărat
+    1: 4, // Date insuficiente
+    2: 2, // Probabil adevărat
+    3: 3, // Probabil fals
+    4: 2, // Probabil adevărat
+    5: 4, // Date insuficiente
+    6: 4, // Date insuficiente
+    7: 3, // Probabil fals
+    8: 2, // Probabil adevărat
     
     // Secțiunea 2: Asumpții (întrebările 9-16)
-    9: 1,  // Da
-    10: 1, // Da
-    11: 0, // Nu
-    12: 1, // Da
-    13: 0, // Nu
-    14: 1, // Da
-    15: 0, // Nu
-    16: 1, // Da
+    9: 0,  // Da
+    10: 0, // Da
+    11: 1, // Nu
+    12: 0, // Da
+    13: 1, // Nu
+    14: 0, // Da
+    15: 1, // Nu
+    16: 0, // Da
     
     // Secțiunea 3: Deducție (întrebările 17-24)
-    17: 0, // Nu urmează logic
-    18: 1, // Urmează logic
-    19: 0, // Nu urmează logic
-    20: 1, // Urmează logic
-    21: 1, // Urmează logic
-    22: 0, // Nu urmează logic
-    23: 0, // Nu urmează logic
-    24: 1, // Urmează logic
+    17: 0, // Urmează logic
+    18: 0, // Urmează logic
+    19: 1, // Nu urmează logic
+    20: 0, // Urmează logic
+    21: 1, // Nu urmează logic
+    22: 0, // Urmează logic
+    23: 1, // Nu urmează logic
+    24: 1, // Nu urmează logic
     
     // Secțiunea 4: Interpretarea (întrebările 25-32)
-    25: 1, // Concluzia urmează
-    26: 0, // Concluzia nu urmează
-    27: 0, // Concluzia nu urmează
-    28: 1, // Concluzia urmează
-    29: 1, // Concluzia urmează
-    30: 0, // Concluzia nu urmează
-    31: 1, // Concluzia urmează
-    32: 1, // Concluzia urmează
+    25: 0, // Concluzia urmează
+    26: 1, // Concluzia nu urmează
+    27: 1, // Concluzia nu urmează
+    28: 0, // Concluzia urmează
+    29: 0, // Concluzia urmează
+    30: 1, // Concluzia nu urmează
+    31: 0, // Concluzia urmează
+    32: 1, // Concluzia nu urmează
     
     // Secțiunea 5: Evaluarea argumentelor (întrebările 33-40)
-    33: 1, // Puternic
-    34: 0, // Slab
-    35: 0, // Slab
-    36: 1, // Puternic
-    37: 0, // Slab
-    38: 1, // Puternic
-    39: 0, // Slab
-    40: 1  // Puternic
+    33: 0, // Argument puternic
+    34: 1, // Argument slab
+    35: 1, // Argument slab
+    36: 0, // Argument puternic
+    37: 1, // Argument slab
+    38: 0, // Argument puternic
+    39: 1, // Argument slab
+    40: 0  // Argument puternic
   };
   
   let totalScore = 0;

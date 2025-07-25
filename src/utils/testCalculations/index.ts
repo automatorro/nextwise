@@ -24,3 +24,55 @@ export {
   calculateProfessionalAptitudeScore,
   calculateWatsonGlaserScore
 };
+
+// Funcție pentru a determina care funcție de calcul să folosim
+export function getScoreCalculationFunction(testName: string) {
+  const testKey = testName.toLowerCase();
+  
+  if (testKey.includes('big five') || testKey.includes('big-five')) {
+    return calculateBigFiveScore;
+  }
+  
+  if (testKey.includes('cattell') || testKey.includes('16pf')) {
+    return calculateCattellScore;
+  }
+  
+  if (testKey.includes('disc')) {
+    return calculateDISCScore;
+  }
+  
+  if (testKey.includes('emotional') || testKey.includes('emotiona')) {
+    return calculateEmotionalIntelligenceScore;
+  }
+  
+  if (testKey.includes('cognitive') || testKey.includes('cognitiv')) {
+    return calculateCognitiveScore;
+  }
+  
+  if (testKey.includes('belbin')) {
+    return calculateBelbinScore;
+  }
+  
+  if (testKey.includes('hexaco')) {
+    return calculateHexacoScore;
+  }
+  
+  if (testKey.includes('gad') || testKey.includes('anxietate')) {
+    return calculateGADScore;
+  }
+  
+  if (testKey.includes('sjt') || testKey.includes('situational') || testKey.includes('competențe manageriale') || testKey.includes('managerial')) {
+    return calculateSJTScore;
+  }
+  
+  if (testKey.includes('professional') || testKey.includes('aptitude')) {
+    return calculateProfessionalAptitudeScore;
+  }
+  
+  if (testKey.includes('watson') || testKey.includes('glaser') || testKey.includes('critical thinking')) {
+    return calculateWatsonGlaserScore;
+  }
+  
+  // Fallback la cognitive pentru teste necunoscute
+  return calculateCognitiveScore;
+}
