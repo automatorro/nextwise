@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -289,79 +288,19 @@ const TestRunner = () => {
             <div className="space-y-6">
               {/* Current Question - only render if currentQuestion exists */}
               {currentQuestion && (
-                <Card>
-                  <CardHeader>
-                    <div className="flex justify-between items-start">
-                      <div className="flex-1">
-                        <CardTitle className="text-lg mb-2">
-                          {language === 'ro' ? 'Întrebarea' : 'Question'} {currentQuestionIndex + 1}
-                        </CardTitle>
-                        <CardDescription>
-                          {currentQuestion.question_text}
-                        </CardDescription>
-                      </div>
-                      <Badge variant="outline">
-                        {currentQuestionIndex + 1} / {questions.length}
-                      </Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <TestQuestion
-                      testType={testData}
-                      currentQuestion={currentQuestion}
-                      currentQuestionIndex={currentQuestionIndex}
-                      totalQuestions={questions.length}
-                      answers={answers}
-                      isSubmitting={isSubmitting}
-                      onAnswerChange={(value) => handleAnswer(currentQuestion.id, parseInt(value))}
-                      onNext={handleNext}
-                      onPrevious={handlePrevious}
-                    />
-                  </CardContent>
-                </Card>
+                <TestQuestion
+                  currentQuestion={currentQuestion}
+                  questions={questions}
+                  answers={answers}
+                  currentIndex={currentQuestionIndex}
+                  testType={testData}
+                  onAnswer={handleAnswer}
+                  onNext={handleNext}
+                  onPrevious={handlePrevious}
+                  onFinish={handleSubmit}
+                  timeRemaining={timeRemaining}
+                />
               )}
-
-              {/* Navigation */}
-              <div className="flex justify-between items-center">
-                <Button
-                  variant="outline"
-                  onClick={handlePrevious}
-                  disabled={currentQuestionIndex === 0}
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  {language === 'ro' ? 'Precedenta' : 'Previous'}
-                </Button>
-
-                <div className="flex space-x-2">
-                  {!isLastQuestion ? (
-                    <Button
-                      onClick={handleNext}
-                      disabled={!currentQuestion || answers[currentQuestion.id] === undefined}
-                    >
-                      {language === 'ro' ? 'Următoarea' : 'Next'}
-                      <ArrowRight className="h-4 w-4 ml-2" />
-                    </Button>
-                  ) : (
-                    <Button
-                      onClick={handleSubmit}
-                      disabled={!allQuestionsAnswered || isSubmitting}
-                      className="bg-green-600 hover:bg-green-700"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          {language === 'ro' ? 'Se trimite...' : 'Submitting...'}
-                        </>
-                      ) : (
-                        <>
-                          <CheckCircle className="h-4 w-4 mr-2" />
-                          {language === 'ro' ? 'Finalizează testul' : 'Finish test'}
-                        </>
-                      )}
-                    </Button>
-                  )}
-                </div>
-              </div>
 
               {/* Progress Summary */}
               <Card>
