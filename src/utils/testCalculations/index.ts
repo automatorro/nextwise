@@ -21,3 +21,5 @@ export {
   calculateSJTScore,
   calculateProfessionalAptitudeScore
 };
+
+export { calculateWatsonGlaserScore } from './watsonGlaserCalculation';

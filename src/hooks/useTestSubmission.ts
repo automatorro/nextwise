@@ -1,4 +1,3 @@
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -14,7 +13,8 @@ import {
   calculateHexacoScore,
   calculateGADScore,
   calculateSJTScore,
-  calculateProfessionalAptitudeScore
+  calculateProfessionalAptitudeScore,
+  calculateWatsonGlaserScore
 } from '@/utils/testCalculations';
 
 export const useTestSubmission = () => {
@@ -69,6 +69,10 @@ export const useTestSubmission = () => {
         console.log('HEXACO score calculated:', score);
       } else if (testName.includes('gad') || testName.includes('anxietate')) {
         score = calculateGADScore(answers);
+      } else if (testName.includes('watson-glaser') || testName.includes('watson glaser')) {
+        console.log('Calculating Watson-Glaser score for answers:', answers);
+        score = calculateWatsonGlaserScore(answers);
+        console.log('Watson-Glaser score calculated:', score);
       } else if (testName.includes('sjt') || testName.includes('situational judgment')) {
         console.log('Calculating SJT score for answers:', answers);
         console.log('Using questions for SJT:', questions);
