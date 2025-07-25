@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -68,7 +69,6 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
   console.log('=== DETAILED OPTION DEBUGGING ===');
   console.log('Current language:', language);
   console.log('Question ID:', currentQuestion.id);
-  console.log('Question type:', currentQuestion.question_type || 'default');
   console.log('Romanian options (raw):', currentQuestion.options);
   console.log('English options (raw):', currentQuestion.options_en);
   console.log('Test type name:', testType.name);
@@ -210,9 +210,7 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
           </CardHeader>
           <CardContent className="space-y-6">
             <p className="text-gray-700 text-lg leading-relaxed">
-              {language === 'en' && currentQuestion.question_text_en 
-                ? currentQuestion.question_text_en 
-                : currentQuestion.question_text_ro || currentQuestion.question_text}
+              {currentQuestion.question_text}
             </p>
 
             <div className="space-y-4">
