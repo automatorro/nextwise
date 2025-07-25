@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -92,7 +93,10 @@ const convertToScoreData = (score: any): ScoreData => {
     detailed_interpretations: score.detailed_interpretations || {},
     primary_roles: score.primary_roles || [],
     secondary_roles: score.secondary_roles || [],
-    role_scores: score.role_scores || {}
+    role_scores: score.role_scores || {},
+    recommendations: score.recommendations || [],
+    dominant_profile: score.dominant_profile,
+    secondary_profile: score.secondary_profile
   };
 };
 
@@ -155,7 +159,7 @@ const TestResult = () => {
   const isBelbinTest = result ? isBelbinTeamRoles(result.test_types.name) : false;
   const isCattell16PFTest = result?.test_types.name.includes('Cattell') || result?.test_types.name.includes('16PF');
   const isEnneagramTest = result?.test_types.name.includes('Enneagram');
-  const isSJTTest = result?.test_types.name.includes('SJT') || result?.test_types.name.includes('Situational Judgment');
+  const isSJTTest = result?.test_types.name.includes('SJT') || result?.test_types.name.includes('Situational Judgment') || result?.test_types.name.includes('orientare') || result?.test_types.name.includes('cariera');
   
   const calculatedBigFiveDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
   const calculatedCognitiveDimensions = useCognitiveAbilitiesCalculation(isCognitiveTest ? result?.answers : undefined);
@@ -192,10 +196,10 @@ const TestResult = () => {
     return result?.score.dimensions || {};
   }, [isBigFiveTest, isCognitiveTest, isCattell16PFTest, isEnneagramTest, isSJTTest, isBelbinTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, calculatedCattell16PFDimensions, calculatedEnneagramDimensions, calculatedSJTDimensions, result?.score]);
 
-  const hasValidTestSpecificDimensions = Object.values(testSpecificDimensions).some(value => value > 0);
+  const hasValidTestSpecificDimensions = testSpecificDimensions && Object.values(testSpecificDimensions).some(value => typeof value === 'number' && value > 0);
 
   // Use different dimensions for general display
-  const generalDisplayDimensions = testSpecificDimensions;
+  const generalDisplayDimensions = testSpecificDimensions || {};
 
   if (isLoading) {
     return (
@@ -263,14 +267,14 @@ const TestResult = () => {
                 testName={result.test_types.name}
                 overallScore={result.score.overall}
                 scoreType={scoreType}
-                dimensions={testSpecificDimensions}
+                dimensions={generalDisplayDimensions}
               />
               
               {/* SJT Results */}
               <SJTResults
                 score={{
                   overall: result.score.overall,
-                  dimensions: testSpecificDimensions,
+                  dimensions: generalDisplayDimensions,
                   interpretation: result.score.interpretation,
                   detailed_interpretations: result.score.detailed_interpretations,
                   recommendations: result.score.recommendations || [],
@@ -289,7 +293,7 @@ const TestResult = () => {
                     testName={result.test_types.name}
                     overallScore={result.score.overall}
                     scoreType={scoreType}
-                    dimensions={testSpecificDimensions}
+                    dimensions={generalDisplayDimensions}
                     roleScores={result.score.role_scores || result.score.dimensions}
                   />
                   
@@ -311,7 +315,7 @@ const TestResult = () => {
                     testName={result.test_types.name}
                     overallScore={result.score.overall}
                     scoreType={scoreType}
-                    dimensions={testSpecificDimensions}
+                    dimensions={generalDisplayDimensions}
                   />
 
                   {/* Correct Answers Section - only for cognitive abilities tests */}
