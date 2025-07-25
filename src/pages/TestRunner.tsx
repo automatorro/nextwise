@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
@@ -9,9 +10,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { TestQuestion } from '@/components/test/TestQuestion';
-import { TestProgressRestoreDialog } from '@/components/test/TestProgressRestoreDialog';
-import { TestErrorScreen } from '@/components/test/TestErrorScreen';
-import { TestStartScreen } from '@/components/test/TestStartScreen';
+import TestProgressRestoreDialog from '@/components/test/TestProgressRestoreDialog';
+import TestErrorScreen from '@/components/test/TestErrorScreen';
+import TestStartScreen from '@/components/test/TestStartScreen';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -42,7 +43,7 @@ const TestRunner = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { submitTest } = useTestSubmission();
-  const { sessionId } = useSessionId();
+  const sessionId = useSessionId();
   const { language } = useLanguage();
   
   const [testType, setTestType] = useState<TestType | null>(null);
@@ -57,9 +58,9 @@ const TestRunner = () => {
 
   const {
     saveProgress,
-    loadProgress,
     clearProgress,
-    hasProgress
+    restoreProgress,
+    hasSavedProgress
   } = useTestProgress(testId || '');
 
   useEffect(() => {
@@ -70,8 +71,8 @@ const TestRunner = () => {
         setIsLoading(true);
         
         // Check for existing progress
-        const existingProgress = await loadProgress();
-        if (existingProgress.answers && Object.keys(existingProgress.answers).length > 0) {
+        const existingProgress = restoreProgress();
+        if (existingProgress && Object.keys(existingProgress.answers).length > 0) {
           setShowRestoreDialog(true);
         }
 
@@ -104,12 +105,12 @@ const TestRunner = () => {
     };
 
     fetchTestData();
-  }, [testId, user]);
+  }, [testId, user, restoreProgress]);
 
   const handleRestoreProgress = async (restore: boolean) => {
     if (restore) {
-      const progress = await loadProgress();
-      if (progress.answers) {
+      const progress = restoreProgress();
+      if (progress && progress.answers) {
         setAnswers(progress.answers);
         setCurrentQuestionIndex(progress.currentQuestionIndex || 0);
       }
@@ -125,11 +126,7 @@ const TestRunner = () => {
       setAnswers(newAnswers);
       
       // Save progress
-      saveProgress({
-        answers: newAnswers,
-        currentQuestionIndex,
-        lastUpdated: new Date().toISOString()
-      });
+      saveProgress(currentQuestionIndex, newAnswers);
     }
   };
 
@@ -137,11 +134,7 @@ const TestRunner = () => {
     if (currentQuestionIndex < questions.length - 1) {
       const nextIndex = currentQuestionIndex + 1;
       setCurrentQuestionIndex(nextIndex);
-      saveProgress({
-        answers,
-        currentQuestionIndex: nextIndex,
-        lastUpdated: new Date().toISOString()
-      });
+      saveProgress(nextIndex, answers);
     }
   };
 
@@ -149,11 +142,7 @@ const TestRunner = () => {
     if (currentQuestionIndex > 0) {
       const prevIndex = currentQuestionIndex - 1;
       setCurrentQuestionIndex(prevIndex);
-      saveProgress({
-        answers,
-        currentQuestionIndex: prevIndex,
-        lastUpdated: new Date().toISOString()
-      });
+      saveProgress(prevIndex, answers);
     }
   };
 
@@ -184,11 +173,23 @@ const TestRunner = () => {
   }
 
   if (error) {
-    return <TestErrorScreen error={error} onRetry={() => window.location.reload()} />;
+    return (
+      <TestErrorScreen 
+        title="Test Error" 
+        message={error} 
+        onReturnToTests={() => navigate('/tests')} 
+      />
+    );
   }
 
   if (!testType || questions.length === 0) {
-    return <TestErrorScreen error="Test not found" onRetry={() => navigate('/tests')} />;
+    return (
+      <TestErrorScreen 
+        title="Test Not Found" 
+        message="Test not found" 
+        onReturnToTests={() => navigate('/tests')} 
+      />
+    );
   }
 
   if (!hasStarted) {
@@ -196,13 +197,17 @@ const TestRunner = () => {
       <>
         <TestStartScreen 
           testType={testType} 
-          onStart={() => setHasStarted(true)} 
+          questionsCount={questions.length}
+          onStartTest={() => setHasStarted(true)} 
         />
         {showRestoreDialog && (
           <TestProgressRestoreDialog
             open={showRestoreDialog}
-            onOpenChange={setShowRestoreDialog}
-            onRestore={handleRestoreProgress}
+            testName={testType.name}
+            questionNumber={currentQuestionIndex}
+            totalQuestions={questions.length}
+            onRestore={() => handleRestoreProgress(true)}
+            onStartFresh={() => handleRestoreProgress(false)}
           />
         )}
       </>
