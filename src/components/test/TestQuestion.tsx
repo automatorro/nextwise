@@ -1,229 +1,63 @@
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { ChevronLeft, ChevronRight, Clock, X } from 'lucide-react';
-import { useLanguage } from '@/hooks/useLanguage';
-import { useNavigate } from 'react-router-dom';
-
-interface Question {
-  id: string;
-  question_text_ro: string;
-  question_text_en?: string;
-  question_text?: string;
-  options: any;
-  options_en?: any;
-  question_order: number;
-  question_type?: string;
-  scoring_weights?: any;
-}
-
-interface TestType {
-  name: string;
-  estimated_duration: number;
-  questions_count: number;
-}
+import { Button } from '@/components/ui/button';
+import { Language } from '@/types/language';
 
 interface TestQuestionProps {
-  currentQuestion: Question;
-  questions: Question[];
-  answers: Record<string, number>;
-  currentIndex: number;
-  testType: TestType;
-  onAnswer: (questionId: string, answer: number) => void;
-  onNext: () => void;
-  onPrevious: () => void;
-  onFinish: () => void;
-  timeRemaining?: number;
+  question: {
+    id: string;
+    question_text_ro: string;
+    question_text_en?: string;
+    question_order: number;
+    options: any;
+    options_en?: any;
+    scoring_weights?: any;
+    question_type: string;
+    test_type_id: string;
+    created_at: string;
+  };
+  selectedAnswer: number | undefined;
+  onAnswer: (answerIndex: number) => void;
+  language: Language;
 }
 
-const TestQuestion: React.FC<TestQuestionProps> = ({
-  currentQuestion,
-  questions,
-  answers,
-  currentIndex,
-  testType,
+export const TestQuestion: React.FC<TestQuestionProps> = ({
+  question,
+  selectedAnswer,
   onAnswer,
-  onNext,
-  onPrevious,
-  onFinish,
-  timeRemaining
+  language
 }) => {
-  const { language } = useLanguage();
-  const navigate = useNavigate();
-  
-  const progress = ((currentIndex + 1) / questions.length) * 100;
-  const hasAnswer = answers[currentQuestion.id] !== undefined;
-  const isLastQuestion = currentIndex === questions.length - 1;
+  const questionText = language === 'en' && question.question_text_en 
+    ? question.question_text_en 
+    : question.question_text_ro;
 
-  const handleExitTest = () => {
-    if (window.confirm(language === 'ro' ? 'Ești sigur că vrei să ieși din test? Progresul va fi salvat.' : 'Are you sure you want to exit the test? Progress will be saved.')) {
-      navigate('/tests');
-    }
-  };
+  const options = language === 'en' && question.options_en 
+    ? question.options_en 
+    : question.options;
 
-  // Parse options based on language
-  const parseOptions = (options: any) => {
-    if (!options) return [];
-    
-    try {
-      if (typeof options === 'string') {
-        return JSON.parse(options);
-      }
-      if (Array.isArray(options)) {
-        return options;
-      }
-      return [];
-    } catch (error) {
-      console.error('Error parsing options:', error);
-      return [];
-    }
-  };
-
-  const getQuestionText = () => {
-    if (language === 'en' && currentQuestion.question_text_en) {
-      return currentQuestion.question_text_en;
-    }
-    return currentQuestion.question_text_ro || currentQuestion.question_text || '';
-  };
-
-  const getOptions = () => {
-    if (language === 'en' && currentQuestion.options_en) {
-      return parseOptions(currentQuestion.options_en);
-    }
-    return parseOptions(currentQuestion.options);
-  };
-
-  const options = getOptions();
-
-  const handleOptionSelect = (optionIndex: number) => {
-    onAnswer(currentQuestion.id, optionIndex);
-    
-    // Auto-advance after a short delay (except for last question)
-    if (!isLastQuestion) {
-      setTimeout(() => {
-        onNext();
-      }, 500);
-    }
-  };
-
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60);
-    const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
+  // Parse options if they're stored as JSON string
+  const parsedOptions = typeof options === 'string' ? JSON.parse(options) : options;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
-      {/* Progress Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <span className="text-sm font-medium text-gray-600">
-            {language === 'en' ? 'Question' : 'Întrebarea'} {currentIndex + 1} {language === 'en' ? 'of' : 'din'} {questions.length}
-          </span>
-          {timeRemaining && (
-            <div className="flex items-center space-x-1 text-sm text-gray-500">
-              <Clock className="w-4 h-4" />
-              <span>{formatTime(timeRemaining)}</span>
-            </div>
-          )}
-        </div>
-        <div className="flex items-center space-x-4">
-          <Progress value={progress} className="w-48" />
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-lg font-medium">
+          {questionText}
+        </CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-3">
+        {Array.isArray(parsedOptions) && parsedOptions.map((option: string, index: number) => (
           <Button
-            variant="outline"
-            size="sm"
-            onClick={handleExitTest}
-            className="flex items-center space-x-2"
+            key={index}
+            variant={selectedAnswer === index ? "default" : "outline"}
+            className="w-full text-left justify-start p-4 h-auto whitespace-normal"
+            onClick={() => onAnswer(index)}
           >
-            <X className="w-4 h-4" />
-            <span>{language === 'ro' ? 'Ieși' : 'Exit'}</span>
+            {option}
           </Button>
-        </div>
-      </div>
-
-      {/* Question Card */}
-      <Card className="border-2 border-gray-200">
-        <CardHeader>
-          <CardTitle className="text-xl">
-            {testType.name}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          <p className="text-gray-700 text-lg leading-relaxed">
-            {getQuestionText()}
-          </p>
-
-          <div className="space-y-4">
-            {options.map((option: any, index: number) => {
-              const optionText = typeof option === 'object' ? option.label : option;
-              const isSelected = answers[currentQuestion.id] === index;
-              
-              return (
-                <button
-                  key={index}
-                  onClick={() => handleOptionSelect(index)}
-                  className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 hover:border-blue-300 ${
-                    isSelected 
-                      ? 'border-blue-500 bg-blue-50 text-blue-900' 
-                      : 'border-gray-200 hover:bg-gray-50'
-                  }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${
-                      isSelected 
-                        ? 'border-blue-500 bg-blue-500' 
-                        : 'border-gray-300'
-                    }`}>
-                      {isSelected && (
-                        <div className="w-2 h-2 bg-white rounded-full" />
-                      )}
-                    </div>
-                    <span className="text-sm font-medium">{optionText}</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Navigation */}
-      <div className="flex justify-between items-center">
-        <Button
-          variant="outline"
-          onClick={onPrevious}
-          disabled={currentIndex === 0}
-          className="flex items-center space-x-2"
-        >
-          <ChevronLeft className="w-4 h-4" />
-          <span>{language === 'en' ? 'Previous' : 'Anterior'}</span>
-        </Button>
-
-        <div className="flex space-x-3">
-          {!isLastQuestion ? (
-            <Button
-              onClick={onNext}
-              disabled={!hasAnswer}
-              className="flex items-center space-x-2"
-            >
-              <span>{language === 'en' ? 'Next' : 'Următorul'}</span>
-              <ChevronRight className="w-4 h-4" />
-            </Button>
-          ) : (
-            <Button
-              onClick={onFinish}
-              disabled={!hasAnswer}
-              className="bg-green-600 hover:bg-green-700 text-white flex items-center space-x-2"
-            >
-              <span>{language === 'en' ? 'Finish Test' : 'Finalizează Testul'}</span>
-            </Button>
-          )}
-        </div>
-      </div>
-    </div>
+        ))}
+      </CardContent>
+    </Card>
   );
 };
-
-export default TestQuestion;

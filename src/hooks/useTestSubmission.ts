@@ -1,4 +1,3 @@
-
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 
@@ -100,13 +99,10 @@ export const useTestSubmission = () => {
 
     if (error) throw error;
 
-    // Update subscription usage using SQL expression
-    const { error: updateError } = await supabase
-      .from('subscriptions')
-      .update({ 
-        tests_taken_this_month: supabase.sql`tests_taken_this_month + 1`
-      })
-      .eq('user_id', user.id);
+    // Update subscription usage with RPC call
+    const { error: updateError } = await supabase.rpc('increment_tests_taken', {
+      user_id: user.id
+    });
 
     if (updateError) {
       console.error('Error updating subscription usage:', updateError);
