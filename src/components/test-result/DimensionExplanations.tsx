@@ -3,7 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { getDimensionExplanation } from '@/utils/scoring/testExplanations';
-import { getScoreVariant } from '@/utils/scoring/scoreVariants';
+import { getScoreBadgeVariant } from '@/utils/scoring/scoreVariants';
 
 interface DimensionExplanationsProps {
   testName: string;
@@ -75,7 +75,7 @@ const DimensionExplanations = ({ testName, dimensions }: DimensionExplanationsPr
               <div className="flex items-center justify-between mb-2">
                 <h4 className="font-semibold text-lg">{getDimensionLabel(key)}</h4>
                 <div className="flex items-center gap-2">
-                  <Badge variant={getScoreVariant(value)}>
+                  <Badge variant={getScoreBadgeVariant(value, testName)}>
                     {Math.round(value)}%
                   </Badge>
                 </div>

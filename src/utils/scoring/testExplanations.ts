@@ -1,3 +1,4 @@
+
 import { getGenericDimensionExplanation } from './scoreInterpretations';
 
 interface ScoreRange {
@@ -40,8 +41,8 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
     return getSJTDimensionExplanation(dimensionKey);
   }
   
-  // For other tests, use the generic explanation
-  return getGenericDimensionExplanation(dimensionKey);
+  // For other tests, use the generic explanation with a default score of 50
+  return getGenericDimensionExplanation(dimensionKey, 50);
 };
 
 export const getTestScoringExplanation = (testName: string): TestScoringExplanation => {
