@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -118,7 +119,8 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('situational') ||
     test.name.toLowerCase().includes('orientare') ||
     test.name.toLowerCase().includes('cariera') ||
-    test.name.toLowerCase().includes('career')
+    test.name.toLowerCase().includes('career') ||
+    test.name.toLowerCase().includes('aptitudini profesionale')
   ) || [];
 
   const emotionalTests = tests?.filter(test => 
@@ -134,7 +136,8 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('beck') || 
     test.name.toLowerCase().includes('anxiety') ||
     test.name.toLowerCase().includes('anxietate') ||
-    test.name.toLowerCase().includes('depresie')
+    test.name.toLowerCase().includes('depresie') ||
+    test.name.toLowerCase().includes('depression')
   ) || [];
 
   const cognitiveTests = tests?.filter(test => 
@@ -145,6 +148,36 @@ const TestsPage = () => {
     test.name.toLowerCase().includes('critical thinking') ||
     test.name.toLowerCase().includes('aptitudini cognitive') ||
     test.name.toLowerCase().includes('watson-glaser')
+  ) || [];
+
+  const perceptionTests = tests?.filter(test => 
+    test.name.toLowerCase().includes('percepție') ||
+    test.name.toLowerCase().includes('perceptie') ||
+    test.name.toLowerCase().includes('senzorial') ||
+    test.name.toLowerCase().includes('sensorial') ||
+    test.name.toLowerCase().includes('perception')
+  ) || [];
+
+  const digitalTests = tests?.filter(test => 
+    test.name.toLowerCase().includes('digital') ||
+    test.name.toLowerCase().includes('competențe digitale') ||
+    test.name.toLowerCase().includes('competente digitale')
+  ) || [];
+
+  // Collect all categorized tests
+  const categorizedTests = [
+    ...personalityTests,
+    ...professionalTests,
+    ...emotionalTests,
+    ...clinicalTests,
+    ...cognitiveTests,
+    ...perceptionTests,
+    ...digitalTests
+  ];
+
+  // Find uncategorized tests
+  const uncategorizedTests = tests?.filter(test => 
+    !categorizedTests.some(catTest => catTest.id === test.id)
   ) || [];
 
   const categoryDescriptions = {
@@ -167,6 +200,18 @@ const TestsPage = () => {
     cognitive: {
       ro: "Testele cognitive evaluează abilitățile mentale și capacitățile de procesare.",
       en: "Cognitive tests evaluate mental abilities and processing capabilities."
+    },
+    perception: {
+      ro: "Testele de percepție evaluează modalitățile de procesare a informațiilor senzoriale.",
+      en: "Perception tests evaluate sensory information processing methods."
+    },
+    digital: {
+      ro: "Testele de competențe digitale evaluează abilitățile tehnologice și digitale.",
+      en: "Digital competency tests evaluate technological and digital skills."
+    },
+    other: {
+      ro: "Alte teste și evaluări specializate.",
+      en: "Other specialized tests and assessments."
     }
   };
 
@@ -326,11 +371,35 @@ const TestsPage = () => {
             />
           )}
 
+          {perceptionTests.length > 0 && (
+            <TestSection 
+              title={language === 'ro' ? 'Teste de Percepție' : 'Perception Tests'}
+              tests={perceptionTests}
+              description={categoryDescriptions.perception[language]}
+            />
+          )}
+
+          {digitalTests.length > 0 && (
+            <TestSection 
+              title={language === 'ro' ? 'Competențe Digitale' : 'Digital Competencies'}
+              tests={digitalTests}
+              description={categoryDescriptions.digital[language]}
+            />
+          )}
+
           {clinicalTests.length > 0 && (
             <TestSection 
               title={language === 'ro' ? 'Teste Clinice' : 'Clinical Tests'}
               tests={clinicalTests}
               description={categoryDescriptions.clinical[language]}
+            />
+          )}
+
+          {uncategorizedTests.length > 0 && (
+            <TestSection 
+              title={language === 'ro' ? 'Alte Teste' : 'Other Tests'}
+              tests={uncategorizedTests}
+              description={categoryDescriptions.other[language]}
             />
           )}
         </div>
