@@ -1,3 +1,4 @@
+
 "use client"
 
 import * as React from "react"
@@ -45,27 +46,7 @@ const ChartContainer = ({
   )
 }
 
-const ChartTooltip = ({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<typeof RechartsPrimitive.Tooltip>) => {
-  return (
-    <RechartsPrimitive.Tooltip
-      contentStyle={{
-        background: "transparent",
-        border: "none",
-        padding: 0,
-      }}
-      itemStyle={{ color: "var(--foreground)" }}
-      labelStyle={{ color: "var(--foreground)" }}
-      className={cn("z-50", className)}
-      {...props}
-    >
-      {children}
-    </RechartsPrimitive.Tooltip>
-  )
-}
+const ChartTooltip = RechartsPrimitive.Tooltip
 
 const ChartTooltipContent = React.forwardRef<
   HTMLDivElement,
@@ -84,24 +65,7 @@ const ChartTooltipContent = React.forwardRef<
 })
 ChartTooltipContent.displayName = "ChartTooltipContent"
 
-const ChartLegend = ({
-  children,
-  className,
-  ...props
-}: React.ComponentProps<typeof RechartsPrimitive.Legend>) => {
-  return (
-    <RechartsPrimitive.Legend
-      wrapperStyle={{
-        fontSize: "12px",
-        color: "var(--foreground)",
-      }}
-      className={cn("z-50", className)}
-      {...props}
-    >
-      {children}
-    </RechartsPrimitive.Legend>
-  )
-}
+const ChartLegend = RechartsPrimitive.Legend
 
 const ChartLegendContent = React.forwardRef<
   HTMLDivElement,
@@ -151,8 +115,8 @@ ${colorConfig
 
 const THEMES = { light: "", dark: ".dark" } as const
 
+export type { ChartConfig }
 export {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,

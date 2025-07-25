@@ -51,7 +51,11 @@ const BigFiveRadarChart = ({ dimensions }: BigFiveRadarChartProps) => {
 
   return (
     <div className="w-full">
-      <ChartContainer config={chartConfig} className="mx-auto aspect-square max-h-[400px]">
+      <ChartContainer 
+        id="big-five-radar-chart" 
+        config={chartConfig} 
+        className="mx-auto aspect-square max-h-[400px]"
+      >
         <RadarChart data={chartData}>
           <ChartTooltip content={<ChartTooltipContent />} />
           <PolarGrid />
