@@ -2,67 +2,45 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage } from '@/hooks/useLanguage';
-import { useToast } from '@/hooks/use-toast';
-import { useTestProgress } from '@/hooks/useTestProgress';
-import { useTestSubmission } from '@/hooks/useTestSubmission';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { Badge } from '@/components/ui/badge';
-import { Clock, AlertCircle, CheckCircle, ArrowLeft, ArrowRight } from 'lucide-react';
-import TestStartScreen from '@/components/test/TestStartScreen';
-import TestErrorScreen from '@/components/test/TestErrorScreen';
-import TestProgressRestoreDialog from '@/components/test/TestProgressRestoreDialog';
-import TestQuestion from '@/components/test/TestQuestion';
-import { translateQuestions } from '@/utils/translateQuestions';
-import { getTestTranslation } from '@/utils/testTranslationMapping';
-import HomeNavigation from '@/components/home/HomeNavigation';
+import { Clock } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
+import { useTestSubmission } from '@/hooks/useTestSubmission';
+import { useSessionId } from '@/hooks/useSessionId';
+import TestQuestion from '@/components/test-runner/TestQuestion';
 
 const TestRunner = () => {
-  const { testId } = useParams();
-  const { user } = useAuth();
-  const { language } = useLanguage();
-  const { toast } = useToast();
+  const { testId } = useParams<{ testId: string }>();
   const navigate = useNavigate();
-  const [hasStarted, setHasStarted] = useState(false);
-  const [showProgressRestore, setShowProgressRestore] = useState(false);
+  const { language } = useLanguage();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [answers, setAnswers] = useState<Record<string, any>>({});
-  const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
+  const [answers, setAnswers] = useState<Record<string, number>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
-  const { 
-    saveProgress, 
-    clearProgress, 
-    restoreProgress,
-    hasSavedProgress 
-  } = useTestProgress(testId || '');
-  
-  const { mutate: submitTest } = useTestSubmission();
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
+  const sessionId = useSessionId();
 
+  // Fetch test details and questions
   const { data: testData, isLoading, error } = useQuery({
-    queryKey: ['test', testId, language],
+    queryKey: ['test', testId],
     queryFn: async () => {
-      if (!testId) throw new Error("Test ID is required");
-
-      const { data: testType, error: testTypeError } = await supabase
+      if (!testId) throw new Error('Test ID is required');
+      
+      // First get the test details
+      const { data: testDetails, error: testError } = await supabase
         .from('test_types')
         .select('*')
         .eq('id', testId)
         .single();
 
-      if (testTypeError) {
-        console.error('Error fetching test type:', testTypeError);
-        throw testTypeError;
+      if (testError) {
+        console.error('Error fetching test details:', testError);
+        throw testError;
       }
 
-      if (!testType) {
-        throw new Error("Test type not found");
-      }
+      console.log('Test details loaded:', testDetails);
 
-      const { data: questionsData, error: questionsError } = await supabase
+      // Then get the questions
+      const { data: questions, error: questionsError } = await supabase
         .from('test_questions')
         .select('*')
         .eq('test_type_id', testId)
@@ -73,111 +51,84 @@ const TestRunner = () => {
         throw questionsError;
       }
 
-      if (!questionsData || questionsData.length === 0) {
-        throw new Error("No questions found for this test");
+      console.log('Questions loaded:', questions?.length || 0);
+      console.log('First question:', questions?.[0]);
+
+      // Handle Watson-Glaser test specifically
+      if (testDetails.name.toLowerCase().includes('watson') || 
+          testDetails.name.toLowerCase().includes('glaser')) {
+        console.log('Watson-Glaser test detected, questions loaded from database');
       }
 
-      const translatedQuestions = await translateQuestions(questionsData, language);
-
       return {
-        ...testType,
-        questions: translatedQuestions
+        testDetails,
+        questions: questions || []
       };
     },
-    enabled: !!testId,
-    retry: false
+    enabled: !!testId
   });
 
-  const questions = testData?.questions || [];
-  const translation = getTestTranslation(testData?.name || '', language);
+  // Set timer when test data is loaded
+  useEffect(() => {
+    if (testData?.testDetails && timeLeft === null) {
+      const duration = testData.testDetails.estimated_duration || 15;
+      setTimeLeft(duration * 60); // Convert to seconds
+    }
+  }, [testData, timeLeft]);
+
+  // Timer countdown
+  useEffect(() => {
+    if (timeLeft === null || timeLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev === null || prev <= 1) {
+          handleSubmit(); // Auto-submit when time runs out
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const handleAnswer = (questionId: string, answerIndex: number) => {
+    setAnswers(prev => ({
+      ...prev,
+      [questionId]: answerIndex
+    }));
+  };
+
+  const handleNext = () => {
+    if (currentQuestionIndex < (testData?.questions.length || 0) - 1) {
+      setCurrentQuestionIndex(prev => prev + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentQuestionIndex > 0) {
+      setCurrentQuestionIndex(prev => prev - 1);
+    }
+  };
 
   const handleSubmit = async () => {
-    if (isSubmitting) return;
-    
+    if (isSubmitting || !testData) return;
+
     setIsSubmitting(true);
-    
     try {
-      submitTest({ testId: testId!, answers, questions });
-      clearProgress();
+      console.log('Submitting test:', testData.testDetails.name);
+      console.log('Answers:', answers);
+      
+      // Use the test submission hook
+      const { submitTest } = useTestSubmission();
+      await submitTest(testId!, answers, sessionId);
+      
+      navigate('/dashboard');
     } catch (error) {
       console.error('Error submitting test:', error);
-      toast({
-        title: language === 'ro' ? 'Eroare la salvarea rezultatelor' : 'Error saving results',
-        description: language === 'ro' ? 'Te rugăm să încerci din nou.' : 'Please try again.',
-        variant: 'destructive',
-      });
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  useEffect(() => {
-    let intervalId: NodeJS.Timeout;
-
-    if (hasStarted && timeRemaining !== null && timeRemaining > 0) {
-      intervalId = setInterval(() => {
-        setTimeRemaining(prevTime => (prevTime !== null && prevTime > 0 ? prevTime - 1 : 0));
-      }, 1000);
-    } else if (timeRemaining === 0) {
-      handleSubmit();
-    }
-
-    return () => clearInterval(intervalId);
-  }, [hasStarted, timeRemaining]);
-
-  const handleStart = async () => {
-    if (hasSavedProgress && !hasStarted) {
-      setShowProgressRestore(true);
-      return;
-    }
-    
-    setHasStarted(true);
-    setTimeRemaining(testData.estimated_duration * 60);
-    
-    const newAnswers = {};
-    setAnswers(newAnswers);
-    saveProgress(0, newAnswers);
-  };
-
-  const handleContinue = async () => {
-    const progress = restoreProgress();
-    if (progress) {
-      setCurrentQuestionIndex(progress.currentQuestionIndex);
-      setAnswers(progress.answers);
-    }
-    setHasStarted(true);
-    setShowProgressRestore(false);
-  };
-
-  const handleStartFresh = async () => {
-    clearProgress();
-    setHasStarted(true);
-    setTimeRemaining(testData.estimated_duration * 60);
-    const newAnswers = {};
-    setAnswers(newAnswers);
-    saveProgress(0, newAnswers);
-    setShowProgressRestore(false);
-  };
-
-  const handleAnswer = async (questionId: string, answer: any) => {
-    const newAnswers = { ...answers, [questionId]: answer };
-    setAnswers(newAnswers);
-    saveProgress(currentQuestionIndex, newAnswers);
-  };
-
-  const handleNext = async () => {
-    if (currentQuestionIndex < questions.length - 1) {
-      const nextIndex = currentQuestionIndex + 1;
-      setCurrentQuestionIndex(nextIndex);
-      saveProgress(nextIndex, answers);
-    }
-  };
-
-  const handlePrevious = async () => {
-    if (currentQuestionIndex > 0) {
-      const prevIndex = currentQuestionIndex - 1;
-      setCurrentQuestionIndex(prevIndex);
-      saveProgress(prevIndex, answers);
     }
   };
 
@@ -187,148 +138,76 @@ const TestRunner = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Add safety check for currentQuestion
-  const currentQuestion = questions[currentQuestionIndex];
-  const progress = questions.length > 0 ? ((currentQuestionIndex + 1) / questions.length) * 100 : 0;
-  const isLastQuestion = currentQuestionIndex === questions.length - 1;
-  const allQuestionsAnswered = questions.every(q => answers[q.id] !== undefined);
+  if (isLoading) return <div>Loading test...</div>;
+  if (error) return <div>Error loading test: {error.message}</div>;
+  if (!testData) return <div>Test not found</div>;
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <HomeNavigation />
-        <div className="text-center pt-24">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">
-            {language === 'ro' ? 'Se încarcă testul...' : 'Loading test...'}
-          </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error || !testData) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <HomeNavigation />
-        <div className="pt-24">
-          <TestErrorScreen 
-            title={language === 'ro' ? 'Eroare' : 'Error'}
-            message={language === 'ro' ? 'A apărut o eroare la încărcarea testului.' : 'An error occurred while loading the test.'}
-            onReturnToTests={() => navigate('/tests')}
-          />
-        </div>
-      </div>
-    );
-  }
-
-  // Add check for empty questions array
-  if (questions.length === 0) {
-    return (
-      <div className="min-h-screen bg-gray-50">
-        <HomeNavigation />
-        <div className="pt-24">
-          <TestErrorScreen 
-            title={language === 'ro' ? 'Test incomplet' : 'Incomplete test'}
-            message={language === 'ro' ? 'Acest test nu conține întrebări.' : 'This test does not contain any questions.'}
-            onReturnToTests={() => navigate('/tests')}
-          />
-        </div>
-      </div>
-    );
-  }
+  const currentQuestion = testData.questions[currentQuestionIndex];
+  const progress = ((currentQuestionIndex + 1) / testData.questions.length) * 100;
 
   return (
-    <div>
-      <HomeNavigation />
-      <div className="min-h-screen bg-gray-50 pt-24 pb-8">
-        <div className="max-w-4xl mx-auto px-4">
-          {/* Header */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 mb-2">
-                  {translation.name}
-                </h1>
-                <p className="text-gray-600">
-                  {translation.description || testData.description}
-                </p>
-              </div>
-              {hasStarted && timeRemaining !== null && (
-                <div className="flex items-center space-x-2">
-                  <Clock className="h-5 w-5 text-gray-500" />
-                  <span className={`text-lg font-mono ${timeRemaining < 300 ? 'text-red-600' : 'text-gray-700'}`}>
-                    {formatTime(timeRemaining)}
-                  </span>
-                </div>
-              )}
-            </div>
-            
-            {hasStarted && (
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm text-gray-600">
-                  <span>
-                    {language === 'ro' ? 'Progres' : 'Progress'}: {currentQuestionIndex + 1} / {questions.length}
-                  </span>
-                  <span>{Math.round(progress)}%</span>
-                </div>
-                <Progress value={progress} className="h-2" />
-              </div>
-            )}
-          </div>
-
-          {/* Test Content */}
-          {!hasStarted ? (
-            <TestStartScreen
-              testType={testData}
-              questionsCount={questions.length}
-              onStartTest={handleStart}
-            />
-          ) : (
-            <div className="space-y-6">
-              {/* Current Question - only render if currentQuestion exists */}
-              {currentQuestion && (
-                <TestQuestion
-                  currentQuestion={currentQuestion}
-                  questions={questions}
-                  answers={answers}
-                  currentIndex={currentQuestionIndex}
-                  testType={testData}
-                  onAnswer={handleAnswer}
-                  onNext={handleNext}
-                  onPrevious={handlePrevious}
-                  onFinish={handleSubmit}
-                  timeRemaining={timeRemaining}
-                />
-              )}
-
-              {/* Progress Summary */}
-              <Card>
-                <CardContent className="pt-6">
-                  <div className="flex justify-between items-center text-sm text-gray-600">
-                    <span>
-                      {language === 'ro' ? 'Întrebări răspunse' : 'Questions answered'}: {Object.keys(answers).length} / {questions.length}
-                    </span>
-                    <span>
-                      {language === 'ro' ? 'Timp rămas' : 'Time remaining'}: {timeRemaining ? formatTime(timeRemaining) : '--:--'}
-                    </span>
-                  </div>
-                </CardContent>
-              </Card>
+    <div className="container mx-auto p-6 max-w-4xl">
+      {/* Test Header */}
+      <div className="mb-8">
+        <div className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold">{testData.testDetails.name}</h1>
+          {timeLeft !== null && (
+            <div className="flex items-center gap-2">
+              <Clock className="w-5 h-5" />
+              <span className="text-lg font-mono">{formatTime(timeLeft)}</span>
             </div>
           )}
         </div>
+        
+        <div className="flex justify-between items-center mb-4">
+          <span className="text-sm text-gray-600">
+            Întrebarea {currentQuestionIndex + 1} din {testData.questions.length}
+          </span>
+          <span className="text-sm text-gray-600">
+            {Math.round(progress)}% complet
+          </span>
+        </div>
+        
+        <div className="w-full bg-gray-200 rounded-full h-2">
+          <div 
+            className="bg-blue-600 h-2 rounded-full transition-all duration-300"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
       </div>
 
-      {/* Progress Restore Dialog */}
-      <TestProgressRestoreDialog
-        open={showProgressRestore}
-        testName={testData?.name || ''}
-        questionNumber={currentQuestionIndex}
-        totalQuestions={questions.length}
-        onRestore={handleContinue}
-        onStartFresh={handleStartFresh}
-      />
+      {/* Question */}
+      {currentQuestion && (
+        <TestQuestion
+          question={currentQuestion}
+          selectedAnswer={answers[currentQuestion.id]}
+          onAnswer={(answerIndex) => handleAnswer(currentQuestion.id, answerIndex)}
+          language={language}
+        />
+      )}
+
+      {/* Navigation */}
+      <div className="flex justify-between items-center mt-8">
+        <Button
+          variant="outline"
+          onClick={handlePrevious}
+          disabled={currentQuestionIndex === 0}
+        >
+          Precedenta
+        </Button>
+
+        <div className="flex gap-2">
+          {currentQuestionIndex < testData.questions.length - 1 ? (
+            <Button onClick={handleNext}>
+              Următoarea
+            </Button>
+          ) : (
+            <Button onClick={handleSubmit} disabled={isSubmitting}>
+              {isSubmitting ? 'Se trimite...' : 'Finalizează testul'}
+            </Button>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

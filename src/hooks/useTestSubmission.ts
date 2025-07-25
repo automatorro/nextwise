@@ -1,141 +1,111 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
 import { useAuth } from '@/contexts/AuthContext';
-import { useNavigate } from 'react-router-dom';
-import { 
-  calculateBigFiveScore, 
-  calculateCattellScore, 
-  calculateDISCScore, 
-  calculateEmotionalIntelligenceScore, 
-  calculateCognitiveScore, 
-  calculateBelbinScore,
-  calculateHexacoScore,
-  calculateGADScore,
-  calculateSJTScore,
-  calculateProfessionalAptitudeScore,
-  calculateWatsonGlaserScore
-} from '@/utils/testCalculations';
+import { supabase } from '@/integrations/supabase/client';
 
 export const useTestSubmission = () => {
-  const { toast } = useToast();
   const { user } = useAuth();
-  const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  
+  const submitTest = async (testId: string, answers: Record<string, number>, sessionId: string) => {
+    if (!user) throw new Error('User not authenticated');
 
-  const mutation = useMutation({
-    mutationFn: async ({ testId, answers, questions }: {
-      testId: string;
-      answers: Record<string, number>;
-      questions: any[];
-    }) => {
-      if (!user) {
-        throw new Error('User not authenticated');
-      }
+    console.log('Submitting test:', testId);
+    console.log('Answers:', answers);
 
-      console.log('Submitting test with:', { testId, answers, questions });
+    // Get test details first
+    const { data: testDetails, error: testError } = await supabase
+      .from('test_types')
+      .select('name')
+      .eq('id', testId)
+      .single();
 
-      // Get test type info
-      const { data: testType, error: testTypeError } = await supabase
-        .from('test_types')
-        .select('name')
-        .eq('id', testId)
-        .single();
+    if (testError) throw testError;
 
-      if (testTypeError) {
-        console.error('Error fetching test type:', testTypeError);
-        throw testTypeError;
-      }
+    const testName = testDetails.name.toLowerCase();
+    console.log('Test name:', testName);
 
-      // Calculate score based on test type
-      let score;
-      const testName = testType.name.toLowerCase();
+    // Get questions for scoring
+    const { data: questions, error: questionsError } = await supabase
+      .from('test_questions')
+      .select('*')
+      .eq('test_type_id', testId)
+      .order('question_order');
+
+    if (questionsError) throw questionsError;
+
+    let calculatedScore;
+
+    // Use appropriate calculator based on test type
+    if (testName.includes('watson') || testName.includes('glaser')) {
+      console.log('Using Watson-Glaser calculator');
+      const { calculateWatsonGlaserScore } = await import('@/utils/testCalculations/watsonGlaserCalculation');
+      calculatedScore = calculateWatsonGlaserScore(answers, questions);
+    } else if (testName.includes('big five') || testName.includes('big-five')) {
+      const { calculateBigFiveScore } = await import('@/utils/testCalculations/bigFiveCalculation');
+      calculatedScore = calculateBigFiveScore(answers, questions);
+    } else if (testName.includes('hexaco')) {
+      const { calculateHexacoScore } = await import('@/utils/testCalculations/hexacoCalculation');
+      calculatedScore = calculateHexacoScore(answers, questions);
+    } else if (testName.includes('cattell') || testName.includes('16pf')) {
+      const { calculateCattellScore } = await import('@/utils/testCalculations/cattellCalculation');
+      calculatedScore = calculateCattellScore(answers, questions);
+    } else if (testName.includes('belbin')) {
+      const { calculateBelbinScore } = await import('@/utils/testCalculations/belbinCalculation');
+      calculatedScore = calculateBelbinScore(answers, questions);
+    } else if (testName.includes('disc')) {
+      const { calculateDISCScore } = await import('@/utils/testCalculations/discCalculation');
+      calculatedScore = calculateDISCScore(answers, questions);
+    } else if (testName.includes('enneagram')) {
+      const { calculateEnneagramScore } = await import('@/utils/testCalculations/enneagramCalculation');
+      calculatedScore = calculateEnneagramScore(answers, questions);
+    } else if (testName.includes('gad') || testName.includes('anxiety')) {
+      const { calculateGADScore } = await import('@/utils/testCalculations/gadCalculation');
+      calculatedScore = calculateGADScore(answers, questions);
+    } else if (testName.includes('emotional') || testName.includes('eq')) {
+      const { calculateEmotionalIntelligenceScore } = await import('@/utils/testCalculations/emotionalIntelligenceCalculation');
+      calculatedScore = calculateEmotionalIntelligenceScore(answers, questions);
+    } else if (testName.includes('sjt') || testName.includes('situational')) {
+      const { calculateSJTScore } = await import('@/utils/testCalculations/sjtCalculation');
+      calculatedScore = calculateSJTScore(answers, questions);
+    } else if (testName.includes('cognitive') || testName.includes('cognitiv')) {
+      const { calculateCognitiveScore } = await import('@/utils/testCalculations/cognitiveCalculation');
+      calculatedScore = calculateCognitiveScore(answers, questions);
+    } else {
+      // Generic fallback calculation
+      console.log('Using generic calculation for:', testName);
+      const totalQuestions = questions.length;
+      const answeredQuestions = Object.keys(answers).length;
+      const overall = Math.round((answeredQuestions / totalQuestions) * 100);
       
-      if (testName.includes('big five') || testName.includes('big-five')) {
-        score = calculateBigFiveScore(answers, questions);
-      } else if (testName.includes('cattell') || testName.includes('16pf')) {
-        score = calculateCattellScore(answers);
-      } else if (testName.includes('disc')) {
-        score = calculateDISCScore(answers);
-      } else if (testName.includes('emotional') || testName.includes('emotiona')) {
-        score = calculateEmotionalIntelligenceScore(answers);
-      } else if (testName.includes('cognitive') || testName.includes('cognitiv')) {
-        score = calculateCognitiveScore(answers, questions);
-      } else if (testName.includes('belbin')) {
-        score = calculateBelbinScore(answers);
-      } else if (testName.includes('hexaco')) {
-        console.log('Calculating HEXACO score for answers:', answers);
-        score = calculateHexacoScore(answers);
-        console.log('HEXACO score calculated:', score);
-      } else if (testName.includes('gad') || testName.includes('anxietate')) {
-        score = calculateGADScore(answers);
-      } else if (testName.includes('watson-glaser') || testName.includes('watson glaser')) {
-        console.log('Calculating Watson-Glaser score for answers:', answers);
-        score = calculateWatsonGlaserScore(answers);
-        console.log('Watson-Glaser score calculated:', score);
-      } else if (testName.includes('sjt') || testName.includes('situational judgment')) {
-        console.log('Calculating SJT score for answers:', answers);
-        console.log('Using questions for SJT:', questions);
-        score = calculateSJTScore(answers, questions);
-        console.log('SJT score calculated:', score);
-      } else if (testName.includes('competențe manageriale') || testName.includes('managerial')) {
-        console.log('Calculating Managerial Competencies score for answers:', answers);
-        score = calculateProfessionalAptitudeScore(answers, questions);
-        console.log('Managerial Competencies score calculated:', score);
-      } else {
-        // Default scoring
-        score = { overall: 0, interpretation: 'Scor calculat automat' };
-      }
-
-      console.log('Calculated score:', score);
-
-      // Save test result
-      const { data: result, error } = await supabase
-        .from('test_results')
-        .insert({
-          user_id: user.id,
-          test_type_id: testId,
-          answers,
-          score,
-          completed_at: new Date().toISOString()
-        })
-        .select()
-        .single();
-
-      if (error) {
-        console.error('Error saving test result:', error);
-        throw error;
-      }
-
-      return result;
-    },
-    onSuccess: (result) => {
-      toast({
-        title: "Test completat!",
-        description: "Rezultatele tale au fost salvate cu succes."
-      });
-      
-      // Invalidate queries
-      queryClient.invalidateQueries({ queryKey: ['testResults'] });
-      queryClient.invalidateQueries({ queryKey: ['subscription'] });
-      
-      // Navigate to results page
-      navigate(`/test-result/${result.id}`);
-    },
-    onError: (error) => {
-      console.error('Test submission error:', error);
-      toast({
-        title: "Eroare",
-        description: "A apărut o eroare la salvarea testului. Te rugăm să încerci din nou.",
-        variant: "destructive"
-      });
+      calculatedScore = {
+        overall,
+        dimensions: {},
+        interpretations: {}
+      };
     }
-  });
 
-  return {
-    mutate: mutation.mutate,
-    isLoading: mutation.isPending,
-    isError: mutation.isError,
-    error: mutation.error
+    console.log('Calculated score:', calculatedScore);
+
+    // Insert result into database
+    const { data, error } = await supabase
+      .from('test_results')
+      .insert({
+        user_id: user.id,
+        test_type_id: testId,
+        answers,
+        score: calculatedScore,
+        completed_at: new Date().toISOString()
+      })
+      .select()
+      .single();
+
+    if (error) throw error;
+
+    // Update subscription usage
+    await supabase.rpc('increment_tests_taken', {
+      user_id: user.id
+    });
+
+    return data;
   };
+
+  return { submitTest };
 };
