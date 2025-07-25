@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -35,12 +36,12 @@ const TestRunner = () => {
   
   const { 
     saveProgress, 
-    loadProgress, 
     clearProgress, 
-    hasProgress 
-  } = useTestProgress(testId || '', user?.id || '');
+    restoreProgress,
+    hasSavedProgress 
+  } = useTestProgress(testId || '');
   
-  const { submitTest } = useTestSubmission();
+  const { mutate: submitTest } = useTestSubmission();
 
   const { data: testData, isLoading, error } = useQuery({
     queryKey: ['test', testId, language],
@@ -63,7 +64,7 @@ const TestRunner = () => {
       }
 
       const { data: questionsData, error: questionsError } = await supabase
-        .from('questions')
+        .from('test_questions')
         .select('*')
         .eq('test_type_id', testId);
 
@@ -86,6 +87,26 @@ const TestRunner = () => {
   const questions = testData?.questions || [];
   const translation = getTestTranslation(testData?.name || '', language);
 
+  const handleSubmit = async () => {
+    if (isSubmitting) return;
+    
+    setIsSubmitting(true);
+    
+    try {
+      submitTest({ testId: testId!, answers, questions });
+      clearProgress();
+    } catch (error) {
+      console.error('Error submitting test:', error);
+      toast({
+        title: language === 'ro' ? 'Eroare la salvarea rezultatelor' : 'Error saving results',
+        description: language === 'ro' ? 'Te rugăm să încerci din nou.' : 'Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   useEffect(() => {
     let intervalId: NodeJS.Timeout;
 
@@ -98,10 +119,10 @@ const TestRunner = () => {
     }
 
     return () => clearInterval(intervalId);
-  }, [hasStarted, timeRemaining, handleSubmit]);
+  }, [hasStarted, timeRemaining]);
 
   const handleStart = async () => {
-    if (hasProgress && !hasStarted) {
+    if (hasSavedProgress && !hasStarted) {
       setShowProgressRestore(true);
       return;
     }
@@ -111,41 +132,40 @@ const TestRunner = () => {
     
     const newAnswers = {};
     setAnswers(newAnswers);
-    await saveProgress(0, newAnswers);
+    saveProgress(0, newAnswers);
   };
 
   const handleContinue = async () => {
-    const progress = await loadProgress();
+    const progress = restoreProgress();
     if (progress) {
-      setCurrentQuestionIndex(progress.currentQuestion);
+      setCurrentQuestionIndex(progress.currentQuestionIndex);
       setAnswers(progress.answers);
-      setTimeRemaining(progress.timeRemaining);
     }
     setHasStarted(true);
     setShowProgressRestore(false);
   };
 
   const handleStartFresh = async () => {
-    await clearProgress();
+    clearProgress();
     setHasStarted(true);
     setTimeRemaining(testData.estimated_duration * 60);
     const newAnswers = {};
     setAnswers(newAnswers);
-    await saveProgress(0, newAnswers);
+    saveProgress(0, newAnswers);
     setShowProgressRestore(false);
   };
 
   const handleAnswer = async (questionId: string, answer: any) => {
     const newAnswers = { ...answers, [questionId]: answer };
     setAnswers(newAnswers);
-    await saveProgress(currentQuestionIndex, newAnswers, timeRemaining);
+    saveProgress(currentQuestionIndex, newAnswers);
   };
 
   const handleNext = async () => {
     if (currentQuestionIndex < questions.length - 1) {
       const nextIndex = currentQuestionIndex + 1;
       setCurrentQuestionIndex(nextIndex);
-      await saveProgress(nextIndex, answers, timeRemaining);
+      saveProgress(nextIndex, answers);
     }
   };
 
@@ -153,34 +173,7 @@ const TestRunner = () => {
     if (currentQuestionIndex > 0) {
       const prevIndex = currentQuestionIndex - 1;
       setCurrentQuestionIndex(prevIndex);
-      await saveProgress(prevIndex, answers, timeRemaining);
-    }
-  };
-
-  const handleSubmit = async () => {
-    if (isSubmitting) return;
-    
-    setIsSubmitting(true);
-    
-    try {
-      const resultId = await submitTest(testId!, answers, timeRemaining);
-      await clearProgress();
-      
-      toast({
-        title: language === 'ro' ? 'Test completat cu succes!' : 'Test completed successfully!',
-        description: language === 'ro' ? 'Rezultatele tale au fost salvate.' : 'Your results have been saved.',
-      });
-      
-      navigate(`/test-result/${resultId}`);
-    } catch (error) {
-      console.error('Error submitting test:', error);
-      toast({
-        title: language === 'ro' ? 'Eroare la salvarea rezultatelor' : 'Error saving results',
-        description: language === 'ro' ? 'Te rugăm să încerci din nou.' : 'Please try again.',
-        variant: 'destructive',
-      });
-    } finally {
-      setIsSubmitting(false);
+      saveProgress(prevIndex, answers);
     }
   };
 
@@ -215,9 +208,9 @@ const TestRunner = () => {
         <HomeNavigation />
         <div className="pt-24">
           <TestErrorScreen 
-            error={error}
-            onRetry={() => window.location.reload()}
-            onGoBack={() => navigate('/tests')}
+            title={language === 'ro' ? 'Eroare' : 'Error'}
+            message={language === 'ro' ? 'A apărut o eroare la încărcarea testului.' : 'An error occurred while loading the test.'}
+            onReturnToTests={() => navigate('/tests')}
           />
         </div>
       </div>
@@ -266,10 +259,9 @@ const TestRunner = () => {
           {/* Test Content */}
           {!hasStarted ? (
             <TestStartScreen
-              testData={testData}
-              translation={translation}
-              onStart={handleStart}
-              onBack={() => navigate('/tests')}
+              testType={testData}
+              questionsCount={questions.length}
+              onStartTest={handleStart}
             />
           ) : (
             <div className="space-y-6">
@@ -282,7 +274,7 @@ const TestRunner = () => {
                         {language === 'ro' ? 'Întrebarea' : 'Question'} {currentQuestionIndex + 1}
                       </CardTitle>
                       <CardDescription>
-                        {currentQuestion.text}
+                        {currentQuestion.question_text}
                       </CardDescription>
                     </div>
                     <Badge variant="outline">
@@ -292,10 +284,15 @@ const TestRunner = () => {
                 </CardHeader>
                 <CardContent>
                   <TestQuestion
-                    question={currentQuestion}
-                    answer={answers[currentQuestion.id]}
-                    onAnswer={(answer) => handleAnswer(currentQuestion.id, answer)}
-                    language={language}
+                    testType={testData}
+                    currentQuestion={currentQuestion}
+                    currentQuestionIndex={currentQuestionIndex}
+                    totalQuestions={questions.length}
+                    answers={answers}
+                    isSubmitting={isSubmitting}
+                    onAnswerChange={(value) => handleAnswer(currentQuestion.id, parseInt(value))}
+                    onNext={handleNext}
+                    onPrevious={handlePrevious}
                   />
                 </CardContent>
               </Card>
@@ -362,10 +359,12 @@ const TestRunner = () => {
 
       {/* Progress Restore Dialog */}
       <TestProgressRestoreDialog
-        isOpen={showProgressRestore}
-        onContinue={handleContinue}
+        open={showProgressRestore}
+        testName={testData?.name || ''}
+        questionNumber={currentQuestionIndex}
+        totalQuestions={questions.length}
+        onRestore={handleContinue}
         onStartFresh={handleStartFresh}
-        onClose={() => setShowProgressRestore(false)}
       />
     </div>
   );

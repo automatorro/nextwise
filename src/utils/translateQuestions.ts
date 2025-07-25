@@ -1,5 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
+import type { Json } from '@/integrations/supabase/types';
 
 // Utility for batch translating test questions using Gemini API
 // This will be used to populate the question_text_en and options_en fields
@@ -23,6 +24,26 @@ export interface TranslationResult {
   translations?: TranslatedQuestion[];
   error?: string;
 }
+
+// Add the missing translateQuestions function
+export const translateQuestions = async (questions: any[], language: string) => {
+  // If language is Romanian or questions are empty, return as-is
+  if (language === 'ro' || !questions || questions.length === 0) {
+    return questions;
+  }
+
+  // For English, try to use translated versions if available
+  return questions.map(question => {
+    if (language === 'en' && question.question_text_en) {
+      return {
+        ...question,
+        question_text: question.question_text_en,
+        options: question.options_en || question.options
+      };
+    }
+    return question;
+  });
+};
 
 // Function to get all untranslated questions from a specific test type
 export const getUntranslatedQuestions = async (testTypeId?: string): Promise<QuestionToTranslate[]> => {
