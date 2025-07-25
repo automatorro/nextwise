@@ -3,8 +3,9 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Progress } from '@/components/ui/progress';
-import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Clock, X } from 'lucide-react';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useNavigate } from 'react-router-dom';
 
 interface Question {
   id: string;
@@ -50,10 +51,17 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
   timeRemaining
 }) => {
   const { language } = useLanguage();
+  const navigate = useNavigate();
   
   const progress = ((currentIndex + 1) / questions.length) * 100;
   const hasAnswer = answers[currentQuestion.id] !== undefined;
   const isLastQuestion = currentIndex === questions.length - 1;
+
+  const handleExitTest = () => {
+    if (window.confirm(language === 'ro' ? 'Ești sigur că vrei să ieși din test? Progresul va fi salvat.' : 'Are you sure you want to exit the test? Progress will be saved.')) {
+      navigate('/tests');
+    }
+  };
 
   // Parse options based on language
   const parseOptions = (options: any) => {
@@ -121,7 +129,18 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
             </div>
           )}
         </div>
-        <Progress value={progress} className="w-48" />
+        <div className="flex items-center space-x-4">
+          <Progress value={progress} className="w-48" />
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExitTest}
+            className="flex items-center space-x-2"
+          >
+            <X className="w-4 h-4" />
+            <span>{language === 'ro' ? 'Ieși' : 'Exit'}</span>
+          </Button>
+        </div>
       </div>
 
       {/* Question Card */}
