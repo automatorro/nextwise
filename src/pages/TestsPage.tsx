@@ -46,6 +46,20 @@ const TestsPage = () => {
       }
       
       console.log('Fetched tests:', data);
+      
+      // Debug: Let's specifically check for Watson-Glaser test
+      const watsonGlaserTest = data?.find(test => 
+        test.name.toLowerCase().includes('watson-glaser') || 
+        test.name.toLowerCase().includes('watson glaser')
+      );
+      
+      if (watsonGlaserTest) {
+        console.log('Watson-Glaser test found:', watsonGlaserTest);
+      } else {
+        console.log('Watson-Glaser test NOT found in database');
+        console.log('Available test names:', data?.map(t => t.name));
+      }
+      
       return data as TestType[];
     }
   });
@@ -139,8 +153,38 @@ const TestsPage = () => {
 
   const cognitiveTests = tests?.filter(test => 
     test.name.toLowerCase().includes('cognitive') || 
-    test.name.toLowerCase().includes('cognitiv')
+    test.name.toLowerCase().includes('cognitiv') ||
+    test.name.toLowerCase().includes('watson-glaser') ||
+    test.name.toLowerCase().includes('watson glaser') ||
+    test.name.toLowerCase().includes('critical thinking') ||
+    test.name.toLowerCase().includes('aptitudini cognitive')
   ) || [];
+
+  // Debug logging for cognitive tests
+  console.log('Cognitive tests found:', cognitiveTests.map(t => t.name));
+
+  const categoryDescriptions = {
+    personality: {
+      ro: "Testele de personalitate îți oferă o perspectivă profundă asupra trăsăturilor tale de personalitate.",
+      en: "Personality tests provide deep insights into your personality traits."
+    },
+    professional: {
+      ro: "Testele profesionale evaluează competențele și stilurile de lucru pentru dezvoltarea carierei.",
+      en: "Professional tests evaluate competencies and work styles for career development."
+    },
+    emotional: {
+      ro: "Testele emoționale măsoară inteligența emoțională și gestionarea stresului.",
+      en: "Emotional tests measure emotional intelligence and stress management."
+    },
+    clinical: {
+      ro: "Testele clinice oferă evaluări validate științific pentru aspecte de sănătate mentală.",
+      en: "Clinical tests provide scientifically validated assessments for mental health aspects."
+    },
+    cognitive: {
+      ro: "Testele cognitive evaluează abilitățile mentale și capacitățile de procesare.",
+      en: "Cognitive tests evaluate mental abilities and processing capabilities."
+    }
+  };
 
   const TestCard = ({ test }: { test: TestType }) => {
     const translation = getTestTranslation(test.name, language);
@@ -248,29 +292,6 @@ const TestsPage = () => {
       </div>
     );
   }
-
-  const categoryDescriptions = {
-    personality: {
-      ro: "Testele de personalitate îți oferă o perspectivă profundă asupra trăsăturilor tale de personalitate.",
-      en: "Personality tests provide deep insights into your personality traits."
-    },
-    professional: {
-      ro: "Testele profesionale evaluează competențele și stilurile de lucru pentru dezvoltarea carierei.",
-      en: "Professional tests evaluate competencies and work styles for career development."
-    },
-    emotional: {
-      ro: "Testele emoționale măsoară inteligența emoțională și gestionarea stresului.",
-      en: "Emotional tests measure emotional intelligence and stress management."
-    },
-    clinical: {
-      ro: "Testele clinice oferă evaluări validate științific pentru aspecte de sănătate mentală.",
-      en: "Clinical tests provide scientifically validated assessments for mental health aspects."
-    },
-    cognitive: {
-      ro: "Testele cognitive evaluează abilitățile mentale și capacitățile de procesare.",
-      en: "Cognitive tests evaluate mental abilities and processing capabilities."
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
