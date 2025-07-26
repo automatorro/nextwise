@@ -4,7 +4,7 @@ import { calculateBigFiveScore } from './bigFiveCalculation';
 import { calculateWatsonGlaserScore } from './watsonGlaserCalculation';
 
 export const calculateTestScore = (testName: string, answers: Record<string, number>) => {
-  console.log(`Calculating score for test: ${testName}`, answers);
+  console.log('Calculating score for test:', testName, 'with answers:', answers);
   
   switch (testName.toLowerCase()) {
     case 'disc assessment':
@@ -16,7 +16,16 @@ export const calculateTestScore = (testName: string, answers: Record<string, num
     case 'watson-glaser':
       return calculateWatsonGlaserScore(answers);
     default:
-      console.warn(`Unknown test name: ${testName}`);
-      return null;
+      console.warn('Unknown test type:', testName);
+      return { 
+        overall: 0, 
+        dimensions: {}, 
+        interpretations: {},
+        error: `Test calculation not implemented for: ${testName}` 
+      };
   }
 };
+
+export { calculateDISCScore } from './discCalculation';
+export { calculateBigFiveScore } from './bigFiveCalculation';
+export { calculateWatsonGlaserScore } from './watsonGlaserCalculation';
