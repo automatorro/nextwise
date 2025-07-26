@@ -55,45 +55,50 @@ const TestsPage = () => {
       const enhanceDescription = (testName: string, originalDescription: string) => {
         const descriptions: Record<string, { ro: string; en: string }> = {
           'Watson-Glaser': {
-            ro: 'Evaluează gândirea critică prin analiza argumentelor, interpretarea informațiilor și luarea deciziilor logice. Testul măsoară capacitatea de a evalua evidențele și de a trage concluzii valide în situații complexe profesionale.',
-            en: 'Evaluates critical thinking through argument analysis, information interpretation, and logical decision-making. The test measures the ability to evaluate evidence and draw valid conclusions in complex professional situations.'
+            ro: 'Evaluează gândirea critică prin analiza argumentelor, interpretarea informațiilor și luarea deciziilor logice. Testul măsoară capacitatea de a evalua evidențele și de a trage concluzii valide în situații complexe profesionale. Perfect pentru pozții care necesită analiză și decizie.',
+            en: 'Evaluates critical thinking through argument analysis, information interpretation, and logical decision-making. The test measures the ability to evaluate evidence and draw valid conclusions in complex professional situations. Perfect for positions requiring analysis and decision-making skills.'
           },
           'Big Five': {
-            ro: 'Analizează cele cinci dimensiuni fundamentale ale personalității: Extraversiunea, Agreabilitatea, Conștiinciozitatea, Nevroticismul și Deschiderea către experiență. Oferă o imagine completă a trăsăturilor tale de personalitate.',
-            en: 'Analyzes the five fundamental dimensions of personality: Extraversion, Agreeableness, Conscientiousness, Neuroticism, and Openness to experience. Provides a complete picture of your personality traits.'
+            ro: 'Analizează cele cinci dimensiuni fundamentale ale personalității: Extraversiunea, Agreabilitatea, Conștiinciozitatea, Nevroticismul și Deschiderea către experiență. Oferă o imagine completă și precisă a trăsăturilor tale de personalitate, fiind cel mai utilizat model în psihologia modernă.',
+            en: 'Analyzes the five fundamental dimensions of personality: Extraversion, Agreeableness, Conscientiousness, Neuroticism, and Openness to experience. Provides a complete and precise picture of your personality traits, being the most widely used model in modern psychology.'
           },
           'HEXACO': {
-            ro: 'Măsoară șase dimensiuni ale personalității incluzând Onestitatea-Umilința ca factor distinct. Oferă o perspectivă comprehensivă asupra comportamentelor etice, sociale și emoționale într-un context profesional modern.',
-            en: 'Measures six personality dimensions including Honesty-Humility as a distinct factor. Provides a comprehensive perspective on ethical, social, and emotional behaviors in a modern professional context.'
+            ro: 'Măsoară șase dimensiuni ale personalității incluzând Onestitatea-Umilința ca factor distinct. Oferă o perspectivă comprehensivă asupra comportamentelor etice, sociale și emoționale într-un context profesional modern. Ideal pentru înțelegerea valorilor și motivațiilor profunde.',
+            en: 'Measures six personality dimensions including Honesty-Humility as a distinct factor. Provides a comprehensive perspective on ethical, social, and emotional behaviors in a modern professional context. Ideal for understanding deep values and motivations.'
           },
           'DISC': {
-            ro: 'Identifică stilul tău comportamental dominant prin analiza a patru dimensiuni: Dominanță, Influență, Stabilitate și Conformitate. Util pentru dezvoltarea echipelor și îmbunătățirea comunicării în mediul profesional.',
-            en: 'Identifies your dominant behavioral style through analysis of four dimensions: Dominance, Influence, Steadiness, and Compliance. Useful for team development and improving communication in professional environments.'
+            ro: 'Identifică stilul tău comportamental dominant prin analiza a patru dimensiuni: Dominanță, Influență, Stabilitate și Conformitate. Util pentru dezvoltarea echipelor și îmbunătățirea comunicării în mediul profesional. Te ajută să înțelegi cum interacționezi cu ceilalți și cum abordezi situațiile de lucru.',
+            en: 'Identifies your dominant behavioral style through analysis of four dimensions: Dominance, Influence, Steadiness, and Compliance. Useful for team development and improving communication in professional environments. Helps you understand how you interact with others and approach work situations.'
           },
           'Enneagram': {
-            ro: 'Descoperă unul dintre cele nouă tipuri de personalitate Enneagram, fiecare cu motivații, frici și strategii distincte. Oferă insight-uri profunde pentru dezvoltarea personală și înțelegerea relațiilor interpersonale.',
-            en: 'Discover one of nine Enneagram personality types, each with distinct motivations, fears, and strategies. Provides deep insights for personal development and understanding interpersonal relationships.'
+            ro: 'Descoperă unul dintre cele nouă tipuri de personalitate Enneagram, fiecare cu motivații, frici și strategii distincte. Oferă insight-uri profunde pentru dezvoltarea personală și înțelegerea relațiilor interpersonale. Un instrument puternic pentru autocunoaștere și creștere personală.',
+            en: 'Discover one of nine Enneagram personality types, each with distinct motivations, fears, and strategies. Provides deep insights for personal development and understanding interpersonal relationships. A powerful tool for self-awareness and personal growth.'
           },
           'Belbin': {
-            ro: 'Identifică rolurile tale preferate în echipă dintre cele nouă roluri Belbin. Ajută la formarea echipelor echilibrate și la maximizarea eficienței collaborative în proiecte și organizații.',
-            en: 'Identifies your preferred team roles among the nine Belbin roles. Helps form balanced teams and maximize collaborative efficiency in projects and organizations.'
+            ro: 'Identifică rolurile tale preferate în echipă dintre cele nouă roluri Belbin. Ajută la formarea echipelor echilibrate și la maximizarea eficienței collaborative în proiecte și organizații. Essential pentru manageri și lideri de echipă care vor să optimizeze performanța grupului.',
+            en: 'Identifies your preferred team roles among the nine Belbin roles. Helps form balanced teams and maximize collaborative efficiency in projects and organizations. Essential for managers and team leaders who want to optimize group performance.'
+          },
+          'Competențe Manageriale': {
+            ro: 'Evaluează competențele manageriale prin scenarii de judecată situațională. Testul măsoară abilitățile de leadership, luarea deciziilor și gestionarea echipei în diverse contexte profesionale. Ideal pentru manageri actuali sau aspiranți care vor să-și dezvolte competențele de conducere.',
+            en: 'Evaluates managerial competencies through situational judgment scenarios. The test measures leadership abilities, decision-making, and team management in various professional contexts. Ideal for current or aspiring managers who want to develop their leadership skills.'
+          },
+          'Percepție Senzorială': {
+            ro: 'Evaluează modul de procesare a informațiilor senzoriale și capacitatea de a interpreta stimulii din mediul înconjurător. Testul analizează acuitatea perceptuală și abilitatea de discriminare vizuală, fiind util în domeniile care necesită atenție la detalii și procesare rapidă a informațiilor vizuale.',
+            en: 'Evaluates sensory information processing and the ability to interpret environmental stimuli. The test analyzes perceptual acuity and visual discrimination ability, being useful in fields requiring attention to detail and rapid visual information processing.'
           }
         };
 
         // Find matching description based on test name
         for (const [key, desc] of Object.entries(descriptions)) {
           if (testName.toLowerCase().includes(key.toLowerCase()) || 
-              testName.toLowerCase().includes(key.replace('-', '').toLowerCase())) {
+              testName.toLowerCase().includes(key.replace('-', '').toLowerCase()) ||
+              testName.toLowerCase().includes(key.replace(' ', '').toLowerCase())) {
             return desc.ro; // Return Romanian description by default
           }
         }
         
-        // If no match found, enhance the original description
-        if (originalDescription && originalDescription.length < 100) {
-          return originalDescription + ' Acest test oferă rezultate detaliate și recomandări personalizate pentru dezvoltarea ta profesională și personală.';
-        }
-        
-        return originalDescription || 'Test psihologic validat științific care oferă insight-uri valoroase despre personalitatea și competențele tale. Rezultatele includ analize detaliate și recomandări pentru dezvoltare.';
+        // If no match found, create a standardized description
+        return 'Test psihologic validat științific care oferă insight-uri valoroase despre personalitatea și competențele tale. Rezultatele includ analize detaliate și recomandări personalizate pentru dezvoltarea ta profesională și personală. Un instrument esențial pentru autocunoaștere și progres.';
       };
       
       // Transform data to match expected interface
