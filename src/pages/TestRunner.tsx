@@ -15,6 +15,8 @@ import TestErrorScreen from '@/components/test/TestErrorScreen';
 import TestStartScreen from '@/components/test/TestStartScreen';
 import TestTimer from '@/components/test-runner/TestTimer';
 import ExitTestDialog from '@/components/test-runner/ExitTestDialog';
+import HomeNavigation from '@/components/home/HomeNavigation';
+import Footer from '@/components/home/Footer';
 import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -240,38 +242,51 @@ const TestRunner = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p>Loading test...</p>
+      <div>
+        <HomeNavigation />
+        <div className="flex justify-center items-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p>Loading test...</p>
+          </div>
         </div>
+        <Footer />
       </div>
     );
   }
 
   if (error) {
     return (
-      <TestErrorScreen 
-        title="Test Error" 
-        message={error} 
-        onReturnToTests={() => navigate('/tests')} 
-      />
+      <div>
+        <HomeNavigation />
+        <TestErrorScreen 
+          title="Test Error" 
+          message={error} 
+          onReturnToTests={() => navigate('/tests')} 
+        />
+        <Footer />
+      </div>
     );
   }
 
   if (!testType || questions.length === 0) {
     return (
-      <TestErrorScreen 
-        title="Test Not Found" 
-        message="Test data could not be loaded" 
-        onReturnToTests={() => navigate('/tests')} 
-      />
+      <div>
+        <HomeNavigation />
+        <TestErrorScreen 
+          title="Test Not Found" 
+          message="Test data could not be loaded" 
+          onReturnToTests={() => navigate('/tests')} 
+        />
+        <Footer />
+      </div>
     );
   }
 
   if (!hasStarted) {
     return (
-      <>
+      <div>
+        <HomeNavigation />
         <TestStartScreen 
           testType={testType} 
           questionsCount={questions.length}
@@ -287,98 +302,103 @@ const TestRunner = () => {
             onStartFresh={() => handleRestoreProgress(false)}
           />
         )}
-      </>
+        <Footer />
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <div className="max-w-4xl mx-auto px-4">
-        {/* Test Header with Timer and Exit Button */}
-        <Card className="mb-6">
-          <CardHeader>
-            <div className="flex justify-between items-start">
-              <div className="flex-1">
-                <CardTitle className="flex justify-between items-center">
-                  <span>{testType.name}</span>
-                  <span className="text-sm font-normal">
-                    {currentQuestionIndex + 1} / {questions.length}
-                  </span>
-                </CardTitle>
-                <Progress value={progress} className="w-full mt-2" />
+    <div>
+      <HomeNavigation />
+      <div className="min-h-screen bg-gray-50 py-8 pt-24">
+        <div className="max-w-4xl mx-auto px-4">
+          {/* Test Header with Timer and Exit Button */}
+          <Card className="mb-6">
+            <CardHeader>
+              <div className="flex justify-between items-start">
+                <div className="flex-1">
+                  <CardTitle className="flex justify-between items-center">
+                    <span>{testType.name}</span>
+                    <span className="text-sm font-normal">
+                      {currentQuestionIndex + 1} / {questions.length}
+                    </span>
+                  </CardTitle>
+                  <Progress value={progress} className="w-full mt-2" />
+                </div>
+                <div className="flex items-center space-x-4 ml-4">
+                  {testType.estimated_duration > 0 && (
+                    <TestTimer
+                      durationMinutes={testType.estimated_duration}
+                      onTimeUp={handleTimeUp}
+                      isActive={true}
+                    />
+                  )}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleExit}
+                    className="text-red-600 hover:text-red-700"
+                  >
+                    <X className="w-4 h-4 mr-1" />
+                    Ieși din test
+                  </Button>
+                </div>
               </div>
-              <div className="flex items-center space-x-4 ml-4">
-                {testType.estimated_duration > 0 && (
-                  <TestTimer
-                    durationMinutes={testType.estimated_duration}
-                    onTimeUp={handleTimeUp}
-                    isActive={true}
-                  />
-                )}
+            </CardHeader>
+          </Card>
+
+          {/* Question Display */}
+          {currentQuestion && (
+            <TestQuestion
+              question={currentQuestion}
+              selectedAnswer={answers[currentQuestion.question_order]}
+              onAnswer={handleAnswer}
+              language={language}
+            />
+          )}
+
+          {/* Navigation Controls */}
+          <div className="flex justify-between items-center mt-8">
+            <Button
+              variant="outline"
+              onClick={handlePrevious}
+              disabled={currentQuestionIndex === 0}
+            >
+              <ChevronLeft className="w-4 h-4 mr-2" />
+              Previous
+            </Button>
+
+            <div className="flex gap-4">
+              {currentQuestionIndex < questions.length - 1 ? (
                 <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleExit}
-                  className="text-red-600 hover:text-red-700"
+                  onClick={handleNext}
+                  disabled={answers[currentQuestion?.question_order] === undefined}
                 >
-                  <X className="w-4 h-4 mr-1" />
-                  Ieși din test
+                  Next
+                  <ChevronRight className="w-4 h-4 ml-2" />
                 </Button>
-              </div>
+              ) : (
+                <Button
+                  onClick={handleSubmit}
+                  disabled={!isComplete || isSubmitting}
+                  variant="default"
+                >
+                  {isSubmitting ? 'Submitting...' : 'Submit Test'}
+                </Button>
+              )}
             </div>
-          </CardHeader>
-        </Card>
-
-        {/* Question Display */}
-        {currentQuestion && (
-          <TestQuestion
-            question={currentQuestion}
-            selectedAnswer={answers[currentQuestion.question_order]}
-            onAnswer={handleAnswer}
-            language={language}
-          />
-        )}
-
-        {/* Navigation Controls */}
-        <div className="flex justify-between items-center mt-8">
-          <Button
-            variant="outline"
-            onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
-          >
-            <ChevronLeft className="w-4 h-4 mr-2" />
-            Previous
-          </Button>
-
-          <div className="flex gap-4">
-            {currentQuestionIndex < questions.length - 1 ? (
-              <Button
-                onClick={handleNext}
-                disabled={answers[currentQuestion?.question_order] === undefined}
-              >
-                Next
-                <ChevronRight className="w-4 h-4 ml-2" />
-              </Button>
-            ) : (
-              <Button
-                onClick={handleSubmit}
-                disabled={!isComplete || isSubmitting}
-                variant="default"
-              >
-                {isSubmitting ? 'Submitting...' : 'Submit Test'}
-              </Button>
-            )}
           </div>
-        </div>
 
-        {/* Exit Confirmation Dialog */}
-        <ExitTestDialog
-          open={showExitDialog}
-          onConfirm={handleConfirmExit}
-          onCancel={() => setShowExitDialog(false)}
-          hasAnswers={hasAnswers}
-        />
+          {/* Exit Confirmation Dialog */}
+          <ExitTestDialog
+            open={showExitDialog}
+            onConfirm={handleConfirmExit}
+            onCancel={() => setShowExitDialog(false)}
+            hasAnswers={hasAnswers}
+          />
+        </div>
       </div>
+      <Footer />
     </div>
   );
 };

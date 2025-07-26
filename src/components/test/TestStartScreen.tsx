@@ -32,8 +32,8 @@ const TestStartScreen: React.FC<TestStartScreenProps> = ({
   const translatedTestDescription = translation.description;
 
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
-      <Card className="max-w-2xl">
+    <div className="flex items-center justify-center min-h-screen pt-24 pb-12 bg-gradient-to-br from-blue-50 via-white to-indigo-50">
+      <Card className="max-w-2xl mx-4">
         <CardHeader>
           <CardTitle>{translatedTestName}</CardTitle>
         </CardHeader>
