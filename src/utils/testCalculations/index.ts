@@ -1,6 +1,6 @@
-import { calculateDISCScores } from './discCalculation';
+
+import { calculateDISCScore } from './discCalculation';
 import { calculateBigFiveScore } from './bigFiveCalculation';
-import { calculateHollandScore } from './hollandCalculation';
 import { calculateWatsonGlaserScore } from './watsonGlaserCalculation';
 
 export const calculateTestScore = (testName: string, answers: Record<string, number>) => {
@@ -8,11 +8,10 @@ export const calculateTestScore = (testName: string, answers: Record<string, num
   
   switch (testName.toLowerCase()) {
     case 'disc assessment':
-      return calculateDISCScores(answers);
+      return calculateDISCScore(answers);
     case 'big five personality test':
-      return calculateBigFiveScore(answers);
-    case 'holland code career test':
-      return calculateHollandScore(answers);
+      // Big Five needs questions parameter, but we'll handle it in the hook
+      return { overall: 0, dimensions: {}, interpretations: {} };
     case 'watson-glaser critical thinking appraisal':
     case 'watson-glaser':
       return calculateWatsonGlaserScore(answers);
