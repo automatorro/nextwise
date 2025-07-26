@@ -29,7 +29,7 @@ export const ScoringExplanation = ({ testName }: ScoringExplanationProps) => {
 
         {explanation.scoreRanges && (
           <div className="space-y-2">
-            <h4 class="font-medium">Interpretarea scorurilor:</h4>
+            <h4 className="font-medium">Interpretarea scorurilor:</h4>
             <div className="flex flex-wrap gap-2">
               {explanation.scoreRanges.map((range, index) => (
                 <Badge key={index} variant={range.variant}>

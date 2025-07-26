@@ -109,7 +109,7 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
     dominance: 'Dominanța indică orientarea către rezultate, direct și competitiv.',
     influence: 'Influența reflectă sociabilitatea, optimismul și persuasiunea.',
     steadiness: 'Stabilitatea măsoară calmul, răbdarea și cooperarea.',
-    conscientiousness: 'Conștiinciozitatea indică analiticul, precizia și orientarea către calitate.',
+    compliance: 'Conformitatea indică analiticul, precizia și orientarea către calitate.',
     
     // Watson-Glaser
     inference: 'Capacitatea de a trage concluzii logice din informațiile disponibile.',
