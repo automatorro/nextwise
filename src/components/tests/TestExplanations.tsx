@@ -1,4 +1,3 @@
-
 import React from 'react';
 import BigFiveExplanation from './explanations/BigFiveExplanation';
 import BelbinExplanation from './explanations/BelbinExplanation';
@@ -13,6 +12,7 @@ import DigitalCompetenciesExplanation from './explanations/DigitalCompetenciesEx
 import { HexacoExplanation } from './explanations/HexacoExplanation';
 import { SJTExplanation } from './explanations/SJTExplanation';
 import { WatsonGlaserExplanation } from './explanations/WatsonGlaserExplanation';
+import SensoryPerceptionExplanation from './explanations/SensoryPerceptionExplanation';
 
 interface TestExplanationsProps {
   testName: string;
@@ -21,6 +21,9 @@ interface TestExplanationsProps {
 }
 
 export const TestExplanations: React.FC<TestExplanationsProps> = ({ testName, score, language = 'ro' }) => {
+  console.log('TestExplanations - Test name:', testName);
+  console.log('TestExplanations - Score:', score);
+  
   const testKey = testName.toLowerCase();
   
   if (testKey.includes('big five') || testKey.includes('big-five')) {
@@ -74,6 +77,16 @@ export const TestExplanations: React.FC<TestExplanationsProps> = ({ testName, sc
   if (testKey.includes('sjt') || testKey.includes('situational judgment') || testKey.includes('orientare') || testKey.includes('cariera') || testKey.includes('competențe manageriale') || testKey.includes('managerial')) {
     return <SJTExplanation score={score} language={language} />;
   }
-  
+
+  // Sensory Perception Test
+  if (testName.includes('Percepție Senzorială') || testName.toLowerCase().includes('sensory perception')) {
+    return (
+      <SensoryPerceptionExplanation
+        score={score}
+        language={language}
+      />
+    );
+  }
+
   return null;
 };

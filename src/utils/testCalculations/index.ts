@@ -1,9 +1,9 @@
-
 import { calculateDISCScore } from './discCalculation';
 import { calculateBigFiveScore } from './bigFiveCalculation';
 import { calculateWatsonGlaserScore } from './watsonGlaserCalculation';
 import { calculateHollandScore } from './hollandCalculation';
 import { calculateDigitalCompetenciesScore } from './digitalCompetenciesCalculation';
+import { calculateSensoryPerceptionScore } from './sensoryPerceptionCalculation';
 
 export const calculateTestScore = (testName: string, answers: Record<string, number>) => {
   console.log('Calculating score for test:', testName, 'with answers:', answers);
@@ -24,6 +24,10 @@ export const calculateTestScore = (testName: string, answers: Record<string, num
     case 'digital competencies':
     case 'competente digitale':
       return calculateDigitalCompetenciesScore(answers);
+    case 'test percepție senzorială':
+    case 'sensory perception test':
+    case 'perceptie senzoriala':
+      return calculateSensoryPerceptionScore(answers);
     default:
       console.warn('Unknown test type:', testName);
       return { 
@@ -40,3 +44,4 @@ export { calculateBigFiveScore } from './bigFiveCalculation';
 export { calculateWatsonGlaserScore } from './watsonGlaserCalculation';
 export { calculateHollandScore } from './hollandCalculation';
 export { calculateDigitalCompetenciesScore } from './digitalCompetenciesCalculation';
+export { calculateSensoryPerceptionScore } from './sensoryPerceptionCalculation';
