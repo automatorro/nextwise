@@ -63,6 +63,10 @@ export const useTestSubmission = () => {
     } else if (testName.includes('emotional') || testName.includes('eq')) {
       const { calculateEmotionalIntelligenceScore } = await import('@/utils/testCalculations/emotionalIntelligenceCalculation');
       calculatedScore = calculateEmotionalIntelligenceScore(answers);
+    } else if (testName.includes('holland') || testName.includes('riasec') || testName.includes('occupational themes')) {
+      console.log('Using Holland RIASEC calculator');
+      const { calculateHollandScore } = await import('@/utils/testCalculations/hollandCalculation');
+      calculatedScore = calculateHollandScore(answers);
     } else if (testName.includes('sjt') || testName.includes('situational')) {
       const { calculateSJTScore } = await import('@/utils/testCalculations/sjtCalculation');
       calculatedScore = calculateSJTScore(answers, questions);

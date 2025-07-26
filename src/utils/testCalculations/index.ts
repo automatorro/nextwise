@@ -2,6 +2,7 @@
 import { calculateDISCScore } from './discCalculation';
 import { calculateBigFiveScore } from './bigFiveCalculation';
 import { calculateWatsonGlaserScore } from './watsonGlaserCalculation';
+import { calculateHollandScore } from './hollandCalculation';
 
 export const calculateTestScore = (testName: string, answers: Record<string, number>) => {
   console.log('Calculating score for test:', testName, 'with answers:', answers);
@@ -15,6 +16,9 @@ export const calculateTestScore = (testName: string, answers: Record<string, num
     case 'watson-glaser critical thinking appraisal':
     case 'watson-glaser':
       return calculateWatsonGlaserScore(answers);
+    case 'holland occupational themes (riasec)':
+    case 'holland riasec':
+      return calculateHollandScore(answers);
     default:
       console.warn('Unknown test type:', testName);
       return { 
@@ -29,3 +33,4 @@ export const calculateTestScore = (testName: string, answers: Record<string, num
 export { calculateDISCScore } from './discCalculation';
 export { calculateBigFiveScore } from './bigFiveCalculation';
 export { calculateWatsonGlaserScore } from './watsonGlaserCalculation';
+export { calculateHollandScore } from './hollandCalculation';

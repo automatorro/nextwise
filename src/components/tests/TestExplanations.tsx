@@ -8,6 +8,7 @@ import DISCExplanation from './explanations/DISCExplanation';
 import EmotionalIntelligenceExplanation from './explanations/EmotionalIntelligenceExplanation';
 import EnneagramExplanation from './explanations/EnneagramExplanation';
 import GADExplanation from './explanations/GADExplanation';
+import HollandExplanation from './explanations/HollandExplanation';
 import { HexacoExplanation } from './explanations/HexacoExplanation';
 import { SJTExplanation } from './explanations/SJTExplanation';
 import { WatsonGlaserExplanation } from './explanations/WatsonGlaserExplanation';
@@ -59,6 +60,10 @@ export const TestExplanations: React.FC<TestExplanationsProps> = ({ testName, sc
   
   if (testKey.includes('hexaco')) {
     return <HexacoExplanation score={score} language={language} />;
+  }
+  
+  if (testKey.includes('holland') || testKey.includes('riasec') || testKey.includes('occupational themes')) {
+    return <HollandExplanation score={score} language={language} />;
   }
   
   if (testKey.includes('sjt') || testKey.includes('situational judgment') || testKey.includes('orientare') || testKey.includes('cariera') || testKey.includes('competențe manageriale') || testKey.includes('managerial')) {

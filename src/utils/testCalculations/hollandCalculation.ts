@@ -23,7 +23,7 @@ export const calculateHollandScore = (answers: Record<string, number>): HollandS
     conventional: 0
   };
   
-  // Holland Code typically has 6 questions per dimension
+  // Holland RIASEC has 10 questions per dimension (60 total)
   Object.entries(answers).forEach(([questionId, answer]) => {
     const questionNumber = parseInt(questionId.split('-')[1] || questionId);
     
@@ -42,8 +42,8 @@ export const calculateHollandScore = (answers: Record<string, number>): HollandS
     }
   });
   
-  // Normalize to percentages
-  const maxScorePerDimension = 10 * 4; // 10 questions × 4 points max
+  // Normalize to percentages (max score per dimension is 10 questions × 5 points = 50)
+  const maxScorePerDimension = 10 * 5; // 10 questions × 5 points max
   const normalizedScores = {
     realistic: Math.round((scores.realistic / maxScorePerDimension) * 100),
     investigative: Math.round((scores.investigative / maxScorePerDimension) * 100),
@@ -53,13 +53,13 @@ export const calculateHollandScore = (answers: Record<string, number>): HollandS
     conventional: Math.round((scores.conventional / maxScorePerDimension) * 100)
   };
   
-  // Determine dominant code
+  // Determine dominant type
   const dominantType = Object.entries(normalizedScores).reduce((a, b) => 
     normalizedScores[a[0] as keyof typeof normalizedScores] > normalizedScores[b[0] as keyof typeof normalizedScores] ? a : b
   )[0];
   
   const typeNames = {
-    realistic: 'Realistic (R) - Practical și orientat spre activități concrete',
+    realistic: 'Realistic (R) - Practic și orientat spre activități concrete',
     investigative: 'Investigative (I) - Analitic și orientat spre cercetare',
     artistic: 'Artistic (A) - Creativ și orientat spre exprimare artistică',
     social: 'Social (S) - Orientat spre ajutorarea altora',

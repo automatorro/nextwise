@@ -30,6 +30,25 @@ export function getDimensionLabel(testName: string, dimensionKey: string): strin
         return dimensionKey;
     }
   }
+
+  if (testKey.includes('holland') || testKey.includes('riasec') || testKey.includes('occupational themes')) {
+    switch (dimensionKey) {
+      case 'realistic':
+        return 'Realistic (R)';
+      case 'investigative':
+        return 'Investigative (I)';
+      case 'artistic':
+        return 'Artistic (A)';
+      case 'social':
+        return 'Social (S)';
+      case 'enterprising':
+        return 'Enterprising (E)';
+      case 'conventional':
+        return 'Conventional (C)';
+      default:
+        return dimensionKey;
+    }
+  }
   
   if (testKey === 'test aptitudini cognitive' || testKey.includes('aptitudini cognitive')) {
     const actualKey = getActualDimensionKey(dimensionKey);
