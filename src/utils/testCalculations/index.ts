@@ -1,3 +1,4 @@
+
 import { calculateDISCScore } from './discCalculation';
 import { calculateBigFiveScore } from './bigFiveCalculation';
 import { calculateWatsonGlaserScore } from './watsonGlaserCalculation';

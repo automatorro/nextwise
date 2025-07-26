@@ -71,6 +71,10 @@ export const useTestSubmission = () => {
       console.log('Using Digital Competencies calculator');
       const { calculateDigitalCompetenciesScore } = await import('@/utils/testCalculations/digitalCompetenciesCalculation');
       calculatedScore = calculateDigitalCompetenciesScore(answers);
+    } else if (testName.includes('percepție senzorială') || testName.includes('perceptie senzoriala') || testName.includes('sensory perception')) {
+      console.log('Using Sensory Perception calculator');
+      const { calculateSensoryPerceptionScore } = await import('@/utils/testCalculations/sensoryPerceptionCalculation');
+      calculatedScore = calculateSensoryPerceptionScore(answers);
     } else if (testName.includes('sjt') || testName.includes('situational')) {
       const { calculateSJTScore } = await import('@/utils/testCalculations/sjtCalculation');
       calculatedScore = calculateSJTScore(answers, questions);
