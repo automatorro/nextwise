@@ -1,7 +1,7 @@
 
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { getTestScoringExplanation } from '@/utils/scoring/testExplanations';
+import { getTestScoringExplanation, type TestExplanation } from '@/utils/scoring/testExplanations';
 
 interface ScoringExplanationProps {
   testName: string;
@@ -12,7 +12,7 @@ interface ScoringExplanationProps {
 }
 
 export const ScoringExplanation = ({ testName }: ScoringExplanationProps) => {
-  const explanation = getTestScoringExplanation(testName);
+  const explanation: TestExplanation = getTestScoringExplanation(testName);
 
   return (
     <Card className="mt-6">
@@ -29,7 +29,7 @@ export const ScoringExplanation = ({ testName }: ScoringExplanationProps) => {
 
         {explanation.scoreRanges && (
           <div className="space-y-2">
-            <h4 className="font-medium">Interpretarea scorurilor:</h4>
+            <h4 class="font-medium">Interpretarea scorurilor:</h4>
             <div className="flex flex-wrap gap-2">
               {explanation.scoreRanges.map((range, index) => (
                 <Badge key={index} variant={range.variant}>

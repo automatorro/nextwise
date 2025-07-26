@@ -1,3 +1,4 @@
+
 import {
   getDISCExplanation,
   getDISCBadgeVariant,
@@ -7,92 +8,67 @@ import {
   getBigFiveBadgeVariant,
 } from "@/utils/scoring/bigFiveExplanations";
 
+// Types for explanation structure
+export interface TestExplanation {
+  description: string;
+  scoreRanges?: Array<{
+    range: string;
+    label: string;
+    variant: 'default' | 'secondary' | 'destructive' | 'outline';
+  }>;
+  whatItMeans?: string;
+}
+
 // Default explanation
-const defaultExplanation = `
-<div class="space-y-4">
-  <p class="text-gray-700">
-    Ne pare rău, nu avem o explicație detaliată pentru acest test momentan.
-  </p>
-  <p class="text-gray-700">
-    Însă, te încurajăm să explorezi alte teste și să revii mai târziu pentru a vedea dacă am adăugat informații suplimentare.
-  </p>
-</div>
-`;
+const defaultExplanation: TestExplanation = {
+  description: "Ne pare rău, nu avem o explicație detaliată pentru acest test momentan. Însă, te încurajăm să explorezi alte teste și să revii mai târziu pentru a vedea dacă am adăugat informații suplimentare.",
+  whatItMeans: "Rezultatele tale oferă o imagine generală asupra performanței la acest test."
+};
 
-const watsonGlaserExplanation = `
-<div class="space-y-6">
-  <div class="bg-blue-50 p-4 rounded-lg">
-    <h3 class="text-lg font-semibold mb-2 text-blue-800">Ce este Watson-Glaser Critical Thinking Appraisal?</h3>
-    <p class="text-blue-700">
-      Watson-Glaser este cel mai utilizat test pentru evaluarea gândirii critice, dezvoltat pentru a măsura 
-      capacitatea de analiză obiectivă și luare a deciziilor informate în situații complexe.
-    </p>
-  </div>
+const watsonGlaserExplanation: TestExplanation = {
+  description: "Watson-Glaser Critical Thinking Appraisal evaluează capacitatea de gândire critică prin 5 dimensiuni: inferențe, asumpții, deducție, interpretare și evaluarea argumentelor.",
+  scoreRanges: [
+    { range: "85-100%", label: "Superior - Abilități excepționale", variant: "default" },
+    { range: "70-84%", label: "Peste medie - Abilități bune", variant: "secondary" },
+    { range: "55-69%", label: "Mediu - Abilități moderate", variant: "outline" },
+    { range: "40-54%", label: "Sub medie - Necesită dezvoltare", variant: "destructive" },
+    { range: "0-39%", label: "Scăzut - Necesită îmbunătățire semnificativă", variant: "destructive" }
+  ],
+  whatItMeans: "Scorul tău reflectă capacitatea de a analiza obiectiv informațiile, identifica presupuneri, trage concluzii logice și evalua argumentele în situații complexe."
+};
 
-  <div class="bg-white p-4 rounded-lg border">
-    <h3 class="text-lg font-semibold mb-3 text-gray-800">Cele 5 Dimensiuni Evaluate:</h3>
-    <div class="grid md:grid-cols-2 gap-4">
-      <div class="space-y-3">
-        <div class="p-3 bg-purple-50 rounded">
-          <h4 class="font-medium text-purple-800">1. Inferențe</h4>
-          <p class="text-sm text-purple-600">Capacitatea de a trage concluzii logice din informațiile disponibile.</p>
-        </div>
-        <div class="p-3 bg-green-50 rounded">
-          <h4 class="font-medium text-green-800">2. Asumpții</h4>
-          <p class="text-sm text-green-600">Identificarea premiselor implicite în argumentări și declarații.</p>
-        </div>
-        <div class="p-3 bg-yellow-50 rounded">
-          <h4 class="font-medium text-yellow-800">3. Deducție</h4>
-          <p class="text-sm text-yellow-600">Aplicarea principiilor logice pentru a determina validitatea concluziilor.</p>
-        </div>
-      </div>
-      <div class="space-y-3">
-        <div class="p-3 bg-blue-50 rounded">
-          <h4 class="font-medium text-blue-800">4. Interpretare</h4>
-          <p class="text-sm text-blue-600">Evaluarea și interpretarea corectă a informațiilor și datelor.</p>
-        </div>
-        <div class="p-3 bg-red-50 rounded">
-          <h4 class="font-medium text-red-800">5. Evaluarea Argumentelor</h4>
-          <p class="text-sm text-red-600">Distingerea între argumentele puternice și cele slabe în luarea deciziilor.</p>
-        </div>
-      </div>
-    </div>
-  </div>
+const discExplanation: TestExplanation = {
+  description: "DISC Assessment măsoară patru stiluri comportamentale: Dominanța, Influența, Stabilitatea și Conștiinciozitatea.",
+  scoreRanges: [
+    { range: "80-100%", label: "Trăsătură dominantă", variant: "default" },
+    { range: "60-79%", label: "Trăsătură puternică", variant: "secondary" },
+    { range: "40-59%", label: "Trăsătură moderată", variant: "outline" },
+    { range: "0-39%", label: "Trăsătură mai puțin prezentă", variant: "destructive" }
+  ],
+  whatItMeans: "Profilul tău DISC arată stilurile tale comportamentale preferate în diferite situații profesionale și sociale."
+};
 
-  <div class="bg-gray-50 p-4 rounded-lg">
-    <h3 class="text-lg font-semibold mb-2 text-gray-800">Interpretarea Scorurilor:</h3>
-    <div class="space-y-2 text-sm">
-      <div class="flex justify-between"><span>85-100%:</span><span class="text-green-600 font-medium">Superior - Abilități excepționale</span></div>
-      <div class="flex justify-between"><span>70-84%:</span><span class="text-blue-600 font-medium">Peste medie - Abilități bune</span></div>
-      <div class="flex justify-between"><span>55-69%:</span><span class="text-yellow-600 font-medium">Mediu - Abilități moderate</span></div>
-      <div class="flex justify-between"><span>40-54%:</span><span class="text-orange-600 font-medium">Sub medie - Necesită dezvoltare</span></div>
-      <div class="flex justify-between"><span>0-39%:</span><span class="text-red-600 font-medium">Scăzut - Necesită îmbunătățire semnificativă</span></div>
-    </div>
-  </div>
+const bigFiveExplanation: TestExplanation = {
+  description: "Big Five evaluează cinci dimensiuni fundamentale ale personalității: Deschiderea, Conștiinciozitatea, Extraversiunea, Agreabilitatea și Neurotismul.",
+  scoreRanges: [
+    { range: "80-100%", label: "Trăsătură foarte pronunțată", variant: "default" },
+    { range: "60-79%", label: "Trăsătură puternică", variant: "secondary" },
+    { range: "40-59%", label: "Trăsătură moderată", variant: "outline" },
+    { range: "20-39%", label: "Trăsătură mai puțin prezentă", variant: "destructive" },
+    { range: "0-19%", label: "Trăsătură foarte slabă", variant: "destructive" }
+  ],
+  whatItMeans: "Profilul tău de personalitate arată cum te poziționezi pe cele cinci dimensiuni universale ale personalității umane."
+};
 
-  <div class="bg-green-50 p-4 rounded-lg">
-    <h3 class="text-lg font-semibold mb-2 text-green-800">Aplicabilitate Profesională:</h3>
-    <ul class="text-sm text-green-700 space-y-1">
-      <li>• Management și leadership</li>
-      <li>• Consultanță și analiză</li>
-      <li>• Luarea deciziilor strategice</li>
-      <li>• Cercetare și dezvoltare</li>
-      <li>• Educație și formare</li>
-      <li>• Justiție și drept</li>
-    </ul>
-  </div>
-</div>
-`;
-
-export const getTestScoringExplanation = (testName: string): string => {
+export const getTestScoringExplanation = (testName: string): TestExplanation => {
   const normalizedTestName = testName.toLowerCase();
   
   if (normalizedTestName.includes('disc')) {
-    return getDISCExplanation();
+    return discExplanation;
   }
   
   if (normalizedTestName.includes('big five')) {
-    return getBigFiveExplanation();
+    return bigFiveExplanation;
   }
   
   if (normalizedTestName.includes('watson') || normalizedTestName.includes('glaser') || normalizedTestName.includes('critical thinking')) {
@@ -114,4 +90,34 @@ export const getScoreBadgeVariant = (testName: string, scoreKey: string): string
   }
 
   return 'default';
+};
+
+// Export the dimension explanation function
+export const getDimensionExplanation = (testName: string, dimensionKey: string): string => {
+  const normalizedTestName = testName.toLowerCase();
+  
+  // Generic dimension explanations
+  const genericExplanations: { [key: string]: string } = {
+    // Big Five
+    openness: 'Deschiderea către experiență măsoară creativitatea, curiozitatea intelectuală și deschiderea către idei noi.',
+    conscientiousness: 'Conștiinciozitatea reflectă organizarea, disciplina și orientarea către obiective.',
+    extraversion: 'Extraversiunea indică sociabilitatea, energia și căutarea stimulării sociale.',
+    agreeableness: 'Agreabilitatea măsoară cooperarea, încrederea și orientarea către alții.',
+    neuroticism: 'Neurotismul reflectă stabilitatea emoțională și gestionarea stresului.',
+    
+    // DISC
+    dominance: 'Dominanța indică orientarea către rezultate, direct și competitiv.',
+    influence: 'Influența reflectă sociabilitatea, optimismul și persuasiunea.',
+    steadiness: 'Stabilitatea măsoară calmul, răbdarea și cooperarea.',
+    conscientiousness: 'Conștiinciozitatea indică analiticul, precizia și orientarea către calitate.',
+    
+    // Watson-Glaser
+    inference: 'Capacitatea de a trage concluzii logice din informațiile disponibile.',
+    assumptions: 'Identificarea premiselor implicite în argumentări și declarații.',
+    deduction: 'Aplicarea principiilor logice pentru a determina validitatea concluziilor.',
+    interpretation: 'Evaluarea și interpretarea corectă a informațiilor și datelor.',
+    argument_evaluation: 'Distingerea între argumentele puternice și cele slabe în luarea deciziilor.'
+  };
+  
+  return genericExplanations[dimensionKey] || `Dimensiunea ${dimensionKey} este evaluată în cadrul acestui test.`;
 };
