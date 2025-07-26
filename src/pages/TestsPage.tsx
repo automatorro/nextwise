@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -151,24 +152,6 @@ const TestsPage = () => {
               </Badge>
             ))}
           </div>
-        </div>
-
-        {/* Watson-Glaser Debug Info */}
-        <div className="mb-4 p-4 bg-blue-50 rounded-lg">
-          <h3 className="font-semibold text-blue-800 mb-2">Debug Info:</h3>
-          <p className="text-sm text-blue-700">
-            Total tests loaded: {tests?.length || 0}
-          </p>
-          <p className="text-sm text-blue-700">
-            Tests after filtering: {filteredTests.length}
-          </p>
-          <p className="text-sm text-blue-700">
-            Watson-Glaser tests: {tests?.filter(t => 
-              t.name.toLowerCase().includes('watson') ||
-              t.name.toLowerCase().includes('glaser') ||
-              t.name.toLowerCase().includes('critical')
-            ).length || 0}
-          </p>
         </div>
 
         {/* Tests Grid */}
