@@ -13,7 +13,9 @@ import { TestQuestion } from '@/components/test/TestQuestion';
 import TestProgressRestoreDialog from '@/components/test/TestProgressRestoreDialog';
 import TestErrorScreen from '@/components/test/TestErrorScreen';
 import TestStartScreen from '@/components/test/TestStartScreen';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import TestTimer from '@/components/test-runner/TestTimer';
+import ExitTestDialog from '@/components/test-runner/ExitTestDialog';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { toast } from 'sonner';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -55,7 +57,9 @@ const TestRunner = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [showRestoreDialog, setShowRestoreDialog] = useState(false);
+  const [showExitDialog, setShowExitDialog] = useState(false);
   const [dataFetched, setDataFetched] = useState(false);
+  const [autoProgressTimer, setAutoProgressTimer] = useState<NodeJS.Timeout | null>(null);
 
   const {
     saveProgress,
@@ -142,24 +146,48 @@ const TestRunner = () => {
       
       // Save progress
       saveProgress(currentQuestionIndex, newAnswers);
+      
+      // Auto-progress to next question after 800ms delay
+      if (autoProgressTimer) {
+        clearTimeout(autoProgressTimer);
+      }
+      
+      const timer = setTimeout(() => {
+        if (currentQuestionIndex < questions.length - 1) {
+          setCurrentQuestionIndex(currentQuestionIndex + 1);
+          saveProgress(currentQuestionIndex + 1, newAnswers);
+        }
+      }, 800);
+      
+      setAutoProgressTimer(timer);
     }
-  }, [questions, currentQuestionIndex, answers, saveProgress]);
+  }, [questions, currentQuestionIndex, answers, saveProgress, autoProgressTimer]);
 
   const handleNext = useCallback(() => {
+    if (autoProgressTimer) {
+      clearTimeout(autoProgressTimer);
+      setAutoProgressTimer(null);
+    }
+    
     if (currentQuestionIndex < questions.length - 1) {
       const nextIndex = currentQuestionIndex + 1;
       setCurrentQuestionIndex(nextIndex);
       saveProgress(nextIndex, answers);
     }
-  }, [currentQuestionIndex, questions.length, answers, saveProgress]);
+  }, [currentQuestionIndex, questions.length, answers, saveProgress, autoProgressTimer]);
 
   const handlePrevious = useCallback(() => {
+    if (autoProgressTimer) {
+      clearTimeout(autoProgressTimer);
+      setAutoProgressTimer(null);
+    }
+    
     if (currentQuestionIndex > 0) {
       const prevIndex = currentQuestionIndex - 1;
       setCurrentQuestionIndex(prevIndex);
       saveProgress(prevIndex, answers);
     }
-  }, [currentQuestionIndex, answers, saveProgress]);
+  }, [currentQuestionIndex, answers, saveProgress, autoProgressTimer]);
 
   const handleSubmit = useCallback(async () => {
     if (!testId || !user) return;
@@ -179,9 +207,36 @@ const TestRunner = () => {
     }
   }, [testId, user, answers, sessionId, submitTest, clearProgress, navigate]);
 
+  const handleExit = useCallback(() => {
+    setShowExitDialog(true);
+  }, []);
+
+  const handleConfirmExit = useCallback(() => {
+    if (Object.keys(answers).length > 0) {
+      saveProgress(currentQuestionIndex, answers);
+      toast.info('Progresul tău a fost salvat');
+    }
+    navigate('/tests');
+  }, [answers, currentQuestionIndex, saveProgress, navigate]);
+
+  const handleTimeUp = useCallback(() => {
+    toast.warning('Timpul a expirat! Testul va fi trimis automat.');
+    handleSubmit();
+  }, [handleSubmit]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (autoProgressTimer) {
+        clearTimeout(autoProgressTimer);
+      }
+    };
+  }, [autoProgressTimer]);
+
   const currentQuestion = useMemo(() => questions[currentQuestionIndex], [questions, currentQuestionIndex]);
   const progress = useMemo(() => ((currentQuestionIndex + 1) / questions.length) * 100, [currentQuestionIndex, questions.length]);
   const isComplete = useMemo(() => Object.keys(answers).length === questions.length, [answers, questions.length]);
+  const hasAnswers = useMemo(() => Object.keys(answers).length > 0, [answers]);
 
   if (isLoading) {
     return (
@@ -239,18 +294,42 @@ const TestRunner = () => {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-4xl mx-auto px-4">
+        {/* Test Header with Timer and Exit Button */}
         <Card className="mb-6">
           <CardHeader>
-            <CardTitle className="flex justify-between items-center">
-              <span>{testType.name}</span>
-              <span className="text-sm font-normal">
-                {currentQuestionIndex + 1} / {questions.length}
-              </span>
-            </CardTitle>
-            <Progress value={progress} className="w-full" />
+            <div className="flex justify-between items-start">
+              <div className="flex-1">
+                <CardTitle className="flex justify-between items-center">
+                  <span>{testType.name}</span>
+                  <span className="text-sm font-normal">
+                    {currentQuestionIndex + 1} / {questions.length}
+                  </span>
+                </CardTitle>
+                <Progress value={progress} className="w-full mt-2" />
+              </div>
+              <div className="flex items-center space-x-4 ml-4">
+                {testType.estimated_duration > 0 && (
+                  <TestTimer
+                    durationMinutes={testType.estimated_duration}
+                    onTimeUp={handleTimeUp}
+                    isActive={true}
+                  />
+                )}
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleExit}
+                  className="text-red-600 hover:text-red-700"
+                >
+                  <X className="w-4 h-4 mr-1" />
+                  Ieși din test
+                </Button>
+              </div>
+            </div>
           </CardHeader>
         </Card>
 
+        {/* Question Display */}
         {currentQuestion && (
           <TestQuestion
             question={currentQuestion}
@@ -260,6 +339,7 @@ const TestRunner = () => {
           />
         )}
 
+        {/* Navigation Controls */}
         <div className="flex justify-between items-center mt-8">
           <Button
             variant="outline"
@@ -290,6 +370,14 @@ const TestRunner = () => {
             )}
           </div>
         </div>
+
+        {/* Exit Confirmation Dialog */}
+        <ExitTestDialog
+          open={showExitDialog}
+          onConfirm={handleConfirmExit}
+          onCancel={() => setShowExitDialog(false)}
+          hasAnswers={hasAnswers}
+        />
       </div>
     </div>
   );

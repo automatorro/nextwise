@@ -169,12 +169,12 @@ export const parseQuestionOptions = (options: Json, language: 'ro' | 'en' = 'ro'
 // Helper function to detect corrupted [object Object] data
 const isCorruptedObjectData = (data: any): boolean => {
   if (typeof data === 'string') {
-    return data === '[object Object]' || data.includes('[object Object]');
+    return data === '[object Object]' || data.includes('[object Object]') || data === 'object';
   }
   
   if (Array.isArray(data)) {
     return data.some(item => 
-      typeof item === 'string' && (item === '[object Object]' || item.includes('[object Object]'))
+      typeof item === 'string' && (item === '[object Object]' || item.includes('[object Object]') || item === 'object')
     );
   }
   
@@ -182,7 +182,7 @@ const isCorruptedObjectData = (data: any): boolean => {
     // Check if object has meaningless structure that indicates corruption
     const values = Object.values(data);
     return values.some(val => 
-      typeof val === 'string' && (val === '[object Object]' || val.includes('[object Object]'))
+      typeof val === 'string' && (val === '[object Object]' || val.includes('[object Object]') || val === 'object')
     );
   }
   
