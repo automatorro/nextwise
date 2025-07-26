@@ -49,6 +49,23 @@ export function getDimensionLabel(testName: string, dimensionKey: string): strin
         return dimensionKey;
     }
   }
+
+  if (testKey.includes('competențe digitale') || testKey.includes('competente digitale') || testKey.includes('digital')) {
+    switch (dimensionKey) {
+      case 'alfabetizare_digitala':
+        return 'Alfabetizare Digitală';
+      case 'comunicare_digitala':
+        return 'Comunicare Digitală';
+      case 'creare_continut':
+        return 'Creare Conținut Digital';
+      case 'siguranta_digitala':
+        return 'Siguranță Digitală';
+      case 'rezolvare_probleme':
+        return 'Rezolvarea Problemelor Digitale';
+      default:
+        return dimensionKey;
+    }
+  }
   
   if (testKey === 'test aptitudini cognitive' || testKey.includes('aptitudini cognitive')) {
     const actualKey = getActualDimensionKey(dimensionKey);
@@ -116,6 +133,10 @@ export function getTestDimensions(testName: string): string[] {
 
   if (testKey === 'roluri în echipă belbin' || testKey.includes('belbin')) {
     return ['plant', 'resource_investigator', 'coordinator', 'shaper', 'monitor_evaluator', 'teamworker', 'implementer', 'completer_finisher', 'specialist'];
+  }
+
+  if (testKey.includes('competențe digitale') || testKey.includes('competente digitale') || testKey.includes('digital')) {
+    return ['alfabetizare_digitala', 'comunicare_digitala', 'creare_continut', 'siguranta_digitala', 'rezolvare_probleme'];
   }
   
   return [];

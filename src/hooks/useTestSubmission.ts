@@ -67,6 +67,10 @@ export const useTestSubmission = () => {
       console.log('Using Holland RIASEC calculator');
       const { calculateHollandScore } = await import('@/utils/testCalculations/hollandCalculation');
       calculatedScore = calculateHollandScore(answers);
+    } else if (testName.includes('competențe digitale') || testName.includes('competente digitale') || testName.includes('digital')) {
+      console.log('Using Digital Competencies calculator');
+      const { calculateDigitalCompetenciesScore } = await import('@/utils/testCalculations/digitalCompetenciesCalculation');
+      calculatedScore = calculateDigitalCompetenciesScore(answers);
     } else if (testName.includes('sjt') || testName.includes('situational')) {
       const { calculateSJTScore } = await import('@/utils/testCalculations/sjtCalculation');
       calculatedScore = calculateSJTScore(answers, questions);

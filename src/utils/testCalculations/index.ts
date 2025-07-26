@@ -3,6 +3,7 @@ import { calculateDISCScore } from './discCalculation';
 import { calculateBigFiveScore } from './bigFiveCalculation';
 import { calculateWatsonGlaserScore } from './watsonGlaserCalculation';
 import { calculateHollandScore } from './hollandCalculation';
+import { calculateDigitalCompetenciesScore } from './digitalCompetenciesCalculation';
 
 export const calculateTestScore = (testName: string, answers: Record<string, number>) => {
   console.log('Calculating score for test:', testName, 'with answers:', answers);
@@ -19,6 +20,10 @@ export const calculateTestScore = (testName: string, answers: Record<string, num
     case 'holland occupational themes (riasec)':
     case 'holland riasec':
       return calculateHollandScore(answers);
+    case 'competențe digitale & analitice':
+    case 'digital competencies':
+    case 'competente digitale':
+      return calculateDigitalCompetenciesScore(answers);
     default:
       console.warn('Unknown test type:', testName);
       return { 
@@ -34,3 +39,4 @@ export { calculateDISCScore } from './discCalculation';
 export { calculateBigFiveScore } from './bigFiveCalculation';
 export { calculateWatsonGlaserScore } from './watsonGlaserCalculation';
 export { calculateHollandScore } from './hollandCalculation';
+export { calculateDigitalCompetenciesScore } from './digitalCompetenciesCalculation';
