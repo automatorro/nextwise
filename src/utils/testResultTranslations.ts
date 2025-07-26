@@ -1,8 +1,15 @@
+
 export const getResultLabels = (language: string) => {
   return {
     overallScoreTitle: language === 'en' ? 'Overall Score' : 'Scorul Total',
     scoredPoints: language === 'en' ? 'Scored Points' : 'Puncte Obținute',
-    maxPoints: language === 'en' ? 'Max Points' : 'Puncte Maxime'
+    maxPoints: language === 'en' ? 'Max Points' : 'Puncte Maxime',
+    backToTests: language === 'en' ? 'Back to Tests' : 'Înapoi la Teste',
+    testResult: language === 'en' ? 'Test Result' : 'Rezultatul Testului',
+    completedOn: language === 'en' ? 'Completed on' : 'Completat pe',
+    noResultsFound: language === 'en' ? 'No results found' : 'Nu au fost găsite rezultate',
+    generateAnalysis: language === 'en' ? 'AI Analysis' : 'Analiză AI',
+    analysisDescription: language === 'en' ? 'Get a detailed AI analysis of your test results with personalized insights and recommendations.' : 'Obțineți o analiză AI detaliată a rezultatelor testului cu perspective și recomandări personalizate.'
   };
 };
 
