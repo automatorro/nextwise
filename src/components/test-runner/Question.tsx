@@ -22,6 +22,7 @@ const Question: React.FC<QuestionProps> = ({ question, selectedAnswer, onAnswerC
       return option;
     }
     if (typeof option === 'object' && option !== null) {
+      // Handle parsed option objects with label/value structure
       return option.label || option.text || option.value || `Option ${index + 1}`;
     }
     return String(option || `Option ${index + 1}`);

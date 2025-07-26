@@ -2,8 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { ChevronLeft, ChevronRight, Clock, X } from 'lucide-react';
+import { parseQuestionOptions } from '@/components/test/QuestionOptionsParser';
 
 interface Question {
   id: string;
@@ -30,24 +29,6 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
   onAnswer,
   language
 }) => {
-  // Parse options based on language
-  const parseOptions = (options: any) => {
-    if (!options) return [];
-    
-    try {
-      if (typeof options === 'string') {
-        return JSON.parse(options);
-      }
-      if (Array.isArray(options)) {
-        return options;
-      }
-      return [];
-    } catch (error) {
-      console.error('Error parsing options:', error);
-      return [];
-    }
-  };
-
   const getQuestionText = () => {
     if (language === 'en' && question.question_text_en) {
       return question.question_text_en;
@@ -55,14 +36,15 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
     return question.question_text_ro || question.question_text || '';
   };
 
-  const getOptions = () => {
+  const getRawOptions = () => {
     if (language === 'en' && question.options_en) {
-      return parseOptions(question.options_en);
+      return question.options_en;
     }
-    return parseOptions(question.options);
+    return question.options;
   };
 
-  const options = getOptions();
+  // Use the parser to get properly structured options
+  const parsedOptions = parseQuestionOptions(getRawOptions(), language as 'ro' | 'en');
 
   return (
     <Card className="border-2 border-gray-200">
@@ -72,14 +54,13 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {options.map((option: any, index: number) => {
-          const optionText = typeof option === 'object' ? option.label : option;
-          const isSelected = selectedAnswer === index;
+        {parsedOptions.map((option, index) => {
+          const isSelected = selectedAnswer === option.value;
           
           return (
             <button
               key={index}
-              onClick={() => onAnswer(index)}
+              onClick={() => onAnswer(option.value)}
               className={`w-full p-4 text-left rounded-lg border-2 transition-all duration-200 hover:border-blue-300 ${
                 isSelected 
                   ? 'border-blue-500 bg-blue-50 text-blue-900' 
@@ -96,7 +77,7 @@ const TestQuestion: React.FC<TestQuestionProps> = ({
                     <div className="w-2 h-2 bg-white rounded-full" />
                   )}
                 </div>
-                <span className="text-sm font-medium">{optionText}</span>
+                <span className="text-sm font-medium">{option.label}</span>
               </div>
             </button>
           );

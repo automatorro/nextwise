@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Language } from '@/types/language';
+import { parseQuestionOptions } from '@/components/test/QuestionOptionsParser';
 
 interface TestQuestionProps {
   question: {
@@ -32,12 +33,12 @@ export const TestQuestion: React.FC<TestQuestionProps> = ({
     ? question.question_text_en 
     : question.question_text_ro;
 
-  const options = language === 'en' && question.options_en 
+  const rawOptions = language === 'en' && question.options_en 
     ? question.options_en 
     : question.options;
 
-  // Parse options if they're stored as JSON string
-  const parsedOptions = typeof options === 'string' ? JSON.parse(options) : options;
+  // Use the parser to get properly structured options
+  const parsedOptions = parseQuestionOptions(rawOptions, language);
 
   return (
     <Card>
@@ -47,14 +48,14 @@ export const TestQuestion: React.FC<TestQuestionProps> = ({
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-3">
-        {Array.isArray(parsedOptions) && parsedOptions.map((option: string, index: number) => (
+        {parsedOptions.map((option, index) => (
           <Button
             key={index}
-            variant={selectedAnswer === index ? "default" : "outline"}
+            variant={selectedAnswer === option.value ? "default" : "outline"}
             className="w-full text-left justify-start p-4 h-auto whitespace-normal"
-            onClick={() => onAnswer(index)}
+            onClick={() => onAnswer(option.value)}
           >
-            {option}
+            {option.label}
           </Button>
         ))}
       </CardContent>
