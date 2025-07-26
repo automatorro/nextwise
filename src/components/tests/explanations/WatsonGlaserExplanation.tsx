@@ -8,27 +8,49 @@ import { Brain, Target, CheckCircle, AlertCircle } from 'lucide-react';
 interface WatsonGlaserExplanationProps {
   score: {
     overall: number;
-    dimensions: {
-      inference: number;
-      assumptions: number;
-      deduction: number;
-      interpretation: number;
-      argument_evaluation: number;
+    dimensions?: {
+      inference?: number;
+      assumptions?: number;
+      deduction?: number;
+      interpretation?: number;
+      argument_evaluation?: number;
     };
-    interpretations: {
-      inference: string;
-      assumptions: string;
-      deduction: string;
-      interpretation: string;
-      argument_evaluation: string;
+    interpretations?: {
+      inference?: string;
+      assumptions?: string;
+      deduction?: string;
+      interpretation?: string;
+      argument_evaluation?: string;
     };
-    performance_level: string;
+    performance_level?: string;
   };
   language: string;
 }
 
 export const WatsonGlaserExplanation: React.FC<WatsonGlaserExplanationProps> = ({ score, language }) => {
   const isRomanian = language === 'ro';
+  
+  // Provide default values for dimensions
+  const defaultDimensions = {
+    inference: 0,
+    assumptions: 0,
+    deduction: 0,
+    interpretation: 0,
+    argument_evaluation: 0
+  };
+  
+  const dimensions = { ...defaultDimensions, ...(score.dimensions || {}) };
+  
+  // Provide default interpretations
+  const defaultInterpretations = {
+    inference: isRomanian ? 'Interpretare nu este disponibilă' : 'Interpretation not available',
+    assumptions: isRomanian ? 'Interpretare nu este disponibilă' : 'Interpretation not available',
+    deduction: isRomanian ? 'Interpretare nu este disponibilă' : 'Interpretation not available',
+    interpretation: isRomanian ? 'Interpretare nu este disponibilă' : 'Interpretation not available',
+    argument_evaluation: isRomanian ? 'Interpretare nu este disponibilă' : 'Interpretation not available'
+  };
+  
+  const interpretations = { ...defaultInterpretations, ...(score.interpretations || {}) };
   
   const dimensionLabels = {
     inference: isRomanian ? 'Inferențe' : 'Inferences',
@@ -97,13 +119,13 @@ export const WatsonGlaserExplanation: React.FC<WatsonGlaserExplanationProps> = (
             <div>
               <div className="text-center mb-4">
                 <div className="text-4xl font-bold text-blue-600 mb-2">
-                  {score.overall}%
+                  {score.overall || 0}%
                 </div>
-                <Badge variant={getPerformanceBadgeVariant(score.overall)} className="text-sm">
-                  {score.performance_level}
+                <Badge variant={getPerformanceBadgeVariant(score.overall || 0)} className="text-sm">
+                  {score.performance_level || (isRomanian ? 'Nivel necunoscut' : 'Unknown level')}
                 </Badge>
               </div>
-              <Progress value={score.overall} className="mb-4 h-3" />
+              <Progress value={score.overall || 0} className="mb-4 h-3" />
               <p className="text-sm text-gray-600 text-center">
                 {isRomanian ? 'Scor general de gândire critică' : 'Overall critical thinking score'}
               </p>
@@ -133,7 +155,7 @@ export const WatsonGlaserExplanation: React.FC<WatsonGlaserExplanationProps> = (
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {Object.entries(score.dimensions).map(([key, percentage]) => (
+            {Object.entries(dimensions).map(([key, percentage]) => (
               <div key={key} className="space-y-3">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-3">
@@ -152,7 +174,7 @@ export const WatsonGlaserExplanation: React.FC<WatsonGlaserExplanationProps> = (
                     {dimensionDescriptions[key as keyof typeof dimensionDescriptions]}
                   </p>
                   <p className="text-sm text-gray-600 mb-2">
-                    {score.interpretations[key as keyof typeof score.interpretations]}
+                    {interpretations[key as keyof typeof interpretations]}
                   </p>
                   <p className="text-xs text-gray-500">
                     {calculateRawScore(percentage)} {isRomanian ? 'din 8 răspunsuri corecte' : 'out of 8 correct answers'}
@@ -172,7 +194,7 @@ export const WatsonGlaserExplanation: React.FC<WatsonGlaserExplanationProps> = (
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {score.overall < 45 && (
+            {(score.overall || 0) < 45 && (
               <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
                 <h4 className="font-medium text-red-800 mb-2">
                   {isRomanian ? 'Dezvoltare Prioritară' : 'Priority Development'}
@@ -185,7 +207,7 @@ export const WatsonGlaserExplanation: React.FC<WatsonGlaserExplanationProps> = (
               </div>
             )}
             
-            {score.overall >= 45 && score.overall < 70 && (
+            {(score.overall || 0) >= 45 && (score.overall || 0) < 70 && (
               <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
                 <h4 className="font-medium text-yellow-800 mb-2">
                   {isRomanian ? 'Îmbunătățiri Recomandate' : 'Recommended Improvements'}
@@ -198,7 +220,7 @@ export const WatsonGlaserExplanation: React.FC<WatsonGlaserExplanationProps> = (
               </div>
             )}
             
-            {score.overall >= 70 && (
+            {(score.overall || 0) >= 70 && (
               <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
                 <h4 className="font-medium text-green-800 mb-2">
                   {isRomanian ? 'Menținerea și Perfecționarea' : 'Maintaining and Perfecting'}
