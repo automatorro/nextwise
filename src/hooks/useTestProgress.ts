@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 interface TestProgress {
   testId: string;
@@ -10,12 +10,14 @@ interface TestProgress {
 
 export const useTestProgress = (testId: string) => {
   const [savedProgress, setSavedProgress] = useState<TestProgress | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
+  const mounted = useRef(true);
 
-  const getStorageKey = (id: string) => `test_progress_${id}`;
+  const getStorageKey = useCallback((id: string) => `test_progress_${id}`, []);
 
-  // Check for existing progress when hook initializes
+  // Check for existing progress when hook initializes - only once
   useEffect(() => {
-    if (!testId) return;
+    if (!testId || isInitialized) return;
     
     const storageKey = getStorageKey(testId);
     const saved = localStorage.getItem(storageKey);
@@ -29,7 +31,9 @@ export const useTestProgress = (testId: string) => {
         const hoursDiff = (now - startedTime) / (1000 * 60 * 60);
         
         if (hoursDiff < 24) {
-          setSavedProgress(progress);
+          if (mounted.current) {
+            setSavedProgress(progress);
+          }
         } else {
           // Clean up old progress
           localStorage.removeItem(storageKey);
@@ -39,10 +43,12 @@ export const useTestProgress = (testId: string) => {
         localStorage.removeItem(storageKey);
       }
     }
-  }, [testId]);
+    
+    setIsInitialized(true);
+  }, [testId, getStorageKey, isInitialized]);
 
-  const saveProgress = (currentQuestionIndex: number, answers: { [questionId: string]: number }) => {
-    if (!testId) return;
+  const saveProgress = useCallback((currentQuestionIndex: number, answers: { [questionId: string]: number }) => {
+    if (!testId || !isInitialized) return;
     
     const progress: TestProgress = {
       testId,
@@ -54,30 +60,38 @@ export const useTestProgress = (testId: string) => {
     const storageKey = getStorageKey(testId);
     localStorage.setItem(storageKey, JSON.stringify(progress));
     console.log('Test progress saved:', progress);
-  };
+  }, [testId, savedProgress?.startedAt, getStorageKey, isInitialized]);
 
-  const clearProgress = () => {
+  const clearProgress = useCallback(() => {
     if (!testId) return;
     
     const storageKey = getStorageKey(testId);
     localStorage.removeItem(storageKey);
     setSavedProgress(null);
     console.log('Test progress cleared for test:', testId);
-  };
+  }, [testId, getStorageKey]);
 
-  const restoreProgress = () => {
+  const restoreProgress = useCallback(() => {
     return savedProgress;
-  };
+  }, [savedProgress]);
 
-  const hasSavedProgress = () => {
-    return savedProgress !== null && Object.keys(savedProgress.answers).length > 0;
-  };
+  const hasSavedProgress = useCallback(() => {
+    return savedProgress !== null && Object.keys(savedProgress.answers || {}).length > 0;
+  }, [savedProgress]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      mounted.current = false;
+    };
+  }, []);
 
   return {
     hasSavedProgress: hasSavedProgress(),
     savedProgress,
     saveProgress,
     clearProgress,
-    restoreProgress
+    restoreProgress,
+    isInitialized
   };
 };

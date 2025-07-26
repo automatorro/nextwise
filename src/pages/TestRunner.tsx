@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -55,71 +55,86 @@ const TestRunner = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [showRestoreDialog, setShowRestoreDialog] = useState(false);
+  const [dataFetched, setDataFetched] = useState(false);
 
   const {
     saveProgress,
     clearProgress,
     restoreProgress,
-    hasSavedProgress
+    hasSavedProgress,
+    isInitialized
   } = useTestProgress(testId || '');
 
+  // Memoize test data fetching to prevent re-fetching
+  const fetchTestData = useCallback(async () => {
+    if (!testId || !user || dataFetched) return;
+
+    try {
+      setIsLoading(true);
+      console.log('Fetching test data for:', testId);
+      
+      // Fetch test type
+      const { data: testTypeData, error: testTypeError } = await supabase
+        .from('test_types')
+        .select('*')
+        .eq('id', testId)
+        .single();
+
+      if (testTypeError) throw testTypeError;
+      setTestType(testTypeData);
+      console.log('Test type loaded:', testTypeData);
+
+      // Fetch questions
+      const { data: questionsData, error: questionsError } = await supabase
+        .from('test_questions')
+        .select('*')
+        .eq('test_type_id', testId)
+        .order('question_order');
+
+      if (questionsError) throw questionsError;
+      setQuestions(questionsData || []);
+      console.log('Questions loaded:', questionsData?.length);
+      
+      setDataFetched(true);
+
+    } catch (error) {
+      console.error('Error fetching test data:', error);
+      setError('Failed to load test data');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [testId, user, dataFetched]);
+
+  // Effect for initial data fetching - only runs once
   useEffect(() => {
-    if (!testId || !user) return;
-
-    const fetchTestData = async () => {
-      try {
-        setIsLoading(true);
-        
-        // Check for existing progress
-        const existingProgress = restoreProgress();
-        if (existingProgress && Object.keys(existingProgress.answers).length > 0) {
-          setShowRestoreDialog(true);
-        }
-
-        // Fetch test type
-        const { data: testTypeData, error: testTypeError } = await supabase
-          .from('test_types')
-          .select('*')
-          .eq('id', testId)
-          .single();
-
-        if (testTypeError) throw testTypeError;
-        setTestType(testTypeData);
-
-        // Fetch questions
-        const { data: questionsData, error: questionsError } = await supabase
-          .from('test_questions')
-          .select('*')
-          .eq('test_type_id', testId)
-          .order('question_order');
-
-        if (questionsError) throw questionsError;
-        setQuestions(questionsData || []);
-
-      } catch (error) {
-        console.error('Error fetching test data:', error);
-        setError('Failed to load test data');
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     fetchTestData();
-  }, [testId, user, restoreProgress]);
+  }, [fetchTestData]);
 
-  const handleRestoreProgress = async (restore: boolean) => {
+  // Effect for checking saved progress - only after data is loaded and progress hook is initialized
+  useEffect(() => {
+    if (!isInitialized || !dataFetched || showRestoreDialog) return;
+
+    const existingProgress = restoreProgress();
+    if (existingProgress && Object.keys(existingProgress.answers).length > 0) {
+      console.log('Found existing progress:', existingProgress);
+      setShowRestoreDialog(true);
+    }
+  }, [isInitialized, dataFetched, restoreProgress, showRestoreDialog]);
+
+  const handleRestoreProgress = useCallback(async (restore: boolean) => {
     if (restore) {
       const progress = restoreProgress();
       if (progress && progress.answers) {
         setAnswers(progress.answers);
         setCurrentQuestionIndex(progress.currentQuestionIndex || 0);
+        console.log('Progress restored:', progress);
       }
     }
     setShowRestoreDialog(false);
     setHasStarted(true);
-  };
+  }, [restoreProgress]);
 
-  const handleAnswer = (answerIndex: number) => {
+  const handleAnswer = useCallback((answerIndex: number) => {
     const questionOrder = questions[currentQuestionIndex]?.question_order;
     if (questionOrder) {
       const newAnswers = { ...answers, [questionOrder]: answerIndex };
@@ -128,25 +143,25 @@ const TestRunner = () => {
       // Save progress
       saveProgress(currentQuestionIndex, newAnswers);
     }
-  };
+  }, [questions, currentQuestionIndex, answers, saveProgress]);
 
-  const handleNext = () => {
+  const handleNext = useCallback(() => {
     if (currentQuestionIndex < questions.length - 1) {
       const nextIndex = currentQuestionIndex + 1;
       setCurrentQuestionIndex(nextIndex);
       saveProgress(nextIndex, answers);
     }
-  };
+  }, [currentQuestionIndex, questions.length, answers, saveProgress]);
 
-  const handlePrevious = () => {
+  const handlePrevious = useCallback(() => {
     if (currentQuestionIndex > 0) {
       const prevIndex = currentQuestionIndex - 1;
       setCurrentQuestionIndex(prevIndex);
       saveProgress(prevIndex, answers);
     }
-  };
+  }, [currentQuestionIndex, answers, saveProgress]);
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     if (!testId || !user) return;
     
     setIsSubmitting(true);
@@ -162,14 +177,21 @@ const TestRunner = () => {
     } finally {
       setIsSubmitting(false);
     }
-  };
+  }, [testId, user, answers, sessionId, submitTest, clearProgress, navigate]);
 
-  const currentQuestion = questions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
-  const isComplete = Object.keys(answers).length === questions.length;
+  const currentQuestion = useMemo(() => questions[currentQuestionIndex], [questions, currentQuestionIndex]);
+  const progress = useMemo(() => ((currentQuestionIndex + 1) / questions.length) * 100, [currentQuestionIndex, questions.length]);
+  const isComplete = useMemo(() => Object.keys(answers).length === questions.length, [answers, questions.length]);
 
   if (isLoading) {
-    return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p>Loading test...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
@@ -186,7 +208,7 @@ const TestRunner = () => {
     return (
       <TestErrorScreen 
         title="Test Not Found" 
-        message="Test not found" 
+        message="Test data could not be loaded" 
         onReturnToTests={() => navigate('/tests')} 
       />
     );
