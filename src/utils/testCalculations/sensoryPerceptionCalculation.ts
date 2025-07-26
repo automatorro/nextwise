@@ -65,25 +65,26 @@ export const calculateSensoryPerceptionScore = (answers: Record<string, number>)
     normalizedScores[a[0] as keyof typeof normalizedScores] > normalizedScores[b[0] as keyof typeof normalizedScores] ? a : b
   )[0];
   
-  // Interpretarea generală
+  // Interpretarea generală bazată pe scorul overall
   let interpretation: string;
   if (overall >= 86) {
-    interpretation = 'Abilități perceptuale excepționale - Acuitate senzorială superioară cu potențial pentru cariere specializate';
+    interpretation = 'Abilități perceptuale excepționale - Acuitate senzorială superioară cu potențial pentru cariere specializate în domenii care necesită precizie perceptuală ridicată.';
   } else if (overall >= 66) {
-    interpretation = 'Abilități perceptuale ridicate - Bună procesare senzorială cu performanțe peste medie';
+    interpretation = 'Abilități perceptuale ridicate - Bună procesare senzorială cu performanțe peste medie în majoritatea domeniilor care necesită atenție la detalii.';
   } else if (overall >= 46) {
-    interpretation = 'Abilități perceptuale moderate - Funcționare normală cu oportunități de îmbunătățire';
+    interpretation = 'Abilități perceptuale moderate - Funcționare normală cu oportunități de îmbunătățire prin antrenament specific și practică țintită.';
   } else {
-    interpretation = 'Abilități perceptuale în dezvoltare - Necesită atenție și antrenament specialized';
+    interpretation = 'Abilități perceptuale în dezvoltare - Necesită atenție și antrenament specializat pentru îmbunătățirea performanțelor în sarcini perceptuale complexe.';
   }
   
-  // Aplicații profesionale bazate pe scorul general
+  // Aplicații profesionale bazate pe scorul general și abilitatea dominantă
   const professionalApplications = getProfessionalApplications(overall, dominantAbility);
   
   console.log('Sensory Perception calculated scores:', {
     overall,
     normalizedScores,
     dominantAbility,
+    interpretation,
     professionalApplications
   });
   
@@ -119,34 +120,40 @@ const getProfessionalApplications = (overallScore: number, dominantAbility: stri
       'Fotografie și cinematografie',
       'Design de interface (UI/UX)',
       'Radiologie și imagistică medicală',
-      'Controlul calității vizuale'
+      'Controlul calității vizuale',
+      'Arhitectură și design interior',
+      'Grafică și publicitate'
     ],
     procesare_auditiva: [
       'Inginerie audio și muzică',
       'Interpretariat și traduceri',
       'Logopedia și audiologie',
-      'Securitate și supraveghere'
+      'Securitate și supraveghere',
+      'Radio și televiziune',
+      'Acustică și sunet'
     ],
     integrare_multimodala: [
       'Pilotaj și transport',
       'Chirurgie și proceduri medicale',
       'Realitate virtuală și gaming',
-      'Cercetare și dezvoltare'
+      'Cercetare și dezvoltare',
+      'Robotică și automatizare',
+      'Ergonomie și factori umani'
     ],
     atentie_perceptuala: [
       'Controlul traficului aerian',
       'Analiză de date și cercetare',
       'Securitate și investigații',
-      'Educație și training'
+      'Educație și training',
+      'Monitorizare și supraveghere',
+      'Controlul proceselor industriale'
     ]
   };
   
   if (overallScore >= 66) {
-    return [
-      ...baseApplications,
-      ...specificApplications[dominantAbility as keyof typeof specificApplications] || []
-    ].slice(0, 6);
+    const specific = specificApplications[dominantAbility as keyof typeof specificApplications] || [];
+    return [...baseApplications, ...specific].slice(0, 8);
   }
   
-  return baseApplications.slice(0, 4);
+  return baseApplications;
 };
