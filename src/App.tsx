@@ -63,7 +63,7 @@ function App() {
                     <CareerPaths />
                   </ProtectedRoute>
                 } />
-                <Route path="/career-paths/plan/:planId" element={
+                <Route path="/career-paths/:planId" element={
                   <ProtectedRoute>
                     <CareerPaths />
                   </ProtectedRoute>
