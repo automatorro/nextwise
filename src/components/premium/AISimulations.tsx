@@ -9,7 +9,7 @@ import { Loader2, Play, Users, Target, Clock } from 'lucide-react';
 
 const AISimulations = () => {
   const { t } = useLanguage();
-  const { simulations, startSimulation, isLoading } = useAISimulations();
+  const { simulations = [], startSimulation, isLoading } = useAISimulations();
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
 
   const scenarios = [
@@ -115,7 +115,7 @@ const AISimulations = () => {
         ))}
       </div>
 
-      {simulations.length > 0 && (
+      {simulations && simulations.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle>{t('premiumFeatures.simulations.recentSimulations')}</CardTitle>
@@ -126,18 +126,18 @@ const AISimulations = () => {
                 <div key={simulation.id} className="border rounded-lg p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="font-medium">{simulation.scenario_type}</h3>
+                      <h3 className="font-medium">{simulation.simulation_type}</h3>
                       <p className="text-sm text-muted-foreground">
                         {new Date(simulation.created_at).toLocaleDateString()}
                       </p>
                     </div>
-                    <Badge variant={simulation.status === 'completed' ? 'default' : 'secondary'}>
-                      {simulation.status}
+                    <Badge variant={simulation.is_completed ? 'default' : 'secondary'}>
+                      {simulation.is_completed ? 'Completed' : 'In Progress'}
                     </Badge>
                   </div>
-                  {simulation.feedback && (
+                  {simulation.ai_feedback && (
                     <div className="mt-2 p-3 bg-muted rounded-md">
-                      <p className="text-sm">{simulation.feedback}</p>
+                      <p className="text-sm">{simulation.ai_feedback}</p>
                     </div>
                   )}
                 </div>

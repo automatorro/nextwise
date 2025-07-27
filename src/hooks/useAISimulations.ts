@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -23,6 +22,7 @@ interface AISimulation {
 
 export const useAISimulations = () => {
   const [activeSimulation, setActiveSimulation] = useState<AISimulation | null>(null);
+  const [simulations, setSimulations] = useState<AISimulation[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
@@ -51,6 +51,29 @@ export const useAISimulations = () => {
     } catch (error) {
       console.error('Error fetching active simulation:', error);
       setError('Eroare la încărcarea simulării');
+    }
+  };
+
+  const fetchCompletedSimulations = async () => {
+    if (!user) return;
+
+    try {
+      const { data, error } = await supabase
+        .from('ai_simulations')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('is_completed', true)
+        .order('completed_at', { ascending: false })
+        .limit(10);
+
+      if (error) {
+        console.error('Error fetching completed simulations:', error);
+        return;
+      }
+
+      setSimulations(data as AISimulation[] || []);
+    } catch (error) {
+      console.error('Error fetching completed simulations:', error);
     }
   };
 
@@ -225,15 +248,20 @@ export const useAISimulations = () => {
 
   useEffect(() => {
     fetchActiveSimulation();
+    fetchCompletedSimulations();
   }, [user]);
 
   return {
     activeSimulation,
+    simulations,
     startSimulation,
     sendResponse,
     clearActiveSimulation,
     isLoading,
     error,
-    refetch: fetchActiveSimulation
+    refetch: () => {
+      fetchActiveSimulation();
+      fetchCompletedSimulations();
+    }
   };
 };
