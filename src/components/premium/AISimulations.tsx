@@ -15,27 +15,35 @@ const AISimulations = () => {
   const scenarios = [
     {
       id: 'interview',
-      title: t('premiumFeatures.simulations.scenarios.interview.title'),
-      description: t('premiumFeatures.simulations.scenarios.interview.description'),
-      roles: ['Recruiter', 'Manager', 'Team_Member'],
+      title: t('premiumFeatures.simulations.job_interview') || 'Job Interview',
+      description: t('premiumFeatures.simulations.simulationDescription.job_interview') || 'Practice for a job interview in a safe environment',
+      roles: ['Recruiter', 'Manager', 'Team Member'],
       duration: '15-30 min',
       difficulty: 'Medium'
     },
     {
       id: 'negotiation',
-      title: t('premiumFeatures.simulations.scenarios.negotiation.title'),
-      description: t('premiumFeatures.simulations.scenarios.negotiation.description'),
-      roles: ['HR_Manager', 'Team_Lead', 'Client'],
+      title: t('premiumFeatures.simulations.salary_negotiation') || 'Salary Negotiation',
+      description: t('premiumFeatures.simulations.simulationDescription.salary_negotiation') || 'Develop your negotiation skills',
+      roles: ['HR Manager', 'Team Lead', 'Client'],
       duration: '20-40 min',
       difficulty: 'Hard'
     },
     {
       id: 'team_meeting',
-      title: t('premiumFeatures.simulations.scenarios.teamMeeting.title'),
-      description: t('premiumFeatures.simulations.scenarios.teamMeeting.description'),
-      roles: ['Manager', 'Team_Member', 'Stakeholder'],
+      title: t('premiumFeatures.simulations.team_conflict') || 'Team Conflict',
+      description: t('premiumFeatures.simulations.simulationDescription.team_conflict') || 'Learn to manage team conflicts',
+      roles: ['Manager', 'Team Member', 'Stakeholder'],
       duration: '10-20 min',
       difficulty: 'Easy'
+    },
+    {
+      id: 'management_promotion',
+      title: t('premiumFeatures.simulations.management_promotion') || 'Management Promotion',
+      description: t('premiumFeatures.simulations.simulationDescription.management_promotion') || 'Prepare for a management promotion',
+      roles: ['HR Manager', 'Senior Manager', 'Team Lead'],
+      duration: '25-35 min',
+      difficulty: 'Hard'
     }
   ];
 
@@ -57,10 +65,10 @@ const AISimulations = () => {
     <div className="space-y-6">
       <div className="text-center">
         <h2 className="text-2xl font-bold mb-2">{t('premiumFeatures.simulations.title')}</h2>
-        <p className="text-muted-foreground">{t('premiumFeatures.simulations.description')}</p>
+        <p className="text-muted-foreground">{t('premiumFeatures.simulations.subtitle')}</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
         {scenarios.map((scenario) => (
           <Card key={scenario.id} className="hover:shadow-lg transition-shadow">
             <CardHeader>
@@ -82,7 +90,7 @@ const AISimulations = () => {
                 <div className="flex flex-wrap gap-1">
                   {scenario.roles.map((role, index) => (
                     <Badge key={index} variant="secondary" className="text-xs">
-                      {role.replace('_', ' ')}
+                      {role}
                     </Badge>
                   ))}
                 </div>
@@ -108,7 +116,7 @@ const AISimulations = () => {
                 ) : (
                   <Play className="w-4 h-4 mr-2" />
                 )}
-                {t('premiumFeatures.simulations.startSimulation')}
+                {t('premiumFeatures.simulations.startSimulation') || 'Start Simulation'}
               </Button>
             </CardContent>
           </Card>
@@ -118,7 +126,7 @@ const AISimulations = () => {
       {simulations && simulations.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>{t('premiumFeatures.simulations.recentSimulations')}</CardTitle>
+            <CardTitle>{t('premiumFeatures.simulations.recentSimulations') || 'Recent Simulations'}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
