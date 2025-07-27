@@ -14,7 +14,7 @@ const AISimulations = () => {
 
   const scenarios = [
     {
-      id: 'interview',
+      id: 'job_interview',
       title: t('premiumFeatures.simulations.job_interview') || 'Job Interview',
       description: t('premiumFeatures.simulations.simulationDescription.job_interview') || 'Practice for a job interview in a safe environment',
       roles: ['Recruiter', 'Manager', 'Team Member'],
@@ -22,7 +22,7 @@ const AISimulations = () => {
       difficulty: 'Medium'
     },
     {
-      id: 'negotiation',
+      id: 'salary_negotiation',
       title: t('premiumFeatures.simulations.salary_negotiation') || 'Salary Negotiation',
       description: t('premiumFeatures.simulations.simulationDescription.salary_negotiation') || 'Develop your negotiation skills',
       roles: ['HR Manager', 'Team Lead', 'Client'],
@@ -30,7 +30,7 @@ const AISimulations = () => {
       difficulty: 'Hard'
     },
     {
-      id: 'team_meeting',
+      id: 'team_conflict',
       title: t('premiumFeatures.simulations.team_conflict') || 'Team Conflict',
       description: t('premiumFeatures.simulations.simulationDescription.team_conflict') || 'Learn to manage team conflicts',
       roles: ['Manager', 'Team Member', 'Stakeholder'],
@@ -126,7 +126,7 @@ const AISimulations = () => {
       {simulations && simulations.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle>{t('premiumFeatures.simulations.recentSimulations') || 'Recent Simulations'}</CardTitle>
+            <CardTitle>Simulări Recente</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
