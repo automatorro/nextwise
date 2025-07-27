@@ -27,11 +27,19 @@ export const useAISimulations = () => {
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
 
+  console.log('🔧 useAISimulations hook initialized');
+  console.log('👤 User:', user?.id);
+
   const fetchActiveSimulation = async () => {
-    if (!user) return;
+    if (!user) {
+      console.log('⚠️ No user found, skipping fetch');
+      return;
+    }
 
     try {
       setError(null);
+      console.log('🔄 Fetching active simulation...');
+      
       const { data, error } = await supabase
         .from('ai_simulations')
         .select('*')
@@ -42,22 +50,28 @@ export const useAISimulations = () => {
         .maybeSingle();
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching active simulation:', error);
+        console.error('❌ Error fetching active simulation:', error);
         setError('Eroare la încărcarea simulării');
         return;
       }
 
+      console.log('✅ Active simulation fetched:', data);
       setActiveSimulation(data as AISimulation);
     } catch (error) {
-      console.error('Error fetching active simulation:', error);
+      console.error('❌ Error fetching active simulation:', error);
       setError('Eroare la încărcarea simulării');
     }
   };
 
   const fetchCompletedSimulations = async () => {
-    if (!user) return;
+    if (!user) {
+      console.log('⚠️ No user found, skipping completed simulations fetch');
+      return;
+    }
 
     try {
+      console.log('🔄 Fetching completed simulations...');
+      
       const { data, error } = await supabase
         .from('ai_simulations')
         .select('*')
@@ -67,23 +81,31 @@ export const useAISimulations = () => {
         .limit(10);
 
       if (error) {
-        console.error('Error fetching completed simulations:', error);
+        console.error('❌ Error fetching completed simulations:', error);
         return;
       }
 
+      console.log('✅ Completed simulations fetched:', data);
       setSimulations(data as AISimulation[] || []);
     } catch (error) {
-      console.error('Error fetching completed simulations:', error);
+      console.error('❌ Error fetching completed simulations:', error);
     }
   };
 
   const startSimulation = async (simulationType: string) => {
-    if (!user) throw new Error('User not authenticated');
+    console.log('🚀 startSimulation called with type:', simulationType);
+    
+    if (!user) {
+      console.error('❌ User not authenticated');
+      throw new Error('User not authenticated');
+    }
 
     setIsLoading(true);
     setError(null);
     
     try {
+      console.log('🔄 Completing existing simulations...');
+      
       // Complete any existing active simulations
       await supabase
         .from('ai_simulations')
@@ -94,16 +116,22 @@ export const useAISimulations = () => {
         .eq('user_id', user.id)
         .eq('is_completed', false);
 
+      console.log('📞 Calling start-simulation function...');
+      
       // Generate initial AI message
       const { data: initialMessage, error: messageError } = await supabase.functions.invoke('start-simulation', {
         body: { simulationType }
       });
 
       if (messageError) {
-        console.error('Error starting simulation:', messageError);
+        console.error('❌ Error starting simulation:', messageError);
         throw new Error('Eroare la pornirea simulării');
       }
 
+      console.log('✅ Initial message received:', initialMessage);
+
+      console.log('💾 Creating new simulation in database...');
+      
       // Create new simulation
       const { data, error } = await supabase
         .from('ai_simulations')
@@ -126,13 +154,15 @@ export const useAISimulations = () => {
         .single();
 
       if (error) {
-        console.error('Database error:', error);
+        console.error('❌ Database error:', error);
         throw new Error('Eroare la crearea simulării');
       }
 
+      console.log('✅ Simulation created successfully:', data);
       setActiveSimulation(data as AISimulation);
+      
     } catch (error) {
-      console.error('Error starting simulation:', error);
+      console.error('❌ Error starting simulation:', error);
       setError(error instanceof Error ? error.message : 'Eroare necunoscută');
       throw error;
     } finally {
@@ -242,14 +272,18 @@ export const useAISimulations = () => {
   };
 
   const clearActiveSimulation = () => {
+    console.log('🧹 Clearing active simulation');
     setActiveSimulation(null);
     setError(null);
   };
 
   useEffect(() => {
+    console.log('🔄 useEffect triggered, fetching data...');
     fetchActiveSimulation();
     fetchCompletedSimulations();
   }, [user]);
+
+  console.log('📊 Hook returning:', { activeSimulation, simulations, isLoading, error });
 
   return {
     activeSimulation,

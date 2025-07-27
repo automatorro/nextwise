@@ -9,7 +9,7 @@ import { Loader2, Play, Users, Target, Clock } from 'lucide-react';
 
 const AISimulations = () => {
   const { t } = useLanguage();
-  const { simulations = [], startSimulation, isLoading } = useAISimulations();
+  const { simulations = [], startSimulation, isLoading, error } = useAISimulations();
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
 
   const scenarios = [
@@ -48,8 +48,18 @@ const AISimulations = () => {
   ];
 
   const handleStartSimulation = async (scenarioId: string) => {
+    console.log('🚀 Starting simulation with ID:', scenarioId);
+    console.log('📊 Hook state - isLoading:', isLoading, 'error:', error);
+    
     setSelectedScenario(scenarioId);
-    await startSimulation(scenarioId);
+    
+    try {
+      console.log('🔄 Calling startSimulation...');
+      await startSimulation(scenarioId);
+      console.log('✅ Simulation started successfully');
+    } catch (err) {
+      console.error('❌ Error starting simulation:', err);
+    }
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -61,11 +71,14 @@ const AISimulations = () => {
     }
   };
 
+  console.log('🎯 AISimulations component rendered');
+  console.log('📋 Hook data:', { simulations, isLoading, error });
+
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">{t('premiumFeatures.simulations.title')}</h2>
-        <p className="text-muted-foreground">{t('premiumFeatures.simulations.subtitle')}</p>
+        <h2 className="text-2xl font-bold mb-2">{t('premiumFeatures.simulations.title') || 'AI Simulations'}</h2>
+        <p className="text-muted-foreground">{t('premiumFeatures.simulations.subtitle') || 'Practice professional scenarios with AI'}</p>
       </div>
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
@@ -122,6 +135,14 @@ const AISimulations = () => {
           </Card>
         ))}
       </div>
+
+      {error && (
+        <Card className="border-red-200 bg-red-50">
+          <CardContent className="pt-6">
+            <p className="text-red-600 text-sm">{error}</p>
+          </CardContent>
+        </Card>
+      )}
 
       {simulations && simulations.length > 0 && (
         <Card>
