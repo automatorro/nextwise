@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -104,17 +105,28 @@ export const useAISimulations = () => {
     setError(null);
     
     try {
-      console.log('🔄 Completing existing simulations...');
+      console.log('🔄 Force completing ALL existing simulations...');
       
-      // Complete any existing active simulations
-      await supabase
+      // Force complete ALL existing simulations for this user
+      const { error: completeError } = await supabase
         .from('ai_simulations')
         .update({ 
           is_completed: true,
+          completed_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
         .eq('user_id', user.id)
         .eq('is_completed', false);
+
+      if (completeError) {
+        console.error('❌ Error completing existing simulations:', completeError);
+        throw new Error('Eroare la completarea simulărilor existente');
+      }
+
+      console.log('✅ All existing simulations completed');
+
+      // Clear the active simulation immediately
+      setActiveSimulation(null);
 
       console.log('📞 Calling start-simulation function...');
       
@@ -160,6 +172,9 @@ export const useAISimulations = () => {
 
       console.log('✅ Simulation created successfully:', data);
       setActiveSimulation(data as AISimulation);
+      
+      // Refresh the completed simulations list
+      await fetchCompletedSimulations();
       
     } catch (error) {
       console.error('❌ Error starting simulation:', error);
