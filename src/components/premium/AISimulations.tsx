@@ -1,342 +1,151 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAISimulations } from '@/hooks/useAISimulations';
-import { useProgressTracking } from '@/hooks/useProgressTracking';
-import { MessageSquare, User, Bot, BarChart3, Play, Send, Target, ArrowLeft, AlertCircle } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { Loader2, Play, Users, Target, Clock } from 'lucide-react';
 
 const AISimulations = () => {
   const { t } = useLanguage();
-  const { toast } = useToast();
-  const { activeSimulation, startSimulation, sendResponse, clearActiveSimulation, isLoading, error } = useAISimulations();
-  const { trackProgress } = useProgressTracking();
-  const [userResponse, setUserResponse] = useState('');
-  const [showSimulationList, setShowSimulationList] = useState(!activeSimulation);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { simulations, startSimulation, isLoading } = useAISimulations();
+  const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
 
-  const simulationTypes = [
+  const scenarios = [
     {
-      id: 'job_interview',
-      icon: '💼',
-      color: 'bg-blue-500',
-      title: 'Interviu de Angajare',
-      description: 'Exersează răspunsurile la întrebări comune de interviu și îmbunătățește-ți prezentarea',
-      role: 'Intervievator'
+      id: 'interview',
+      title: t('premiumFeatures.simulations.scenarios.interview.title'),
+      description: t('premiumFeatures.simulations.scenarios.interview.description'),
+      roles: ['Recruiter', 'Manager', 'Team_Member'],
+      duration: '15-30 min',
+      difficulty: 'Medium'
     },
     {
-      id: 'management_promotion',
-      icon: '📈',
-      color: 'bg-purple-500',
-      title: 'Promovare în Management',
-      description: 'Pregătește-te pentru roluri de leadership și discuții despre responsabilități manageriale',
-      role: 'Manager Senior'
+      id: 'negotiation',
+      title: t('premiumFeatures.simulations.scenarios.negotiation.title'),
+      description: t('premiumFeatures.simulations.scenarios.negotiation.description'),
+      roles: ['HR_Manager', 'Team_Lead', 'Client'],
+      duration: '20-40 min',
+      difficulty: 'Hard'
     },
     {
-      id: 'team_conflict',
-      icon: '⚖️',
-      color: 'bg-orange-500',
-      title: 'Conflict în Echipă',
-      description: 'Învață să gestionezi conflictele interpersonale și să comunici eficient în situații tensionate',
-      role: 'Coleg de Echipă'
-    },
-    {
-      id: 'salary_negotiation',
-      icon: '💰',
-      color: 'bg-green-500',
-      title: 'Negociere Salariu',
-      description: 'Exersează tehnicile de negociere și argumentarea pentru măriri salariale',
-      role: 'Manager HR'
+      id: 'team_meeting',
+      title: t('premiumFeatures.simulations.scenarios.teamMeeting.title'),
+      description: t('premiumFeatures.simulations.scenarios.teamMeeting.description'),
+      roles: ['Manager', 'Team_Member', 'Stakeholder'],
+      duration: '10-20 min',
+      difficulty: 'Easy'
     }
   ];
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const handleStartSimulation = async (scenarioId: string) => {
+    setSelectedScenario(scenarioId);
+    await startSimulation(scenarioId);
   };
 
-  useEffect(() => {
-    scrollToBottom();
-  }, [activeSimulation?.conversation_log]);
-
-  useEffect(() => {
-    setShowSimulationList(!activeSimulation);
-  }, [activeSimulation]);
-
-  const handleStartSimulation = async (simulationType: string) => {
-    try {
-      await startSimulation(simulationType);
-      setShowSimulationList(false);
-      toast({
-        title: t('common.success'),
-        description: 'Simularea a început cu succes!',
-      });
-    } catch (error) {
-      console.error('Error starting simulation:', error);
-      toast({
-        title: t('common.error'),
-        description: error instanceof Error ? error.message : 'Eroare la pornirea simulării',
-        variant: 'destructive',
-      });
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'Easy': return 'bg-green-100 text-green-800';
+      case 'Medium': return 'bg-yellow-100 text-yellow-800';
+      case 'Hard': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
     }
   };
-
-  const handleSendResponse = async () => {
-    if (!userResponse.trim() || !activeSimulation) return;
-    
-    try {
-      await sendResponse(userResponse);
-      setUserResponse('');
-      
-      // Track progress
-      await trackProgress({
-        steps_completed: 1,
-        achievement_description: `Participated in ${activeSimulation.simulation_type} simulation`
-      });
-      
-      toast({
-        title: t('common.success'),
-        description: 'Răspunsul a fost trimis cu succes!',
-      });
-    } catch (error) {
-      console.error('Error sending response:', error);
-      toast({
-        title: t('common.error'),
-        description: error instanceof Error ? error.message : 'Eroare la trimiterea răspunsului',
-        variant: 'destructive',
-      });
-    }
-  };
-
-  const handleBackToSimulations = () => {
-    clearActiveSimulation();
-    setShowSimulationList(true);
-    setUserResponse('');
-  };
-
-  const getSimulationConfig = (type: string) => {
-    return simulationTypes.find(sim => sim.id === type);
-  };
-
-  if (isLoading && !activeSimulation) {
-    return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-      </div>
-    );
-  }
-
-  if (activeSimulation && !showSimulationList) {
-    const config = getSimulationConfig(activeSimulation.simulation_type);
-    const isCompleted = activeSimulation.is_completed;
-
-    return (
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleBackToSimulations}
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              {t('premiumFeatures.simulations.backToSimulations')}
-            </Button>
-          </div>
-          {isCompleted && (
-            <Badge variant="secondary" className="bg-green-100 text-green-800">
-              {t('premiumFeatures.simulations.completed')}
-            </Badge>
-          )}
-        </div>
-
-        <div>
-          <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
-            <span className="text-3xl">{config?.icon}</span>
-            {config?.title}
-          </h2>
-          <p className="text-muted-foreground flex items-center gap-2">
-            <Target className="w-4 h-4" />
-            {t('premiumFeatures.simulations.aiRole')}: {config?.role}
-          </p>
-        </div>
-
-        {error && (
-          <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
-            <AlertDescription>{error}</AlertDescription>
-          </Alert>
-        )}
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <MessageSquare className="w-5 h-5" />
-              {t('premiumFeatures.simulations.conversation')}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4 max-h-96 overflow-y-auto bg-muted/20 p-4 rounded-lg">
-              {activeSimulation.conversation_log && activeSimulation.conversation_log.length > 0 ? (
-                activeSimulation.conversation_log.map((message: any, index: number) => (
-                  <div 
-                    key={index}
-                    className={`flex gap-3 ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div className={`flex gap-3 max-w-[85%] ${message.sender === 'user' ? 'flex-row-reverse' : ''}`}>
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                        message.sender === 'user' ? 'bg-primary text-primary-foreground' : 'bg-blue-500 text-white'
-                      }`}>
-                        {message.sender === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-                      </div>
-                      <div className={`p-4 rounded-lg ${
-                        message.sender === 'user' 
-                          ? 'bg-primary text-primary-foreground' 
-                          : 'bg-white border shadow-sm'
-                      }`}>
-                        <p className="text-sm leading-relaxed">{message.content}</p>
-                        <p className="text-xs opacity-70 mt-2">
-                          {message.timestamp ? new Date(message.timestamp).toLocaleTimeString('ro-RO', {
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          }) : ''}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8">
-                  <Bot className="w-12 h-12 mx-auto text-muted-foreground mb-4" />
-                  <p className="text-muted-foreground">Simularea se încarcă...</p>
-                </div>
-              )}
-              <div ref={messagesEndRef} />
-            </div>
-
-            {!isCompleted && (
-              <div className="mt-4 space-y-3">
-                <Textarea
-                  id="user-response"
-                  name="userResponse"
-                  value={userResponse}
-                  onChange={(e) => setUserResponse(e.target.value)}
-                  placeholder="Scrie răspunsul tău aici..."
-                  className="min-h-[100px]"
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter' && !e.shiftKey) {
-                      e.preventDefault();
-                      handleSendResponse();
-                    }
-                  }}
-                />
-                <Button 
-                  onClick={handleSendResponse}
-                  disabled={!userResponse.trim() || isLoading}
-                  className="w-full"
-                >
-                  <Send className="w-4 h-4 mr-2" />
-                  {isLoading ? 'Se trimite...' : t('premiumFeatures.simulations.sendResponse')}
-                </Button>
-              </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {isCompleted && activeSimulation.ai_feedback && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <BarChart3 className="w-5 h-5" />
-                {t('premiumFeatures.simulations.feedback')}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h4 className="font-medium mb-2 text-blue-900">Feedback-ul AI</h4>
-                <p className="text-blue-800">{activeSimulation.ai_feedback}</p>
-              </div>
-
-              <div>
-                <h4 className="font-medium mb-4">Scorurile Tale</h4>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                  {[
-                    { key: 'clarity', label: t('premiumFeatures.simulations.clarity'), score: activeSimulation.clarity_score },
-                    { key: 'empathy', label: t('premiumFeatures.simulations.empathy'), score: activeSimulation.empathy_score },
-                    { key: 'conviction', label: t('premiumFeatures.simulations.conviction'), score: activeSimulation.conviction_score },
-                    { key: 'structure', label: t('premiumFeatures.simulations.structure'), score: activeSimulation.structure_score },
-                  ].map(({ key, label, score }) => (
-                    <div key={key} className="text-center p-3 bg-muted rounded-lg">
-                      <div className="text-2xl font-bold text-primary">{score || 0}/10</div>
-                      <div className="text-sm text-muted-foreground">{label}</div>
-                    </div>
-                  ))}
-                </div>
-                
-                <div className="text-center p-4 bg-primary/10 rounded-lg">
-                  <div className="text-3xl font-bold text-primary">{activeSimulation.overall_score || 0}/100</div>
-                  <div className="text-sm text-muted-foreground">{t('premiumFeatures.simulations.overallScore')}</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
-      <div>
-        <h2 className="text-2xl font-bold text-foreground">{t('premiumFeatures.simulations.title')}</h2>
-        <p className="text-muted-foreground">
-          {t('premiumFeatures.simulations.description')}
-        </p>
+      <div className="text-center">
+        <h2 className="text-2xl font-bold mb-2">{t('premiumFeatures.simulations.title')}</h2>
+        <p className="text-muted-foreground">{t('premiumFeatures.simulations.description')}</p>
       </div>
 
-      {error && (
-        <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      <div className="grid gap-6 md:grid-cols-2">
-        {simulationTypes.map((simulation) => (
-          <Card key={simulation.id} className="cursor-pointer hover:shadow-lg transition-all duration-200">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {scenarios.map((scenario) => (
+          <Card key={scenario.id} className="hover:shadow-lg transition-shadow">
             <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <div className={`w-12 h-12 rounded-full ${simulation.color} flex items-center justify-center text-white text-xl`}>
-                  {simulation.icon}
-                </div>
-                {simulation.title}
+              <CardTitle className="flex items-center gap-2">
+                <Target className="w-5 h-5" />
+                {scenario.title}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {simulation.description}
+              <p className="text-sm text-muted-foreground">
+                {scenario.description}
               </p>
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Bot className="w-4 h-4" />
-                {t('premiumFeatures.simulations.aiRole')}: {simulation.role}
+              
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Users className="w-4 h-4 text-blue-500" />
+                  <span className="text-sm font-medium">Roles:</span>
+                </div>
+                <div className="flex flex-wrap gap-1">
+                  {scenario.roles.map((role, index) => (
+                    <Badge key={index} variant="secondary" className="text-xs">
+                      {role.replace('_', ' ')}
+                    </Badge>
+                  ))}
+                </div>
               </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-gray-500" />
+                  <span className="text-sm text-muted-foreground">{scenario.duration}</span>
+                </div>
+                <Badge className={`text-xs ${getDifficultyColor(scenario.difficulty)}`}>
+                  {scenario.difficulty}
+                </Badge>
+              </div>
+
               <Button 
-                onClick={() => handleStartSimulation(simulation.id)}
-                disabled={isLoading}
+                onClick={() => handleStartSimulation(scenario.id)}
+                disabled={isLoading || selectedScenario === scenario.id}
                 className="w-full"
               >
-                <Play className="w-4 h-4 mr-2" />
-                {isLoading ? t('common.loading') : t('premiumFeatures.simulations.startSimulation')}
+                {isLoading && selectedScenario === scenario.id ? (
+                  <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                ) : (
+                  <Play className="w-4 h-4 mr-2" />
+                )}
+                {t('premiumFeatures.simulations.startSimulation')}
               </Button>
             </CardContent>
           </Card>
         ))}
       </div>
+
+      {simulations.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('premiumFeatures.simulations.recentSimulations')}</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              {simulations.map((simulation) => (
+                <div key={simulation.id} className="border rounded-lg p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-medium">{simulation.scenario_type}</h3>
+                      <p className="text-sm text-muted-foreground">
+                        {new Date(simulation.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Badge variant={simulation.status === 'completed' ? 'default' : 'secondary'}>
+                      {simulation.status}
+                    </Badge>
+                  </div>
+                  {simulation.feedback && (
+                    <div className="mt-2 p-3 bg-muted rounded-md">
+                      <p className="text-sm">{simulation.feedback}</p>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
