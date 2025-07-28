@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -62,6 +61,12 @@ function App() {
                   </ProtectedRoute>
                 } />
                 <Route path="/career-paths" element={
+                  <ProtectedRoute>
+                    <CareerPaths />
+                  </ProtectedRoute>
+                } />
+                {/* RUTA ADĂUGATĂ AICI, ÎNAINTE DE CEA DINAMICĂ */}
+                <Route path="/career-paths/simulations" element={
                   <ProtectedRoute>
                     <CareerPaths />
                   </ProtectedRoute>
