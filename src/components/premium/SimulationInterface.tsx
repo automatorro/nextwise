@@ -43,6 +43,34 @@ const SimulationInterface = () => {
     }
   };
 
+  // Function to translate simulation types
+  const getSimulationTitle = (simulationType: string) => {
+    const simulationTitles = {
+      ro: {
+        job_interview: 'Interviu de Angajare',
+        presentation: 'Prezentare',
+        negotiation: 'Negociere',
+        leadership: 'Leadership',
+        teamwork: 'Lucru în Echipă',
+        conflict_resolution: 'Rezolvarea Conflictelor',
+        sales_pitch: 'Prezentare Comercială',
+        performance_review: 'Evaluarea Performanței'
+      },
+      en: {
+        job_interview: 'Job Interview',
+        presentation: 'Presentation',
+        negotiation: 'Negotiation',
+        leadership: 'Leadership',
+        teamwork: 'Teamwork',
+        conflict_resolution: 'Conflict Resolution',
+        sales_pitch: 'Sales Pitch',
+        performance_review: 'Performance Review'
+      }
+    };
+
+    return simulationTitles[language][simulationType] || simulationType;
+  };
+
   // Translation texts
   const texts = {
     ro: {
@@ -118,7 +146,7 @@ const SimulationInterface = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              <span>{t.simulation}: {activeSimulation.simulation_type}</span>
+              <span>{t.simulation}: {getSimulationTitle(activeSimulation.simulation_type)}</span>
               <Badge variant="secondary">
                 {activeSimulation.is_completed ? t.completed : t.inProgress}
               </Badge>

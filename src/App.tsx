@@ -19,6 +19,8 @@ import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import SimulationInterface from "./components/premium/SimulationInterface";
+import HomeNavigation from "./components/home/HomeNavigation";
+import Footer from "./components/home/Footer";
 
 const queryClient = new QueryClient();
 
@@ -71,7 +73,13 @@ function App() {
                 } />
                 <Route path="/simulation/:simulationId" element={
                   <ProtectedRoute>
-                    <SimulationInterface />
+                    <div className="min-h-screen bg-gray-50">
+                      <HomeNavigation />
+                      <div className="pt-20">
+                        <SimulationInterface />
+                      </div>
+                      <Footer />
+                    </div>
                   </ProtectedRoute>
                 } />
                 <Route path="/subscription" element={
