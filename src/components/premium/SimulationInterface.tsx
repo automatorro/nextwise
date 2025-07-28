@@ -68,7 +68,7 @@ const SimulationInterface = () => {
       }
     };
 
-    return simulationTitles[language][simulationType] || simulationType;
+    return simulationTitles[language]?.[simulationType] || simulationType;
   };
 
   // Translation texts
@@ -120,7 +120,7 @@ const SimulationInterface = () => {
               <p className="text-muted-foreground mb-4">
                 {t.noActiveSimulation}
               </p>
-              <Button onClick={() => navigate('/career-paths')}>
+              <Button onClick={() => navigate('/career-paths/simulations')}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 {t.backToSimulations}
               </Button>
@@ -136,7 +136,7 @@ const SimulationInterface = () => {
       <div className="mb-4">
         <Button
           variant="ghost"
-          onClick={() => navigate('/career-paths')}
+          onClick={() => navigate('/career-paths/simulations')}
           className="mb-4"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
