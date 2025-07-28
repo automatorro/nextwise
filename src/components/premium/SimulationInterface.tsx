@@ -12,7 +12,7 @@ import { Loader2, Send, ArrowLeft, User, Bot } from 'lucide-react';
 const SimulationInterface = () => {
   const { simulationId } = useParams<{ simulationId: string }>();
   const navigate = useNavigate();
-  const { t } = useLanguage();
+  const { language } = useLanguage();
   const { activeSimulation, sendResponse, isLoading, error } = useAISimulations();
   const [userInput, setUserInput] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -43,6 +43,46 @@ const SimulationInterface = () => {
     }
   };
 
+  // Translation texts
+  const texts = {
+    ro: {
+      simulation: 'Simulare',
+      completed: 'Completată',
+      inProgress: 'În desfășurare',
+      backToSimulations: 'Înapoi la Simulări',
+      conversation: 'Conversație',
+      you: 'Tu',
+      ai: 'AI',
+      responseHere: 'Scrie răspunsul tău aici...',
+      sendResponse: 'Trimite Răspuns',
+      finalFeedback: 'Feedback Final',
+      clarity: 'Claritate',
+      empathy: 'Empatie',
+      conviction: 'Convingere',
+      structure: 'Structură',
+      noActiveSimulation: 'Nu s-a găsit nicio simulare activă.'
+    },
+    en: {
+      simulation: 'Simulation',
+      completed: 'Completed',
+      inProgress: 'In Progress',
+      backToSimulations: 'Back to Simulations',
+      conversation: 'Conversation',
+      you: 'You',
+      ai: 'AI',
+      responseHere: 'Write your response here...',
+      sendResponse: 'Send Response',
+      finalFeedback: 'Final Feedback',
+      clarity: 'Clarity',
+      empathy: 'Empathy',
+      conviction: 'Conviction',
+      structure: 'Structure',
+      noActiveSimulation: 'No active simulation found.'
+    }
+  };
+
+  const t = texts[language];
+
   if (!activeSimulation) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -50,11 +90,11 @@ const SimulationInterface = () => {
           <CardContent className="pt-6">
             <div className="text-center">
               <p className="text-muted-foreground mb-4">
-                Nu s-a găsit nicio simulare activă.
+                {t.noActiveSimulation}
               </p>
               <Button onClick={() => navigate('/career-paths')}>
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Înapoi la Simulări
+                {t.backToSimulations}
               </Button>
             </div>
           </CardContent>
@@ -72,15 +112,15 @@ const SimulationInterface = () => {
           className="mb-4"
         >
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Înapoi la Simulări
+          {t.backToSimulations}
         </Button>
         
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              <span>Simulare: {activeSimulation.simulation_type}</span>
+              <span>{t.simulation}: {activeSimulation.simulation_type}</span>
               <Badge variant="secondary">
-                {activeSimulation.is_completed ? 'Completată' : 'În desfășurare'}
+                {activeSimulation.is_completed ? t.completed : t.inProgress}
               </Badge>
             </CardTitle>
           </CardHeader>
@@ -89,7 +129,7 @@ const SimulationInterface = () => {
 
       <Card className="mb-4">
         <CardHeader>
-          <CardTitle>Conversație</CardTitle>
+          <CardTitle>{t.conversation}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4 max-h-96 overflow-y-auto">
@@ -112,7 +152,7 @@ const SimulationInterface = () => {
                       <Bot className="w-4 h-4" />
                     )}
                     <span className="text-sm font-medium">
-                      {message.sender === 'user' ? 'Tu' : 'AI'}
+                      {message.sender === 'user' ? t.you : t.ai}
                     </span>
                   </div>
                   <p className="text-sm whitespace-pre-wrap">{message.content}</p>
@@ -132,7 +172,7 @@ const SimulationInterface = () => {
                 value={userInput}
                 onChange={(e) => setUserInput(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Scrie răspunsul tău aici..."
+                placeholder={t.responseHere}
                 className="min-h-[100px]"
                 disabled={isLoading}
               />
@@ -146,7 +186,7 @@ const SimulationInterface = () => {
                   ) : (
                     <Send className="w-4 h-4 mr-2" />
                   )}
-                  Trimite Răspuns
+                  {t.sendResponse}
                 </Button>
               </div>
             </div>
@@ -157,7 +197,7 @@ const SimulationInterface = () => {
       {activeSimulation.is_completed && activeSimulation.ai_feedback && (
         <Card className="mt-4">
           <CardHeader>
-            <CardTitle>Feedback Final</CardTitle>
+            <CardTitle>{t.finalFeedback}</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -169,25 +209,25 @@ const SimulationInterface = () => {
                     <div className="text-2xl font-bold text-blue-600">
                       {activeSimulation.clarity_score || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">Claritate</div>
+                    <div className="text-sm text-muted-foreground">{t.clarity}</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-green-600">
                       {activeSimulation.empathy_score || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">Empatie</div>
+                    <div className="text-sm text-muted-foreground">{t.empathy}</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-orange-600">
                       {activeSimulation.conviction_score || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">Convingere</div>
+                    <div className="text-sm text-muted-foreground">{t.conviction}</div>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-purple-600">
                       {activeSimulation.structure_score || 0}
                     </div>
-                    <div className="text-sm text-muted-foreground">Structură</div>
+                    <div className="text-sm text-muted-foreground">{t.structure}</div>
                   </div>
                 </div>
               )}
