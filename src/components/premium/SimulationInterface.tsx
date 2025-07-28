@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -43,28 +42,20 @@ const SimulationInterface = () => {
     }
   };
 
-  // Function to translate simulation types
+  // FUNCȚIA DE TRADUCERE A FOST COMPLETATĂ AICI
   const getSimulationTitle = (simulationType: string) => {
     const simulationTitles = {
       ro: {
         job_interview: 'Interviu de Angajare',
-        presentation: 'Prezentare',
-        negotiation: 'Negociere',
-        leadership: 'Leadership',
-        teamwork: 'Lucru în Echipă',
-        conflict_resolution: 'Rezolvarea Conflictelor',
-        sales_pitch: 'Prezentare Comercială',
-        performance_review: 'Evaluarea Performanței'
+        salary_negotiation: 'Negociere Salariu',
+        team_conflict: 'Conflict în Echipă',
+        management_promotion: 'Promovare în Management'
       },
       en: {
         job_interview: 'Job Interview',
-        presentation: 'Presentation',
-        negotiation: 'Negotiation',
-        leadership: 'Leadership',
-        teamwork: 'Teamwork',
-        conflict_resolution: 'Conflict Resolution',
-        sales_pitch: 'Sales Pitch',
-        performance_review: 'Performance Review'
+        salary_negotiation: 'Salary Negotiation',
+        team_conflict: 'Team Conflict',
+        management_promotion: 'Management Promotion'
       }
     };
 
