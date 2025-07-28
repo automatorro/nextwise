@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
@@ -93,7 +92,7 @@ export const useAISimulations = () => {
     }
   };
 
-  const startSimulation = async (simulationType: string) => {
+  const startSimulation = async (simulationType: string): Promise<AISimulation | null> => {
     console.log('🚀 startSimulation called with type:', simulationType);
     
     if (!user) {
@@ -171,10 +170,13 @@ export const useAISimulations = () => {
       }
 
       console.log('✅ Simulation created successfully:', data);
-      setActiveSimulation(data as AISimulation);
+      const newSimulation = data as AISimulation;
+      setActiveSimulation(newSimulation);
       
       // Refresh the completed simulations list
       await fetchCompletedSimulations();
+      
+      return newSimulation;
       
     } catch (error) {
       console.error('❌ Error starting simulation:', error);

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -9,6 +10,7 @@ import { Loader2, Play, Users, Target, Clock } from 'lucide-react';
 
 const AISimulations = () => {
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const { simulations = [], activeSimulation, startSimulation, isLoading, error } = useAISimulations();
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
 
@@ -49,19 +51,29 @@ const AISimulations = () => {
 
   const handleStartSimulation = async (scenarioId: string) => {
     console.log('🚀 Starting simulation with ID:', scenarioId);
-    console.log('📊 Hook state - isLoading:', isLoading, 'error:', error);
-    console.log('💡 Active simulation before start:', activeSimulation);
     
     setSelectedScenario(scenarioId);
     
     try {
       console.log('🔄 Calling startSimulation...');
-      await startSimulation(scenarioId);
-      console.log('✅ Simulation started successfully');
+      const newSimulation = await startSimulation(scenarioId);
+      console.log('✅ Simulation started successfully:', newSimulation);
+      
+      // Navigate to the simulation interface
+      if (newSimulation && newSimulation.id) {
+        navigate(`/simulation/${newSimulation.id}`);
+      }
+      
       setSelectedScenario(null);
     } catch (err) {
       console.error('❌ Error starting simulation:', err);
       setSelectedScenario(null);
+    }
+  };
+
+  const handleResumeSimulation = () => {
+    if (activeSimulation) {
+      navigate(`/simulation/${activeSimulation.id}`);
     }
   };
 
@@ -87,15 +99,22 @@ const AISimulations = () => {
       {activeSimulation && (
         <Card className="border-blue-200 bg-blue-50">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-2 mb-2">
-              <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <p className="text-blue-800 font-medium">Simulare activă în desfășurare</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <p className="text-blue-800 font-medium">Simulare activă în desfășurare</p>
+                </div>
+                <p className="text-blue-700 text-sm">
+                  Tip: {activeSimulation.simulation_type} | 
+                  Mesaje: {activeSimulation.conversation_log?.length || 0} | 
+                  Răspunsuri: {activeSimulation.user_responses?.length || 0}
+                </p>
+              </div>
+              <Button onClick={handleResumeSimulation} variant="outline" size="sm">
+                Continuă Simularea
+              </Button>
             </div>
-            <p className="text-blue-700 text-sm">
-              Tip: {activeSimulation.simulation_type} | 
-              Mesaje: {activeSimulation.conversation_log?.length || 0} | 
-              Răspunsuri: {activeSimulation.user_responses?.length || 0}
-            </p>
           </CardContent>
         </Card>
       )}
@@ -148,7 +167,7 @@ const AISimulations = () => {
                 ) : (
                   <Play className="w-4 h-4 mr-2" />
                 )}
-                {t('premiumFeatures.simulations.startSimulation') || 'Start Simulation'}
+                {t('premiumFeatures.simulations.startSimulation') || 'Începe Simularea'}
               </Button>
             </CardContent>
           </Card>

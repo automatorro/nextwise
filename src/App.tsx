@@ -18,6 +18,7 @@ import SubscriptionPage from "./pages/SubscriptionPage";
 import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
+import SimulationInterface from "./components/premium/SimulationInterface";
 
 const queryClient = new QueryClient();
 
@@ -66,6 +67,11 @@ function App() {
                 <Route path="/career-paths/:planId" element={
                   <ProtectedRoute>
                     <CareerPaths />
+                  </ProtectedRoute>
+                } />
+                <Route path="/simulation/:simulationId" element={
+                  <ProtectedRoute>
+                    <SimulationInterface />
                   </ProtectedRoute>
                 } />
                 <Route path="/subscription" element={
