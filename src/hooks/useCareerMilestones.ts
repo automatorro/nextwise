@@ -1,4 +1,3 @@
-
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -15,6 +14,8 @@ export interface CareerMilestone {
   resources: any[] | null;
   created_at: string;
   updated_at: string;
+  last_validation_check: string | null;
+  validation_status: any | null;
 }
 
 export const useCareerMilestones = (careerPathId?: string) => {
@@ -32,7 +33,7 @@ export const useCareerMilestones = (careerPathId?: string) => {
 
       const { data, error } = await supabase
         .from('career_milestones' as any)
-        .select('*')
+        .select('*, last_validation_check, validation_status')
         .eq('career_path_id', careerPathId)
         .order('milestone_order', { ascending: true });
 

@@ -178,12 +178,13 @@ const MilestoneTracker = ({ careerPathId, canEdit = true }: Props) => {
                     )}
                   </div>
                   
-                  {/* Resources Section */}
+                  {/* Resources Section with validation status */}
                   {milestone.resources && milestone.resources.length > 0 && (
                     <div className="mt-3">
                       <MilestoneResourcesSection
                         resources={milestone.resources}
                         milestoneTitle={milestone.title}
+                        validationStatus={milestone.validation_status}
                       />
                     </div>
                   )}

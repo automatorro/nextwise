@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -28,12 +29,29 @@ interface Resource {
 interface Props {
   resources: Resource[];
   milestoneTitle: string;
+  validationStatus?: any;
 }
 
-const MilestoneResourcesSection = ({ resources, milestoneTitle }: Props) => {
+const MilestoneResourcesSection = ({ resources, milestoneTitle, validationStatus }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   if (!resources || resources.length === 0) {
+    return null;
+  }
+
+  // Filter resources based on validation status
+  const activeResources = resources.filter(resource => {
+    // If no validation status exists, show all resources (backward compatibility)
+    if (!validationStatus) {
+      return true;
+    }
+    
+    // Check if this specific resource URL is marked as active
+    const urlValidation = validationStatus[resource.url];
+    return urlValidation === undefined || urlValidation === true;
+  });
+
+  if (activeResources.length === 0) {
     return null;
   }
 
@@ -61,7 +79,7 @@ const MilestoneResourcesSection = ({ resources, milestoneTitle }: Props) => {
     }
   };
 
-  const totalHours = resources.reduce((sum, resource) => sum + (resource.estimatedHours || 0), 0);
+  const totalHours = activeResources.reduce((sum, resource) => sum + (resource.estimatedHours || 0), 0);
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
@@ -71,7 +89,7 @@ const MilestoneResourcesSection = ({ resources, milestoneTitle }: Props) => {
             {isOpen ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
             <span className="text-sm font-medium">Resurse recomandate</span>
             <Badge variant="secondary" className="text-xs">
-              {resources.length} resurse
+              {activeResources.length} resurse
             </Badge>
             {totalHours > 0 && (
               <Badge variant="outline" className="text-xs">
@@ -85,7 +103,7 @@ const MilestoneResourcesSection = ({ resources, milestoneTitle }: Props) => {
       
       <CollapsibleContent className="mt-2">
         <div className="space-y-3">
-          {resources.map((resource, index) => (
+          {activeResources.map((resource, index) => (
             <Card key={index} className="border-l-4 border-l-blue-500">
               <CardContent className="p-4">
                 <div className="flex items-start justify-between">
