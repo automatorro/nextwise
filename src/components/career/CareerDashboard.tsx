@@ -45,7 +45,7 @@ interface Props {
   };
 }
 
-const CareerDashboard = ({ activeCareerPlans, recommendations, features }: Props) => {
+const CareerDashboard = ({ activeCareerPlans = [], recommendations = [], features }: Props) => {
   const getRecommendationIcon = (type: string) => {
     switch (type) {
       case 'skill': return BookOpen;
@@ -54,6 +54,11 @@ const CareerDashboard = ({ activeCareerPlans, recommendations, features }: Props
       default: return Lightbulb;
     }
   };
+
+  // Defensive checks
+  const safeActiveCareerPlans = Array.isArray(activeCareerPlans) ? activeCareerPlans : [];
+  const safeRecommendations = Array.isArray(recommendations) ? recommendations : [];
+  const safeFeatures = features || { maxPlans: 1, hasAI: false, hasAnalytics: false };
 
   return (
     <div className="space-y-8">
@@ -65,9 +70,9 @@ const CareerDashboard = ({ activeCareerPlans, recommendations, features }: Props
             <Target className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{activeCareerPlans.length}</div>
+            <div className="text-2xl font-bold">{safeActiveCareerPlans.length}</div>
             <p className="text-xs text-muted-foreground">
-              din {features.maxPlans === 999 ? '∞' : features.maxPlans} disponibile
+              din {safeFeatures.maxPlans === 999 ? '∞' : safeFeatures.maxPlans} disponibile
             </p>
           </CardContent>
         </Card>
@@ -79,7 +84,7 @@ const CareerDashboard = ({ activeCareerPlans, recommendations, features }: Props
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {Math.round(activeCareerPlans.reduce((acc, plan) => acc + plan.progress, 0) / activeCareerPlans.length || 0)}%
+              {Math.round(safeActiveCareerPlans.reduce((acc, plan) => acc + plan.progress, 0) / safeActiveCareerPlans.length || 0)}%
             </div>
             <p className="text-xs text-muted-foreground">
               din toate planurile
@@ -94,7 +99,7 @@ const CareerDashboard = ({ activeCareerPlans, recommendations, features }: Props
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {activeCareerPlans.reduce((acc, plan) => acc + plan.completedMilestones, 0)}
+              {safeActiveCareerPlans.reduce((acc, plan) => acc + plan.completedMilestones, 0)}
             </div>
             <p className="text-xs text-muted-foreground">
               completate luna aceasta
@@ -114,7 +119,7 @@ const CareerDashboard = ({ activeCareerPlans, recommendations, features }: Props
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {activeCareerPlans.map((plan) => (
+          {safeActiveCareerPlans.map((plan) => (
             <Card key={plan.id} className="hover:shadow-lg transition-shadow">
               <CardHeader>
                 <div className="flex justify-between items-start">
@@ -169,7 +174,7 @@ const CareerDashboard = ({ activeCareerPlans, recommendations, features }: Props
       <div>
         <h2 className="text-2xl font-bold text-gray-900 mb-6">Recomandări AI pentru tine</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {recommendations.map((rec, index) => {
+          {safeRecommendations.map((rec, index) => {
             const Icon = getRecommendationIcon(rec.type);
             return (
               <Card key={index} className="hover:shadow-lg transition-shadow">
