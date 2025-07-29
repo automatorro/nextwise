@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,6 +19,7 @@ import AdminPanel from "./pages/AdminPanel";
 import NotFound from "./pages/NotFound";
 import ProtectedRoute from "./components/layout/ProtectedRoute";
 import SimulationInterface from "./components/premium/SimulationInterface";
+import SharedPlanPage from "./components/career/SharedPlanPage";
 import HomeNavigation from "./components/home/HomeNavigation";
 import Footer from "./components/home/Footer";
 
@@ -35,6 +37,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<AuthPage />} />
+                <Route path="/shared-plan/:planId" element={<SharedPlanPage />} />
                 <Route path="/dashboard" element={
                   <ProtectedRoute>
                     <Dashboard />

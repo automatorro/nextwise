@@ -20,6 +20,8 @@ import {
   Image as ImageIcon
 } from 'lucide-react';
 import { type CareerPlan } from '@/hooks/useCareerPlans';
+import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 
 interface Props {
   isOpen: boolean;
@@ -28,7 +30,7 @@ interface Props {
 }
 
 const ShareCareerPlanModal = ({ isOpen, onClose, plan }: Props) => {
-  const [shareUrl] = useState(`${window.location.origin}/career-paths/plan/${plan.id}`);
+  const [shareUrl] = useState(`${window.location.origin}/shared-plan/${plan.id}`);
   const { toast } = useToast();
 
   const copyToClipboard = async () => {
@@ -48,28 +50,91 @@ const ShareCareerPlanModal = ({ isOpen, onClose, plan }: Props) => {
   };
 
   const shareViaEmail = () => {
-    const subject = `Planul meu de carieră: ${plan.title}`;
+    const subject = `Plan de carieră: ${plan.title}`;
     const body = `Salut!\n\nVreau să îți prezint planul meu de carieră "${plan.title}".\n\nPoți să îl vezi aici: ${shareUrl}\n\nMulțumesc!`;
     window.open(`mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
   };
 
   const shareViaWhatsApp = () => {
     const message = `Vreau să îți prezint planul meu de carieră "${plan.title}": ${shareUrl}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`);
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
 
-  const exportAsPDF = () => {
-    toast({
-      title: "În curând!",
-      description: "Funcționalitatea de export PDF va fi disponibilă în curând."
-    });
+  const exportAsPDF = async () => {
+    try {
+      // Find the main content area (excluding the modal)
+      const element = document.querySelector('main') || document.body;
+      
+      const canvas = await html2canvas(element as HTMLElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true
+      });
+      
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF();
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+      
+      let position = 0;
+      
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+      
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+      
+      pdf.save(`${plan.title}.pdf`);
+      
+      toast({
+        title: "PDF generat!",
+        description: "Planul a fost descărcat ca PDF."
+      });
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      toast({
+        title: "Eroare",
+        description: "Nu am putut genera PDF-ul.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const exportAsImage = () => {
-    toast({
-      title: "În curând!",
-      description: "Funcționalitatea de export imagine va fi disponibilă în curând."
-    });
+  const exportAsImage = async () => {
+    try {
+      // Find the main content area (excluding the modal)
+      const element = document.querySelector('main') || document.body;
+      
+      const canvas = await html2canvas(element as HTMLElement, {
+        scale: 2,
+        useCORS: true,
+        allowTaint: true
+      });
+      
+      // Create download link
+      const link = document.createElement('a');
+      link.download = `${plan.title}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      
+      toast({
+        title: "Imagine generată!",
+        description: "Planul a fost descărcat ca imagine."
+      });
+    } catch (error) {
+      console.error('Error generating image:', error);
+      toast({
+        title: "Eroare",
+        description: "Nu am putut genera imaginea.",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
