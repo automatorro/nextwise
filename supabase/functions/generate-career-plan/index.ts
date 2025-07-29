@@ -2,6 +2,303 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 import "https://deno.land/x/xhr@0.1.0/mod.ts"
 
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+}
+
+// High-quality resource platforms prioritized in order
+const PRIORITY_PLATFORMS = {
+  youtube: {
+    baseUrl: 'https://www.youtube.com',
+    searchPatterns: [
+      'site:youtube.com "{query}" full course',
+      'site:youtube.com "{query}" tutorial',
+      'site:youtube.com "{query}" TED',
+      'site:youtube.com "{query}" freeCodeCamp',
+      'site:youtube.com "{query}" Google',
+      'site:youtube.com "{query}" Microsoft',
+    ],
+    priorityChannels: ['TED', 'freeCodeCamp', 'Google', 'Microsoft', 'Harvard', 'MIT', 'Stanford']
+  },
+  ted: {
+    baseUrl: 'https://www.ted.com',
+    searchPatterns: [
+      'site:ted.com "{query}"',
+      'site:ted.com "{query}" talk',
+    ]
+  },
+  coursera: {
+    baseUrl: 'https://www.coursera.org',
+    searchPatterns: [
+      'site:coursera.org "{query}" audit',
+      'site:coursera.org "{query}" free',
+      'site:coursera.org "{query}" course',
+    ]
+  },
+  udemy: {
+    baseUrl: 'https://www.udemy.com',
+    searchPatterns: [
+      'site:udemy.com "{query}" free',
+      'site:udemy.com "{query}" course',
+    ]
+  }
+};
+
+// Function to validate a URL by making an HTTP HEAD request
+async function validateUrl(url: string): Promise<{ isValid: boolean; statusCode?: number; error?: string }> {
+  try {
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    const response = await fetch(url, {
+      method: 'HEAD',
+      signal: controller.signal,
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (compatible; CareerPlatform/1.0; +https://example.com/bot)'
+      }
+    });
+    
+    clearTimeout(timeoutId);
+    
+    return {
+      isValid: response.status === 200,
+      statusCode: response.status
+    };
+  } catch (error) {
+    return {
+      isValid: false,
+      error: error.message
+    };
+  }
+}
+
+// Function to generate search queries for a milestone
+function generateSearchQueries(milestoneTitle: string): string[] {
+  const queries = [];
+  
+  // Base queries
+  queries.push(`"${milestoneTitle}" tutorial`);
+  queries.push(`"${milestoneTitle}" course`);
+  queries.push(`"${milestoneTitle}" guide`);
+  queries.push(`Introduction to ${milestoneTitle}`);
+  queries.push(`${milestoneTitle} fundamentals`);
+  queries.push(`${milestoneTitle} basics`);
+  
+  // Add variations with common keywords
+  if (milestoneTitle.toLowerCase().includes('design')) {
+    queries.push(`${milestoneTitle} design thinking`);
+    queries.push(`${milestoneTitle} UX design`);
+  }
+  
+  if (milestoneTitle.toLowerCase().includes('development') || milestoneTitle.toLowerCase().includes('programming')) {
+    queries.push(`${milestoneTitle} coding`);
+    queries.push(`${milestoneTitle} programming`);
+  }
+  
+  return queries;
+}
+
+// Function to find high-quality resources for a milestone
+async function findQualityResources(milestoneTitle: string, category: string): Promise<any[]> {
+  const resources = [];
+  const searchQueries = generateSearchQueries(milestoneTitle);
+  
+  // Template resources based on milestone category and title
+  const templateResources = getTemplateResources(milestoneTitle, category);
+  
+  // Validate each template resource
+  for (const resource of templateResources) {
+    console.log(`Validating resource: ${resource.url}`);
+    const validation = await validateUrl(resource.url);
+    
+    if (validation.isValid) {
+      resources.push({
+        ...resource,
+        validationStatus: 'active',
+        lastChecked: new Date().toISOString()
+      });
+      console.log(`✓ Valid resource added: ${resource.title}`);
+    } else {
+      console.log(`✗ Invalid resource skipped: ${resource.title} (${validation.statusCode || validation.error})`);
+    }
+    
+    // Add small delay to prevent overwhelming servers
+    await new Promise(resolve => setTimeout(resolve, 100));
+  }
+  
+  return resources;
+}
+
+// Function to get template resources based on milestone content
+function getTemplateResources(milestoneTitle: string, category: string): any[] {
+  const title = milestoneTitle.toLowerCase();
+  const resources = [];
+  
+  // Design-related resources
+  if (title.includes('design thinking') || title.includes('design')) {
+    resources.push({
+      type: 'video',
+      title: 'Design Thinking Process - IDEO',
+      url: 'https://www.youtube.com/watch?v=_r0VX-aU_T8',
+      description: 'Learn the design thinking process from IDEO experts',
+      estimatedHours: 1,
+      isFree: true,
+      platform: 'YouTube'
+    });
+    
+    resources.push({
+      type: 'course',
+      title: 'Introduction to Design Thinking - Stanford',
+      url: 'https://www.coursera.org/learn/design-thinking-introduction',
+      description: 'Stanford course on design thinking fundamentals',
+      estimatedHours: 25,
+      isFree: true,
+      platform: 'Coursera'
+    });
+  }
+  
+  // Programming/Development resources
+  if (title.includes('programming') || title.includes('development') || title.includes('coding')) {
+    resources.push({
+      type: 'course',
+      title: 'freeCodeCamp - Full Stack Development',
+      url: 'https://www.freecodecamp.org/learn',
+      description: 'Complete free coding curriculum',
+      estimatedHours: 300,
+      isFree: true,
+      platform: 'freeCodeCamp'
+    });
+    
+    resources.push({
+      type: 'video',
+      title: 'Programming Fundamentals - Harvard CS50',
+      url: 'https://www.youtube.com/watch?v=YoXxevp1WRQ',
+      description: 'Harvard CS50 introduction to programming',
+      estimatedHours: 2,
+      isFree: true,
+      platform: 'YouTube'
+    });
+  }
+  
+  // Leadership/Management resources
+  if (title.includes('leadership') || title.includes('management') || title.includes('trainer')) {
+    resources.push({
+      type: 'video',
+      title: 'How to be a Great Leader - TED',
+      url: 'https://www.ted.com/talks/roselinde_torres_what_it_takes_to_be_a_great_leader',
+      description: 'TED talk on leadership fundamentals',
+      estimatedHours: 1,
+      isFree: true,
+      platform: 'TED'
+    });
+    
+    resources.push({
+      type: 'course',
+      title: 'Leadership Skills for Managers - Coursera',
+      url: 'https://www.coursera.org/learn/leadership-skills-managers',
+      description: 'University of Virginia course on leadership',
+      estimatedHours: 15,
+      isFree: true,
+      platform: 'Coursera'
+    });
+  }
+  
+  // Communication resources
+  if (title.includes('communication') || title.includes('presentation') || title.includes('public speaking')) {
+    resources.push({
+      type: 'video',
+      title: 'The Power of Effective Communication - TED',
+      url: 'https://www.ted.com/talks/celeste_headlee_10_ways_to_have_a_better_conversation',
+      description: 'TED talk on effective communication',
+      estimatedHours: 1,
+      isFree: true,
+      platform: 'TED'
+    });
+    
+    resources.push({
+      type: 'course',
+      title: 'Public Speaking - University of Washington',
+      url: 'https://www.coursera.org/learn/public-speaking',
+      description: 'Comprehensive public speaking course',
+      estimatedHours: 20,
+      isFree: true,
+      platform: 'Coursera'
+    });
+  }
+  
+  // Data Science resources
+  if (title.includes('data') || title.includes('analytics') || title.includes('statistics')) {
+    resources.push({
+      type: 'course',
+      title: 'Data Science Fundamentals - IBM',
+      url: 'https://www.coursera.org/learn/data-science-methodology',
+      description: 'IBM course on data science methodology',
+      estimatedHours: 15,
+      isFree: true,
+      platform: 'Coursera'
+    });
+    
+    resources.push({
+      type: 'video',
+      title: 'Data Science Tutorial - freeCodeCamp',
+      url: 'https://www.youtube.com/watch?v=ua-CiDNNj30',
+      description: 'Complete data science tutorial',
+      estimatedHours: 12,
+      isFree: true,
+      platform: 'YouTube'
+    });
+  }
+  
+  // Project Management resources
+  if (title.includes('project') || title.includes('management') || title.includes('agile')) {
+    resources.push({
+      type: 'course',
+      title: 'Project Management - Google',
+      url: 'https://www.coursera.org/professional-certificates/google-project-management',
+      description: 'Google Project Management Certificate',
+      estimatedHours: 180,
+      isFree: true,
+      platform: 'Coursera'
+    });
+    
+    resources.push({
+      type: 'video',
+      title: 'Agile Project Management - Microsoft',
+      url: 'https://www.youtube.com/watch?v=502ILHjX9EE',
+      description: 'Microsoft guide to agile project management',
+      estimatedHours: 2,
+      isFree: true,
+      platform: 'YouTube'
+    });
+  }
+  
+  // Generic assessment resources
+  if (title.includes('assessment') || title.includes('evaluation') || title.includes('personality')) {
+    resources.push({
+      type: 'test',
+      title: 'Myers-Briggs Type Indicator',
+      url: 'https://www.16personalities.com/',
+      description: 'Free personality assessment test',
+      estimatedHours: 1,
+      isFree: true,
+      platform: '16Personalities'
+    });
+    
+    resources.push({
+      type: 'test',
+      title: 'VIA Character Strengths Survey',
+      url: 'https://www.viacharacter.org/character-strengths-survey',
+      description: 'Identify your character strengths',
+      estimatedHours: 1,
+      isFree: true,
+      platform: 'VIA Institute'
+    });
+  }
+  
+  return resources;
+}
+
 // Helper functions for template-specific content generation
 function getTemplateSpecificDescription(careerGoal: string, phase: string): string {
   const goal = careerGoal.toLowerCase();
@@ -164,11 +461,6 @@ function getTemplateSpecificActions(careerGoal: string, phase: string): string[]
     'Aplică cunoștințele în proiecte practice',
     'Solicită feedback de la profesioniști din domeniu'
   ];
-}
-
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
 serve(async (req) => {
@@ -336,7 +628,7 @@ serve(async (req) => {
       }
     } catch (parseError) {
       console.error('JSON Parse Error:', parseError);
-      // Fallback: create a template-specific structure with real resources
+      // Fallback: create a template-specific structure with validated resources
       const fallbackTimeframe = isTemplate ? `${templateContext.estimatedDurationMonths} luni` : '6-12 luni';
       careerPlan = {
         title: `Plan de dezvoltare ${careerGoal}`,
@@ -348,24 +640,7 @@ serve(async (req) => {
             description: 'Completează teste gratuite pentru a-ți cunoaște punctele forte și zonele de dezvoltare.',
             targetWeeks: 1,
             category: 'assessment',
-            resources: [
-              {
-                type: 'test',
-                title: 'Myers-Briggs Type Indicator',
-                url: 'https://www.16personalities.com/',
-                description: 'Test gratuit de personalitate pentru înțelegerea preferințelor tale profesionale',
-                estimatedHours: 1,
-                isFree: true
-              },
-              {
-                type: 'test',
-                title: 'VIA Character Strengths Survey',
-                url: 'https://www.viacharacter.org/www/Character-Strengths-Survey',
-                description: 'Identifică-ți punctele forte de caracter',
-                estimatedHours: 1,
-                isFree: true
-              }
-            ],
+            resources: await findQualityResources('personality assessment', 'assessment'),
             actionItems: [
               'Completează testul MBTI și salvează rezultatele',
               'Fă testul de puncte forte VIA',
@@ -377,7 +652,7 @@ serve(async (req) => {
             description: getTemplateSpecificDescription(careerGoal, 'fundamentals'),
             targetWeeks: isTemplate ? Math.floor(templateContext.estimatedDurationMonths * 4 * 0.4) : 8,
             category: 'skill',
-            resources: getTemplateSpecificResources(careerGoal, 'fundamentals'),
+            resources: await findQualityResources(`${careerGoal} fundamentals`, 'skill'),
             actionItems: getTemplateSpecificActions(careerGoal, 'fundamentals')
           },
           {
@@ -385,7 +660,7 @@ serve(async (req) => {
             description: getTemplateSpecificDescription(careerGoal, 'practical'),
             targetWeeks: isTemplate ? Math.floor(templateContext.estimatedDurationMonths * 4 * 0.5) : 12,
             category: 'experience',
-            resources: getTemplateSpecificResources(careerGoal, 'practical'),
+            resources: await findQualityResources(`${careerGoal} practical`, 'experience'),
             actionItems: getTemplateSpecificActions(careerGoal, 'practical')
           },
           {
@@ -393,7 +668,7 @@ serve(async (req) => {
             description: getTemplateSpecificDescription(careerGoal, 'networking'),
             targetWeeks: isTemplate ? Math.floor(templateContext.estimatedDurationMonths * 4 * 0.3) : 16,
             category: 'networking',
-            resources: getTemplateSpecificResources(careerGoal, 'networking'),
+            resources: await findQualityResources(`${careerGoal} networking`, 'networking'),
             actionItems: getTemplateSpecificActions(careerGoal, 'networking')
           },
           {
@@ -401,24 +676,7 @@ serve(async (req) => {
             description: 'Pregătește-te pentru primul rol în noua carieră prin CV, portofoliu și interviuri.',
             targetWeeks: 20,
             category: 'experience',
-            resources: [
-              {
-                type: 'course',
-                title: 'Coursera - CV și scrisori de intenție',
-                url: 'https://www.coursera.org/learn/resume-writing',
-                description: 'Învață să scrii CV-uri eficiente',
-                estimatedHours: 8,
-                isFree: true
-              },
-              {
-                type: 'practice',
-                title: 'GitHub - Portofoliu online',
-                url: 'https://github.com/',
-                description: 'Creează un portofoliu online pentru proiectele tale',
-                estimatedHours: 12,
-                isFree: true
-              }
-            ],
+            resources: await findQualityResources('career transition', 'experience'),
             actionItems: [
               'Actualizează CV-ul cu noile competențe',
               'Creează portofoliu online',
@@ -461,6 +719,38 @@ serve(async (req) => {
       };
     }
 
+    // Validate resources in the career plan before saving
+    if (careerPlan.milestones && Array.isArray(careerPlan.milestones)) {
+      for (const milestone of careerPlan.milestones) {
+        if (milestone.resources && Array.isArray(milestone.resources)) {
+          const validatedResources = [];
+          
+          for (const resource of milestone.resources) {
+            if (resource.url) {
+              console.log(`Validating milestone resource: ${resource.url}`);
+              const validation = await validateUrl(resource.url);
+              
+              if (validation.isValid) {
+                validatedResources.push({
+                  ...resource,
+                  validationStatus: 'active',
+                  lastChecked: new Date().toISOString()
+                });
+                console.log(`✓ Valid milestone resource: ${resource.title}`);
+              } else {
+                console.log(`✗ Invalid milestone resource skipped: ${resource.title} (${validation.statusCode || validation.error})`);
+              }
+            }
+            
+            // Add small delay to prevent overwhelming servers
+            await new Promise(resolve => setTimeout(resolve, 100));
+          }
+          
+          milestone.resources = validatedResources;
+        }
+      }
+    }
+
     // Save the career plan to database
     const { data: savedPlan, error: saveError } = await supabase
       .from('career_paths')
@@ -480,17 +770,31 @@ serve(async (req) => {
       throw saveError;
     }
 
-    // Create individual milestone records in career_milestones table
+    // Create individual milestone records in career_milestones table with validation status
     if (careerPlan.milestones && Array.isArray(careerPlan.milestones)) {
-      const milestoneInserts = careerPlan.milestones.map((milestone: any, index: number) => ({
-        career_path_id: savedPlan.id,
-        title: milestone.title,
-        description: milestone.description,
-        milestone_order: index + 1,
-        resources: milestone.resources || [],
-        target_date: null, // Can be set later by user
-        is_completed: false
-      }));
+      const milestoneInserts = careerPlan.milestones.map((milestone: any, index: number) => {
+        // Create validation status object for the milestone
+        const validationStatus: any = {};
+        if (milestone.resources && Array.isArray(milestone.resources)) {
+          milestone.resources.forEach((resource: any) => {
+            if (resource.url) {
+              validationStatus[resource.url] = resource.validationStatus === 'active';
+            }
+          });
+        }
+
+        return {
+          career_path_id: savedPlan.id,
+          title: milestone.title,
+          description: milestone.description,
+          milestone_order: index + 1,
+          resources: milestone.resources || [],
+          target_date: null,
+          is_completed: false,
+          last_validation_check: new Date().toISOString(),
+          validation_status: validationStatus
+        };
+      });
 
       const { error: milestonesError } = await supabase
         .from('career_milestones')
