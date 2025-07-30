@@ -68,7 +68,6 @@ function App() {
                     <CareerPaths />
                   </ProtectedRoute>
                 } />
-                {/* RUTA ADĂUGATĂ AICI, ÎNAINTE DE CEA DINAMICĂ */}
                 <Route path="/career-paths/simulations" element={
                   <ProtectedRoute>
                     <CareerPaths />

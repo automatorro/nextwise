@@ -1,7 +1,9 @@
+
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
 
 interface AuthContextType {
   user: User | null;
@@ -56,6 +58,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             title: "Bun venit!",
             description: "Te-ai autentificat cu succes."
           });
+          
+          // Automatically redirect to dashboard after successful login
+          setTimeout(() => {
+            window.location.href = '/dashboard';
+          }, 500);
           
           // Check subscription in background
           setTimeout(() => {
@@ -138,12 +145,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         description: error.message,
         variant: "destructive"
       });
-    } else {
-      toast({
-        title: "Bun venit!",
-        description: "Te-ai autentificat cu succes."
-      });
     }
+    // Note: Success toast and redirect are handled in onAuthStateChange
 
     return { error };
   };
