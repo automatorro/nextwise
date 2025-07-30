@@ -62,8 +62,8 @@ const ShareCareerPlanModal = ({ isOpen, onClose, plan }: Props) => {
 
   const hideModalAndToasts = () => {
     // Hide the modal
-    const modalElement = document.querySelector('[data-radix-dialog-overlay]');
-    const modalContent = document.querySelector('[data-radix-dialog-content]');
+    const modalElement = document.querySelector('[data-radix-dialog-overlay]') as HTMLElement;
+    const modalContent = document.querySelector('[data-radix-dialog-content]') as HTMLElement;
     if (modalElement) modalElement.style.display = 'none';
     if (modalContent) modalContent.style.display = 'none';
 
@@ -76,8 +76,8 @@ const ShareCareerPlanModal = ({ isOpen, onClose, plan }: Props) => {
 
   const showModalAndToasts = () => {
     // Show the modal
-    const modalElement = document.querySelector('[data-radix-dialog-overlay]');
-    const modalContent = document.querySelector('[data-radix-dialog-content]');
+    const modalElement = document.querySelector('[data-radix-dialog-overlay]') as HTMLElement;
+    const modalContent = document.querySelector('[data-radix-dialog-content]') as HTMLElement;
     if (modalElement) modalElement.style.display = '';
     if (modalContent) modalContent.style.display = '';
 
