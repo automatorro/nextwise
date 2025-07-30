@@ -17,32 +17,32 @@ const AISimulations = () => {
   const scenarios = [
     {
       id: 'job_interview',
-      title: t('premiumFeatures.simulations.job_interview') || 'Job Interview',
-      description: t('premiumFeatures.simulations.simulationDescription.job_interview') || 'Practice for a job interview in a safe environment',
+      title: t('premiumFeatures.simulations.job_interview') || 'Interviu de Angajare',
+      description: t('premiumFeatures.simulations.simulationDescription.job_interview') || 'Practică pentru un interviu de angajare într-un mediu sigur',
       roles: ['Recruiter', 'Manager', 'Team Member'],
       duration: '15-30 min',
       difficulty: 'Medium'
     },
     {
       id: 'salary_negotiation',
-      title: t('premiumFeatures.simulations.salary_negotiation') || 'Salary Negotiation',
-      description: t('premiumFeatures.simulations.simulationDescription.salary_negotiation') || 'Develop your negotiation skills',
+      title: t('premiumFeatures.simulations.salary_negotiation') || 'Negociere Salariu',
+      description: t('premiumFeatures.simulations.simulationDescription.salary_negotiation') || 'Dezvoltă-ți abilitățile de negociere',
       roles: ['HR Manager', 'Team Lead', 'Client'],
       duration: '20-40 min',
       difficulty: 'Hard'
     },
     {
       id: 'team_conflict',
-      title: t('premiumFeatures.simulations.team_conflict') || 'Team Conflict',
-      description: t('premiumFeatures.simulations.simulationDescription.team_conflict') || 'Learn to manage team conflicts',
+      title: t('premiumFeatures.simulations.team_conflict') || 'Conflict în Echipă',
+      description: t('premiumFeatures.simulations.simulationDescription.team_conflict') || 'Învață să gestionezi conflictele în echipă',
       roles: ['Manager', 'Team Member', 'Stakeholder'],
       duration: '10-20 min',
       difficulty: 'Easy'
     },
     {
       id: 'management_promotion',
-      title: t('premiumFeatures.simulations.management_promotion') || 'Management Promotion',
-      description: t('premiumFeatures.simulations.simulationDescription.management_promotion') || 'Prepare for a management promotion',
+      title: t('premiumFeatures.simulations.management_promotion') || 'Promovare în Management',
+      description: t('premiumFeatures.simulations.simulationDescription.management_promotion') || 'Pregătește-te pentru o promovare în management',
       roles: ['HR Manager', 'Senior Manager', 'Team Lead'],
       duration: '25-35 min',
       difficulty: 'Hard'
@@ -92,8 +92,8 @@ const AISimulations = () => {
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">{t('premiumFeatures.simulations.title') || 'AI Simulations'}</h2>
-        <p className="text-muted-foreground">{t('premiumFeatures.simulations.subtitle') || 'Practice professional scenarios with AI'}</p>
+        <h2 className="text-2xl font-bold mb-2">{t('premiumFeatures.simulations.title') || 'Simulări AI'}</h2>
+        <p className="text-muted-foreground">{t('premiumFeatures.simulations.subtitle') || 'Exersează scenarii profesionale cu AI'}</p>
       </div>
 
       {activeSimulation && (
@@ -136,7 +136,7 @@ const AISimulations = () => {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Users className="w-4 h-4 text-blue-500" />
-                  <span className="text-sm font-medium">Roles:</span>
+                  <span className="text-sm font-medium">Roluri:</span>
                 </div>
                 <div className="flex flex-wrap gap-1">
                   {scenario.roles.map((role, index) => (
@@ -199,7 +199,7 @@ const AISimulations = () => {
                       </p>
                     </div>
                     <Badge variant={simulation.is_completed ? 'default' : 'secondary'}>
-                      {simulation.is_completed ? 'Completed' : 'In Progress'}
+                      {simulation.is_completed ? 'Completată' : 'În Progres'}
                     </Badge>
                   </div>
                   {simulation.ai_feedback && (
