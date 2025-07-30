@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,8 +8,15 @@ import { ArrowLeft } from 'lucide-react';
 import { SecureAuthForm } from './SecureAuthForm';
 
 export const AuthPage = () => {
-  const { loading } = useAuth();
+  const { loading, user } = useAuth();
   const navigate = useNavigate();
+
+  // Redirect to dashboard if user is already logged in
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [loading, user, navigate]);
 
   const handleGoHome = () => {
     navigate('/');
@@ -24,6 +31,11 @@ export const AuthPage = () => {
         </div>
       </div>
     );
+  }
+
+  // Don't render the auth form if user is logged in (will redirect)
+  if (user) {
+    return null;
   }
 
   return (
