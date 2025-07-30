@@ -30,7 +30,7 @@ interface Props {
 }
 
 const ShareCareerPlanModal = ({ isOpen, onClose, plan }: Props) => {
-  const [shareUrl] = useState(`${window.location.origin}/shared-plan/${plan.id}`);
+  const shareUrl = `${window.location.origin}/shared-plan/${plan.id}`;
   const { toast } = useToast();
 
   const copyToClipboard = async () => {
@@ -60,17 +60,73 @@ const ShareCareerPlanModal = ({ isOpen, onClose, plan }: Props) => {
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, '_blank');
   };
 
+  const hideModalAndToasts = () => {
+    // Hide the modal
+    const modalElement = document.querySelector('[data-radix-dialog-overlay]');
+    const modalContent = document.querySelector('[data-radix-dialog-content]');
+    if (modalElement) modalElement.style.display = 'none';
+    if (modalContent) modalContent.style.display = 'none';
+
+    // Hide toasts
+    const toasts = document.querySelectorAll('[data-sonner-toaster], [data-radix-toast-viewport]');
+    toasts.forEach(toast => {
+      (toast as HTMLElement).style.display = 'none';
+    });
+  };
+
+  const showModalAndToasts = () => {
+    // Show the modal
+    const modalElement = document.querySelector('[data-radix-dialog-overlay]');
+    const modalContent = document.querySelector('[data-radix-dialog-content]');
+    if (modalElement) modalElement.style.display = '';
+    if (modalContent) modalContent.style.display = '';
+
+    // Show toasts
+    const toasts = document.querySelectorAll('[data-sonner-toaster], [data-radix-toast-viewport]');
+    toasts.forEach(toast => {
+      (toast as HTMLElement).style.display = '';
+    });
+  };
+
+  const getCareerPlanElement = () => {
+    // Try to find the career plan content container
+    const careerPlanContainer = document.querySelector('.container.mx-auto') || 
+                               document.querySelector('main') || 
+                               document.querySelector('.career-plan-content') ||
+                               document.querySelector('.space-y-6');
+    
+    return careerPlanContainer as HTMLElement;
+  };
+
   const exportAsPDF = async () => {
     try {
-      // Find the main content area (excluding the modal)
-      const element = document.querySelector('main') || document.body;
+      // Get the career plan element
+      const element = getCareerPlanElement();
+      if (!element) {
+        toast({
+          title: "Eroare",
+          description: "Nu am putut găsi conținutul planului de carieră.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Hide modal and toasts temporarily
+      hideModalAndToasts();
+
+      // Wait a moment for the hiding to take effect
+      await new Promise(resolve => setTimeout(resolve, 100));
       
-      const canvas = await html2canvas(element as HTMLElement, {
+      const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
-        allowTaint: true
+        allowTaint: true,
+        backgroundColor: '#ffffff'
       });
       
+      // Show modal and toasts again
+      showModalAndToasts();
+
       const imgData = canvas.toDataURL('image/png');
       const pdf = new jsPDF();
       const imgWidth = 210;
@@ -97,6 +153,8 @@ const ShareCareerPlanModal = ({ isOpen, onClose, plan }: Props) => {
         description: "Planul a fost descărcat ca PDF."
       });
     } catch (error) {
+      // Make sure to show modal and toasts again even if there's an error
+      showModalAndToasts();
       console.error('Error generating PDF:', error);
       toast({
         title: "Eroare",
@@ -108,14 +166,32 @@ const ShareCareerPlanModal = ({ isOpen, onClose, plan }: Props) => {
 
   const exportAsImage = async () => {
     try {
-      // Find the main content area (excluding the modal)
-      const element = document.querySelector('main') || document.body;
+      // Get the career plan element
+      const element = getCareerPlanElement();
+      if (!element) {
+        toast({
+          title: "Eroare",
+          description: "Nu am putut găsi conținutul planului de carieră.",
+          variant: "destructive"
+        });
+        return;
+      }
+
+      // Hide modal and toasts temporarily
+      hideModalAndToasts();
+
+      // Wait a moment for the hiding to take effect
+      await new Promise(resolve => setTimeout(resolve, 100));
       
-      const canvas = await html2canvas(element as HTMLElement, {
+      const canvas = await html2canvas(element, {
         scale: 2,
         useCORS: true,
-        allowTaint: true
+        allowTaint: true,
+        backgroundColor: '#ffffff'
       });
+      
+      // Show modal and toasts again
+      showModalAndToasts();
       
       // Create download link
       const link = document.createElement('a');
@@ -128,6 +204,8 @@ const ShareCareerPlanModal = ({ isOpen, onClose, plan }: Props) => {
         description: "Planul a fost descărcat ca imagine."
       });
     } catch (error) {
+      // Make sure to show modal and toasts again even if there's an error
+      showModalAndToasts();
       console.error('Error generating image:', error);
       toast({
         title: "Eroare",
