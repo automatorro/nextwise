@@ -1,8 +1,9 @@
-Empower Career Now
-Empower Career Now este o platformă digitală inovatoare care ajută utilizatorii să își dezvolte planuri de carieră și să își accelereze dezvoltarea profesională și personală, bazându-se pe interpretarea avansată, cu ajutorul AI, a unor teste psihologice de personalitate, abilități și inteligență emoțională recunoscute internațional.
+
+NextWise
+NextWise este o platformă digitală inovatoare care ajută utilizatorii să își dezvolte planuri de carieră și să își accelereze dezvoltarea profesională și personală, bazându-se pe interpretarea avansată, cu ajutorul AI, a unor teste psihologice de personalitate, abilități și inteligență emoțională recunoscute internațional.
 
 Scopul Proiectului
-Scopul principal al platformei este să ofere oricui, dar mai ales tinerilor aflați la început de drum profesional sau celor care doresc să își schimbe sau consolideze cariera, instrumente moderne și personalizate pentru orientare și dezvoltare. Empower Career Now folosește rezultate concrete din testări psihologice și le transformă, cu ajutorul AI, în recomandări clare, planuri de acțiune și sesiuni de mentoring digital.
+Scopul principal al platformei este să ofere oricui, dar mai ales tinerilor aflați la început de drum profesional sau celor care doresc să își schimbe sau consolideze cariera, instrumente moderne și personalizate pentru orientare și dezvoltare. NextWise folosește rezultate concrete din testări psihologice și le transformă, cu ajutorul AI, în recomandări clare, planuri de acțiune și sesiuni de mentoring digital.
 
 Public Țintă
 Absolvenți de liceu, facultate sau alte forme de pregătire profesională
@@ -53,4 +54,4 @@ Status
 ✅ 15 teste implementate cu explicații AI
 ✅ Planuri de carieră și mentoring automatizate
 ✅ Documentație completă pentru extindere
-Empower Career Now – Creează-ți viitorul cu ajutorul AI!
+NextWise – Creează-ți viitorul cu ajutorul AI!
