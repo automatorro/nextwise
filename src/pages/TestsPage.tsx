@@ -9,6 +9,7 @@ import { Clock, Users, BookOpen, Search } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { useNavigate } from 'react-router-dom';
 import HomeNavigation from '@/components/home/HomeNavigation';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface TestType {
   id: string;
@@ -26,10 +27,11 @@ const TestsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const navigate = useNavigate();
+  const { language } = useLanguage();
 
-  // Fetch tests from database
+  // Fetch tests from database with language dependency
   const { data: tests, isLoading, error } = useQuery({
-    queryKey: ['test_types'],
+    queryKey: ['test_types', language],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('test_types')
@@ -50,6 +52,7 @@ const TestsPage = () => {
       console.log('Raw test data from database:', data);
       console.log('Total tests fetched:', data?.length || 0);
       console.log('All test names:', data?.map(t => t.name) || []);
+      console.log('Current language:', language);
       
       // Enhanced descriptions for uniform card layout
       const enhanceDescription = (testName: string, originalDescription: string) => {
@@ -93,12 +96,16 @@ const TestsPage = () => {
           if (testName.toLowerCase().includes(key.toLowerCase()) || 
               testName.toLowerCase().includes(key.replace('-', '').toLowerCase()) ||
               testName.toLowerCase().includes(key.replace(' ', '').toLowerCase())) {
-            return desc.ro; // Return Romanian description by default
+            return desc[language as 'ro' | 'en']; // Return description in current language
           }
         }
         
-        // If no match found, create a standardized description
-        return 'Test psihologic validat științific care oferă insight-uri valoroase despre personalitatea și competențele tale. Rezultatele includ analize detaliate și recomandări personalizate pentru dezvoltarea ta profesională și personală. Un instrument esențial pentru autocunoaștere și progres.';
+        // If no match found, create a standardized description based on language
+        if (language === 'en') {
+          return 'Scientifically validated psychological test that provides valuable insights into your personality and competencies. Results include detailed analyses and personalized recommendations for your professional and personal development. An essential tool for self-awareness and progress.';
+        } else {
+          return 'Test psihologic validat științific care oferă insight-uri valoroase despre personalitatea și competențele tale. Rezultatele includ analize detaliate și recomandări personalizate pentru dezvoltarea ta profesională și personală. Un instrument esențial pentru autocunoaștere și progres.';
+        }
       };
       
       // Transform data to match expected interface
@@ -114,7 +121,7 @@ const TestsPage = () => {
         updated_at: test.created_at || ''
       })) || [];
       
-      console.log('Transformed tests:', transformedTests);
+      console.log('Transformed tests with language:', language, transformedTests);
       
       return transformedTests as TestType[];
     }
@@ -143,8 +150,15 @@ const TestsPage = () => {
       <HomeNavigation />
       <div className="container mx-auto p-6 pt-24">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Teste Psihologice</h1>
-          <p className="text-gray-600">Descoperă-ți personalitatea și competențele cu testele noastre validate științific</p>
+          <h1 className="text-3xl font-bold mb-2">
+            {language === 'en' ? 'Psychological Tests' : 'Teste Psihologice'}
+          </h1>
+          <p className="text-gray-600">
+            {language === 'en' 
+              ? 'Discover your personality and skills with our scientifically validated tests'
+              : 'Descoperă-ți personalitatea și competențele cu testele noastre validate științific'
+            }
+          </p>
         </div>
 
         {/* Search and Filter Section */}
@@ -153,7 +167,7 @@ const TestsPage = () => {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
-                placeholder="Caută teste..."
+                placeholder={language === 'en' ? 'Search tests...' : 'Caută teste...'}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -169,7 +183,10 @@ const TestsPage = () => {
                 className="cursor-pointer"
                 onClick={() => setSelectedCategory(category)}
               >
-                {category === 'all' ? 'Toate' : category}
+                {category === 'all' 
+                  ? (language === 'en' ? 'All' : 'Toate')
+                  : category
+                }
               </Badge>
             ))}
           </div>
@@ -191,11 +208,15 @@ const TestsPage = () => {
                 <div className="space-y-2 mb-4">
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <Clock className="w-4 h-4" />
-                    <span>{test.duration} minute</span>
+                    <span>
+                      {test.duration} {language === 'en' ? 'minutes' : 'minute'}
+                    </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <BookOpen className="w-4 h-4" />
-                    <span>{test.questions_count} întrebări</span>
+                    <span>
+                      {test.questions_count} {language === 'en' ? 'questions' : 'întrebări'}
+                    </span>
                   </div>
                 </div>
 
@@ -203,7 +224,7 @@ const TestsPage = () => {
                   onClick={() => handleStartTest(test.id)}
                   className="w-full mt-auto"
                 >
-                  Începe testul
+                  {language === 'en' ? 'Start test' : 'Începe testul'}
                 </Button>
               </CardContent>
             </Card>
@@ -212,7 +233,12 @@ const TestsPage = () => {
 
         {filteredTests.length === 0 && (
           <div className="text-center py-12">
-            <p className="text-gray-500">Nu s-au găsit teste care să corespundă criteriilor de căutare.</p>
+            <p className="text-gray-500">
+              {language === 'en' 
+                ? 'No tests found matching your search criteria.'
+                : 'Nu s-au găsit teste care să corespundă criteriilor de căutare.'
+              }
+            </p>
           </div>
         )}
       </div>
