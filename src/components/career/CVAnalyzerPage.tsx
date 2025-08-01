@@ -4,6 +4,8 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/hooks/useLanguage';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 import { Loader2, FileText, Briefcase, TrendingUp } from 'lucide-react';
 
 interface CVAnalysisResult {
@@ -31,35 +33,42 @@ const CVAnalyzerPage = () => {
 
   const handleAnalyze = async () => {
     if (!cvText.trim() || !jobDescriptionText.trim()) {
+      toast.error(t('common.error'), {
+        description: 'Please provide both CV text and job description.'
+      });
       return;
     }
 
     setIsAnalyzing(true);
-    // TODO: Connect to backend in Phase 2
     
-    // Placeholder for now
-    setTimeout(() => {
-      setAnalysisResult({
-        matchScore: 85,
-        keywordAnalysis: {
-          found: ["JavaScript", "React", "Node.js"],
-          missing: ["TypeScript", "Docker", "AWS"]
-        },
-        sectionFeedback: [
-          {
-            section: "Summary",
-            feedback: "Your summary is good, but could be more impactful by adding quantifiable achievements."
-          }
-        ],
-        rewriteSuggestions: [
-          {
-            original: "Responsible for developing new features.",
-            suggestion: "Engineered and launched 5 new customer-facing features, resulting in a 15% increase in user engagement."
-          }
-        ]
+    try {
+      const { data, error } = await supabase.functions.invoke('analyze-cv', {
+        body: {
+          cvText: cvText.trim(),
+          jobDescriptionText: jobDescriptionText.trim()
+        }
       });
+
+      if (error) {
+        console.error('Error calling analyze-cv function:', error);
+        throw error;
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      setAnalysisResult(data);
+      toast.success('Analysis completed successfully!');
+      
+    } catch (error) {
+      console.error('CV Analysis error:', error);
+      toast.error('Analysis failed', {
+        description: 'Unable to analyze CV. Please try again later.'
+      });
+    } finally {
       setIsAnalyzing(false);
-    }, 2000);
+    }
   };
 
   return (
