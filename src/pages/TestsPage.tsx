@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -39,6 +38,7 @@ const TestsPage = () => {
           *,
           test_categories (
             name,
+            name_en,
             description
           )
         `)
@@ -111,7 +111,7 @@ const TestsPage = () => {
       // Transform data to match expected interface with language-aware names
       const transformedTests = data?.map(test => {
         // Get the test name in the correct language (fallback to name if name_en doesn't exist)
-        const testName = (language === 'en' && test.name_en) ? test.name_en : test.name;
+        const testName = (language === 'en' && (test as any).name_en) ? (test as any).name_en : test.name;
         
         // Get the category name safely
         const categoryName = test.test_categories ? 
