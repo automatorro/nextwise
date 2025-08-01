@@ -86,7 +86,7 @@
     "beckDepressionInventory": "Evaluează starea ta emoțională și identifică potențiale semne de depresie prin întrebări validate științific.",
     "cognitiveAbilitiesTest": "Evaluează abilitățile tale cognitive incluzând gândirea logică, rezolvarea problemelor și gândirea analitică.",
     "belbinTeamRoles": "Descoperă rolul tău preferat în echipă și cum contribui cel mai eficient în grupuri.",
-    "bigFivePersonality": "Explorează cele cinci dimensiuni majore ale personalității: deschiderea, conștiinciozitatea, extraversia, amabilitatea și neuroticismul.",
+    "bigFivePersonality": "Explorează cele cinci dimensiuni majore ale personalității: deschiderea, conștiinciozitatea, extraverția, amabilitatea și neuroticismul.",
     "emotionalIntelligenceTest": "Măsoară capacitatea ta de a înțelege și gestiona propriile emoții și pe cele ale altora în diverse situații.",
     "leadershipTest": "Evaluează stilul tău de leadership, punctele forte și domeniile de dezvoltare în managementul și inspirarea echipelor.",
     "maslachBurnoutTest": "Evaluează nivelul tău de burnout legat de muncă prin epuizare emoțională, depersonalizare și realizări personale.",
@@ -252,6 +252,29 @@
       "roles": "Roluri Țintă"
     }
   },
+  "cvAnalyzer": {
+    "title": "Analiza CV",
+    "subtitle": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți crește șansele de a fi invitat la interviu",
+    "cvText": "Textul CV-ului",
+    "cvTextPlaceholder": "Introdu aici textul complet al CV-ului tău...",
+    "jobDescription": "Descrierea Jobului",
+    "jobDescriptionPlaceholder": "Introdu aici textul complet al anunțului de angajare pentru care aplici...",
+    "analyzeButton": "Analizează CV-ul",
+    "analyzing": "Se analizează CV-ul...",
+    "results": "Rezultatele Analizei",
+    "matchScore": "Scor de Compatibilitate",
+    "keywordsFound": "Cuvinte Cheie Găsite",
+    "keywordsMissing": "Cuvinte Cheie Lipsă",
+    "sectionFeedback": "Feedback pe Secțiuni",
+    "rewriteSuggestions": "Sugestii de Rescriere",
+    "original": "Original",
+    "suggestion": "Sugestie"
+  },
+  "careerOptimization": {
+    "title": "Optimizare CV",
+    "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele. Primește feedback detaliat și sugestii de optimizare.",
+    "startAnalysis": "Începe Analiza"
+  },
   "subscription": {
     "title": "Abonament & Setări",
     "subtitle": "Gestionează abonamentul tău și actualizează informațiile personale.",
@@ -264,78 +287,6 @@
     "unlimitedAccess": "Administrator (Acces Nelimitat)",
     "active": "Activ",
     "upgradeSubscription": "Upgrade abonament"
-  },
-  "testRunner": {
-    "notFound": "Test nu a fost găsit",
-    "testNotExists": "Testul solicitat nu există sau nu este disponibil.",
-    "returnToTests": "Înapoi la Teste",
-    "unavailable": "Test indisponibil",
-    "noQuestions": "nu are întrebări configurate momentan. Vă rugăm să încercați mai târziu sau să alegeți un alt test.",
-    "loadingQuestions": "Se încarcă întrebările...",
-    "limitReached": "Limită atinsă",
-    "limitMessage": "Ai atins limita de teste pentru această lună.",
-    "progressRestored": "Progres restaurat",
-    "continueFrom": "Continui de la întrebarea",
-    "testRestarted": "Test reînceput",
-    "startFromFirst": "Începi testul de la prima întrebare",
-    "questionsLabel": "Numărul de întrebări",
-    "durationLabel": "Durata estimată",
-    "startButton": "Începe testul"
-  },
-  "testResult": {
-    "results": "Rezultatele Testului",
-    "analysis": "Analiză",
-    "recommendations": "Recomandări",
-    "score": "Scor",
-    "interpretation": "Interpretare",
-    "backToTests": "Înapoi la Teste",
-    "downloadResults": "Descarcă Rezultatele",
-    "shareResults": "Distribuie Rezultatele",
-    "overallScore": "Scor General",
-    "detailedAnalysis": "Analiză Detaliată",
-    "dimensions": "Dimensiuni",
-    "explanations": "Explicații",
-    "aiAnalysis": "Analiză AI",
-    "chartTitle": "Graficul Rezultatelor",
-    "noAnalysis": "Analiza AI nu este disponibilă pentru acest test.",
-    "loadingAnalysis": "Se generează analiza AI...",
-    "correctAnswers": "Răspunsuri Corecte",
-    "questionAnalysis": "Analiza Întrebărilor",
-    "performanceSummary": "Rezumat Performanță",
-    "scoringExplanation": "Explicația Scorului"
-  },
-  "profile": {
-    "title": "Profil",
-    "welcome": "Bun venit",
-    "administrator": "Administrator",
-    "welcomeMessage": "Aici poți vedea progresul tău și rezultatele testelor.",
-    "personalInfo": "Informații Personale",
-    "fullName": "Nume Complet",
-    "email": "Email",
-    "avatar": "Avatar",
-    "updateProfile": "Actualizează Profilul",
-    "passwordSection": "Parolă",
-    "currentPassword": "Parola Curentă",
-    "newPassword": "Parola Nouă",
-    "confirmPassword": "Confirmă Parola",
-    "changePassword": "Schimbă Parola",
-    "profileUpdated": "Profil actualizat cu succes!",
-    "passwordChanged": "Parola a fost schimbată cu succes!",
-    "overview": "Prezentare Generală",
-    "recentResults": "Rezultate Recente",
-    "quickActions": "Acțiuni Rapide",
-    "statsCards": {
-      "testsCompleted": "Teste Completate",
-      "avgScore": "Scor Mediu",
-      "lastTest": "Ultimul Test",
-      "timeSpent": "Timp Petrecut"
-    },
-    "actions": {
-      "takeTest": "Începe un Test",
-      "viewResults": "Vezi Rezultatele",
-      "planCareer": "Planifică Cariera",
-      "settings": "Setări"
-    }
   },
   "career": {
     "dashboard": {
@@ -411,223 +362,7 @@
       "beginner": "Începător",
       "intermediate": "Intermediar",
       "advanced": "Avansat"
-    }
-  },
-  "forms": {
-    "required": "Câmp obligatoriu",
-    "invalidEmail": "Email invalid",
-    "passwordMismatch": "Parolele nu se potrivesc",
-    "minLength": "Minim {count} caractere",
-    "maxLength": "Maxim {count} caractere",
-    "uploading": "Se încarcă...",
-    "uploadError": "Eroare la încărcare",
-    "selectFile": "Selectează fișier"
-  },
-  "admin": {
-    "panel": "Panou Administrare",
-    "users": "Utilizatori",
-    "tests": "Teste",
-    "translations": "Traduceri",
-    "analytics": "Analiză",
-    "settings": "Setări",
-    "fixTranslations": "Repară Traducerile",
-    "notice": "Funcționalități administrative disponibile doar pentru administratori."
-  },
-  "careerJourney": {
-    "title": "Drumul tău către succes profesional",
-    "subtitle": "Transformă-ți cariera cu ajutorul testelor psihometrice și planificării strategice",
-    "step1": {
-      "title": "Completează testele",
-      "description": "Descoperă-ți punctele forte, stilul de personalitate și abilitățile cognitive prin teste validate științific"
     },
-    "step2": {
-      "title": "Primești analiză detaliată",
-      "description": "Obții un raport complet cu interpretări personalizate și recomandări bazate pe rezultatele tale"
-    },
-    "step3": {
-      "title": "Creezi planul de carieră",
-      "description": "Folosește recomandările AI pentru a-ți construi un plan concret de dezvoltare profesională"
-    },
-    "step4": {
-      "title": "Urmărești progresul",
-      "description": "Monitorizează-ți evoluția și ajustează strategia pentru a-ți atinge obiectivele de carieră"
-    },
-    "benefits": {
-      "title": "De ce să alegi platforma noastră?",
-      "benefit1": "Teste validate științific pentru rezultate precise",
-      "benefit2": "Analiză AI personalizată pentru fiecare profil",
-      "benefit3": "Planuri de carieră concrete și realizabile",
-      "benefit4": "Urmărire continuă a progresului tău"
-    },
-    "premiumFeatures": {
-      "aiPrograms": {
-        "title": "Programe AI de 14 Zile",
-        "subtitle": "Mini-intervenții ghidate pentru dezvoltare rapidă",
-        "selectProgram": "Selectează un program:",
-        "motivationReset": "Resetare Motivațională Profesională",
-        "leadershipTransition": "Tranziție către Leadership",
-        "interviewTraining": "Antrenament pentru Interviuri",
-        "careerClarity": "Claritate în Alegeri de Carieră",
-        "startProgram": "Începe Programul",
-        "continueProgram": "Continuă Programul",
-        "dayOf": "Ziua {{day}} din 14",
-        "completed": "Completat",
-        "dailyTask": "Task Zilnic",
-        "reflection": "Întrebare de Reflecție",
-        "submitReflection": "Trimite Reflecția",
-        "intermediateEvaluation": "Evaluare Intermediară (Ziua 7)",
-        "finalEvaluation": "Evaluare Finală",
-        "feedback": "Feedback AI",
-        "score": "Scor Final",
-        "nextRecommendation": "Recomandare de Urmare",
-        "programDescription": {
-          "motivationReset": "Redescoperă-ți motivația și pasiunea pentru cariera ta printr-un program structurat de 14 zile.",
-          "leadershipTransition": "Dezvoltă-ți abilitățile de leadership și pregătește-te pentru roluri de conducere.",
-          "interviewTraining": "Perfecționează-ți tehnicile de interviu și câștigă încredere în procesele de recrutare.",
-          "careerClarity": "Clarifică-ți direcția profesională și ia decizii informate despre viitorul tău."
-        }
-      },
-      "progressSheets": {
-        "title": "Fișe de Progres AI",
-        "subtitle": "Evaluări vizuale și feedback personalizat",
-        "askQuestion": "Întreabă AI-ul despre cariera ta",
-        "questionPlaceholder": "Ex: Ce urmează în cariera mea?",
-        "generateSheet": "Generează Fișa",
-        "mySheets": "Fișele Mele",
-        "objective": "Obiectivul Tău",
-        "analysis": "Analiza AI",
-        "recommendations": "Recomandări",
-        "nextSteps": "Următorii Pași",
-        "saveSheet": "Salvează Fișa",
-        "deleteSheet": "Șterge Fișa",
-        "noSheets": "Nu ai încă fișe de progres salvate.",
-        "generating": "Generez fișa de progres...",
-        "error": "Eroare la generarea fișei",
-        "backToSheets": "Înapoi la Fișe"
-      },
-      "simulations": {
-        "title": "Simulări AI",
-        "subtitle": "Exersează scenarii profesionale cu AI",
-        "selectSimulation": "Alege tipul de simulare:",
-        "jobInterview": "Interviu pentru Job",
-        "managementPromotion": "Promovare în Management",
-        "teamConflict": "Gestionare Conflict în Echipă",
-        "salaryNegotiation": "Negociere de Salariu",
-        "startSimulation": "Începe Simularea",
-        "myResponse": "Răspunsul Meu",
-        "sendResponse": "Trimite Răspunsul",
-        "aiRole": "AI în rolul de",
-        "simulation": "Simulare",
-        "completed": "Simulare Completă",
-        "feedback": "Feedback Detaliat",
-        "scores": "Scoruri",
-        "clarity": "Claritate",
-        "empathy": "Empatie",
-        "conviction": "Convingere",
-        "structure": "Structură",
-        "overall": "Scor General",
-        "simulationDescription": {
-          "jobInterview": "Simulează un interviu pentru poziția ta dorită cu un recruiter AI.",
-          "managementPromotion": "Exersează o conversație de promovare cu managerul tău.",
-          "teamConflict": "Învață să gestionezi conflictele în echipă într-un mediu sigur.",
-          "salaryNegotiation": "Pregătește-te pentru negocierea salariului cu AI-ul."
-        },
-        "backToSimulations": "Înapoi la Simulări"
-      },
-      "progressTracking": {
-        "title": "Analiza Progresului",
-        "subtitle": "Urmărește-ți evoluția în timp",
-        "timeframe": "Perioada",
-        "lastWeek": "Ultima Săptămână",
-        "lastMonth": "Ultima Lună",
-        "last3Months": "Ultimele 3 Luni",
-        "last6Months": "Ultimele 6 Luni",
-        "stepsCompleted": "Pași Completați",
-        "milestonesReached": "Milestone-uri Atinse",
-        "testsRetaken": "Teste Refăcute",
-        "achievements": "Realizări",
-        "exportPDF": "Exportă PDF",
-        "noData": "Nu există date pentru perioada selectată.",
-        "progressChart": "Graficul Progresului",
-        "weeklyProgress": "Progres Săptămânal",
-        "monthlyProgress": "Progres Lunar",
-        "achievementsList": "Lista Realizărilor"
-      },
-      "accessRestricted": "Această funcționalitate este disponibilă doar pentru utilizatorii Premium.",
-      "upgradeNow": "Upgrade la Premium"
-    }
-  },
-  "premiumFeatures": {
-    "aiPrograms": {
-      "title": "Programe AI de 14 Zile",
-      "subtitle": "Mini-intervenții ghidate pentru dezvoltare rapidă",
-      "motivation_reset": "Resetarea Motivației",
-      "leadership_transition": "Tranziția în Leadership",
-      "interview_training": "Pregătire pentru Interviuri",
-      "career_clarity": "Clarificarea Carierei",
-      "selectProgram": "Selectează un program",
-      "startProgram": "Începe Programul",
-      "dailyTask": "Sarcina de Astăzi",
-      "reflection": "Reflecție",
-      "reflectionPlaceholder": "Descrie experiența ta cu sarcina de astăzi...",
-      "submitReflection": "Trimite Reflecția",
-      "processing": "Se procesează...",
-      "progress": "Progres",
-      "completed": "Finalizat",
-      "generatingTask": "Se generează sarcina...",
-      "reflectionSubmitted": "Reflecția a fost trimisă cu succes!",
-      "intermediateEvaluation": "Evaluare Intermediară",
-      "finalEvaluation": "Evaluare Finală",
-      "feedback": "Feedback",
-      "score": "Scor",
-      "programDescription": {
-        "motivation_reset": "Un program de 14 zile pentru redescoperirea motivației și pasiunii în carieră",
-        "leadership_transition": "Dezvoltă abilitățile de leadership și pregătește-te pentru roluri de conducere",
-        "interview_training": "Pregătește-te pentru interviuri de succes cu exerciții practice zilnice",
-        "career_clarity": "Descoperă-ți direcția profesională ideală prin exerciții de auto-cunoaștere"
-      },
-      "backToPrograms": "Înapoi la Programe"
-    },
-    "progressSheets": {
-      "title": "Fișe de Progres AI",
-      "subtitle": "Evaluări vizuale și feedback personalizat",
-      "questionPlaceholder": "Descrie obiectivul sau provocarea ta...",
-      "generateSheet": "Generează Fișa",
-      "mySheets": "Fișele Mele",
-      "askQuestion": "Pune o întrebare pentru a genera o fișă de progres personalizată",
-      "loading": "Se generează fișa...",
-      "error": "Eroare la generarea fișei",
-      "saved": "Fișa a fost salvată",
-      "noSavedSheets": "Nu ai fișe salvate încă"
-    },
-    "simulations": {
-      "title": "Simulări AI",
-      "subtitle": "Exersează scenarii profesionale cu AI",
-      "selectSimulation": "Selectează o simulare",
-      "job_interview": "Interviu de Angajare",
-      "management_promotion": "Promovare în Management",
-      "team_conflict": "Conflict în Echipă",
-      "salary_negotiation": "Negociere Salariu",
-      "startSimulation": "Începe Simularea",
-      "simulationDescription": {
-        "job_interview": "Practică pentru un interviu de angajare într-un mediu sigur",
-        "management_promotion": "Pregătește-te pentru o promovare în management",
-        "team_conflict": "Învață să gestionezi conflictele în echipă",
-        "salary_negotiation": "Dezvoltă-ți abilitățile de negociere"
-      },
-      "aiRole": {
-        "Recruiter": "Recruiter",
-        "Manager": "Manager",
-        "Team_Member": "Membru al Echipei",
-        "HR_Manager": "Manager HR"
-      }
-    },
-    "progressTracking": {
-      "title": "Analiza Progresului",
-      "subtitle": "Urmărește-ți evoluția în timp",
-      "exportPDF": "Exportă PDF",
-      "progressReport": "Raport de Progres",
-      "noData": "Nu există date pentru perioada selectată"
-    }
+    "cvAnalyzer": "Analiza CV"
   }
 }
