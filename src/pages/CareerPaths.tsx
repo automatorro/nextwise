@@ -1,18 +1,21 @@
-
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useSubscription } from '@/hooks/useSubscription';
 import { useCareerPlans } from '@/hooks/useCareerPlans';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { FileText, TrendingUp } from 'lucide-react';
 import HomeNavigation from '@/components/home/HomeNavigation';
 import Footer from '@/components/home/Footer';
 import CareerDashboardReal from '@/components/career/CareerDashboardReal';
 import CreateCareerPlanEnhanced from '@/components/career/CreateCareerPlanEnhanced';
 import CareerPlanDetails from '@/components/career/CareerPlanDetails';
 import AIMentoringWithLimits from '@/components/career/AIMentoringWithLimits';
+import CVAnalyzerPage from '@/components/career/CVAnalyzerPage';
 import AIPrograms14Days from '@/components/premium/AIPrograms14Days';
 import AIProgressSheets from '@/components/premium/AIProgressSheets';
 import AISimulations from '@/components/premium/AISimulations';
@@ -55,6 +58,43 @@ const CareerPaths = () => {
 
   const features = getSubscriptionFeatures();
 
+  // Enhanced Dashboard with CV Analyzer CTA
+  const EnhancedDashboard = () => (
+    <div className="space-y-6">
+      {/* CV Analyzer CTA Card */}
+      <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-blue-900">
+            <FileText className="w-6 h-6 text-blue-600" />
+            Optimizare CV
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-blue-700 mb-4">
+            Analizează-ți CV-ul în raport cu descrierile de job pentru a-ți îmbunătăți șansele de angajare. 
+            Primește feedback detaliat și sugestii de optimizare.
+          </p>
+          <Button 
+            className="bg-blue-600 hover:bg-blue-700 text-white"
+            onClick={() => {
+              // Find the tabs trigger for CV analyzer and click it
+              const cvAnalyzerTab = document.querySelector('[data-state="inactive"][value="cv-analyzer"]');
+              if (cvAnalyzerTab) {
+                (cvAnalyzerTab as HTMLElement).click();
+              }
+            }}
+          >
+            <TrendingUp className="w-4 h-4 mr-2" />
+            Începe Analiza
+          </Button>
+        </CardContent>
+      </Card>
+      
+      {/* Existing Dashboard Content */}
+      <CareerDashboardReal />
+    </div>
+  );
+
   return (
     <div className="min-h-screen bg-gray-50">
       <HomeNavigation />
@@ -81,6 +121,9 @@ const CareerPaths = () => {
                   <TabsTrigger value="ai-mentoring" className="whitespace-nowrap">
                     {t('careerPaths.tabs.mentoring')}
                   </TabsTrigger>
+                  <TabsTrigger value="cv-analyzer" className="whitespace-nowrap">
+                    Analiza CV
+                  </TabsTrigger>
                   {features.hasAI && (
                     <>
                       <TabsTrigger value="ai-programs" className="whitespace-nowrap">
@@ -101,10 +144,11 @@ const CareerPaths = () => {
               </div>
             ) : (
               // Desktop layout: grid
-              <TabsList className={`grid w-full ${features.hasAI ? 'grid-cols-7' : 'grid-cols-3'}`}>
+              <TabsList className={`grid w-full ${features.hasAI ? 'grid-cols-8' : 'grid-cols-4'}`}>
                 <TabsTrigger value="my-plans">{t('careerPaths.tabs.dashboard')}</TabsTrigger>
                 <TabsTrigger value="create-plan">{t('careerPaths.tabs.create')}</TabsTrigger>
                 <TabsTrigger value="ai-mentoring">{t('careerPaths.tabs.mentoring')}</TabsTrigger>
+                <TabsTrigger value="cv-analyzer">Analiza CV</TabsTrigger>
                 {features.hasAI && (
                   <>
                     <TabsTrigger value="ai-programs">{t('premiumFeatures.aiPrograms.title')}</TabsTrigger>
@@ -117,7 +161,7 @@ const CareerPaths = () => {
             )}
 
             <TabsContent value="my-plans" className="space-y-6">
-              <CareerDashboardReal />
+              <EnhancedDashboard />
             </TabsContent>
 
             <TabsContent value="create-plan" className="space-y-6">
@@ -129,6 +173,10 @@ const CareerPaths = () => {
 
             <TabsContent value="ai-mentoring" className="space-y-6">
               <AIMentoringWithLimits />
+            </TabsContent>
+
+            <TabsContent value="cv-analyzer" className="space-y-6">
+              <CVAnalyzerPage />
             </TabsContent>
 
             {features.hasAI && (
