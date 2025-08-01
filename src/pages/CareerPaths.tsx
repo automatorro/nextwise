@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -66,13 +67,12 @@ const CareerPaths = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-blue-900">
             <FileText className="w-6 h-6 text-blue-600" />
-            Optimizare CV
+            {t('career.cvOptimization.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-blue-700 mb-4">
-            Analizează-ți CV-ul în raport cu descrierile de job pentru a-ți îmbunătăți șansele de angajare. 
-            Primește feedback detaliat și sugestii de optimizare.
+            {t('career.cvOptimization.description')}
           </p>
           <Button 
             className="bg-blue-600 hover:bg-blue-700 text-white"
@@ -85,7 +85,7 @@ const CareerPaths = () => {
             }}
           >
             <TrendingUp className="w-4 h-4 mr-2" />
-            Începe Analiza
+            {t('career.cvOptimization.startAnalysis')}
           </Button>
         </CardContent>
       </Card>
@@ -122,7 +122,7 @@ const CareerPaths = () => {
                     {t('careerPaths.tabs.mentoring')}
                   </TabsTrigger>
                   <TabsTrigger value="cv-analyzer" className="whitespace-nowrap">
-                    Analiza CV
+                    {t('career.cvAnalyzer.title')}
                   </TabsTrigger>
                   {features.hasAI && (
                     <>
@@ -148,7 +148,7 @@ const CareerPaths = () => {
                 <TabsTrigger value="my-plans">{t('careerPaths.tabs.dashboard')}</TabsTrigger>
                 <TabsTrigger value="create-plan">{t('careerPaths.tabs.create')}</TabsTrigger>
                 <TabsTrigger value="ai-mentoring">{t('careerPaths.tabs.mentoring')}</TabsTrigger>
-                <TabsTrigger value="cv-analyzer">Analiza CV</TabsTrigger>
+                <TabsTrigger value="cv-analyzer">{t('career.cvAnalyzer.title')}</TabsTrigger>
                 {features.hasAI && (
                   <>
                     <TabsTrigger value="ai-programs">{t('premiumFeatures.aiPrograms.title')}</TabsTrigger>

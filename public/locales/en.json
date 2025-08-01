@@ -1,3 +1,4 @@
+
 {
   "common": {
     "poweredByAI": "Powered by AI",
@@ -425,6 +426,29 @@
       "beginner": "Beginner",
       "intermediate": "Intermediate",
       "advanced": "Advanced"
+    },
+    "cvAnalyzer": {
+      "title": "CV Analysis",
+      "subtitle": "Analyze your CV against job descriptions to improve your hiring chances",
+      "cvText": "CV Text",
+      "cvTextPlaceholder": "Insert your complete CV text here...",
+      "jobDescription": "Job Description", 
+      "jobDescriptionPlaceholder": "Insert the complete job description you're applying for here...",
+      "analyzeButton": "Analyze CV",
+      "analyzing": "Analyzing CV...",
+      "results": "Analysis Results",
+      "matchScore": "Compatibility Score",
+      "keywordsFound": "Keywords Found",
+      "keywordsMissing": "Missing Keywords",
+      "sectionFeedback": "Section Feedback",
+      "rewriteSuggestions": "Rewrite Suggestions",
+      "original": "Original",
+      "suggestion": "Suggestion"
+    },
+    "cvOptimization": {
+      "title": "CV Optimization",
+      "description": "Analyze your CV against job descriptions to improve your hiring chances. Get detailed feedback and optimization suggestions.",
+      "startAnalysis": "Start Analysis"
     }
   },
   "forms": {
