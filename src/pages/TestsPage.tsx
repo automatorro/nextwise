@@ -33,18 +33,12 @@ const TestsPage = () => {
   const { data: tests, isLoading, error } = useQuery({
     queryKey: ['test_types', language],
     queryFn: async () => {
-      // Conditionally select the correct columns based on language
-      const nameColumn = language === 'en' ? 'name_en' : 'name';
-      const categoryNameColumn = language === 'en' ? 'name_en' : 'name';
-      const descriptionColumn = language === 'en' ? 'description_en' : 'description';
-      
       const { data, error } = await supabase
         .from('test_types')
         .select(`
           *,
           test_categories (
             name,
-            name_en,
             description
           )
         `)
@@ -116,18 +110,20 @@ const TestsPage = () => {
       
       // Transform data to match expected interface with language-aware names
       const transformedTests = data?.map(test => {
-        // Get the test name in the correct language
-        const testName = language === 'en' && test.name_en ? test.name_en : test.name;
+        // Get the test name in the correct language (fallback to name if name_en doesn't exist)
+        const testName = (language === 'en' && test.name_en) ? test.name_en : test.name;
         
-        // Get the category name in the correct language
-        const categoryName = language === 'en' && test.test_categories?.name_en 
-          ? test.test_categories.name_en 
-          : test.test_categories?.name || '';
+        // Get the category name safely
+        const categoryName = test.test_categories ? 
+          ((language === 'en' && (test.test_categories as any).name_en) 
+            ? (test.test_categories as any).name_en 
+            : (test.test_categories as any).name) 
+          : '';
         
         return {
           id: test.id,
           name: testName,
-          description: enhanceDescription(testName, test.description),
+          description: enhanceDescription(testName, test.description || ''),
           category: categoryName,
           duration: test.estimated_duration || 15,
           questions_count: test.questions_count || 20,
