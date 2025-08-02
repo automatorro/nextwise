@@ -1,266 +1,48 @@
+
 {
-  "common": {
-    "poweredByAI": "Alimentat de AI",
-    "loading": "Se încarcă...",
-    "error": "Eroare", 
-    "success": "Succes",
-    "cancel": "Anulează",
-    "save": "Salvează",
-    "edit": "Editează",
-    "delete": "Șterge",
-    "back": "Înapoi",
-    "next": "Următorul",
-    "previous": "Precedentul",
-    "submit": "Trimite",
-    "start": "Începe",
-    "finish": "Finalizează",
-    "continue": "Continuă"
-  },
-  "nav": {
-    "login": "Autentificare",
-    "startFree": "Începe Gratuit",
-    "dashboard": "Dashboard",
+  "header": {
+    "dashboard": "Panou",
     "tests": "Teste",
     "career": "Carieră",
     "profile": "Profil",
-    "subscription": "Abonament",
-    "subscriptionSettings": "Abonament și Setări",
-    "logout": "Deconectare"
-  },
-  "home": {
-    "title": "Descoperă-ți potențialul și dezvoltă-ți cariera",
-    "subtitle": "Platforma AI care te ajută să îți înțelegi personalitatea, să îți identifici punctele forte și să îți construiești calea ideală în carieră prin evaluări psihologice avansate.",
-    "ctaButton": "Începe Evaluarea Gratuită",
-    "demoButton": "Vezi Demo",
-    "featuresTitle": "De ce să alegi NextWise?",
-    "featuresSubtitle": "Descoperă cum tehnologia AI poate transforma modul în care îți înțelegi personalitatea și îți planifici cariera.",
-    "categoriesTitle": "Categorii de Teste Disponibile",
-    "categoriesSubtitle": "Explorează o gamă variată de evaluări psihologice și teste de personalitate pentru a-ți înțelege mai bine punctele forte și preferințele.",
-    "pricingTitle": "Planuri de Abonament",
-    "pricingSubtitle": "Alege planul care se potrivește cel mai bine nevoilor tale de dezvoltare profesională.",
-    "ctaFinalTitle": "Gata să îți transformi cariera?",
-    "ctaFinalSubtitle": "Începe astăzi cu evaluarea gratuită și descoperă-ți adevăratul potențial.",
-    "ctaFinalButton": "Începe Acum",
-    "footerText": "Platforma AI care te ajută să îți descoperi potențialul și să îți construiești cariera ideală.",
-    "footerCopyright": "© 2024 NextWise. Toate drepturile rezervate."
-  },
-  "features": {
-    "psychologicalEvaluations": "Evaluări Psihologice AI",
-    "psychologicalEvaluationsDesc": "Teste avansate de personalitate și inteligență emoțională analizate de algoritmi AI",
-    "personalizedCareerPlans": "Planuri de Carieră Personalizate",
-    "personalizedCareerPlansDesc": "Recomandări de carieră bazate pe rezultatele testelor și preferințele tale",
-    "advancedAnalytics": "Analiză Avansată",
-    "advancedAnalyticsDesc": "Vizualizări detaliate și interpretări pentru rezultatele testelor tale",
-    "aiMentoring": "Mentoring AI",
-    "aiMentoringDesc": "Consiliere inteligentă și ghidare pentru dezvoltarea carierei tale"
-  },
-  "testCategories": {
-    "emotionalIntelligence": "Inteligență Emoțională",
-    "personality": "Personalitate",
-    "leadership": "Leadership",
-    "technicalSkills": "Abilități Tehnice",
-    "wellness": "Bunăstare",
-    "psychologicalWellness": "Wellness Psihologic",
-    "cognitive": "Cognitiv",
-    "digital": "Digital",
-    "sensory": "Senzorial",
-    "mentalHealth": "Sănătate Mentală",
-    "cognitiveAbilities": "Aptitudini Cognitive",
-    "teamRoles": "Roluri în Echipă"
-  },
-  "testNames": {
-    "beckDepressionInventory": "Beck Depression Inventory",
-    "cognitiveAbilitiesTest": "Test de Aptitudini Cognitive",
-    "belbinTeamRoles": "Rolurile de Echipă Belbin",
-    "bigFivePersonality": "Test de Personalitate Big Five",
-    "emotionalIntelligenceTest": "Test de Inteligență Emoțională",
-    "leadershipTest": "Test de Leadership",
-    "maslachBurnoutTest": "Test de Burnout Maslach",
-    "perceivedStressTest": "Test de Stres Perceput",
-    "resilienceTest": "Test de Reziliență",
-    "gad7AnxietyAssessment": "Evaluare Anxietate GAD-7",
-    "discBehavioralStyles": "Test DISC - Stiluri de Comportament",
-    "cattell16PF": "Cattell 16PF"
-  },
-  "testDescriptions": {
-    "beckDepressionInventory": "Evaluează starea ta emoțională și identifică potențiale semne de depresie prin întrebări validate științific.",
-    "cognitiveAbilitiesTest": "Evaluează abilitățile tale cognitive incluzând gândirea logică, rezolvarea problemelor și gândirea analitică.",
-    "belbinTeamRoles": "Descoperă rolul tău preferat în echipă și cum contribui cel mai eficient în grupuri.",
-    "bigFivePersonality": "Explorează cele cinci dimensiuni majore ale personalității: deschiderea, conștiinciozitatea, extraverția, amabilitatea și neuroticismul.",
-    "emotionalIntelligenceTest": "Măsoară capacitatea ta de a înțelege și gestiona propriile emoții și pe cele ale altora în diverse situații.",
-    "leadershipTest": "Evaluează stilul tău de leadership, punctele forte și domeniile de dezvoltare în managementul și inspirarea echipelor.",
-    "maslachBurnoutTest": "Evaluează nivelul tău de burnout legat de muncă prin epuizare emoțională, depersonalizare și realizări personale.",
-    "perceivedStressTest": "Măsoară cât de stresante percepi situațiile din viața ta și capacitatea ta de a face față stresului.",
-    "resilienceTest": "Evaluează reziliența ta psihologică și capacitatea de a te recupera după provocări și adversități.",
-    "gad7AnxietyAssessment": "Evaluează nivelul de anxietate folosind scala standardizată GAD-7 pentru a identifica simptomele și severitatea tulburării de anxietate generalizată.",
-    "discBehavioralStyles": "Descoperă stilul tău comportamental și preferințele de comunicare folosind modelul de evaluare DISC pentru îmbunătățirea relațiilor de la locul de muncă.",
-    "cattell16PF": "Evaluare comprehensivă a personalității care măsoară 16 factori primari ai personalității pentru a oferi informații detaliate despre trăsăturile tale de caracter și tiparele comportamentale."
-  },
-  "plans": {
-    "basic": {
-      "name": "Planul Basic",
-      "price": "Gratuit",
-      "description": "Perfect pentru începători",
-      "features": [
-        "3 teste gratuite pe lună",
-        "Rezultate de bază",
-        "Suport email"
-      ],
-      "button": "Începe Gratuit"
-    },
-    "professional": {
-      "name": "Planul Professional",
-      "price": "29 lei/lună",
-      "description": "Ideal pentru profesionişti",
-      "features": [
-        "Teste nelimitate",
-        "Analiză detaliată AI",
-        "Planuri de carieră personalizate",
-        "Mentoring AI",
-        "Suport prioritar"
-      ],
-      "button": "Începe Perioada de Probă"
-    },
-    "premium": {
-      "name": "Planul Premium",
-      "price": "49 lei/lună",
-      "description": "Pentru organizații și echipe",
-      "features": [
-        "Toate beneficiile Professional",
-        "Rapoarte pentru echipă",
-        "Analiză comparativă",
-        "Dashboard manager",
-        "Consultanță specializată"
-      ],
-      "button": "Contactează-ne"
-    },
-    "mostPopular": "Cel mai popular"
-  },
-  "dashboard": {
-    "welcome": "Bun venit",
-    "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
-    "stats": {
-      "testsCompleted": "Teste Completate",
-      "careerPlans": "Planuri de Carieră",
-      "timeSaved": "Timp Economisit",
-      "careerProgress": "Progres Carieră",
-      "days": "Zile"
-    },
-    "actions": {
-      "startFirstTest": "Începe Primul Tău Test",
-      "startFirstTestDesc": "Descoperă-ți personalitatea și punctele forte cu primul nostru test AI.",
-      "exploreTests": "Explorează Testele",
-      "planCareer": "Planifică-ți Cariera",
-      "planCareerDesc": "Creează un plan personalizat de carieră bazat pe rezultatele testelor tale.",
-      "startCareerPlan": "Începe Planul de Carieră"
-    },
-    "categories": {
-      "title": "Categorii de Teste Populare",
-      "subtitle": "Explorează cele mai populare categorii de teste pentru dezvoltarea ta profesională.",
-      "emotionalIntelligence": "Inteligență Emoțională",
-      "emotionalIntelligenceDesc": "Evaluează capacitatea ta de a înțelege și gestiona emotiile",
-      "personality": "Teste de Personalitate",
-      "personalityDesc": "Descoperă trăsăturile tale de personalitate și stilul de lucru",
-      "leadership": "Abilități de Leadership",
-      "leadershipDesc": "Evaluează potențialul tău de leadership și stilul de management",
-      "wellness": "Bunăstare și Stres",
-      "wellnessDesc": "Analizează nivelul de stres și strategiile de coping",
-      "test": "test",
-      "tests": "teste",
-      "viewAllTests": "Vezi Toate Testele"
-    }
-  },
-  "tests": {
-    "title": "Teste Psihologice",
-    "subtitle": "Descoperă-ți personalitatea și punctele forte prin evaluări psihologice avansate analizate de inteligența artificială.",
-    "allCategories": "Toate Categoriile",
-    "noTests": "Nu sunt teste disponibile în această categorie",
-    "noTestsDescription": "Testele vor fi adăugate în curând. Vă mulțumim pentru răbdare!",
-    "minutes": "minute",
-    "questions": "întrebări",
-    "takeTest": "Începe Testul",
-    "upgradeRequired": "Necesită Upgrade",
-    "categories": {
-      "all": "Toate",
-      "personality": "Personalitate",
-      "cognitive": "Cognitiv",
-      "emotional": "Emoțional",
-      "leadership": "Leadership",
-      "wellness": "Bunăstare",
-      "technical": "Tehnic"
-    }
+    "admin": "Admin"
   },
   "careerPaths": {
     "title": "Planurile tale de carieră personalizate",
     "subtitle": "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale, oferindu-ți un drumul clar către obiectivele profesionale.",
-    "poweredByAI": "Planuri Personalizate AI",
     "tabs": {
       "dashboard": "Dashboard",
       "create": "Plan Nou",
       "mentoring": "Mentoring AI",
-      "aiPrograms": "Programe AI de 14 Zile",
+      "programs": "Programe AI de 14 Zile",
       "progressSheets": "Fișe de Progres AI",
       "simulations": "Simulări AI",
-      "analytics": "Analiza Progresului"
+      "progressAnalysis": "Analiza Progresului",
+      "cvAnalyzer": "Analiza CV"
     },
     "dashboard": {
       "title": "Dashboard Carieră",
       "subtitle": "Monitorizează progresul și planifică următorii pași",
       "createPlan": "Creează Plan Nou",
-      "noPlans": "Nu ai încă planuri de carieră",
-      "createFirstPlan": "Începe prin a crea primul tău plan personalizat",
       "progress": "Progres",
       "created": "Creat",
       "viewDetails": "Vezi Detalii"
-    },
-    "noPlans": "Nu ai încă planuri de carieră",
-    "createFirst": "Creează primul tău plan de carieră",
-    "createPlan": "Creează Plan",
-    "viewPlan": "Vezi Planul",
-    "milestones": {
-      "title": "Obiective de Carieră",
-      "completed": "Completat",
-      "pending": "În Așteptare",
-      "overdue": "Întârziat",
-      "markComplete": "Marchează ca Completat",
-      "markIncomplete": "Marchează ca Incomplet",
-      "addMilestone": "Adaugă Obiectiv",
-      "editMilestone": "Editează Obiectiv",
-      "deleteMilestone": "Șterge Obiectiv",
-      "targetDate": "Data Țintă",
-      "progress": "Progres"
-    },
-    "recommendations": {
-      "title": "Recomandări AI",
-      "subtitle": "Sugestii personalizate bazate pe profilul și rezultatele testelor tale",
-      "dismiss": "Respinge",
-      "viewDetails": "Vezi Detalii",
-      "takeAction": "Acționează",
-      "basedOn": "Bazat pe",
-      "estimatedTime": "Timp estimat",
-      "minutes": "minute"
-    },
-    "templates": {
-      "title": "Șabloane de Carieră",
-      "subtitle": "Planuri de carieră pre-construite pentru a te ajuta să începi",
-      "useTemplate": "Folosește Șablonul",
-      "viewDetails": "Vezi Detalii",
-      "difficulty": "Dificultate",
-      "duration": "Durată",
-      "months": "luni",
-      "skills": "Abilități Necesare",
-      "roles": "Roluri Țintă"
     }
+  },
+  "cvOptimization": {
+    "title": "Optimizare CV",
+    "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele. Primește feedback detaliat și sugestii de optimizare.",
+    "startAnalysis": "Începe Analiza"
   },
   "cvAnalyzer": {
     "title": "Analiza CV",
-    "subtitle": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți crește șansele de a fi invitat la interviu",
+    "subtitle": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți crește șansele de angajare.",
     "cvText": "Textul CV-ului",
     "cvTextPlaceholder": "Introdu aici textul complet al CV-ului tău...",
     "jobDescription": "Descrierea Jobului",
     "jobDescriptionPlaceholder": "Introdu aici textul complet al anunțului de angajare pentru care aplici...",
     "analyzeButton": "Analizează CV-ul",
-    "analyzing": "Se analizează CV-ul...",
+    "analyzing": "Se analizează...",
     "results": "Rezultatele Analizei",
     "matchScore": "Scor de Compatibilitate",
     "keywordsFound": "Cuvinte Cheie Găsite",
@@ -269,100 +51,5 @@
     "rewriteSuggestions": "Sugestii de Rescriere",
     "original": "Original",
     "suggestion": "Sugestie"
-  },
-  "careerOptimization": {
-    "title": "Optimizare CV",
-    "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele. Primește feedback detaliat și sugestii de optimizare.",
-    "startAnalysis": "Începe Analiza"
-  },
-  "subscription": {
-    "title": "Abonament & Setări",
-    "subtitle": "Gestionează abonamentul tău și actualizează informațiile personale.",
-    "profileSettings": "Setări Profil",
-    "currentSubscription": "Abonamentul Curent",
-    "subscriptionType": "Tip Abonament",
-    "status": "Status",
-    "testsThisMonth": "Teste Efectuate Luna Aceasta",
-    "administrator": "Administrator",
-    "unlimitedAccess": "Administrator (Acces Nelimitat)",
-    "active": "Activ",
-    "upgradeSubscription": "Upgrade abonament"
-  },
-  "career": {
-    "dashboard": {
-      "title": "Dashboard Carieră",
-      "subtitle": "Monitorizează progresul și planifică următorii pași",
-      "createPlan": "Creează Plan Nou",
-      "noPlanTitle": "Nu ai planuri de carieră",
-      "noPlanDesc": "Începe prin a crea primul tău plan personalizat",
-      "activePlans": "Planuri Active",
-      "completedMilestones": "Obiective Completate",
-      "inProgress": "În Progres",
-      "viewDetails": "Vezi Detalii"
-    },
-    "createPlan": {
-      "title": "Creează Plan de Carieră",
-      "selectGoal": "Selectează Obiectivul",
-      "generatePlan": "Generează Plan",
-      "currentRole": "Rolul Curent",
-      "targetRole": "Rolul Țintă",
-      "timeframe": "Perioada de Timp",
-      "skills": "Abilități",
-      "interests": "Interese",
-      "creating": "Se creează planul...",
-      "error": "Eroare la crearea planului"
-    },
-    "planDetails": {
-      "title": "Detalii Plan",
-      "description": "Descriere",
-      "milestones": "Obiective",
-      "progress": "Progres",
-      "editPlan": "Editează Planul",
-      "deletePlan": "Șterge Planul",
-      "sharePlan": "Distribuie Planul",
-      "addMilestone": "Adaugă Obiectiv",
-      "targetDate": "Data Țintă",
-      "completed": "Completat",
-      "markComplete": "Marchează ca Completat",
-      "markIncomplete": "Marchează ca Incomplet",
-      "resources": "Resurse",
-      "noResources": "Nu sunt resurse disponibile"
-    },
-    "milestones": {
-      "add": "Adaugă Obiectiv",
-      "edit": "Editează Obiectiv",
-      "delete": "Șterge Obiectiv",
-      "title": "Titlu",
-      "description": "Descriere",
-      "targetDate": "Data Țintă",
-      "resources": "Resurse",
-      "save": "Salvează",
-      "cancel": "Anulează",
-      "deleteConfirm": "Ești sigur că vrei să ștergi acest obiectiv?"
-    },
-    "aiMentoring": {
-      "title": "Mentoring AI",
-      "subtitle": "Obține sfaturi personalizate pentru cariera ta",
-      "askQuestion": "Pune o întrebare...",
-      "send": "Trimite",
-      "thinking": "Se gândește...",
-      "error": "Eroare la trimiterea mesajului",
-      "placeholder": "Scrie întrebarea ta aici...",
-      "suggestions": [
-        "Cum pot să îmi îmbunătățesc abilitățile de leadership?",
-        "Ce pași să urmez pentru promovare?",
-        "Cum să gestionez mai bine stresul la muncă?"
-      ]
-    },
-    "templates": {
-      "title": "Șabloane de Carieră",
-      "useTemplate": "Folosește Șablonul",
-      "difficulty": "Dificultate",
-      "duration": "Durată",
-      "beginner": "Începător",
-      "intermediate": "Intermediar",
-      "advanced": "Avansat"
-    },
-    "cvAnalyzer": "Analiza CV"
   }
 }
