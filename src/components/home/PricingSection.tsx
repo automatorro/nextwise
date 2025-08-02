@@ -10,30 +10,54 @@ import { Star, CheckCircle } from 'lucide-react';
 const PricingSection = () => {
   const { t } = useLanguage();
 
+  // Helper function to ensure we get an array from translations
+  const getFeatureArray = (translationKey: string, fallback: string[]) => {
+    const result = t(translationKey);
+    return Array.isArray(result) ? result : fallback;
+  };
+
   const subscriptionPlans = [
     {
-      name: t('plans.basic.name'),
-      price: t('plans.basic.price'),
-      description: t('plans.basic.description'),
-      features: t('plans.basic.features'),
+      name: t('plans.basic.name') || 'Basic',
+      price: t('plans.basic.price') || '€19/lună',
+      description: t('plans.basic.description') || 'Perfect for getting started',
+      features: getFeatureArray('plans.basic.features', [
+        '4 teste psihologice pe lună',
+        'Plan de învățare scurt',
+        'Rezultate de bază',
+        'Suport email'
+      ]),
       highlight: false,
-      button: t('plans.basic.button')
+      button: t('plans.basic.button') || 'Alege Basic'
     },
     {
-      name: t('plans.professional.name'),
-      price: t('plans.professional.price'),
-      description: t('plans.professional.description'),
-      features: t('plans.professional.features'),
+      name: t('plans.professional.name') || 'Professional',
+      price: t('plans.professional.price') || '€49/lună',
+      description: t('plans.professional.description') || 'Most popular choice',
+      features: getFeatureArray('plans.professional.features', [
+        '7 teste psihologice pe lună',
+        'Plan de învățare și dezvoltare extins',
+        'Analize detaliate AI',
+        'Recomandări personalizate',
+        'Suport prioritar'
+      ]),
       highlight: true,
-      button: t('plans.professional.button')
+      button: t('plans.professional.button') || 'Alege Professional'
     },
     {
-      name: t('plans.premium.name'),
-      price: t('plans.premium.price'),
-      description: t('plans.premium.description'),
-      features: t('plans.premium.features'),
+      name: t('plans.premium.name') || 'Premium',
+      price: t('plans.premium.price') || '€89/lună',
+      description: t('plans.premium.description') || 'Everything you need',
+      features: getFeatureArray('plans.premium.features', [
+        'Acces complet nelimitat',
+        'Toate testele disponibile',
+        'Planuri de carieră avansate',
+        'Consultanță personalizată',
+        'Sesiuni video 1-la-1',
+        'Suport 24/7'
+      ]),
       highlight: false,
-      button: t('plans.premium.button')
+      button: t('plans.premium.button') || 'Alege Premium'
     }
   ];
 
