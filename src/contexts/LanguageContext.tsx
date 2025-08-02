@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import type { Language, Translations } from '@/types/language';
 import { fallbackTranslations } from '@/utils/fallbackTranslations';
@@ -30,7 +29,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // Funcție pentru validarea traducerilor
   const validateTranslations = useCallback((trans: Translations, lang: Language): boolean => {
-    const requiredKeys = ['common', 'nav', 'home', 'dashboard', 'tests', 'profile'];
+    const requiredKeys = ['header', 'home', 'dashboard', 'careerPaths', 'profile', 'cvOptimization'];
     const missingKeys = requiredKeys.filter(key => !trans[key]);
     
     if (missingKeys.length > 0) {
