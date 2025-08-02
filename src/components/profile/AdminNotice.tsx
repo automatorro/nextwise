@@ -15,7 +15,7 @@ const AdminNotice = () => {
           <div>
             <h3 className="font-semibold text-orange-900">{t('profile.administrator')}</h3>
             <p className="text-orange-700 text-sm">
-              {t('admin.notice')}
+              {t('profile.admin.notice')}
             </p>
           </div>
         </div>

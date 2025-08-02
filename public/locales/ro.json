@@ -7,22 +7,52 @@
     "profile": "Profil",
     "admin": "Admin"
   },
+  "home": {
+    "featuresTitle": "Descoperă Funcționalitățile Noastre",
+    "featuresSubtitle": "Unelte bazate pe inteligență artificială pentru a-ți accelera cariera."
+  },
+  "dashboard": {
+    "welcome": "Bun venit,",
+    "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
+    "stats": {
+      "testsCompleted": "Teste Completate",
+      "careerPlans": "Planuri de Carieră",
+      "timeSaved": "Timp Economisit",
+      "careerProgress": "Progres Carieră"
+    },
+    "actions": {
+      "startFirstTest": "Fă primul pas spre autocunoaștere",
+      "startFirstTestDesc": "Completează un test pentru a primi recomandări personalizate.",
+      "exploreTests": "Explorează Testele",
+      "planCareer": "Creează-ți un plan de carieră personalizat",
+      "planCareerDesc": "Setează-ți obiectivele și urmărește-ți progresul pas cu pas.",
+      "startCareerPlan": "Începe Planul"
+    },
+    "categories": {
+      "title": "Categorii de Teste",
+      "subtitle": "Alege din diverse categorii pentru a-ți înțelege mai bine profilul.",
+      "emotionalIntelligence": "Inteligență Emoțională",
+      "emotionalIntelligenceDesc": "Înțelege și gestionează emoțiile.",
+      "personality": "Personalitate",
+      "personalityDesc": "Descoperă-ți trăsăturile dominante."
+    }
+  },
   "careerPaths": {
     "title": "Planurile tale de carieră personalizate",
-    "subtitle": "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale, oferindu-ți un drumul clar către obiectivele profesionale.",
+    "subtitle": "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale.",
     "tabs": {
       "dashboard": "Dashboard",
       "create": "Plan Nou",
       "mentoring": "Mentoring AI",
-      "programs": "Programe AI de 14 Zile",
-      "progressSheets": "Fișe de Progres AI",
+      "cvAnalyzer": "Analiza CV",
+      "programs": "Programe AI",
+      "progressSheets": "Fișe de Progres",
       "simulations": "Simulări AI",
-      "progressAnalysis": "Analiza Progresului",
-      "cvAnalyzer": "Analiza CV"
+      "progressAnalysis": "Analiza Progresului"
     },
     "dashboard": {
       "title": "Dashboard Carieră",
-      "subtitle": "Monitorizează progresul și planifică următorii pași",
+      "subtitle": "Monitorizează progresul și planifică următorii pași.",
       "createPlan": "Creează Plan Nou",
       "progress": "Progres",
       "created": "Creat",
@@ -31,25 +61,16 @@
   },
   "cvOptimization": {
     "title": "Optimizare CV",
-    "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele. Primește feedback detaliat și sugestii de optimizare.",
+    "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele.",
     "startAnalysis": "Începe Analiza"
   },
-  "cvAnalyzer": {
-    "title": "Analiza CV",
-    "subtitle": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți crește șansele de angajare.",
-    "cvText": "Textul CV-ului",
-    "cvTextPlaceholder": "Introdu aici textul complet al CV-ului tău...",
-    "jobDescription": "Descrierea Jobului",
-    "jobDescriptionPlaceholder": "Introdu aici textul complet al anunțului de angajare pentru care aplici...",
-    "analyzeButton": "Analizează CV-ul",
-    "analyzing": "Se analizează...",
-    "results": "Rezultatele Analizei",
-    "matchScore": "Scor de Compatibilitate",
-    "keywordsFound": "Cuvinte Cheie Găsite",
-    "keywordsMissing": "Cuvinte Cheie Lipsă",
-    "sectionFeedback": "Feedback pe Secțiuni",
-    "rewriteSuggestions": "Sugestii de Rescriere",
-    "original": "Original",
-    "suggestion": "Sugestie"
+  "profile": {
+    "title": "Profilul Meu",
+    "administrator": "Administrator",
+    "welcome": "Bun venit,",
+    "welcomeMessage": "Aici poți vedea sumarul activității tale și informațiile personale.",
+    "admin": {
+        "notice": "Acesta este un cont de administrator cu acces la toate funcționalitățile."
+    }
   }
 }
