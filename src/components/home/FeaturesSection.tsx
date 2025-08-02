@@ -7,32 +7,42 @@ import { Brain, BarChart3, Target, Users } from 'lucide-react';
 const FeaturesSection = () => {
   const { t } = useLanguage();
 
+  // Define features with fallback values to prevent translation errors
   const features = [
     {
       icon: Brain,
-      title: t('features.psychologicalEvaluations'),
-      description: t('features.psychologicalEvaluationsDesc')
+      title: t('features.psychologicalEvaluations') || 'Psychological Evaluations',
+      description: t('features.psychologicalEvaluationsDesc') || 'Comprehensive psychological assessments to understand your personality and strengths.'
     },
     {
       icon: Target,
-      title: t('features.personalizedCareerPlans'),
-      description: t('features.personalizedCareerPlansDesc')
+      title: t('features.personalizedCareerPlans') || 'Personalized Career Plans',
+      description: t('features.personalizedCareerPlansDesc') || 'AI-generated career development plans tailored to your unique profile.'
     },
     {
       icon: BarChart3,
-      title: t('features.advancedAnalytics'),
-      description: t('features.advancedAnalyticsDesc')
+      title: t('features.advancedAnalytics') || 'Advanced Analytics',
+      description: t('features.advancedAnalyticsDesc') || 'Detailed insights and analytics to track your career development progress.'
     },
     {
       icon: Users,
-      title: t('features.aiMentoring'),
-      description: t('features.aiMentoringDesc')
+      title: t('features.aiMentoring') || 'AI Mentoring',
+      description: t('features.aiMentoringDesc') || 'Intelligent mentoring and guidance powered by artificial intelligence.'
     }
   ];
 
-  // Defensive check to ensure features is an array
-  if (!Array.isArray(features)) {
-    console.error('Features is not an array:', features);
+  // Ensure features is always an array and filter out any invalid entries
+  const validFeatures = Array.isArray(features) ? features.filter(feature => 
+    feature && 
+    typeof feature === 'object' && 
+    feature.icon && 
+    feature.title && 
+    feature.description
+  ) : [];
+
+  // If no valid features, return null or a fallback
+  if (validFeatures.length === 0) {
+    console.warn('No valid features found for FeaturesSection');
     return null;
   }
 
@@ -46,7 +56,7 @@ const FeaturesSection = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {features.map((feature, index) => (
+          {validFeatures.map((feature, index) => (
             <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader>
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center mb-4">
