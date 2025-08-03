@@ -29,8 +29,13 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [translations, setTranslations] = useState<Translations>({});
   const [loading, setLoading] = useState(true);
 
-  // Simple translation function
+  // Simple translation function with better error handling
   const translateKey = useCallback((translations: Translations, key: string): string => {
+    if (!key || typeof key !== 'string') {
+      console.warn('Invalid translation key:', key);
+      return '';
+    }
+
     const keys = key.split('.');
     let value: any = translations;
     
@@ -46,7 +51,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return typeof value === 'string' ? value : key;
   }, []);
 
-  // Load translations from JSON file
+  // Load translations from JSON file with simplified error handling
   const loadTranslations = useCallback(async (lang: Language): Promise<Translations> => {
     try {
       console.log(`Loading translations for: ${lang}`);
@@ -67,7 +72,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   }, []);
 
-  // Get stored language
+  // Get stored language with fallback
   const getStoredLanguage = (): Language => {
     try {
       const stored = localStorage.getItem('language');
@@ -77,7 +82,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  // Store language
+  // Store language with error handling
   const setStoredLanguage = (lang: Language): void => {
     try {
       localStorage.setItem('language', lang);
@@ -86,32 +91,46 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     }
   };
 
-  // Initialize translations
+  // Initialize translations on mount
   useEffect(() => {
     const initializeTranslations = async () => {
-      const initialLanguage = getStoredLanguage();
-      console.log(`Initializing with language: ${initialLanguage}`);
-      
-      setLanguage(initialLanguage);
-      
-      const loadedTranslations = await loadTranslations(initialLanguage);
-      setTranslations(loadedTranslations);
-      setLoading(false);
+      try {
+        const initialLanguage = getStoredLanguage();
+        console.log(`Initializing with language: ${initialLanguage}`);
+        
+        setLanguage(initialLanguage);
+        
+        const loadedTranslations = await loadTranslations(initialLanguage);
+        setTranslations(loadedTranslations);
+      } catch (error) {
+        console.error('Failed to initialize translations:', error);
+        // Set minimal fallback
+        setTranslations(minimalFallback[language]);
+      } finally {
+        setLoading(false);
+      }
     };
 
     initializeTranslations();
-  }, [loadTranslations]);
+  }, [loadTranslations, language]);
 
-  // Change language
+  // Change language function
   const changeLanguage = useCallback(async (newLanguage: Language) => {
     if (newLanguage === language) return;
 
-    console.log(`Changing language to: ${newLanguage}`);
-    setLanguage(newLanguage);
-    setStoredLanguage(newLanguage);
-    
-    const newTranslations = await loadTranslations(newLanguage);
-    setTranslations(newTranslations);
+    try {
+      console.log(`Changing language to: ${newLanguage}`);
+      setLanguage(newLanguage);
+      setStoredLanguage(newLanguage);
+      
+      const newTranslations = await loadTranslations(newLanguage);
+      setTranslations(newTranslations);
+    } catch (error) {
+      console.error('Failed to change language:', error);
+      // Revert on error
+      setLanguage(language);
+      setTranslations(minimalFallback[language]);
+    }
   }, [language, loadTranslations]);
 
   // Translation function
@@ -119,6 +138,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return translateKey(translations, key);
   }, [translations, translateKey]);
 
+  // Create context value
   const contextValue: LanguageContextType = {
     language,
     translations,
@@ -137,6 +157,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 export const useLanguageContext = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (context === undefined) {
+    console.error('useLanguageContext must be used within a LanguageProvider');
     throw new Error('useLanguageContext must be used within a LanguageProvider');
   }
   return context;
