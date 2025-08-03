@@ -1,668 +1,97 @@
 
 {
-  "common": {
-    "poweredByAI": "Powered by AI",
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "cancel": "Cancel",
-    "save": "Save",
-    "edit": "Edit",
-    "delete": "Delete",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "submit": "Submit",
-    "start": "Start",
-    "finish": "Finish",
-    "continue": "Continue"
-  },
-  "nav": {
-    "login": "Login",
-    "startFree": "Start Free",
+  "header": {
     "dashboard": "Dashboard",
     "tests": "Tests",
     "career": "Career",
     "profile": "Profile",
-    "subscription": "Subscription",
-    "subscriptionSettings": "Subscription & Settings",
-    "logout": "Logout"
+    "admin": "Admin"
   },
   "home": {
-    "title": "Discover Your Potential and Grow Your Career",
-    "subtitle": "The AI platform that helps you understand your personality, identify your strengths, and build your ideal career path through advanced psychological assessments.",
-    "ctaButton": "Start Free Assessment",
-    "demoButton": "View Demo",
-    "featuresTitle": "Why Choose NextWise?",
-    "featuresSubtitle": "Discover how AI technology can transform the way you understand your personality and plan your career.",
-    "categoriesTitle": "Available Test Categories",
-    "categoriesSubtitle": "Explore a diverse range of psychological assessments and personality tests to better understand your strengths and preferences.",
-    "pricingTitle": "Subscription Plans",
-    "pricingSubtitle": "Choose the plan that best fits your professional development needs.",
-    "ctaFinalTitle": "Ready to transform your career?",
-    "ctaFinalSubtitle": "Start today with a free assessment and discover your true potential.",
-    "ctaFinalButton": "Start Now",
-    "footerText": "The AI platform that helps you discover your potential and build your ideal career.",
-    "footerCopyright": "© 2024 NextWise. All rights reserved."
-  },
-  "features": {
-    "psychologicalEvaluations": "AI Psychological Evaluations",
-    "psychologicalEvaluationsDesc": "Advanced personality and emotional intelligence tests analyzed by AI algorithms",
-    "personalizedCareerPlans": "Personalized Career Plans",
-    "personalizedCareerPlansDesc": "Career recommendations based on your test results and preferences",
-    "advancedAnalytics": "Advanced Analytics",
-    "advancedAnalyticsDesc": "Detailed visualizations and interpretations for your test results",
-    "aiMentoring": "AI Mentoring",
-    "aiMentoringDesc": "Intelligent counseling and guidance for your career development"
-  },
-  "testCategories": {
-    "emotionalIntelligence": "Emotional Intelligence",
-    "personality": "Personality",
-    "leadership": "Leadership",
-    "technicalSkills": "Technical Skills",
-    "wellness": "Wellness",
-    "psychologicalWellness": "Psychological Wellness",
-    "cognitive": "Cognitive",
-    "digital": "Digital",
-    "sensory": "Sensory",
-    "mentalHealth": "Mental Health",
-    "cognitiveAbilities": "Cognitive Abilities",
-    "teamRoles": "Team Roles"
-  },
-  "testNames": {
-    "beckDepressionInventory": "Beck Depression Inventory",
-    "cognitiveAbilitiesTest": "Cognitive Abilities Test",
-    "belbinTeamRoles": "Belbin Team Roles",
-    "bigFivePersonality": "Big Five Personality Test",
-    "emotionalIntelligenceTest": "Emotional Intelligence Test",
-    "leadershipTest": "Leadership Test",
-    "maslachBurnoutTest": "Maslach Burnout Test",
-    "perceivedStressTest": "Perceived Stress Test",
-    "resilienceTest": "Resilience Test",
-    "gad7AnxietyAssessment": "GAD-7 Anxiety Assessment",
-    "discBehavioralStyles": "DISC Behavioral Styles Test",
-    "cattell16PF": "Cattell 16PF Personality Test"
-  },
-  "testDescriptions": {
-    "beckDepressionInventory": "Assess your emotional state and identify potential signs of depression through scientifically validated questions.",
-    "cognitiveAbilitiesTest": "Evaluate your cognitive skills including logical reasoning, problem-solving, and analytical thinking.",
-    "belbinTeamRoles": "Discover your preferred team role and how you contribute most effectively in group settings.",
-    "bigFivePersonality": "Explore the five major dimensions of personality: openness, conscientiousness, extraversion, agreeableness, and neuroticism.",
-    "emotionalIntelligenceTest": "Measure your ability to understand and manage your own emotions and those of others in various situations.",
-    "leadershipTest": "Assess your leadership style, strengths, and areas for development in managing and inspiring teams.",
-    "maslachBurnoutTest": "Evaluate your level of work-related burnout across emotional exhaustion, depersonalization, and personal accomplishment.",
-    "perceivedStressTest": "Measure how stressful you perceive situations in your life and your ability to cope with stress.",
-    "resilienceTest": "Assess your psychological resilience and ability to bounce back from challenges and adversity.",
-    "gad7AnxietyAssessment": "Evaluate your anxiety levels using the standardized GAD-7 scale to identify symptoms and severity of generalized anxiety disorder.",
-    "discBehavioralStyles": "Discover your behavioral style and communication preferences using the DISC assessment model to improve workplace relationships.",
-    "cattell16PF": "Comprehensive personality assessment measuring 16 primary personality factors to provide detailed insights into your character traits and behavioral patterns."
-  },
-  "plans": {
-    "basic": {
-      "name": "Basic Plan",
-      "price": "Free",
-      "description": "Perfect for beginners",
-      "features": [
-        "3 free tests per month",
-        "Basic results",
-        "Email support"
-      ],
-      "button": "Start Free"
-    },
-    "professional": {
-      "name": "Professional Plan",
-      "price": "$7/month",
-      "description": "Ideal for professionals",
-      "features": [
-        "Unlimited tests",
-        "Detailed AI analysis",
-        "Personalized career plans",
-        "AI mentoring",
-        "Priority support"
-      ],
-      "button": "Start Trial"
-    },
-    "premium": {
-      "name": "Premium Plan",
-      "price": "$12/month",
-      "description": "For organizations and teams",
-      "features": [
-        "All Professional benefits",
-        "Team reports",
-        "Comparative analysis",
-        "Manager dashboard",
-        "Specialized consulting"
-      ],
-      "button": "Contact Us"
-    },
-    "mostPopular": "Most Popular"
+    "heroTitle": "Discover Your Potential and Grow Your Career",
+    "heroSubtitle": "The AI platform that helps you understand your personality, identify your strengths, and build your ideal career path through advanced psychological assessments.",
+    "startFreeAssessment": "Start Free Assessment",
+    "featuresTitle": "Discover Our Features",
+    "featuresSubtitle": "AI-powered tools to accelerate your career.",
+    "features": {
+      "psychologicalEvaluations": "Psychological Evaluations",
+      "psychologicalEvaluationsDesc": "Understand your personality and cognitive skills.",
+      "personalizedCareerPlans": "Personalized Career Plans",
+      "personalizedCareerPlansDesc": "Get a clear roadmap based on your unique profile.",
+      "advancedAnalytics": "Advanced Analytics",
+      "advancedAnalyticsDesc": "Track your progress with detailed insights.",
+      "aiMentoring": "AI Mentoring",
+      "aiMentoringDesc": "Receive continuous guidance from your AI mentor."
+    }
   },
   "dashboard": {
-    "welcome": "Welcome",
+    "welcome": "Welcome,",
     "welcomeSubtext": "Start your personal and professional development journey with our AI tests.",
     "stats": {
       "testsCompleted": "Tests Completed",
       "careerPlans": "Career Plans",
       "timeSaved": "Time Saved",
-      "careerProgress": "Career Progress",
-      "days": "Days"
+      "careerProgress": "Career Progress"
     },
     "actions": {
-      "startFirstTest": "Start Your First Test",
-      "startFirstTestDesc": "Discover your personality and strengths with our first AI test.",
+      "startFirstTest": "Take the first step towards self-discovery",
+      "startFirstTestDesc": "Complete a test to receive personalized recommendations.",
       "exploreTests": "Explore Tests",
-      "planCareer": "Plan Your Career",
-      "planCareerDesc": "Create a personalized career plan based on your test results.",
-      "startCareerPlan": "Start Career Plan"
-    },
-    "categories": {
-      "title": "Popular Test Categories",
-      "subtitle": "Explore the most popular test categories for your professional development.",
-      "emotionalIntelligence": "Emotional Intelligence",
-      "emotionalIntelligenceDesc": "Assess your ability to understand and manage emotions",
-      "personality": "Personality Tests",
-      "personalityDesc": "Discover your personality traits and work style",
-      "leadership": "Leadership Skills",
-      "leadershipDesc": "Evaluate your leadership potential and management style",
-      "wellness": "Wellness and Stress",
-      "wellnessDesc": "Analyze stress levels and coping strategies",
-      "test": "test",
-      "tests": "tests",
-      "viewAllTests": "View All Tests"
-    }
-  },
-  "tests": {
-    "title": "Psychological Tests",
-    "subtitle": "Discover your personality and strengths through advanced psychological assessments analyzed by artificial intelligence.",
-    "allCategories": "All Categories",
-    "noTests": "No tests available in this category",
-    "noTestsDescription": "Tests will be added soon. Thank you for your patience!",
-    "minutes": "minutes",
-    "questions": "questions",
-    "takeTest": "Take Test",
-    "upgradeRequired": "Upgrade Required",
-    "categories": {
-      "all": "All",
-      "personality": "Personality",
-      "cognitive": "Cognitive",
-      "emotional": "Emotional",
-      "leadership": "Leadership",
-      "wellness": "Wellness",
-      "technical": "Technical"
+      "planCareer": "Create a personalized career plan",
+      "planCareerDesc": "Set your goals and track your progress step by step.",
+      "startCareerPlan": "Start Plan"
     }
   },
   "careerPaths": {
-    "title": "Career Hub",
-    "subtitle": "Plan, track, and accelerate your professional growth",
-    "poweredByAI": "AI-Powered Plans",
+    "title": "Your Personalized Career Plans",
+    "subtitle": "AI creates career plans based on your test results, giving you a clear path to your professional goals.",
     "tabs": {
-      "dashboard": "My Plans",
-      "create": "Create Plan",
-      "mentoring": "AI Mentoring"
+      "dashboard": "Dashboard",
+      "create": "New Plan",
+      "mentoring": "AI Mentoring",
+      "cvAnalyzer": "CV Analysis",
+      "programs": "14-Day AI Programs",
+      "progressSheets": "AI Progress Sheets",
+      "simulations": "AI Simulations",
+      "progressAnalysis": "Progress Analytics"
     },
     "dashboard": {
       "title": "Career Dashboard",
-      "subtitle": "Track progress and plan your next steps",
+      "subtitle": "Monitor your progress and plan your next steps.",
       "createPlan": "Create New Plan",
-      "noPlans": "You don't have any career plans yet",
-      "createFirstPlan": "Create your first career plan",
       "progress": "Progress",
       "created": "Created",
       "viewDetails": "View Details"
-    },
-    "noPlans": "You don't have any career plans yet",
-    "createFirst": "Create your first career plan",
-    "createPlan": "Create Plan",
-    "viewPlan": "View Plan",
-    "milestones": {
-      "title": "Career Milestones",
-      "completed": "Completed",
-      "pending": "Pending",
-      "overdue": "Overdue",
-      "markComplete": "Mark as Complete",
-      "markIncomplete": "Mark as Incomplete",
-      "addMilestone": "Add Milestone",
-      "editMilestone": "Edit Milestone",
-      "deleteMilestone": "Delete Milestone",
-      "targetDate": "Target Date",
-      "progress": "Progress"
-    },
-    "recommendations": {
-      "title": "AI Recommendations",
-      "subtitle": "Personalized suggestions based on your profile and test results",
-      "dismiss": "Dismiss",
-      "viewDetails": "View Details",
-      "takeAction": "Take Action",
-      "basedOn": "Based on your",
-      "estimatedTime": "Estimated time",
-      "minutes": "minutes"
-    },
-    "templates": {
-      "title": "Career Templates",
-      "subtitle": "Pre-built career paths to help you get started",
-      "useTemplate": "Use Template",
-      "viewDetails": "View Details",
-      "difficulty": "Difficulty",
-      "duration": "Duration",
-      "months": "months",
-      "skills": "Required Skills",
-      "roles": "Target Roles"
     }
   },
-  "subscription": {
-    "title": "Subscription & Settings",
-    "subtitle": "Manage your subscription and update your personal information.",
-    "profileSettings": "Profile Settings",
-    "currentSubscription": "Current Subscription",
-    "subscriptionType": "Subscription Type",
-    "status": "Status",
-    "testsThisMonth": "Tests Taken This Month",
-    "administrator": "Administrator",
-    "unlimitedAccess": "Administrator (Unlimited Access)",
-    "active": "Active",
-    "upgradeSubscription": "Upgrade subscription"
-  },
-  "testRunner": {
-    "notFound": "Test not found",
-    "testNotExists": "The requested test does not exist or is not available.",
-    "returnToTests": "Return to Tests",
-    "unavailable": "Test unavailable",
-    "noQuestions": "has no configured questions at the moment. Please try again later or choose another test.",
-    "loadingQuestions": "Loading questions...",
-    "limitReached": "Limit reached",
-    "limitMessage": "You have reached the test limit for this month.",
-    "progressRestored": "Progress restored",
-    "continueFrom": "Continue from question",
-    "testRestarted": "Test restarted",
-    "startFromFirst": "Starting test from the first question",
-    "questionsLabel": "Number of questions",
-    "durationLabel": "Estimated duration",
-    "startButton": "Start test"
-  },
-  "testResult": {
-    "results": "Test Results",
-    "analysis": "Analysis",
-    "recommendations": "Recommendations",
-    "score": "Score",
-    "interpretation": "Interpretation",
-    "backToTests": "Back to Tests",
-    "downloadResults": "Download Results",
-    "shareResults": "Share Results",
-    "overallScore": "Overall Score",
-    "detailedAnalysis": "Detailed Analysis",
-    "dimensions": "Dimensions",
-    "explanations": "Explanations",
-    "aiAnalysis": "AI Analysis",
-    "chartTitle": "Results Chart",
-    "noAnalysis": "AI analysis is not available for this test.",
-    "loadingAnalysis": "Generating AI analysis...",
-    "correctAnswers": "Correct Answers",
-    "questionAnalysis": "Question Analysis",
-    "performanceSummary": "Performance Summary",
-    "scoringExplanation": "Score Explanation"
-  },
-  "belbin": {
-    "roles": {
-      "plant": "Plant (The Creative)",
-      "resourceInvestigator": "Resource Investigator",
-      "coordinator": "Coordinator",
-      "shaper": "Shaper",
-      "monitorEvaluator": "Monitor Evaluator",
-      "teamworker": "Teamworker",
-      "implementer": "Implementer",
-      "completerFinisher": "Completer Finisher",
-      "specialist": "Specialist"
-    },
-    "categories": {
-      "actionOriented": "Action-Oriented Roles",
-      "peopleOriented": "People-Oriented Roles",
-      "thinkingOriented": "Thinking-Oriented Roles"
-    }
+  "cvOptimization": {
+    "title": "CV Optimization",
+    "description": "Analyze your CV against a job description to improve your chances. Get detailed feedback and optimization suggestions.",
+    "startAnalysis": "Start Analysis"
   },
   "profile": {
-    "title": "Profile",
-    "welcome": "Welcome",
+    "title": "My Profile",
+    "welcome": "Welcome,",
+    "welcomeMessage": "Here you can see a summary of your activity and personal information.",
     "administrator": "Administrator",
-    "welcomeMessage": "Here you can view your progress and test results.",
-    "personalInfo": "Personal Information",
-    "fullName": "Full Name",
+    "admin": {
+      "notice": "This is an administrator account with access to all features."
+    },
+    "personalInfo": {
+      "title": "Profile Information",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "memberSince": "Member Since"
+    }
+  },
+  "auth": {
+    "backToMain": "Back to main page",
+    "welcome": "Welcome",
+    "signInMessage": "Sign in to your account or create a new one",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
     "email": "Email",
-    "avatar": "Avatar",
-    "updateProfile": "Update Profile",
-    "passwordSection": "Password",
-    "currentPassword": "Current Password",
-    "newPassword": "New Password",
-    "confirmPassword": "Confirm Password",
-    "changePassword": "Change Password",
-    "profileUpdated": "Profile updated successfully!",
-    "passwordChanged": "Password changed successfully!",
-    "overview": "Overview",
-    "recentResults": "Recent Results",
-    "quickActions": "Quick Actions",
-    "statsCards": {
-      "testsCompleted": "Tests Completed",
-      "avgScore": "Average Score",
-      "lastTest": "Last Test",
-      "timeSpent": "Time Spent"
-    },
-    "actions": {
-      "takeTest": "Take a Test",
-      "viewResults": "View Results",
-      "planCareer": "Plan Career",
-      "settings": "Settings"
-    }
-  },
-  "career": {
-    "dashboard": {
-      "title": "Career Dashboard",
-      "subtitle": "Track progress and plan your next steps",
-      "createPlan": "Create New Plan",
-      "noPlanTitle": "You don't have any career plans",
-      "noPlanDesc": "Start by creating your first personalized plan",
-      "activePlans": "Active Plans",
-      "completedMilestones": "Completed Milestones",
-      "inProgress": "In Progress",
-      "viewDetails": "View Details"
-    },
-    "createPlan": {
-      "title": "Create Career Plan",
-      "selectGoal": "Select Goal",
-      "generatePlan": "Generate Plan",
-      "currentRole": "Current Role",
-      "targetRole": "Target Role",
-      "timeframe": "Timeframe",
-      "skills": "Skills",
-      "interests": "Interests",
-      "creating": "Creating plan...",
-      "error": "Error creating plan"
-    },
-    "planDetails": {
-      "title": "Plan Details",
-      "description": "Description",
-      "milestones": "Milestones",
-      "progress": "Progress",
-      "editPlan": "Edit Plan",
-      "deletePlan": "Delete Plan",
-      "sharePlan": "Share Plan",
-      "addMilestone": "Add Milestone",
-      "targetDate": "Target Date",
-      "completed": "Completed",
-      "markComplete": "Mark as Complete",
-      "markIncomplete": "Mark as Incomplete",
-      "resources": "Resources",
-      "noResources": "No resources available"
-    },
-    "milestones": {
-      "add": "Add Milestone",
-      "edit": "Edit Milestone",
-      "delete": "Delete Milestone",
-      "title": "Title",
-      "description": "Description",
-      "targetDate": "Target Date",
-      "resources": "Resources",
-      "save": "Save",
-      "cancel": "Cancel",
-      "deleteConfirm": "Are you sure you want to delete this milestone?"
-    },
-    "aiMentoring": {
-      "title": "AI Mentoring",
-      "subtitle": "Get personalized advice for your career",
-      "askQuestion": "Ask a question...",
-      "send": "Send",
-      "thinking": "Thinking...",
-      "error": "Error sending message",
-      "placeholder": "Write your question here...",
-      "suggestions": [
-        "How can I improve my leadership skills?",
-        "What steps should I take for promotion?",
-        "How to better manage work stress?"
-      ]
-    },
-    "templates": {
-      "title": "Career Templates",
-      "useTemplate": "Use Template",
-      "difficulty": "Difficulty",
-      "duration": "Duration",
-      "beginner": "Beginner",
-      "intermediate": "Intermediate",
-      "advanced": "Advanced"
-    },
-    "cvAnalyzer": {
-      "title": "CV Analysis",
-      "subtitle": "Analyze your CV against job descriptions to improve your hiring chances",
-      "cvText": "CV Text",
-      "cvTextPlaceholder": "Insert your complete CV text here...",
-      "jobDescription": "Job Description", 
-      "jobDescriptionPlaceholder": "Insert the complete job description you're applying for here...",
-      "analyzeButton": "Analyze CV",
-      "analyzing": "Analyzing CV...",
-      "results": "Analysis Results",
-      "matchScore": "Compatibility Score",
-      "keywordsFound": "Keywords Found",
-      "keywordsMissing": "Missing Keywords",
-      "sectionFeedback": "Section Feedback",
-      "rewriteSuggestions": "Rewrite Suggestions",
-      "original": "Original",
-      "suggestion": "Suggestion"
-    },
-    "cvOptimization": {
-      "title": "CV Optimization",
-      "description": "Analyze your CV against job descriptions to improve your hiring chances. Get detailed feedback and optimization suggestions.",
-      "startAnalysis": "Start Analysis"
-    }
-  },
-  "forms": {
-    "required": "Required field",
-    "invalidEmail": "Invalid email",
-    "passwordMismatch": "Passwords don't match",
-    "minLength": "Minimum {count} characters",
-    "maxLength": "Maximum {count} characters",
-    "uploading": "Uploading...",
-    "uploadError": "Upload error",
-    "selectFile": "Select file"
-  },
-  "admin": {
-    "panel": "Admin Panel",
-    "users": "Users",
-    "tests": "Tests",
-    "translations": "Translations",
-    "analytics": "Analytics",
-    "settings": "Settings",
-    "fixTranslations": "Fix Translations",
-    "notice": "Administrative features available only to administrators."
-  },
-  "careerJourney": {
-    "title": "Your path to professional success",
-    "subtitle": "Transform your career with psychometric testing and strategic planning",
-    "step1": {
-      "title": "Take the tests",
-      "description": "Discover your strengths, personality style, and cognitive abilities through scientifically validated assessments"
-    },
-    "step2": {
-      "title": "Get detailed analysis",
-      "description": "Receive a comprehensive report with personalized interpretations and recommendations based on your results"
-    },
-    "step3": {
-      "title": "Create your career plan",
-      "description": "Use AI recommendations to build a concrete professional development strategy tailored to you"
-    },
-    "step4": {
-      "title": "Track your progress",
-      "description": "Monitor your evolution and adjust your strategy to achieve your career goals"
-    },
-    "benefits": {
-      "title": "Why choose our platform?",
-      "benefit1": "Scientifically validated tests for accurate results",
-      "benefit2": "Personalized AI analysis for each profile",
-      "benefit3": "Concrete and achievable career plans",
-      "benefit4": "Continuous tracking of your progress"
-    },
-    "premiumFeatures": {
-      "aiPrograms": {
-        "title": "14-Day AI Programs",
-        "subtitle": "Guided mini-interventions for rapid development",
-        "selectProgram": "Select a program:",
-        "motivationReset": "Professional Motivation Reset",
-        "leadershipTransition": "Leadership Transition",
-        "interviewTraining": "Interview Training",
-        "careerClarity": "Career Choice Clarity",
-        "startProgram": "Start Program",
-        "continueProgram": "Continue Program",
-        "dayOf": "Day {{day}} of 14",
-        "completed": "Completed",
-        "dailyTask": "Daily Task",
-        "reflection": "Reflection Question",
-        "submitReflection": "Submit Reflection",
-        "intermediateEvaluation": "Intermediate Evaluation (Day 7)",
-        "finalEvaluation": "Final Evaluation",
-        "feedback": "AI Feedback",
-        "score": "Final Score",
-        "nextRecommendation": "Next Recommendation",
-        "programDescription": {
-          "motivationReset": "Rediscover your motivation and passion for your career through a structured 14-day program.",
-          "leadershipTransition": "Develop your leadership skills and prepare for management roles.",
-          "interviewTraining": "Perfect your interview techniques and gain confidence in recruitment processes.",
-          "careerClarity": "Clarify your professional direction and make informed decisions about your future."
-        }
-      },
-      "progressSheets": {
-        "title": "AI Progress Sheets",
-        "subtitle": "Visual evaluations and personalized feedback",
-        "askQuestion": "Ask AI about your career",
-        "questionPlaceholder": "Ex: What's next in my career?",
-        "generateSheet": "Generate Sheet",
-        "mySheets": "My Sheets",
-        "objective": "Your Objective",
-        "analysis": "AI Analysis",
-        "recommendations": "Recommendations",
-        "nextSteps": "Next Steps",
-        "saveSheet": "Save Sheet",
-        "deleteSheet": "Delete Sheet",
-        "noSheets": "You don't have any saved progress sheets yet.",
-        "generating": "Generating progress sheet...",
-        "error": "Error generating sheet"
-      },
-      "simulations": {
-        "title": "AI Simulations",
-        "subtitle": "Practice professional scenarios with AI",
-        "selectSimulation": "Choose simulation type:",
-        "jobInterview": "Job Interview",
-        "managementPromotion": "Management Promotion",
-        "teamConflict": "Team Conflict Management",
-        "salaryNegotiation": "Salary Negotiation",
-        "startSimulation": "Start Simulation",
-        "myResponse": "My Response",
-        "sendResponse": "Send Response",
-        "aiRole": "AI as",
-        "simulation": "Simulation",
-        "completed": "Simulation Complete",
-        "feedback": "Detailed Feedback",
-        "scores": "Scores",
-        "clarity": "Clarity",
-        "empathy": "Empathy",
-        "conviction": "Conviction",
-        "structure": "Structure",
-        "overall": "Overall Score",
-        "simulationDescription": {
-          "jobInterview": "Simulate a job interview for your desired position with an AI recruiter.",
-          "managementPromotion": "Practice a promotion conversation with your manager.",
-          "teamConflict": "Learn to manage team conflicts in a safe environment.",
-          "salaryNegotiation": "Prepare for salary negotiation with AI."
-        }
-      },
-      "progressTracking": {
-        "title": "Progress Analytics",
-        "subtitle": "Track your evolution over time",
-        "timeframe": "Time Period",
-        "lastWeek": "Last Week",
-        "lastMonth": "Last Month",
-        "last3Months": "Last 3 Months",
-        "last6Months": "Last 6 Months",
-        "stepsCompleted": "Steps Completed",
-        "milestonesReached": "Milestones Reached",
-        "testsRetaken": "Tests Retaken",
-        "achievements": "Achievements",
-        "exportPDF": "Export PDF",
-        "noData": "No data available for the selected period.",
-        "progressChart": "Progress Chart",
-        "weeklyProgress": "Weekly Progress",
-        "monthlyProgress": "Monthly Progress",
-        "achievementsList": "Achievements List"
-      },
-      "accessRestricted": "This feature is only available for Premium users.",
-      "upgradeNow": "Upgrade to Premium"
-    }
-  },
-  "premiumFeatures": {
-    "aiPrograms": {
-      "title": "14-Day AI Programs",
-      "subtitle": "Guided mini-interventions for rapid development",
-      "motivation_reset": "Motivation Reset",
-      "leadership_transition": "Leadership Transition",
-      "interview_training": "Interview Training",
-      "career_clarity": "Career Clarity",
-      "selectProgram": "Select a program",
-      "startProgram": "Start Program",
-      "dailyTask": "Daily Task",
-      "reflection": "Reflection",
-      "reflectionPlaceholder": "Describe your experience with today's task...",
-      "submitReflection": "Submit Reflection",
-      "processing": "Processing...",
-      "progress": "Progress",
-      "completed": "Completed",
-      "generatingTask": "Generating task...",
-      "reflectionSubmitted": "Reflection submitted successfully!",
-      "intermediateEvaluation": "Intermediate Evaluation",
-      "finalEvaluation": "Final Evaluation",
-      "feedback": "Feedback",
-      "score": "Score",
-      "programDescription": {
-        "motivation_reset": "A 14-day program to rediscover motivation and passion in your career",
-        "leadership_transition": "Develop leadership skills and prepare for management roles",
-        "interview_training": "Prepare for successful interviews with daily practical exercises",
-        "career_clarity": "Discover your ideal professional direction through self-awareness exercises"
-      }
-    },
-    "progressSheets": {
-      "title": "AI Progress Sheets",
-      "subtitle": "Visual assessments and personalized feedback",
-      "questionPlaceholder": "Describe your goal or challenge...",
-      "generateSheet": "Generate Sheet",
-      "mySheets": "My Sheets",
-      "askQuestion": "Ask a question to generate a personalized progress sheet",
-      "loading": "Generating sheet...",
-      "error": "Error generating sheet",
-      "saved": "Sheet has been saved",
-      "noSavedSheets": "You don't have any saved sheets yet"
-    },
-    "simulations": {
-      "title": "AI Simulations",
-      "subtitle": "Practice professional scenarios with AI",
-      "selectSimulation": "Select a simulation",
-      "job_interview": "Job Interview",
-      "management_promotion": "Management Promotion",
-      "team_conflict": "Team Conflict",
-      "salary_negotiation": "Salary Negotiation",
-      "startSimulation": "Start Simulation",
-      "simulationDescription": {
-        "job_interview": "Practice for a job interview in a safe environment",
-        "management_promotion": "Prepare for a management promotion",
-        "team_conflict": "Learn to manage team conflicts",
-        "salary_negotiation": "Develop your negotiation skills"
-      },
-      "aiRole": {
-        "Recruiter": "Recruiter",
-        "Manager": "Manager",
-        "Team_Member": "Team Member",
-        "HR_Manager": "HR Manager"
-      }
-    },
-    "progressTracking": {
-      "title": "Progress Analytics",
-      "subtitle": "Track your evolution over time",
-      "exportPDF": "Export PDF",
-      "progressReport": "Progress Report",
-      "noData": "No data available for the selected period"
-    }
+    "password": "Password"
   }
 }

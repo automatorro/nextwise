@@ -8,8 +8,21 @@
     "admin": "Admin"
   },
   "home": {
+    "heroTitle": "Descoperă-ți Potențialul și Dezvoltă-ți Cariera",
+    "heroSubtitle": "Platforma AI care te ajută să îți înțelegi personalitatea, să îți identifici punctele forte și să îți construiești calea ideală în carieră prin evaluări psihologice avansate.",
+    "startFreeAssessment": "Începe Evaluarea Gratuită",
     "featuresTitle": "Descoperă Funcționalitățile Noastre",
-    "featuresSubtitle": "Unelte bazate pe inteligență artificială pentru a-ți accelera cariera."
+    "featuresSubtitle": "Unelte bazate pe inteligență artificială pentru a-ți accelera cariera.",
+    "features": {
+      "psychologicalEvaluations": "Evaluări Psihologice",
+      "psychologicalEvaluationsDesc": "Înțelege-ți personalitatea și abilitățile cognitive.",
+      "personalizedCareerPlans": "Planuri de Carieră Personalizate",
+      "personalizedCareerPlansDesc": "Primește o foaie de parcurs clară, bazată pe profilul tău unic.",
+      "advancedAnalytics": "Analiză Avansată",
+      "advancedAnalyticsDesc": "Urmărește-ți progresul cu informații detaliate.",
+      "aiMentoring": "Mentorat AI",
+      "aiMentoringDesc": "Primește ghidare continuă de la mentorul tău AI."
+    }
   },
   "dashboard": {
     "welcome": "Bun venit,",
@@ -27,14 +40,6 @@
       "planCareer": "Creează-ți un plan de carieră personalizat",
       "planCareerDesc": "Setează-ți obiectivele și urmărește-ți progresul pas cu pas.",
       "startCareerPlan": "Începe Planul"
-    },
-    "categories": {
-      "title": "Categorii de Teste",
-      "subtitle": "Alege din diverse categorii pentru a-ți înțelege mai bine profilul.",
-      "emotionalIntelligence": "Inteligență Emoțională",
-      "emotionalIntelligenceDesc": "Înțelege și gestionează emoțiile.",
-      "personality": "Personalitate",
-      "personalityDesc": "Descoperă-ți trăsăturile dominante."
     }
   },
   "careerPaths": {
@@ -45,8 +50,8 @@
       "create": "Plan Nou",
       "mentoring": "Mentoring AI",
       "cvAnalyzer": "Analiza CV",
-      "programs": "Programe AI",
-      "progressSheets": "Fișe de Progres",
+      "programs": "Programe AI de 14 Zile",
+      "progressSheets": "Fișe de Progres AI",
       "simulations": "Simulări AI",
       "progressAnalysis": "Analiza Progresului"
     },
@@ -66,11 +71,27 @@
   },
   "profile": {
     "title": "Profilul Meu",
-    "administrator": "Administrator",
     "welcome": "Bun venit,",
     "welcomeMessage": "Aici poți vedea sumarul activității tale și informațiile personale.",
+    "administrator": "Administrator",
     "admin": {
-        "notice": "Acesta este un cont de administrator cu acces la toate funcționalitățile."
+      "notice": "Acesta este un cont de administrator cu acces la toate funcționalitățile."
+    },
+    "personalInfo": {
+      "title": "Informații Profil",
+      "name": "Nume",
+      "email": "Email",
+      "role": "Rol",
+      "memberSince": "Membru din"
     }
+  },
+  "auth": {
+    "backToMain": "Înapoi la pagina principală",
+    "welcome": "Bun venit",
+    "signInMessage": "Autentifică-te în cont sau creează unul nou",
+    "signIn": "Autentificare",
+    "signUp": "Înregistrare",
+    "email": "Email",
+    "password": "Parolă"
   }
 }

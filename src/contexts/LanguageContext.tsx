@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import type { Language, Translations } from '@/types/language';
 import { fallbackTranslations } from '@/utils/fallbackTranslations';
@@ -27,39 +28,20 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     clearTranslationResultCache();
   }, []);
 
-  // Funcție pentru validarea traducerilor
-  const validateTranslations = useCallback((trans: Translations, lang: Language): boolean => {
-    const requiredKeys = ['header', 'home', 'dashboard', 'careerPaths', 'profile', 'cvOptimization'];
-    const missingKeys = requiredKeys.filter(key => !trans[key]);
-    
-    if (missingKeys.length > 0) {
-      console.warn(`⚠️ Missing keys in ${lang}:`, missingKeys);
-      return false;
-    }
-    
-    console.log(`✅ Translation validation passed for ${lang}`);
-    return true;
-  }, []);
-
   // Funcție pentru încărcarea sigură a traducerilor
   const loadSafeTranslations = useCallback(async (lang: Language): Promise<Translations> => {
     console.log(`🔄 Loading safe translations for: ${lang}`);
     
     try {
       const loadedTranslations = await loadTranslations(lang);
-      
-      if (validateTranslations(loadedTranslations, lang)) {
-        console.log(`✅ Loaded and validated translations for ${lang}`);
-        return loadedTranslations;
-      } else {
-        console.warn(`⚠️ Validation failed for ${lang}, using fallback`);
-        return fallbackTranslations[lang];
-      }
+      console.log(`✅ Loaded translations for ${lang}`);
+      return loadedTranslations;
     } catch (error) {
       console.error(`❌ Error loading translations for ${lang}:`, error);
+      console.log(`🔄 Using fallback translations for ${lang}`);
       return fallbackTranslations[lang];
     }
-  }, [validateTranslations]);
+  }, []);
 
   // Inițializare
   useEffect(() => {
