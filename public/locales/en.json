@@ -40,7 +40,10 @@
       "planCareer": "Create a personalized career plan",
       "planCareerDesc": "Set your goals and track your progress step by step.",
       "startCareerPlan": "Start Plan"
-    }
+    },
+    "testCategories": "Test Categories",
+    "exploreCategories": "Explore different types of assessments available",
+    "seeAllTests": "See All Tests"
   },
   "careerPaths": {
     "title": "Your Personalized Career Plans",
@@ -61,7 +64,9 @@
       "createPlan": "Create New Plan",
       "progress": "Progress",
       "created": "Created",
-      "viewDetails": "View Details"
+      "viewDetails": "View Details",
+      "noPlans": "You don't have any career plans yet",
+      "createFirst": "Create your first personalized plan to achieve your professional goals"
     }
   },
   "cvOptimization": {
@@ -83,6 +88,18 @@
       "email": "Email",
       "role": "Role",
       "memberSince": "Member Since"
+    },
+    "quickActions": {
+      "title": "Quick Actions",
+      "tryNewTest": "Try New Test",
+      "goToDashboard": "Go to Dashboard",
+      "viewSubscription": "View Subscription"
+    },
+    "recentTests": {
+      "title": "Recent Test Results",
+      "noTests": "No tests completed yet",
+      "takeFirst": "Take your first test to see results here",
+      "completedOn": "Completed on"
     }
   },
   "auth": {
@@ -92,6 +109,43 @@
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "email": "Email",
-    "password": "Password"
+    "password": "Password",
+    "fullName": "Full Name",
+    "enterEmail": "Enter your email",
+    "enterPassword": "Enter password",
+    "enterFullName": "Enter your full name",
+    "signingIn": "Signing in...",
+    "creatingAccount": "Creating account...",
+    "createAccount": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "forgotPassword": "Forgot password?",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "invalidEmail": "Please enter a valid email",
+    "nameRequired": "Full name is required"
+  },
+  "tests": {
+    "title": "Psychological Tests",
+    "subtitle": "Discover your personality and skills with our scientifically validated tests",
+    "searchPlaceholder": "Search tests...",
+    "allCategories": "All",
+    "duration": "minutes",
+    "questions": "questions",
+    "startTest": "Start test",
+    "noTestsFound": "No tests found matching your search criteria."
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit"
   }
 }

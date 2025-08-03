@@ -162,10 +162,10 @@ const Dashboard = () => {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Trophy className="w-6 h-6 text-yellow-600" />
-                  <span>Categorii de Teste</span>
+                  <span>{t('dashboard.testCategories')}</span>
                 </CardTitle>
                 <CardDescription>
-                  Explorează diferitele tipuri de evaluări disponibile
+                  {t('dashboard.exploreCategories')}
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -190,7 +190,7 @@ const Dashboard = () => {
                 <div className="mt-6">
                   <Link to="/tests">
                     <Button variant="outline" className="w-full">
-                      Vezi Toate Testele
+                      {t('dashboard.seeAllTests')}
                     </Button>
                   </Link>
                 </div>

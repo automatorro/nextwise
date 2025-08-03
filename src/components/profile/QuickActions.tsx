@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface QuickActionsProps {
   isAdmin: boolean;
@@ -10,11 +11,12 @@ interface QuickActionsProps {
 
 const QuickActions = ({ isAdmin }: QuickActionsProps) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Acțiuni Rapide</CardTitle>
+        <CardTitle>{t('profile.quickActions.title')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
@@ -22,14 +24,14 @@ const QuickActions = ({ isAdmin }: QuickActionsProps) => {
             className="w-full" 
             onClick={() => navigate('/teste')}
           >
-            Încearcă un Test Nou
+            {t('profile.quickActions.tryNewTest')}
           </Button>
           <Button 
             variant="outline" 
             className="w-full"
             onClick={() => navigate('/dashboard')}
           >
-            Mergi la Dashboard
+            {t('profile.quickActions.goToDashboard')}
           </Button>
           {!isAdmin && (
             <Button 
@@ -37,7 +39,7 @@ const QuickActions = ({ isAdmin }: QuickActionsProps) => {
               className="w-full"
               onClick={() => navigate('/abonament')}
             >
-              Vezi Abonamentul
+              {t('profile.quickActions.viewSubscription')}
             </Button>
           )}
         </div>

@@ -40,7 +40,10 @@
       "planCareer": "Creează-ți un plan de carieră personalizat",
       "planCareerDesc": "Setează-ți obiectivele și urmărește-ți progresul pas cu pas.",
       "startCareerPlan": "Începe Planul"
-    }
+    },
+    "testCategories": "Categorii de Teste",
+    "exploreCategories": "Explorează diferitele tipuri de evaluări disponibile",
+    "seeAllTests": "Vezi Toate Testele"
   },
   "careerPaths": {
     "title": "Planurile tale de carieră personalizate",
@@ -61,7 +64,9 @@
       "createPlan": "Creează Plan Nou",
       "progress": "Progres",
       "created": "Creat",
-      "viewDetails": "Vezi Detalii"
+      "viewDetails": "Vezi Detalii",
+      "noPlans": "Nu ai încă planuri de carieră",
+      "createFirst": "Creează primul tău plan personalizat pentru a-ți atinge obiectivele profesionale"
     }
   },
   "cvOptimization": {
@@ -83,6 +88,18 @@
       "email": "Email",
       "role": "Rol",
       "memberSince": "Membru din"
+    },
+    "quickActions": {
+      "title": "Acțiuni Rapide",
+      "tryNewTest": "Încearcă un Test Nou",
+      "goToDashboard": "Mergi la Dashboard",
+      "viewSubscription": "Vezi Abonamentul"
+    },
+    "recentTests": {
+      "title": "Rezultate Teste Recente",
+      "noTests": "Încă nu ai completat teste",
+      "takeFirst": "Completează primul test pentru a vedea rezultatele aici",
+      "completedOn": "Completat pe"
     }
   },
   "auth": {
@@ -92,6 +109,43 @@
     "signIn": "Autentificare",
     "signUp": "Înregistrare",
     "email": "Email",
-    "password": "Parolă"
+    "password": "Parolă",
+    "fullName": "Nume Complet",
+    "enterEmail": "Introdu email-ul",
+    "enterPassword": "Introdu parola",
+    "enterFullName": "Introdu numele complet",
+    "signingIn": "Se autentifică...",
+    "creatingAccount": "Se creează contul...",
+    "createAccount": "Creează Cont",
+    "alreadyHaveAccount": "Ai deja un cont?",
+    "dontHaveAccount": "Nu ai un cont?",
+    "forgotPassword": "Ai uitat parola?",
+    "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
+    "invalidEmail": "Te rog să introduci un email valid",
+    "nameRequired": "Numele complet este obligatoriu"
+  },
+  "tests": {
+    "title": "Teste Psihologice",
+    "subtitle": "Descoperă-ți personalitatea și competențele cu testele noastre validate științific",
+    "searchPlaceholder": "Caută teste...",
+    "allCategories": "Toate",
+    "duration": "minute",
+    "questions": "întrebări",
+    "startTest": "Începe testul",
+    "noTestsFound": "Nu s-au găsit teste care să corespundă criteriilor de căutare."
+  },
+  "common": {
+    "loading": "Se încarcă...",
+    "error": "Eroare",
+    "save": "Salvează",
+    "cancel": "Anulează",
+    "delete": "Șterge",
+    "edit": "Editează",
+    "close": "Închide",
+    "confirm": "Confirmă",
+    "back": "Înapoi",
+    "next": "Următorul",
+    "previous": "Anterior",
+    "submit": "Trimite"
   }
 }

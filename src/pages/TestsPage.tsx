@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -26,7 +27,7 @@ const TestsPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const navigate = useNavigate();
-  const { language } = useLanguage();
+  const { language, t } = useLanguage();
 
   // Fetch tests from database with language dependency
   const { data: tests, isLoading, error } = useQuery({
@@ -51,7 +52,6 @@ const TestsPage = () => {
       
       console.log('Raw test data from database:', data);
       console.log('Total tests fetched:', data?.length || 0);
-      console.log('All test names:', data?.map(t => t.name) || []);
       console.log('Current language:', language);
       
       // Enhanced descriptions for uniform card layout
@@ -96,7 +96,7 @@ const TestsPage = () => {
           if (testName.toLowerCase().includes(key.toLowerCase()) || 
               testName.toLowerCase().includes(key.replace('-', '').toLowerCase()) ||
               testName.toLowerCase().includes(key.replace(' ', '').toLowerCase())) {
-            return desc[language as 'ro' | 'en']; // Return description in current language
+            return desc[language as 'ro' | 'en'];
           }
         }
         
@@ -127,7 +127,7 @@ const TestsPage = () => {
           category: categoryName,
           duration: test.estimated_duration || 15,
           questions_count: test.questions_count || 20,
-          difficulty: 'Medium', // Default since not in database
+          difficulty: 'Medium',
           created_at: test.created_at || '',
           updated_at: test.created_at || ''
         };
@@ -154,8 +154,8 @@ const TestsPage = () => {
     navigate(`/test/${testId}`);
   };
 
-  if (isLoading) return <div>Loading tests...</div>;
-  if (error) return <div>Error loading tests: {error.message}</div>;
+  if (isLoading) return <div>{t('common.loading')}</div>;
+  if (error) return <div>{t('common.error')}: {error.message}</div>;
 
   return (
     <>
@@ -163,13 +163,10 @@ const TestsPage = () => {
       <div className="container mx-auto p-6 pt-24">
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">
-            {language === 'en' ? 'Psychological Tests' : 'Teste Psihologice'}
+            {t('tests.title')}
           </h1>
           <p className="text-gray-600">
-            {language === 'en' 
-              ? 'Discover your personality and skills with our scientifically validated tests'
-              : 'Descoperă-ți personalitatea și competențele cu testele noastre validate științific'
-            }
+            {t('tests.subtitle')}
           </p>
         </div>
 
@@ -179,7 +176,7 @@ const TestsPage = () => {
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
-                placeholder={language === 'en' ? 'Search tests...' : 'Caută teste...'}
+                placeholder={t('tests.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="pl-10"
@@ -196,7 +193,7 @@ const TestsPage = () => {
                 onClick={() => setSelectedCategory(category)}
               >
                 {category === 'all' 
-                  ? (language === 'en' ? 'All' : 'Toate')
+                  ? t('tests.allCategories')
                   : category
                 }
               </Badge>
@@ -221,13 +218,13 @@ const TestsPage = () => {
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <Clock className="w-4 h-4" />
                     <span>
-                      {test.duration} {language === 'en' ? 'minutes' : 'minute'}
+                      {test.duration} {t('tests.duration')}
                     </span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-500">
                     <BookOpen className="w-4 h-4" />
                     <span>
-                      {test.questions_count} {language === 'en' ? 'questions' : 'întrebări'}
+                      {test.questions_count} {t('tests.questions')}
                     </span>
                   </div>
                 </div>
@@ -236,7 +233,7 @@ const TestsPage = () => {
                   onClick={() => handleStartTest(test.id)}
                   className="w-full mt-auto"
                 >
-                  {language === 'en' ? 'Start test' : 'Începe testul'}
+                  {t('tests.startTest')}
                 </Button>
               </CardContent>
             </Card>
@@ -246,10 +243,7 @@ const TestsPage = () => {
         {filteredTests.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500">
-              {language === 'en' 
-                ? 'No tests found matching your search criteria.'
-                : 'Nu s-au găsit teste care să corespundă criteriilor de căutare.'
-              }
+              {t('tests.noTestsFound')}
             </p>
           </div>
         )}
