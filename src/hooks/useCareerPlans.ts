@@ -2,6 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 import { useToast } from '@/hooks/use-toast';
 
 export interface CareerPlan {
@@ -31,6 +32,7 @@ export interface CareerMilestone {
 
 export const useCareerPlans = () => {
   const { user } = useAuth();
+  const { language, t } = useLanguage();
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -39,7 +41,7 @@ export const useCareerPlans = () => {
     isLoading,
     error
   } = useQuery({
-    queryKey: ['career-plans', user?.id],
+    queryKey: ['career-plans', user?.id, language],
     queryFn: async () => {
       if (!user?.id) throw new Error('User not authenticated');
 
@@ -83,15 +85,15 @@ export const useCareerPlans = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['career-plans'] });
       toast({
-        title: "Success",
-        description: "Planul de carieră a fost creat cu succes!"
+        title: t('common.success'),
+        description: t('careerPaths.messages.planCreated')
       });
     },
     onError: (error) => {
       console.error('Error creating career plan:', error);
       toast({
-        title: "Eroare",
-        description: "Nu am putut crea planul de carieră.",
+        title: t('common.error'),
+        description: t('careerPaths.messages.createError'),
         variant: "destructive"
       });
     }
@@ -112,8 +114,8 @@ export const useCareerPlans = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['career-plans'] });
       toast({
-        title: "Success",
-        description: "Planul de carieră a fost actualizat!"
+        title: t('common.success'),
+        description: t('careerPaths.messages.planUpdated')
       });
     }
   });
@@ -130,8 +132,8 @@ export const useCareerPlans = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['career-plans'] });
       toast({
-        title: "Success",
-        description: "Planul de carieră a fost șters!"
+        title: t('common.success'),
+        description: t('careerPaths.messages.planDeleted')
       });
     }
   });

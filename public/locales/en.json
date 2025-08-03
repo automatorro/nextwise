@@ -22,7 +22,9 @@
       "advancedAnalyticsDesc": "Track your progress with detailed insights.",
       "aiMentoring": "AI Mentoring",
       "aiMentoringDesc": "Receive continuous guidance from your AI mentor."
-    }
+    },
+    "footerText": "The AI platform that helps you understand your personality, identify your strengths, and build your ideal career path through advanced psychological assessments.",
+    "footerCopyright": "© 2024 NextWise. All rights reserved."
   },
   "dashboard": {
     "welcome": "Welcome,",
@@ -67,6 +69,36 @@
       "viewDetails": "View Details",
       "noPlans": "You don't have any career plans yet",
       "createFirst": "Create your first personalized plan to achieve your professional goals"
+    },
+    "messages": {
+      "planCreated": "Career plan created successfully!",
+      "planUpdated": "Career plan updated successfully!",
+      "planDeleted": "Career plan deleted successfully!",
+      "createError": "Could not create career plan.",
+      "updateError": "Could not update career plan.",
+      "deleteError": "Could not delete career plan."
+    },
+    "simulations": {
+      "title": "AI Simulations",
+      "subtitle": "Practice professional scenarios with AI",
+      "jobInterview": "Job Interview",
+      "jobInterviewDesc": "Practice for a job interview in a safe environment",
+      "salaryNegotiation": "Salary Negotiation",
+      "salaryNegotiationDesc": "Develop your negotiation skills",
+      "teamConflict": "Team Conflict",
+      "teamConflictDesc": "Learn to manage team conflicts",
+      "managementPromotion": "Management Promotion",
+      "managementPromotionDesc": "Prepare for a management promotion",
+      "activeSimulation": "Active simulation in progress",
+      "type": "Type",
+      "messages": "Messages",
+      "responses": "Responses",
+      "continueSimulation": "Continue Simulation",
+      "roles": "Roles",
+      "startSimulation": "Start Simulation",
+      "recentSimulations": "Recent Simulations",
+      "completed": "Completed",
+      "inProgress": "In Progress"
     }
   },
   "cvOptimization": {
@@ -137,6 +169,7 @@
   "common": {
     "loading": "Loading...",
     "error": "Error",
+    "success": "Success",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",

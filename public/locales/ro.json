@@ -22,7 +22,9 @@
       "advancedAnalyticsDesc": "Urmărește-ți progresul cu informații detaliate.",
       "aiMentoring": "Mentorat AI",
       "aiMentoringDesc": "Primește ghidare continuă de la mentorul tău AI."
-    }
+    },
+    "footerText": "Platforma AI care te ajută să îți înțelegi personalitatea, să îți identifici punctele forte și să îți construiești calea ideală în carieră prin evaluări psihologice avansate.",
+    "footerCopyright": "© 2024 NextWise. Toate drepturile rezervate."
   },
   "dashboard": {
     "welcome": "Bun venit,",
@@ -67,6 +69,36 @@
       "viewDetails": "Vezi Detalii",
       "noPlans": "Nu ai încă planuri de carieră",
       "createFirst": "Creează primul tău plan personalizat pentru a-ți atinge obiectivele profesionale"
+    },
+    "messages": {
+      "planCreated": "Planul de carieră a fost creat cu succes!",
+      "planUpdated": "Planul de carieră a fost actualizat cu succes!",
+      "planDeleted": "Planul de carieră a fost șters cu succes!",
+      "createError": "Nu am putut crea planul de carieră.",
+      "updateError": "Nu am putut actualiza planul de carieră.",
+      "deleteError": "Nu am putut șterge planul de carieră."
+    },
+    "simulations": {
+      "title": "Simulări AI",
+      "subtitle": "Exersează scenarii profesionale cu AI",
+      "jobInterview": "Interviu de Angajare",
+      "jobInterviewDesc": "Practică pentru un interviu de angajare într-un mediu sigur",
+      "salaryNegotiation": "Negociere Salariu",
+      "salaryNegotiationDesc": "Dezvoltă-ți abilitățile de negociere",
+      "teamConflict": "Conflict în Echipă",
+      "teamConflictDesc": "Învață să gestionezi conflictele în echipă",
+      "managementPromotion": "Promovare în Management",
+      "managementPromotionDesc": "Pregătește-te pentru o promovare în management",
+      "activeSimulation": "Simulare activă în desfășurare",
+      "type": "Tip",
+      "messages": "Mesaje",
+      "responses": "Răspunsuri",
+      "continueSimulation": "Continuă Simularea",
+      "roles": "Roluri",
+      "startSimulation": "Începe Simularea",
+      "recentSimulations": "Simulări Recente",
+      "completed": "Completată",
+      "inProgress": "În Progres"
     }
   },
   "cvOptimization": {
@@ -137,6 +169,7 @@
   "common": {
     "loading": "Se încarcă...",
     "error": "Eroare",
+    "success": "Succes",
     "save": "Salvează",
     "cancel": "Anulează",
     "delete": "Șterge",
