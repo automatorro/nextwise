@@ -19,22 +19,22 @@ const ProfileInfoCard = ({ fullName, email, isAdmin, createdAt }: ProfileInfoCar
       <CardHeader>
         <CardTitle className="flex items-center">
           <User className="w-5 h-5 mr-2" />
-          {t('profile.personalInfo') || 'Informații Profil'}
+          {t('profile.personalInfo.title')}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
           <div>
-            <label className="text-sm font-medium text-gray-600">{t('profile.name') || 'Nume'}</label>
-            <p className="text-gray-900">{fullName || t('profile.notSet') || 'Nu este setat'}</p>
+            <label className="text-sm font-medium text-gray-600">{t('profile.personalInfo.name')}</label>
+            <p className="text-gray-900">{fullName || 'Nu este setat'}</p>
           </div>
           <div>
-            <label className="text-sm font-medium text-gray-600">Email</label>
+            <label className="text-sm font-medium text-gray-600">{t('profile.personalInfo.email')}</label>
             <p className="text-gray-900">{email}</p>
           </div>
           {isAdmin && (
             <div>
-              <label className="text-sm font-medium text-gray-600">{t('profile.role') || 'Rol'}</label>
+              <label className="text-sm font-medium text-gray-600">{t('profile.personalInfo.role')}</label>
               <div className="flex items-center space-x-2 mt-1">
                 <Shield className="w-4 h-4 text-red-600" />
                 <span className="text-red-600 font-medium">{t('profile.administrator')}</span>
@@ -42,11 +42,11 @@ const ProfileInfoCard = ({ fullName, email, isAdmin, createdAt }: ProfileInfoCar
             </div>
           )}
           <div>
-            <label className="text-sm font-medium text-gray-600">{t('profile.memberSince') || 'Membru din'}</label>
+            <label className="text-sm font-medium text-gray-600">{t('profile.personalInfo.memberSince')}</label>
             <p className="text-gray-900">
               {createdAt 
                 ? new Date(createdAt).toLocaleDateString('ro-RO')
-                : t('profile.notAvailable') || 'Nu este disponibil'
+                : 'Nu este disponibil'
               }
             </p>
           </div>
