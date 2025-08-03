@@ -26,29 +26,29 @@ const Dashboard = () => {
   const testCategories = [
     {
       icon: Brain,
-      title: t('dashboard.categories.emotionalIntelligence'),
-      description: t('dashboard.categories.emotionalIntelligenceDesc'),
+      title: "Inteligența Emoțională",
+      description: "Evaluează capacitatea de a înțelege și gestiona emoțiile.",
       color: 'bg-blue-100 text-blue-600',
       tests: 1
     },
     {
       icon: Users,
-      title: t('dashboard.categories.personality'),
-      description: t('dashboard.categories.personalityDesc'),
+      title: "Personalitate",
+      description: "Analizează trăsăturile de personalitate și stilul comportamental.",
       color: 'bg-purple-100 text-purple-600',
       tests: 5
     },
     {
       icon: Target,
-      title: t('dashboard.categories.leadership'),
-      description: t('dashboard.categories.leadershipDesc'),
+      title: "Leadership",
+      description: "Evaluează abilitățile de conducere și influență.",
       color: 'bg-green-100 text-green-600',
       tests: 1
     },
     {
       icon: Heart,
-      title: t('dashboard.categories.wellness'),
-      description: t('dashboard.categories.wellnessDesc'),
+      title: "Wellness",
+      description: "Monitorizează bunăstarea mentală și echilibrul.",
       color: 'bg-pink-100 text-pink-600',
       tests: 2
     }
@@ -90,7 +90,7 @@ const Dashboard = () => {
             {/* Welcome Section */}
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gray-900">
-                {t('dashboard.welcome')}, {user?.user_metadata?.full_name || 'Utilizator'}! 👋
+                {t('dashboard.welcome')} {user?.user_metadata?.full_name || 'Utilizator'}! 👋
               </h1>
               <p className="text-gray-600 mt-2">
                 {t('dashboard.welcomeSubtext')}
@@ -162,10 +162,10 @@ const Dashboard = () => {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <Trophy className="w-6 h-6 text-yellow-600" />
-                  <span>{t('dashboard.categories.title')}</span>
+                  <span>Categorii de Teste</span>
                 </CardTitle>
                 <CardDescription>
-                  {t('dashboard.categories.subtitle')}
+                  Explorează diferitele tipuri de evaluări disponibile
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -180,7 +180,7 @@ const Dashboard = () => {
                           <h3 className="font-semibold text-gray-900">{category.title}</h3>
                           <p className="text-sm text-gray-600 mt-1">{category.description}</p>
                           <Badge variant="secondary" className="mt-2">
-                            {category.tests} {category.tests === 1 ? t('dashboard.categories.test') : t('dashboard.categories.tests')}
+                            {category.tests} {category.tests === 1 ? 'test' : 'teste'}
                           </Badge>
                         </div>
                       </div>
@@ -190,7 +190,7 @@ const Dashboard = () => {
                 <div className="mt-6">
                   <Link to="/tests">
                     <Button variant="outline" className="w-full">
-                      {t('dashboard.categories.viewAllTests')}
+                      Vezi Toate Testele
                     </Button>
                   </Link>
                 </div>

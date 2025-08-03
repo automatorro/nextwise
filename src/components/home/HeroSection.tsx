@@ -31,13 +31,13 @@ const HeroSection = () => {
       <div className="max-w-7xl mx-auto text-center">
         <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-200">
           <Zap className="w-3 h-3 mr-1" />
-          {t('common.poweredByAI')}
+          Powered by AI
         </Badge>
         <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
-          {t('home.title')}
+          {t('home.heroTitle')}
         </h1>
         <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
-          {t('home.subtitle')}
+          {t('home.heroSubtitle')}
         </p>
         <div className="flex justify-center">
           <Button 
@@ -53,7 +53,7 @@ const HeroSection = () => {
               cursor: 'pointer'
             }}
           >
-            {t('home.ctaButton')}
+            {t('home.startFreeAssessment')}
             <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </div>

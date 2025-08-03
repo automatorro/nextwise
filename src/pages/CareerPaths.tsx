@@ -67,12 +67,12 @@ const CareerPaths = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-blue-900">
             <FileText className="w-6 h-6 text-blue-600" />
-            {t('career.cvOptimization.title')}
+            {t('cvOptimization.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-blue-700 mb-4">
-            {t('career.cvOptimization.description')}
+            {t('cvOptimization.description')}
           </p>
           <Button 
             className="bg-blue-600 hover:bg-blue-700 text-white"
@@ -85,7 +85,7 @@ const CareerPaths = () => {
             }}
           >
             <TrendingUp className="w-4 h-4 mr-2" />
-            {t('career.cvOptimization.startAnalysis')}
+            {t('cvOptimization.startAnalysis')}
           </Button>
         </CardContent>
       </Card>
@@ -122,21 +122,21 @@ const CareerPaths = () => {
                     {t('careerPaths.tabs.mentoring')}
                   </TabsTrigger>
                   <TabsTrigger value="cv-analyzer" className="whitespace-nowrap">
-                    {t('career.cvAnalyzer.title')}
+                    {t('careerPaths.tabs.cvAnalyzer')}
                   </TabsTrigger>
                   {features.hasAI && (
                     <>
                       <TabsTrigger value="ai-programs" className="whitespace-nowrap">
-                        {t('premiumFeatures.aiPrograms.title')}
+                        {t('careerPaths.tabs.programs')}
                       </TabsTrigger>
                       <TabsTrigger value="progress-sheets" className="whitespace-nowrap">
-                        {t('premiumFeatures.progressSheets.title')}
+                        {t('careerPaths.tabs.progressSheets')}
                       </TabsTrigger>
                       <TabsTrigger value="ai-simulations" className="whitespace-nowrap">
-                        {t('premiumFeatures.simulations.title')}
+                        {t('careerPaths.tabs.simulations')}
                       </TabsTrigger>
                       <TabsTrigger value="progress-analytics" className="whitespace-nowrap">
-                        {t('premiumFeatures.progressTracking.title')}
+                        {t('careerPaths.tabs.progressAnalysis')}
                       </TabsTrigger>
                     </>
                   )}
@@ -148,13 +148,13 @@ const CareerPaths = () => {
                 <TabsTrigger value="my-plans">{t('careerPaths.tabs.dashboard')}</TabsTrigger>
                 <TabsTrigger value="create-plan">{t('careerPaths.tabs.create')}</TabsTrigger>
                 <TabsTrigger value="ai-mentoring">{t('careerPaths.tabs.mentoring')}</TabsTrigger>
-                <TabsTrigger value="cv-analyzer">{t('career.cvAnalyzer.title')}</TabsTrigger>
+                <TabsTrigger value="cv-analyzer">{t('careerPaths.tabs.cvAnalyzer')}</TabsTrigger>
                 {features.hasAI && (
                   <>
-                    <TabsTrigger value="ai-programs">{t('premiumFeatures.aiPrograms.title')}</TabsTrigger>
-                    <TabsTrigger value="progress-sheets">{t('premiumFeatures.progressSheets.title')}</TabsTrigger>
-                    <TabsTrigger value="ai-simulations">{t('premiumFeatures.simulations.title')}</TabsTrigger>
-                    <TabsTrigger value="progress-analytics">{t('premiumFeatures.progressTracking.title')}</TabsTrigger>
+                    <TabsTrigger value="ai-programs">{t('careerPaths.tabs.programs')}</TabsTrigger>
+                    <TabsTrigger value="progress-sheets">{t('careerPaths.tabs.progressSheets')}</TabsTrigger>
+                    <TabsTrigger value="ai-simulations">{t('careerPaths.tabs.simulations')}</TabsTrigger>
+                    <TabsTrigger value="progress-analytics">{t('careerPaths.tabs.progressAnalysis')}</TabsTrigger>
                   </>
                 )}
               </TabsList>

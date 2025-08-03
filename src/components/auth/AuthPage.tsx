@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import { SecureAuthForm } from './SecureAuthForm';
 
 export const AuthPage = () => {
   const { loading, user } = useAuth();
+  const { t } = useLanguage();
   const navigate = useNavigate();
 
   // Redirect to dashboard if user is already logged in
@@ -47,10 +49,22 @@ export const AuthPage = () => {
           className="flex items-center gap-2 text-gray-600 hover:text-gray-800"
         >
           <ArrowLeft className="h-4 w-4" />
-          Înapoi la pagina principală
+          {t('auth.backToMain')}
         </Button>
         
-        <SecureAuthForm />
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold text-gray-900">
+              {t('auth.welcome')}
+            </CardTitle>
+            <CardDescription className="text-gray-600">
+              {t('auth.signInMessage')}
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <SecureAuthForm />
+          </CardContent>
+        </Card>
       </div>
     </div>
   );

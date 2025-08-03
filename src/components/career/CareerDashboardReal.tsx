@@ -64,10 +64,10 @@ const CareerDashboardReal = () => {
       <div className="text-center py-12">
         <Target className="mx-auto h-12 w-12 text-gray-400 mb-4" />
         <h3 className="text-lg font-medium text-gray-900 mb-2">
-          {t('careerPaths.dashboard.noPlans')}
+          Nu ai încă planuri de carieră
         </h3>
         <p className="text-gray-600 mb-6">
-          {t('careerPaths.dashboard.createFirstPlan')}
+          Creează primul tău plan personalizat pentru a-ți atinge obiectivele profesionale
         </p>
         <Button onClick={() => navigate('/career-paths?tab=create-plan')}>
           <Plus className="w-4 h-4 mr-2" />
