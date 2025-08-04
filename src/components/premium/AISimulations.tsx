@@ -24,7 +24,7 @@ const AISimulations = () => {
       id: 'job-interview',
       title: t('aiSimulations.jobInterview.title'),
       description: t('aiSimulations.jobInterview.description'),
-      duration: t('aiSimulations.duration.minutes', { minutes: 15 }),
+      duration: '15 ' + t('aiSimulations.duration.minutes'),
       difficulty: t('aiSimulations.difficulty.medium'),
       icon: Users,
       color: 'bg-blue-100 text-blue-600'
@@ -33,7 +33,7 @@ const AISimulations = () => {
       id: 'presentation-skills',
       title: t('aiSimulations.presentationSkills.title'),
       description: t('aiSimulations.presentationSkills.description'),
-      duration: t('aiSimulations.duration.minutes', { minutes: 20 }),
+      duration: '20 ' + t('aiSimulations.duration.minutes'),
       difficulty: t('aiSimulations.difficulty.medium'),
       icon: Target,
       color: 'bg-green-100 text-green-600'
@@ -42,7 +42,7 @@ const AISimulations = () => {
       id: 'negotiation-skills',
       title: t('aiSimulations.negotiationSkills.title'),
       description: t('aiSimulations.negotiationSkills.description'),
-      duration: t('aiSimulations.duration.minutes', { minutes: 25 }),
+      duration: '25 ' + t('aiSimulations.duration.minutes'),
       difficulty: t('aiSimulations.difficulty.hard'),
       icon: Trophy,
       color: 'bg-purple-100 text-purple-600'
