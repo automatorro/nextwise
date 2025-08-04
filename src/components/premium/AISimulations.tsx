@@ -4,7 +4,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { PlayCircle, Clock, Users, Trophy, Target } from 'lucide-react';
+import { PlayCircle, Clock, Users, Trophy, Target, Briefcase } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -21,7 +21,7 @@ const AISimulations = () => {
 
   const simulationTypes = [
     {
-      id: 'job-interview',
+      id: 'job_interview',
       title: t('aiSimulations.jobInterview.title'),
       description: t('aiSimulations.jobInterview.description'),
       duration: '15 ' + t('aiSimulations.duration.minutes'),
@@ -30,18 +30,27 @@ const AISimulations = () => {
       color: 'bg-blue-100 text-blue-600'
     },
     {
-      id: 'presentation-skills',
-      title: t('aiSimulations.presentationSkills.title'),
-      description: t('aiSimulations.presentationSkills.description'),
+      id: 'salary_negotiation',
+      title: 'Negociere Salarială',
+      description: 'Practică negocierea salariului într-un mediu sigur',
       duration: '20 ' + t('aiSimulations.duration.minutes'),
       difficulty: t('aiSimulations.difficulty.medium'),
-      icon: Target,
+      icon: Briefcase,
       color: 'bg-green-100 text-green-600'
     },
     {
-      id: 'negotiation-skills',
-      title: t('aiSimulations.negotiationSkills.title'),
-      description: t('aiSimulations.negotiationSkills.description'),
+      id: 'team_conflict',
+      title: 'Rezolvare Conflicte',
+      description: 'Învață să gestionezi conflictele în echipă',
+      duration: '15 ' + t('aiSimulations.duration.minutes'),
+      difficulty: t('aiSimulations.difficulty.hard'),
+      icon: Target,
+      color: 'bg-orange-100 text-orange-600'
+    },
+    {
+      id: 'management_promotion',
+      title: 'Promovare în Management',
+      description: 'Pregătește-te pentru un rol de leadership',
       duration: '25 ' + t('aiSimulations.duration.minutes'),
       difficulty: t('aiSimulations.difficulty.hard'),
       icon: Trophy,
@@ -70,19 +79,27 @@ const AISimulations = () => {
     mutationFn: async (simulationType: string) => {
       if (!user?.id) throw new Error('User not authenticated');
 
+      console.log('Starting simulation with type:', simulationType, 'and language:', language);
+
       const { data, error } = await supabase.functions.invoke('start-simulation', {
         body: { 
           simulationType,
-          language // Pass language parameter
+          language
         }
       });
 
-      if (error) throw error;
+      if (error) {
+        console.error('Supabase function error:', error);
+        throw error;
+      }
+
+      console.log('Simulation started successfully:', data);
       return data;
     },
     onSuccess: (data) => {
+      console.log('Simulation created, navigating to:', `/simulation/${data.id}`);
       queryClient.invalidateQueries({ queryKey: ['ai-simulations'] });
-      navigate(`/simulation/${data.simulationId}`);
+      navigate(`/simulation/${data.id}`);
     },
     onError: (error) => {
       console.error('Error starting simulation:', error);
@@ -95,6 +112,7 @@ const AISimulations = () => {
   });
 
   const handleStartSimulation = async (simulationType: string) => {
+    console.log('handleStartSimulation called with:', simulationType);
     setStartingSimulation(true);
     try {
       await startSimulation.mutateAsync(simulationType);

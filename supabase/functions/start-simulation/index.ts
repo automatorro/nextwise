@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
   try {
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     )
 
     const { simulationType, language = 'ro' } = await req.json()
@@ -24,10 +24,14 @@ Deno.serve(async (req) => {
       throw new Error('No authorization header')
     }
 
-    const { data: { user }, error: userError } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''))
+    const token = authHeader.replace('Bearer ', '')
+    const { data: { user }, error: userError } = await supabase.auth.getUser(token)
     if (userError || !user) {
+      console.error('User authentication error:', userError)
       throw new Error('User not authenticated')
     }
+
+    console.log('Creating simulation for user:', user.id, 'type:', simulationType, 'language:', language)
 
     // Define initial messages for different languages
     const initialMessages = {
@@ -46,9 +50,14 @@ Deno.serve(async (req) => {
     }
 
     // Get the appropriate initial message
-    const initialMessage = initialMessages[language as 'ro' | 'en']?.[simulationType] || 
-                           initialMessages.ro[simulationType]
+    const initialMessage = initialMessages[language as 'ro' | 'en']?.[simulationType as keyof typeof initialMessages.ro] || 
+                           initialMessages.ro[simulationType as keyof typeof initialMessages.ro]
 
+    if (!initialMessage) {
+      throw new Error(`Unknown simulation type: ${simulationType}`)
+    }
+
+    // Create new simulation using service role client to bypass RLS
     const { data: simulation, error } = await supabase
       .from('ai_simulations')
       .insert({
@@ -71,7 +80,7 @@ Deno.serve(async (req) => {
       throw error
     }
 
-    console.log(`Started ${simulationType} simulation`)
+    console.log(`Started ${simulationType} simulation with ID:`, simulation.id)
 
     return new Response(JSON.stringify(simulation), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' }

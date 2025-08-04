@@ -65,7 +65,7 @@ const RecentTestResults = ({ testResults }: RecentTestResultsProps) => {
               <Button 
                 variant="outline" 
                 className="w-full"
-                onClick={() => navigate('/teste')}
+                onClick={() => navigate('/tests')}
               >
                 Vezi Toate Rezultatele
               </Button>
@@ -81,7 +81,7 @@ const RecentTestResults = ({ testResults }: RecentTestResultsProps) => {
               Începe cu primul tău test pentru a vedea rezultatele aici.
             </p>
             <div className="mt-6">
-              <Button onClick={() => navigate('/teste')}>
+              <Button onClick={() => navigate('/tests')}>
                 Încearcă un Test
               </Button>
             </div>
