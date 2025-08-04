@@ -2,7 +2,7 @@
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from 'react-router-dom';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Trophy } from 'lucide-react';
@@ -20,7 +20,6 @@ const TestCategoriesPreview = () => {
         .select(`
           id,
           name,
-          name_en,
           description,
           icon,
           test_types (
@@ -32,7 +31,7 @@ const TestCategoriesPreview = () => {
 
       return data.map(category => ({
         id: category.id,
-        name: language === 'en' ? (category.name_en || category.name) : category.name,
+        name: category.name, // Use the same name for both languages for now
         description: category.description,
         icon: category.icon,
         testCount: category.test_types?.length || 0
