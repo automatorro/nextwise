@@ -130,6 +130,37 @@
       }
     }
   },
+  "aiSimulations": {
+    "availableTitle": "Available Simulations",
+    "previousTitle": "Previous Simulations",
+    "starting": "Starting...",
+    "startButton": "Start Simulation",
+    "score": "Score",
+    "viewDetails": "View Details",
+    "messages": {
+      "startError": "Failed to start simulation"
+    },
+    "jobInterview": {
+      "title": "Job Interview",
+      "description": "Practice for a job interview in a safe environment"
+    },
+    "presentationSkills": {
+      "title": "Presentation Skills",
+      "description": "Improve your presentation and communication skills"
+    },
+    "negotiationSkills": {
+      "title": "Negotiation Skills",
+      "description": "Develop your negotiation and persuasion abilities"
+    },
+    "duration": {
+      "minutes": "minutes"
+    },
+    "difficulty": {
+      "easy": "Easy",
+      "medium": "Medium",
+      "hard": "Hard"
+    }
+  },
   "cvOptimization": {
     "title": "CV Optimization",
     "description": "Analyze your CV against a job description to improve your chances. Get detailed feedback and optimization suggestions.",

@@ -14,9 +14,6 @@ const HomeNavigation = () => {
   const { user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  // Add debugging
-  console.log('HomeNavigation: Component rendered, user:', !!user, 'loading:', loading);
-
   // Show loading skeleton only during initial app load
   if (loading) {
     return (

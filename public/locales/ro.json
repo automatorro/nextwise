@@ -130,6 +130,37 @@
       }
     }
   },
+  "aiSimulations": {
+    "availableTitle": "Simulări Disponibile",
+    "previousTitle": "Simulări Anterioare",
+    "starting": "Se pornește...",
+    "startButton": "Începe Simularea",
+    "score": "Scor",
+    "viewDetails": "Vezi Detalii",
+    "messages": {
+      "startError": "Nu am putut porni simularea"
+    },
+    "jobInterview": {
+      "title": "Interviu de Angajare",
+      "description": "Practică pentru un interviu de angajare într-un mediu sigur"
+    },
+    "presentationSkills": {
+      "title": "Abilități de Prezentare",
+      "description": "Îmbunătățește-ți abilitățile de prezentare și comunicare"
+    },
+    "negotiationSkills": {
+      "title": "Abilități de Negociere",
+      "description": "Dezvoltă-ți abilitățile de negociere și persuasiune"
+    },
+    "duration": {
+      "minutes": "minute"
+    },
+    "difficulty": {
+      "easy": "Ușor",
+      "medium": "Mediu",
+      "hard": "Dificil"
+    }
+  },
   "cvOptimization": {
     "title": "Optimizare CV",
     "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele.",
