@@ -74,9 +74,9 @@ const CVAnalyzerPage = () => {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('career.cvAnalyzer.title')}</h1>
+        <h1 className="text-3xl font-bold text-gray-900 mb-2">{t('cvOptimization.title')}</h1>
         <p className="text-gray-600">
-          {t('career.cvAnalyzer.subtitle')}
+          {t('cvOptimization.description')}
         </p>
       </div>
 
@@ -85,12 +85,12 @@ const CVAnalyzerPage = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <FileText className="w-5 h-5 text-blue-600" />
-              {t('career.cvAnalyzer.cvText')}
+              CV Text
             </CardTitle>
           </CardHeader>
           <CardContent>
             <Textarea
-              placeholder={t('career.cvAnalyzer.cvTextPlaceholder')}
+              placeholder="Paste your CV content here..."
               value={cvText}
               onChange={(e) => setCvText(e.target.value)}
               className="min-h-[300px] resize-none"
@@ -102,12 +102,12 @@ const CVAnalyzerPage = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Briefcase className="w-5 h-5 text-green-600" />
-              {t('career.cvAnalyzer.jobDescription')}
+              Job Description
             </CardTitle>
           </CardHeader>
           <CardContent>
             <Textarea
-              placeholder={t('career.cvAnalyzer.jobDescriptionPlaceholder')}
+              placeholder="Paste the job description here..."
               value={jobDescriptionText}
               onChange={(e) => setJobDescriptionText(e.target.value)}
               className="min-h-[300px] resize-none"
@@ -126,12 +126,12 @@ const CVAnalyzerPage = () => {
           {isAnalyzing ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              {t('career.cvAnalyzer.analyzing')}
+              Analyzing...
             </>
           ) : (
             <>
               <TrendingUp className="w-4 h-4 mr-2" />
-              {t('career.cvAnalyzer.analyzeButton')}
+              {t('cvOptimization.startAnalysis')}
             </>
           )}
         </Button>
@@ -141,7 +141,7 @@ const CVAnalyzerPage = () => {
         <div className="space-y-6 mt-8">
           <Card>
             <CardHeader>
-              <CardTitle>{t('career.cvAnalyzer.results')}</CardTitle>
+              <CardTitle>Analysis Results</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Match Score */}
@@ -151,13 +151,13 @@ const CVAnalyzerPage = () => {
                     {analysisResult.matchScore}%
                   </span>
                 </div>
-                <p className="text-gray-600">{t('career.cvAnalyzer.matchScore')}</p>
+                <p className="text-gray-600">Match Score</p>
               </div>
 
               {/* Keywords Analysis */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
-                  <h4 className="font-semibold text-green-600 mb-2">{t('career.cvAnalyzer.keywordsFound')}</h4>
+                  <h4 className="font-semibold text-green-600 mb-2">Keywords Found</h4>
                   <div className="flex flex-wrap gap-2">
                     {analysisResult.keywordAnalysis.found.map((keyword, index) => (
                       <span
@@ -170,7 +170,7 @@ const CVAnalyzerPage = () => {
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-red-600 mb-2">{t('career.cvAnalyzer.keywordsMissing')}</h4>
+                  <h4 className="font-semibold text-red-600 mb-2">Missing Keywords</h4>
                   <div className="flex flex-wrap gap-2">
                     {analysisResult.keywordAnalysis.missing.map((keyword, index) => (
                       <span
@@ -186,7 +186,7 @@ const CVAnalyzerPage = () => {
 
               {/* Section Feedback */}
               <div>
-                <h4 className="font-semibold mb-3">{t('career.cvAnalyzer.sectionFeedback')}</h4>
+                <h4 className="font-semibold mb-3">Section Feedback</h4>
                 <div className="space-y-3">
                   {analysisResult.sectionFeedback.map((item, index) => (
                     <div key={index} className="border-l-4 border-blue-500 pl-4">
@@ -199,16 +199,16 @@ const CVAnalyzerPage = () => {
 
               {/* Rewrite Suggestions */}
               <div>
-                <h4 className="font-semibold mb-3">{t('career.cvAnalyzer.rewriteSuggestions')}</h4>
+                <h4 className="font-semibold mb-3">Improvement Suggestions</h4>
                 <div className="space-y-4">
                   {analysisResult.rewriteSuggestions.map((item, index) => (
                     <div key={index} className="border rounded-lg p-4">
                       <div className="mb-2">
-                        <span className="text-sm font-medium text-red-600">{t('career.cvAnalyzer.original')}:</span>
+                        <span className="text-sm font-medium text-red-600">Original:</span>
                         <p className="text-sm text-gray-700 italic">"{item.original}"</p>
                       </div>
                       <div>
-                        <span className="text-sm font-medium text-green-600">{t('career.cvAnalyzer.suggestion')}:</span>
+                        <span className="text-sm font-medium text-green-600">Suggestion:</span>
                         <p className="text-sm text-gray-700">"{item.suggestion}"</p>
                       </div>
                     </div>

@@ -13,6 +13,8 @@
     "startFreeAssessment": "Începe Evaluarea Gratuită",
     "featuresTitle": "Descoperă Funcționalitățile Noastre",
     "featuresSubtitle": "Unelte bazate pe inteligență artificială pentru a-ți accelera cariera.",
+    "categoriesTitle": "Categorii de Teste",
+    "categoriesSubtitle": "Explorează diferitele tipuri de evaluări disponibile",
     "features": {
       "psychologicalEvaluations": "Evaluări Psihologice",
       "psychologicalEvaluationsDesc": "Înțelege-ți personalitatea și abilitățile cognitive.",
@@ -45,7 +47,19 @@
     },
     "testCategories": "Categorii de Teste",
     "exploreCategories": "Explorează diferitele tipuri de evaluări disponibile",
-    "seeAllTests": "Vezi Toate Testele"
+    "seeAllTests": "Vezi Toate Testele",
+    "categories": {
+      "emotionalIntelligence": "Inteligența Emoțională",
+      "personality": "Personalitate",
+      "leadership": "Leadership",
+      "technicalSkills": "Abilități Tehnice",
+      "wellness": "Wellness",
+      "cognitive": "Cognitiv",
+      "digital": "Digital",
+      "sensory": "Senzorial",
+      "testLabel": "test",
+      "testsLabel": "teste"
+    }
   },
   "careerPaths": {
     "title": "Planurile tale de carieră personalizate",

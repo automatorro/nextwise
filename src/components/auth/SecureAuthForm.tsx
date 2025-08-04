@@ -10,8 +10,10 @@ import { useSecureAuth } from '@/hooks/useSecureAuth';
 import { emailSchema, passwordSchema, sanitizeInput } from '@/utils/security';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export const SecureAuthForm = () => {
+  const { t } = useLanguage();
   const { signIn, signUp, isRateLimited, attemptCount } = useSecureAuth();
   const [isLoading, setIsLoading] = useState(false);
   
@@ -122,26 +124,26 @@ export const SecureAuthForm = () => {
   return (
     <Card className="w-full max-w-md mx-auto">
       <CardHeader>
-        <CardTitle>Welcome</CardTitle>
-        <CardDescription>Sign in to your account or create a new one</CardDescription>
+        <CardTitle>{t('auth.welcome')}</CardTitle>
+        <CardDescription>{t('auth.signInMessage')}</CardDescription>
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="signin" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signin">Sign In</TabsTrigger>
-            <TabsTrigger value="signup">Sign Up</TabsTrigger>
+            <TabsTrigger value="signin">{t('auth.signIn')}</TabsTrigger>
+            <TabsTrigger value="signup">{t('auth.signUp')}</TabsTrigger>
           </TabsList>
           
           <TabsContent value="signin" className="space-y-4">
             <form onSubmit={handleSignIn} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="signin-email">Email</Label>
+                <Label htmlFor="signin-email">{t('auth.email')}</Label>
                 <Input
                   id="signin-email"
                   type="email"
                   value={signInData.email}
                   onChange={(e) => setSignInData({ ...signInData, email: e.target.value })}
-                  placeholder="Enter your email"
+                  placeholder={t('auth.enterEmail')}
                   required
                 />
               </div>
@@ -163,7 +165,7 @@ export const SecureAuthForm = () => {
                 className="w-full" 
                 disabled={isLoading || isRateLimited}
               >
-                {isLoading ? 'Signing in...' : 'Sign In'}
+                {isLoading ? t('auth.signingIn') : t('auth.signIn')}
               </Button>
             </form>
           </TabsContent>
@@ -171,25 +173,25 @@ export const SecureAuthForm = () => {
           <TabsContent value="signup" className="space-y-4">
             <form onSubmit={handleSignUp} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="signup-name">Full Name</Label>
+                <Label htmlFor="signup-name">{t('auth.fullName')}</Label>
                 <Input
                   id="signup-name"
                   type="text"
                   value={signUpData.fullName}
                   onChange={(e) => setSignUpData({ ...signUpData, fullName: e.target.value })}
-                  placeholder="Enter your full name"
+                  placeholder={t('auth.enterFullName')}
                   required
                 />
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="signup-email">Email</Label>
+                <Label htmlFor="signup-email">{t('auth.email')}</Label>
                 <Input
                   id="signup-email"
                   type="email"
                   value={signUpData.email}
                   onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
-                  placeholder="Enter your email"
+                  placeholder={t('auth.enterEmail')}
                   required
                 />
               </div>
@@ -205,7 +207,7 @@ export const SecureAuthForm = () => {
                 className="w-full" 
                 disabled={isLoading || isRateLimited}
               >
-                {isLoading ? 'Creating account...' : 'Create Account'}
+                {isLoading ? t('auth.creatingAccount') : t('auth.createAccount')}
               </Button>
             </form>
           </TabsContent>

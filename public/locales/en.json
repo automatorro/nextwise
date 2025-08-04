@@ -13,6 +13,8 @@
     "startFreeAssessment": "Start Free Assessment",
     "featuresTitle": "Discover Our Features",
     "featuresSubtitle": "AI-powered tools to accelerate your career.",
+    "categoriesTitle": "Test Categories",
+    "categoriesSubtitle": "Explore different types of assessments available",
     "features": {
       "psychologicalEvaluations": "Psychological Evaluations",
       "psychologicalEvaluationsDesc": "Understand your personality and cognitive skills.",
@@ -45,7 +47,19 @@
     },
     "testCategories": "Test Categories",
     "exploreCategories": "Explore different types of assessments available",
-    "seeAllTests": "See All Tests"
+    "seeAllTests": "See All Tests",
+    "categories": {
+      "emotionalIntelligence": "Emotional Intelligence",
+      "personality": "Personality",
+      "leadership": "Leadership",
+      "technicalSkills": "Technical Skills",
+      "wellness": "Wellness",
+      "cognitive": "Cognitive",
+      "digital": "Digital",
+      "sensory": "Sensory",
+      "testLabel": "test",
+      "testsLabel": "tests"
+    }
   },
   "careerPaths": {
     "title": "Your Personalized Career Plans",

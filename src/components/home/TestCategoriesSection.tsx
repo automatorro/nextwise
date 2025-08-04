@@ -9,42 +9,42 @@ const TestCategoriesSection = () => {
 
   const testCategories = [
     {
-      name: t('testCategories.emotionalIntelligence'),
+      name: t('dashboard.categories.emotionalIntelligence'),
       icon: '🧠',
       count: 1
     },
     {
-      name: t('testCategories.personality'),
+      name: t('dashboard.categories.personality'),
       icon: '👤',
       count: 5
     },
     {
-      name: t('testCategories.leadership'),
+      name: t('dashboard.categories.leadership'),
       icon: '👥',
       count: 1
     },
     {
-      name: t('testCategories.technicalSkills'),
+      name: t('dashboard.categories.technicalSkills'),
       icon: '💻',
       count: 1
     },
     {
-      name: t('testCategories.wellness'),
+      name: t('dashboard.categories.wellness'),
       icon: '🌱',
       count: 2
     },
     {
-      name: t('testCategories.cognitive'),
+      name: t('dashboard.categories.cognitive'),
       icon: '🎯',
       count: 1
     },
     {
-      name: t('testCategories.digital'),
+      name: t('dashboard.categories.digital'),
       icon: '📊',
       count: 1
     },
     {
-      name: t('testCategories.sensory'),
+      name: t('dashboard.categories.sensory'),
       icon: '👁️',
       count: 1
     }
@@ -68,7 +68,7 @@ const TestCategoriesSection = () => {
                 <div className="text-4xl mb-3">{category.icon}</div>
                 <h3 className="font-semibold text-gray-900 mb-2">{category.name}</h3>
                 <Badge variant="secondary">
-                  {category.count} {category.count === 1 ? t('dashboard.categories.test') : t('dashboard.categories.tests')}
+                  {category.count} {category.count === 1 ? t('dashboard.categories.testLabel') : t('dashboard.categories.testsLabel')}
                 </Badge>
               </CardContent>
             </Card>
