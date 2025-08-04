@@ -112,7 +112,22 @@
       "startSimulation": "Start Simulation",
       "recentSimulations": "Recent Simulations",
       "completed": "Completed",
-      "inProgress": "In Progress"
+      "inProgress": "In Progress",
+      "difficulty": {
+        "easy": "Easy",
+        "medium": "Medium",
+        "hard": "Hard"
+      },
+      "roles": {
+        "recruiter": "Recruiter",
+        "manager": "Manager",
+        "teamMember": "Team Member",
+        "hrManager": "HR Manager",
+        "teamLead": "Team Lead",
+        "client": "Client",
+        "stakeholder": "Stakeholder",
+        "seniorManager": "Senior Manager"
+      }
     }
   },
   "cvOptimization": {

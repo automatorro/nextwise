@@ -5,54 +5,19 @@ import { useLanguage } from '@/hooks/useLanguage';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { 
-  Brain, 
   BarChart3, 
   Target, 
-  Trophy,
   TrendingUp,
-  Clock,
-  Users,
-  Heart
+  Clock
 } from 'lucide-react';
 import HomeNavigation from '@/components/home/HomeNavigation';
 import Footer from '@/components/home/Footer';
+import TestCategoriesPreview from '@/components/dashboard/TestCategoriesPreview';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
-
-  const testCategories = [
-    {
-      icon: Brain,
-      title: "Inteligența Emoțională",
-      description: "Evaluează capacitatea de a înțelege și gestiona emoțiile.",
-      color: 'bg-blue-100 text-blue-600',
-      tests: 1
-    },
-    {
-      icon: Users,
-      title: "Personalitate",
-      description: "Analizează trăsăturile de personalitate și stilul comportamental.",
-      color: 'bg-purple-100 text-purple-600',
-      tests: 5
-    },
-    {
-      icon: Target,
-      title: "Leadership",
-      description: "Evaluează abilitățile de conducere și influență.",
-      color: 'bg-green-100 text-green-600',
-      tests: 1
-    },
-    {
-      icon: Heart,
-      title: "Wellness",
-      description: "Monitorizează bunăstarea mentală și echilibrul.",
-      color: 'bg-pink-100 text-pink-600',
-      tests: 2
-    }
-  ];
 
   const quickStats = [
     {
@@ -158,44 +123,7 @@ const Dashboard = () => {
             </div>
 
             {/* Test Categories Preview */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Trophy className="w-6 h-6 text-yellow-600" />
-                  <span>{t('dashboard.testCategories')}</span>
-                </CardTitle>
-                <CardDescription>
-                  {t('dashboard.exploreCategories')}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {testCategories.map((category, index) => (
-                    <div key={index} className="p-4 border rounded-lg hover:shadow-md transition-shadow">
-                      <div className="flex items-start space-x-3">
-                        <div className={`p-2 rounded-lg ${category.color}`}>
-                          <category.icon className="w-5 h-5" />
-                        </div>
-                        <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900">{category.title}</h3>
-                          <p className="text-sm text-gray-600 mt-1">{category.description}</p>
-                          <Badge variant="secondary" className="mt-2">
-                            {category.tests} {category.tests === 1 ? 'test' : 'teste'}
-                          </Badge>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-6">
-                  <Link to="/tests">
-                    <Button variant="outline" className="w-full">
-                      {t('dashboard.seeAllTests')}
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
+            <TestCategoriesPreview />
           </div>
         </div>
       </div>

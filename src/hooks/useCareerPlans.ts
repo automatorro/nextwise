@@ -47,12 +47,22 @@ export const useCareerPlans = () => {
 
       const { data, error } = await supabase
         .from('career_paths')
-        .select('*')
+        .select(`
+          *,
+          title_en,
+          description_en
+        `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data as CareerPlan[];
+      
+      // Map the data to use the appropriate language fields
+      return data.map(plan => ({
+        ...plan,
+        title: language === 'en' ? (plan.title_en || plan.title) : plan.title,
+        description: language === 'en' ? (plan.description_en || plan.description) : plan.description
+      })) as CareerPlan[];
     },
     enabled: !!user?.id
   });

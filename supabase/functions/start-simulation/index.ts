@@ -1,67 +1,87 @@
 
-import "https://deno.land/x/xhr@0.1.0/mod.ts";
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-};
+}
 
-serve(async (req) => {
+Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders })
   }
 
   try {
-    const { simulationType } = await req.json();
-    
-    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+    )
 
-    if (!GEMINI_API_KEY) {
-      throw new Error('GEMINI_API_KEY not configured');
+    const { simulationType, language = 'ro' } = await req.json()
+
+    const authHeader = req.headers.get('Authorization')
+    if (!authHeader) {
+      throw new Error('No authorization header')
     }
 
-    const simulationConfigs = {
-      'job_interview': {
-        role: 'Intervievator',
-        opening: 'Bună ziua! Vă mulțumesc că ați venit astăzi la acest interviu. Sunt bucuros să vă cunosc și să aflu mai multe despre experiența dumneavoastră. Ați putea să începeți prin a-mi spune puțin despre dumneavoastră și ce vă interesează la această poziție?'
+    const { data: { user }, error: userError } = await supabase.auth.getUser(authHeader.replace('Bearer ', ''))
+    if (userError || !user) {
+      throw new Error('User not authenticated')
+    }
+
+    // Define initial messages for different languages
+    const initialMessages = {
+      ro: {
+        job_interview: "Bună ziua! Sunt recrutorul dumneavoastră pentru această simulare de interviu. Să începem cu o prezentare scurtă despre dumneavoastră și motivația pentru această poziție.",
+        salary_negotiation: "Bună! Sunt managerul de HR. Am fost impresionat de performanța dumneavoastră și aș vrea să discutăm despre o ajustare salarială. Care sunt așteptările dumneavoastră?",
+        team_conflict: "Salut! Am observat niște tensiuni în echipă recent. Cum vedeți situația și ce soluții aveți în vedere pentru a îmbunătăți colaborarea?",
+        management_promotion: "Bună! Poziția de manager devine disponibilă și credem că ați putea fi un candidat potrivit. Cum vă vedeți în rolul de lider al echipei?"
       },
-      'management_promotion': {
-        role: 'Manager Senior',
-        opening: 'Bună ziua! Vă mulțumesc că ați acceptat să discutăm despre oportunitatea de promovare. Aș dori să încep prin a discuta despre experiența dumneavoastră de leadership. Îmi puteți povesti despre o situație în care a trebuit să conduceți o echipă printr-o provocare dificilă?'
-      },
-      'team_conflict': {
-        role: 'Coleg de Echipă',
-        opening: 'Mă bucur că am putut să ne facem timp pentru această discuție. M-am simțit frustrat în legătură cu dinamica echipei din ultima vreme și cred că trebuie să abordăm ce s-a întâmplat în ultima noastră ședință de proiect.'
-      },
-      'salary_negotiation': {
-        role: 'Manager HR',
-        opening: 'Vă mulțumesc că ați solicitat această întâlnire. Înțeleg că doriți să discutăm despre compensația dumneavoastră. Am analizat performanța și contribuțiile dumneavoastră la echipă. Ce aspecte specifice ați dori să discutăm?'
+      en: {
+        job_interview: "Good morning! I'm your recruiter for this interview simulation. Let's start with a brief introduction about yourself and your motivation for this position.",
+        salary_negotiation: "Hello! I'm the HR manager. I've been impressed with your performance and would like to discuss a salary adjustment. What are your expectations?",
+        team_conflict: "Hi! I've noticed some tensions in the team recently. How do you see the situation and what solutions do you have in mind to improve collaboration?",
+        management_promotion: "Hello! The manager position is becoming available and we think you could be a suitable candidate. How do you see yourself in the team leader role?"
       }
-    };
-
-    const config = simulationConfigs[simulationType as keyof typeof simulationConfigs];
-    if (!config) {
-      throw new Error(`Unknown simulation type: ${simulationType}`);
     }
 
-    console.log(`Started ${simulationType} simulation`);
+    // Get the appropriate initial message
+    const initialMessage = initialMessages[language as 'ro' | 'en']?.[simulationType] || 
+                           initialMessages.ro[simulationType]
 
-    return new Response(JSON.stringify({ 
-      message: config.opening,
-      role: config.role 
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    const { data: simulation, error } = await supabase
+      .from('ai_simulations')
+      .insert({
+        user_id: user.id,
+        simulation_type: simulationType,
+        conversation_log: [
+          {
+            role: 'assistant',
+            content: initialMessage,
+            timestamp: new Date().toISOString()
+          }
+        ],
+        user_responses: []
+      })
+      .select()
+      .single()
+
+    if (error) {
+      console.error('Database error:', error)
+      throw error
+    }
+
+    console.log(`Started ${simulationType} simulation`)
+
+    return new Response(JSON.stringify(simulation), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
+
   } catch (error) {
-    console.error('Error in start-simulation:', error);
-    return new Response(JSON.stringify({ 
-      error: error.message,
-      message: "Bună ziua! Să începem sesiunea noastră de practică. Cum vă pot ajuta astăzi?",
-      role: "Asistent"
-    }), {
-      status: 200,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    console.error('Error starting simulation:', error)
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    })
   }
-});
+})

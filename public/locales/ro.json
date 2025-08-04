@@ -112,7 +112,22 @@
       "startSimulation": "Începe Simularea",
       "recentSimulations": "Simulări Recente",
       "completed": "Completată",
-      "inProgress": "În Progres"
+      "inProgress": "În Progres",
+      "difficulty": {
+        "easy": "Ușor",
+        "medium": "Mediu",
+        "hard": "Dificil"
+      },
+      "roles": {
+        "recruiter": "Recrutor",
+        "manager": "Manager",
+        "teamMember": "Membru Echipă",
+        "hrManager": "Manager HR",
+        "teamLead": "Team Lead",
+        "client": "Client",
+        "stakeholder": "Stakeholder",
+        "seniorManager": "Manager Senior"
+      }
     }
   },
   "cvOptimization": {

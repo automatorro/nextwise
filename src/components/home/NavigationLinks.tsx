@@ -11,7 +11,7 @@ const NavigationLinks = () => {
     { to: '/dashboard', label: t('header.dashboard') },
     { to: '/tests', label: t('header.tests') },
     { to: '/career-paths', label: t('header.career') },
-    { to: '/profile', label: t('header.profile') },
+    { to: '/my-profile', label: t('header.profile') }, // Fixed route
   ];
 
   return (

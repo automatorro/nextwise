@@ -9,7 +9,7 @@ import { useAISimulations } from '@/hooks/useAISimulations';
 import { Loader2, Play, Users, Target, Clock } from 'lucide-react';
 
 const AISimulations = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const navigate = useNavigate();
   const { simulations = [], activeSimulation, startSimulation, isLoading, error } = useAISimulations();
   const [selectedScenario, setSelectedScenario] = useState<string | null>(null);
@@ -19,33 +19,33 @@ const AISimulations = () => {
       id: 'job_interview',
       title: t('careerPaths.simulations.jobInterview'),
       description: t('careerPaths.simulations.jobInterviewDesc'),
-      roles: ['Recruiter', 'Manager', 'Team Member'],
+      roles: [t('careerPaths.simulations.roles.recruiter'), t('careerPaths.simulations.roles.manager'), t('careerPaths.simulations.roles.teamMember')],
       duration: '15-30 min',
-      difficulty: 'Medium'
+      difficulty: t('careerPaths.simulations.difficulty.medium')
     },
     {
       id: 'salary_negotiation',
       title: t('careerPaths.simulations.salaryNegotiation'),
       description: t('careerPaths.simulations.salaryNegotiationDesc'),
-      roles: ['HR Manager', 'Team Lead', 'Client'],
+      roles: [t('careerPaths.simulations.roles.hrManager'), t('careerPaths.simulations.roles.teamLead'), t('careerPaths.simulations.roles.client')],
       duration: '20-40 min',
-      difficulty: 'Hard'
+      difficulty: t('careerPaths.simulations.difficulty.hard')
     },
     {
       id: 'team_conflict',
       title: t('careerPaths.simulations.teamConflict'),
       description: t('careerPaths.simulations.teamConflictDesc'),
-      roles: ['Manager', 'Team Member', 'Stakeholder'],
+      roles: [t('careerPaths.simulations.roles.manager'), t('careerPaths.simulations.roles.teamMember'), t('careerPaths.simulations.roles.stakeholder')],
       duration: '10-20 min',
-      difficulty: 'Easy'
+      difficulty: t('careerPaths.simulations.difficulty.easy')
     },
     {
       id: 'management_promotion',
       title: t('careerPaths.simulations.managementPromotion'),
       description: t('careerPaths.simulations.managementPromotionDesc'),
-      roles: ['HR Manager', 'Senior Manager', 'Team Lead'],
+      roles: [t('careerPaths.simulations.roles.hrManager'), t('careerPaths.simulations.roles.seniorManager'), t('careerPaths.simulations.roles.teamLead')],
       duration: '25-35 min',
-      difficulty: 'Hard'
+      difficulty: t('careerPaths.simulations.difficulty.hard')
     }
   ];
 
@@ -56,10 +56,9 @@ const AISimulations = () => {
     
     try {
       console.log('🔄 Calling startSimulation...');
-      const newSimulation = await startSimulation(scenarioId);
+      const newSimulation = await startSimulation(scenarioId, language);
       console.log('✅ Simulation started successfully:', newSimulation);
       
-      // Navigate to the simulation interface
       if (newSimulation && newSimulation.id) {
         navigate(`/simulation/${newSimulation.id}`);
       }
@@ -78,16 +77,11 @@ const AISimulations = () => {
   };
 
   const getDifficultyColor = (difficulty: string) => {
-    switch (difficulty) {
-      case 'Easy': return 'bg-green-100 text-green-800';
-      case 'Medium': return 'bg-yellow-100 text-yellow-800';
-      case 'Hard': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
+    if (difficulty === t('careerPaths.simulations.difficulty.easy')) return 'bg-green-100 text-green-800';
+    if (difficulty === t('careerPaths.simulations.difficulty.medium')) return 'bg-yellow-100 text-yellow-800';
+    if (difficulty === t('careerPaths.simulations.difficulty.hard')) return 'bg-red-100 text-red-800';
+    return 'bg-gray-100 text-gray-800';
   };
-
-  console.log('🎯 AISimulations component rendered');
-  console.log('📋 Hook data:', { simulations, activeSimulation, isLoading, error });
 
   return (
     <div className="space-y-6">
