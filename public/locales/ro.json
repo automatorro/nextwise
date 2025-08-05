@@ -1,11 +1,13 @@
-
 {
   "header": {
     "dashboard": "Panou",
-    "tests": "Teste",
+    "tests": "Teste", 
     "career": "Carieră",
     "profile": "Profil",
-    "admin": "Admin"
+    "admin": "Admin",
+    "logout": "Deconectare",
+    "subscriptionSettings": "Setări Abonament",
+    "adminPanel": "Panou Admin"
   },
   "home": {
     "heroTitle": "Descoperă-ți Potențialul și Dezvoltă-ți Cariera",

@@ -58,7 +58,7 @@ const UserMenu = () => {
           }}
         >
           <Settings className="h-4 w-4 mr-2" />
-          {t('nav.subscriptionSettings')}
+          {t('header.subscriptionSettings')}
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={handleSignOut} 
@@ -69,7 +69,7 @@ const UserMenu = () => {
           }}
         >
           <LogOut className="h-4 w-4 mr-2" />
-          {t('nav.logout')}
+          {t('header.logout')}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

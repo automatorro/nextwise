@@ -1,11 +1,13 @@
-
 {
   "header": {
     "dashboard": "Dashboard",
-    "tests": "Tests",
+    "tests": "Tests", 
     "career": "Career",
     "profile": "Profile",
-    "admin": "Admin"
+    "admin": "Admin",
+    "logout": "Logout",
+    "subscriptionSettings": "Subscription Settings",
+    "adminPanel": "Admin Panel"
   },
   "home": {
     "heroTitle": "Discover Your Potential and Grow Your Career",
@@ -18,7 +20,7 @@
     "features": {
       "psychologicalEvaluations": "Psychological Evaluations",
       "psychologicalEvaluationsDesc": "Understand your personality and cognitive skills.",
-      "personalizedCareerPlans": "Personalized Career Plans",
+      "personalizedCareerPlans": "Personalized Career Plans", 
       "personalizedCareerPlansDesc": "Get a clear roadmap based on your unique profile.",
       "advancedAnalytics": "Advanced Analytics",
       "advancedAnalyticsDesc": "Track your progress with detailed insights.",

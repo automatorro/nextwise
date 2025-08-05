@@ -76,7 +76,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
                   userSelect: 'none'
                 }}
               >
-                {t('nav.dashboard')}
+                {t('header.dashboard')}
               </button>
               <button
                 onClick={handleNavigation('/tests')}
@@ -87,7 +87,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
                   userSelect: 'none'
                 }}
               >
-                {t('nav.tests')}
+                {t('header.tests')}
               </button>
               <button
                 onClick={handleNavigation('/career-paths')}
@@ -98,7 +98,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
                   userSelect: 'none'
                 }}
               >
-                {t('nav.career')}
+                {t('header.career')}
               </button>
               <button
                 onClick={handleNavigation('/my-profile')}
@@ -109,7 +109,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
                   userSelect: 'none'
                 }}
               >
-                {t('nav.profile')}
+                {t('header.profile')}
               </button>
               <button
                 onClick={handleNavigation('/subscription')}
@@ -120,7 +120,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
                   userSelect: 'none'
                 }}
               >
-                {t('nav.subscriptionSettings')}
+                {t('header.subscriptionSettings')}
               </button>
               {isAdmin && (
                 <button
@@ -132,7 +132,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
                     userSelect: 'none'
                   }}
                 >
-                  Admin Panel
+                  {t('header.adminPanel')}
                 </button>
               )}
               
@@ -147,7 +147,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
                   userSelect: 'none'
                 }}
               >
-                {t('nav.logout')}
+                {t('header.logout')}
               </button>
             </div>
           </div>
