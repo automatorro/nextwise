@@ -7,7 +7,9 @@
     "admin": "Admin",
     "logout": "Deconectare",
     "subscriptionSettings": "Setări Abonament",
-    "adminPanel": "Panou Admin"
+    "adminPanel": "Panou Admin",
+    "login": "Intră în cont",
+    "startFree": "Începe gratuit"
   },
   "home": {
     "heroTitle": "Descoperă-ți Potențialul și Dezvoltă-ți Cariera",

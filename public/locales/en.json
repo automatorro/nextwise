@@ -7,7 +7,9 @@
     "admin": "Admin",
     "logout": "Logout",
     "subscriptionSettings": "Subscription Settings",
-    "adminPanel": "Admin Panel"
+    "adminPanel": "Admin Panel",
+    "login": "Login",
+    "startFree": "Start for free"
   },
   "home": {
     "heroTitle": "Discover Your Potential and Grow Your Career",

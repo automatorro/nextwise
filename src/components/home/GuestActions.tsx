@@ -53,7 +53,7 @@ const GuestActions = () => {
           cursor: 'pointer'
         }}
       >
-        {t('nav.login')}
+        {t('header.login')}
       </Button>
       <Button 
         className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold shadow-lg min-h-[44px] min-w-[44px] px-4 py-2"
@@ -67,7 +67,7 @@ const GuestActions = () => {
           cursor: 'pointer'
         }}
       >
-        {t('nav.startFree')}
+        {t('header.startFree')}
       </Button>
     </>
   );
