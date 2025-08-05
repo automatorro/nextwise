@@ -24,6 +24,7 @@ import { useCareerTemplates } from '@/hooks/useCareerTemplates';
 import { useCareerPlanGeneration } from '@/hooks/useCareerPlanGeneration';
 import { useTestResults } from '@/hooks/useTestResults';
 import { useAuth } from '@/contexts/AuthContext';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface Props {
   maxPlans: number;
@@ -32,6 +33,7 @@ interface Props {
 
 const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const { user } = useAuth();
   const { templates, isLoading: templatesLoading, createPlanFromTemplate } = useCareerTemplates();
   const { generateCareerPlan, isGeneratingPlan } = useCareerPlanGeneration();
@@ -56,8 +58,8 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
   const handleGeneratePlan = async () => {
     if (!canCreatePlan) {
       toast({
-        title: "Limită atinsă",
-        description: "Ai atins limita de planuri pentru abonamentul tău.",
+        title: t('careerPlan.limitReachedTitle'),
+        description: t('careerPlan.limitReachedDescription'),
         variant: "destructive"
       });
       return;
@@ -65,8 +67,8 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
 
     if (testResults.length === 0) {
       toast({
-        title: "Assessment Required",
-        description: "Pentru a genera un plan personalizat, completează mai întâi un test.",
+        title: t('careerPlan.assessmentRequiredTitle'),
+        description: t('careerPlan.assessmentRequiredDescription'),
         variant: "destructive"
       });
       return;
@@ -81,8 +83,8 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
   const handleUseTemplate = async (templateId: string) => {
     if (!canCreatePlan || !user?.id) {
       toast({
-        title: "Eroare",
-        description: "Nu poți crea un plan nou în acest moment.",
+        title: t('careerPlan.errorTitle'),
+        description: t('careerPlan.errorDescription'),
         variant: "destructive"
       });
       return;
@@ -110,7 +112,7 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
     return (
       <div className="space-y-4">
         <div>
-          <h4 className="font-semibold mb-2">Milestone-uri incluse:</h4>
+          <h4 className="font-semibold mb-2">{t('careerPlan.milestonesIncluded')}</h4>
           <div className="space-y-2 max-h-64 overflow-y-auto">
             {milestones?.map((milestone, index) => (
               <div key={milestone.id} className="flex items-start space-x-3 p-3 bg-gray-50 rounded-lg">
@@ -123,9 +125,9 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
                     <p className="text-sm text-gray-600 mt-1">{milestone.description}</p>
                   )}
                   <div className="flex items-center space-x-4 mt-2 text-xs text-gray-500">
-                    <span>⏱️ {milestone.estimated_duration_weeks} săptămâni</span>
+                    <span>⏱️ {milestone.estimated_duration_weeks} {t('careerPlan.weeks')}</span>
                     {milestone.required_skills && milestone.required_skills.length > 0 && (
-                      <span>🎯 {milestone.required_skills.length} skills</span>
+                      <span>🎯 {milestone.required_skills.length} {t('careerPlan.skills')}</span>
                     )}
                   </div>
                 </div>
@@ -136,7 +138,7 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
         
         {template.required_skills && template.required_skills.length > 0 && (
           <div>
-            <h4 className="font-semibold mb-2">Skills necesare:</h4>
+            <h4 className="font-semibold mb-2">{t('careerPlan.requiredSkills')}</h4>
             <div className="flex flex-wrap gap-2">
               {template.required_skills.map((skill, index) => (
                 <Badge key={index} variant="outline" className="text-xs">
@@ -178,10 +180,10 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
             <AlertCircle className="w-5 h-5 text-orange-600" />
             <div>
               <p className="font-medium text-orange-900">
-                Ai atins limita de planuri pentru abonamentul tău
+                {t('careerPlan.limitReachedDescription')}
               </p>
               <p className="text-sm text-orange-700">
-                Upgrade la Professional sau Premium pentru planuri nelimitate
+                {t('careerPlan.upgradeForUnlimited')}
               </p>
             </div>
           </CardContent>
@@ -194,48 +196,48 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Brain className="w-5 h-5 text-blue-600" />
-              <span>Creează plan personalizat</span>
+              <span>{t('careerPlan.createCustomTitle')}</span>
             </CardTitle>
             <CardDescription>
-              AI-ul va genera un plan bazat pe profilul și rezultatele tale
+              {t('careerPlan.createCustomDescription')}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <Label htmlFor="targetRole">Rolul dorit</Label>
+              <Label htmlFor="targetRole">{t('careerPlan.targetRole')}</Label>
               <Input
                 id="targetRole"
-                placeholder="ex: Senior Frontend Developer"
+                placeholder={t('careerPlan.targetRolePlaceholder')}
                 value={formData.targetRole}
                 onChange={(e) => handleInputChange('targetRole', e.target.value)}
               />
             </div>
 
             <div>
-              <Label htmlFor="currentRole">Rolul actual</Label>
+              <Label htmlFor="currentRole">{t('careerPlan.currentRole')}</Label>
               <Input
                 id="currentRole"
-                placeholder="ex: Junior Developer"
+                placeholder={t('careerPlan.currentRolePlaceholder')}
                 value={formData.currentRole}
                 onChange={(e) => handleInputChange('currentRole', e.target.value)}
               />
             </div>
 
             <div>
-              <Label htmlFor="timeframe">Perioada dorită</Label>
+              <Label htmlFor="timeframe">{t('careerPlan.timeframe')}</Label>
               <Input
                 id="timeframe"
-                placeholder="ex: 6 luni"
+                placeholder={t('careerPlan.timeframePlaceholder')}
                 value={formData.timeframe}
                 onChange={(e) => handleInputChange('timeframe', e.target.value)}
               />
             </div>
 
             <div>
-              <Label htmlFor="description">Descriere obiective</Label>
+              <Label htmlFor="description">{t('careerPlan.objectiveDescription')}</Label>
               <Textarea
                 id="description"
-                placeholder="Descrie ce vrei să realizezi..."
+                placeholder={t('careerPlan.objectiveDescriptionPlaceholder')}
                 value={formData.description}
                 onChange={(e) => handleInputChange('description', e.target.value)}
               />
@@ -249,12 +251,12 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
               {isGeneratingPlan ? (
                 <>
                   <Sparkles className="w-4 h-4 mr-2 animate-spin" />
-                  Generez planul...
+                  {t('careerPlan.generatingPlan')}
                 </>
               ) : (
                 <>
                   <Brain className="w-4 h-4 mr-2" />
-                  Generează cu AI
+                  {t('careerPlan.generateWithAI')}
                 </>
               )}
             </Button>
@@ -264,14 +266,14 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
         {/* Template Selection */}
         <div className="space-y-6">
           <div>
-            <h3 className="text-xl font-semibold mb-4">Template-uri disponibile</h3>
+            <h3 className="text-xl font-semibold mb-4">{t('careerPlan.availableTemplates')}</h3>
             <p className="text-gray-600 mb-6">
-              Planuri predefinite pentru carierele populare
+              {t('careerPlan.popularTemplates')}
             </p>
           </div>
 
           {templatesLoading ? (
-            <div>Se încarcă template-urile...</div>
+            <div>{t('careerPlan.loadingTemplates')}</div>
           ) : (
             <div className="space-y-4">
               {templates.map((template) => (
@@ -294,10 +296,10 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
                       <div className="flex items-center space-x-3">
                         <Badge variant="outline">
                           <Clock className="w-3 h-3 mr-1" />
-                          {template.estimated_duration_months} luni
+                          {template.estimated_duration_months} {t('careerPlan.months')}
                         </Badge>
                         <Badge className={getDifficultyColor(template.difficulty_level)}>
-                          {template.difficulty_level}
+                          {t(`careerPlan.difficulty.${template.difficulty_level}`)}
                         </Badge>
                       </div>
                     </div>
@@ -312,7 +314,7 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
                           ))}
                           {template.required_skills.length > 3 && (
                             <Badge variant="secondary" className="text-xs">
-                              +{template.required_skills.length - 3} mai multe
+                              +{template.required_skills.length - 3} {t('careerPlan.more')}
                             </Badge>
                           )}
                         </div>
@@ -324,7 +326,7 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
                         <DialogTrigger asChild>
                           <Button variant="outline" className="flex-1">
                             <Eye className="w-4 h-4 mr-2" />
-                            Preview
+                            {t('careerPlan.preview')}
                           </Button>
                         </DialogTrigger>
                         <DialogContent className="max-w-2xl">
@@ -346,12 +348,12 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
                         {createPlanFromTemplate.isPending ? (
                           <>
                             <Sparkles className="w-4 h-4 mr-2 animate-spin" />
-                            Creez planul...
+                            {t('careerPlan.creatingPlan')}
                           </>
                         ) : (
                           <>
                             <Target className="w-4 h-4 mr-2" />
-                            Folosește template-ul
+                            {t('careerPlan.useTemplate')}
                           </>
                         )}
                       </Button>
