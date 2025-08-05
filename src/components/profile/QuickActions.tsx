@@ -22,7 +22,7 @@ const QuickActions = ({ isAdmin }: QuickActionsProps) => {
         <div className="space-y-3">
           <Button 
             className="w-full" 
-            onClick={() => navigate('/teste')}
+            onClick={() => navigate('/tests')}
           >
             {t('profile.quickActions.tryNewTest')}
           </Button>

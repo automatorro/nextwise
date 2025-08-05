@@ -20,7 +20,7 @@ const TestResultHeader = ({ testName, completedAt }: TestResultHeaderProps) => {
     <div className="mb-8">
       <Button 
         variant="ghost" 
-        onClick={() => navigate('/teste')}
+        onClick={() => navigate('/tests')}
         className="flex items-center mb-4"
       >
         <ArrowLeft className="w-4 h-4 mr-2" />
