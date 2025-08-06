@@ -20,6 +20,11 @@
     "featuresSubtitle": "AI-powered tools to accelerate your career.",
     "categoriesTitle": "Test Categories",
     "categoriesSubtitle": "Explore different types of assessments available",
+    "pricingTitle": "Choose Your Plan",
+    "pricingSubtitle": "Select the perfect plan for your career development journey",
+    "ctaFinalTitle": "Ready to Transform Your Career?",
+    "ctaFinalSubtitle": "Join thousands of professionals who have already discovered their potential",
+    "ctaFinalButton": "Start Your Journey",
     "features": {
       "psychologicalEvaluations": "Psychological Evaluations",
       "psychologicalEvaluationsDesc": "Understand your personality and cognitive skills.",
@@ -32,6 +37,75 @@
     },
     "footerText": "The AI platform that helps you understand your personality, identify your strengths, and build your ideal career path through advanced psychological assessments.",
     "footerCopyright": "© 2024 NextWise. All rights reserved."
+  },
+  "careerJourney": {
+    "title": "Your Career Journey in 4 Steps",
+    "subtitle": "Discover how our AI-powered platform guides you through every stage of your professional development",
+    "step1": {
+      "title": "Complete Assessment",
+      "description": "Take comprehensive psychological tests to understand your personality, strengths, and preferences"
+    },
+    "step2": {
+      "title": "Get AI Analysis",
+      "description": "Receive detailed insights and personalized recommendations based on your test results"
+    },
+    "step3": {
+      "title": "Build Your Plan",
+      "description": "Create a customized career development plan with clear milestones and actionable steps"
+    },
+    "step4": {
+      "title": "Achieve Success",
+      "description": "Follow your personalized roadmap and track your progress toward your career goals"
+    },
+    "benefits": {
+      "title": "Why Choose NextWise?",
+      "benefit1": "Scientifically validated psychological assessments",
+      "benefit2": "AI-powered personalized career recommendations",
+      "benefit3": "Step-by-step guidance and progress tracking",
+      "benefit4": "Continuous support and mentoring throughout your journey"
+    }
+  },
+  "plans": {
+    "mostPopular": "Most Popular",
+    "basic": {
+      "name": "Basic",
+      "price": "$19/month",
+      "description": "Perfect for getting started",
+      "features": [
+        "4 psychological tests per month",
+        "Basic learning plan",
+        "Basic results",
+        "Email support"
+      ],
+      "button": "Choose Basic"
+    },
+    "professional": {
+      "name": "Professional",
+      "price": "$49/month",
+      "description": "Most popular choice",
+      "features": [
+        "7 psychological tests per month",
+        "Extended learning and development plan",
+        "Detailed AI analysis",
+        "Personalized recommendations",
+        "Priority support"
+      ],
+      "button": "Choose Professional"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "$89/month",
+      "description": "Everything you need",
+      "features": [
+        "Unlimited access",
+        "All available tests",
+        "Advanced career plans",
+        "Personalized consulting",
+        "1-on-1 video sessions",
+        "24/7 support"
+      ],
+      "button": "Choose Premium"
+    }
   },
   "dashboard": {
     "welcome": "Welcome,",

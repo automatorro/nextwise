@@ -20,6 +20,11 @@
     "featuresSubtitle": "Unelte bazate pe inteligență artificială pentru a-ți accelera cariera.",
     "categoriesTitle": "Categorii de Teste",
     "categoriesSubtitle": "Explorează diferitele tipuri de evaluări disponibile",
+    "pricingTitle": "Alege Planul Tău",
+    "pricingSubtitle": "Selectează planul perfect pentru călătoria ta de dezvoltare în carieră",
+    "ctaFinalTitle": "Ești Gata să Îți Transformi Cariera?",
+    "ctaFinalSubtitle": "Alătură-te miilor de profesioniști care și-au descoperit deja potențialul",
+    "ctaFinalButton": "Începe Călătoria Ta",
     "features": {
       "psychologicalEvaluations": "Evaluări Psihologice",
       "psychologicalEvaluationsDesc": "Înțelege-ți personalitatea și abilitățile cognitive.",
@@ -32,6 +37,75 @@
     },
     "footerText": "Platforma AI care te ajută să îți înțelegi personalitatea, să îți identifici punctele forte și să îți construiești calea ideală în carieră prin evaluări psihologice avansate.",
     "footerCopyright": "© 2024 NextWise. Toate drepturile rezervate."
+  },
+  "careerJourney": {
+    "title": "Călătoria Ta în Carieră în 4 Pași",
+    "subtitle": "Descoperă cum platforma noastră bazată pe AI te ghidează prin fiecare etapă a dezvoltării tale profesionale",
+    "step1": {
+      "title": "Completează Evaluarea",
+      "description": "Susține teste psihologice cuprinzătoare pentru a-ți înțelege personalitatea, punctele forte și preferințele"
+    },
+    "step2": {
+      "title": "Primește Analiza AI",
+      "description": "Primești informații detaliate și recomandări personalizate bazate pe rezultatele testelor tale"
+    },
+    "step3": {
+      "title": "Construiește-ți Planul",
+      "description": "Creează un plan personalizat de dezvoltare în carieră cu obiective clare și pași acționabili"
+    },
+    "step4": {
+      "title": "Atinge Succesul",
+      "description": "Urmează foaia ta de parcurs personalizată și urmărește progresul către obiectivele tale de carieră"
+    },
+    "benefits": {
+      "title": "De Ce să Alegi NextWise?",
+      "benefit1": "Evaluări psihologice validate științific",
+      "benefit2": "Recomandări personalizate de carieră bazate pe AI",
+      "benefit3": "Ghidare pas cu pas și urmărirea progresului",
+      "benefit4": "Suport și mentorat continuu pe parcursul călătoriei tale"
+    }
+  },
+  "plans": {
+    "mostPopular": "Cel Mai Popular",
+    "basic": {
+      "name": "Basic",
+      "price": "€19/lună",
+      "description": "Perfect pentru a începe",
+      "features": [
+        "4 teste psihologice pe lună",
+        "Plan de învățare de bază",
+        "Rezultate de bază",
+        "Suport email"
+      ],
+      "button": "Alege Basic"
+    },
+    "professional": {
+      "name": "Professional",
+      "price": "€49/lună",
+      "description": "Cea mai populară alegere",
+      "features": [
+        "7 teste psihologice pe lună",
+        "Plan extins de învățare și dezvoltare",
+        "Analize detaliate AI",
+        "Recomandări personalizate",
+        "Suport prioritar"
+      ],
+      "button": "Alege Professional"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "€89/lună",
+      "description": "Tot ce ai nevoie",
+      "features": [
+        "Acces complet nelimitat",
+        "Toate testele disponibile",
+        "Planuri de carieră avansate",
+        "Consultanță personalizată",
+        "Sesiuni video 1-la-1",
+        "Suport 24/7"
+      ],
+      "button": "Alege Premium"
+    }
   },
   "dashboard": {
     "welcome": "Bun venit,",
