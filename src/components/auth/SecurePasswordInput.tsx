@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { passwordSchema } from '@/utils/security';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface SecurePasswordInputProps {
   value: string;
@@ -18,10 +19,11 @@ export const SecurePasswordInput = ({
   value, 
   onChange, 
   placeholder = "Enter password",
-  label = "Password",
+  label,
   showStrengthIndicator = true
 }: SecurePasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
+  const { t } = useLanguage();
   
   const validatePassword = (password: string) => {
     const checks = [
@@ -53,7 +55,7 @@ export const SecurePasswordInput = ({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="password">{label}</Label>
+      <Label htmlFor="password">{label || t('auth.password')}</Label>
       <div className="relative">
         <Input
           id="password"
