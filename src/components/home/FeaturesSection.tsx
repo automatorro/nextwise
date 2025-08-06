@@ -7,27 +7,27 @@ import { Brain, BarChart3, Target, Users } from 'lucide-react';
 const FeaturesSection = () => {
   const { t } = useLanguage();
 
-  // Define features with fallback values to prevent translation errors
+  // Define features with correct translation paths
   const features = [
     {
       icon: Brain,
-      title: t('features.psychologicalEvaluations') || 'Psychological Evaluations',
-      description: t('features.psychologicalEvaluationsDesc') || 'Comprehensive psychological assessments to understand your personality and strengths.'
+      title: t('home.features.psychologicalEvaluations') || 'Psychological Evaluations',
+      description: t('home.features.psychologicalEvaluationsDesc') || 'Comprehensive psychological assessments to understand your personality and strengths.'
     },
     {
       icon: Target,
-      title: t('features.personalizedCareerPlans') || 'Personalized Career Plans',
-      description: t('features.personalizedCareerPlansDesc') || 'AI-generated career development plans tailored to your unique profile.'
+      title: t('home.features.personalizedCareerPlans') || 'Personalized Career Plans',
+      description: t('home.features.personalizedCareerPlansDesc') || 'AI-generated career development plans tailored to your unique profile.'
     },
     {
       icon: BarChart3,
-      title: t('features.advancedAnalytics') || 'Advanced Analytics',
-      description: t('features.advancedAnalyticsDesc') || 'Detailed insights and analytics to track your career development progress.'
+      title: t('home.features.advancedAnalytics') || 'Advanced Analytics',
+      description: t('home.features.advancedAnalyticsDesc') || 'Detailed insights and analytics to track your career development progress.'
     },
     {
       icon: Users,
-      title: t('features.aiMentoring') || 'AI Mentoring',
-      description: t('features.aiMentoringDesc') || 'Intelligent mentoring and guidance powered by artificial intelligence.'
+      title: t('home.features.aiMentoring') || 'AI Mentoring',
+      description: t('home.features.aiMentoringDesc') || 'Intelligent mentoring and guidance powered by artificial intelligence.'
     }
   ];
 
