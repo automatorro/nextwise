@@ -1,3 +1,4 @@
+
 {
   "header": {
     "dashboard": "Panou",
@@ -202,9 +203,12 @@
     "backToMain": "Înapoi la pagina principală",
     "welcome": "Bun venit",
     "signInMessage": "Autentifică-te în cont sau creează unul nou",
+    "title": "Autentifică-te în contul tău",
+    "subtitle": "Introdu email-ul tău mai jos pentru a te conecta",
     "signIn": "Autentificare",
     "signUp": "Înregistrare",
     "email": "Email",
+    "emailLabel": "Email",
     "password": "Parolă",
     "fullName": "Nume Complet",
     "enterEmail": "Introdu email-ul",
@@ -213,6 +217,8 @@
     "signingIn": "Se autentifică...",
     "creatingAccount": "Se creează contul...",
     "createAccount": "Creează Cont",
+    "signInButton": "Autentificare cu Email",
+    "googleSignIn": "Continuă cu Google",
     "alreadyHaveAccount": "Ai deja un cont?",
     "dontHaveAccount": "Nu ai un cont?",
     "forgotPassword": "Ai uitat parola?",

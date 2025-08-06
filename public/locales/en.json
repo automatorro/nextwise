@@ -1,3 +1,4 @@
+
 {
   "header": {
     "dashboard": "Dashboard",
@@ -202,9 +203,12 @@
     "backToMain": "Back to main page",
     "welcome": "Welcome",
     "signInMessage": "Sign in to your account or create a new one",
+    "title": "Sign in to your account",
+    "subtitle": "Enter your email below to log in",
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "email": "Email",
+    "emailLabel": "Email",
     "password": "Password",
     "fullName": "Full Name",
     "enterEmail": "Enter your email",
@@ -213,6 +217,8 @@
     "signingIn": "Signing in...",
     "creatingAccount": "Creating account...",
     "createAccount": "Create Account",
+    "signInButton": "Sign In with Email",
+    "googleSignIn": "Continue with Google",
     "alreadyHaveAccount": "Already have an account?",
     "dontHaveAccount": "Don't have an account?",
     "forgotPassword": "Forgot password?",
