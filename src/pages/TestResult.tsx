@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -22,9 +21,9 @@ import { TestExplanations } from '@/components/tests/TestExplanations';
 import { SJTResults } from '@/components/test-result/SJTResults';
 import { useBigFiveCalculation } from '@/hooks/useBigFiveCalculation';
 import { useCognitiveAbilitiesCalculation } from '@/hooks/useCognitiveAbilitiesCalculation';
-import { useCattell16PFCalculation } from '@/hooks/useCattell16PFCalculation';
 import { useEnneagramCalculation } from '@/hooks/useEnneagramCalculation';
 import { useSJTCalculation } from '@/hooks/useSJTCalculation';
+import { calculateCattellScore } from '@/utils/testCalculations/cattellCalculation';
 import { isCognitiveAbilitiesTest, isBelbinTeamRoles } from '@/utils/testLabels';
 import { translateInterpretation, getResultLabels } from '@/utils/testResultTranslations';
 import { useLanguage } from '@/hooks/useLanguage';
@@ -163,9 +162,19 @@ const TestResult = () => {
   
   const calculatedBigFiveDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
   const calculatedCognitiveDimensions = useCognitiveAbilitiesCalculation(isCognitiveTest ? result?.answers : undefined);
-  const calculatedCattell16PFDimensions = useCattell16PFCalculation(isCattell16PFTest ? result?.answers : undefined);
   const calculatedEnneagramDimensions = useEnneagramCalculation(isEnneagramTest ? result?.answers : undefined);
   const calculatedSJTDimensions = useSJTCalculation(isSJTTest ? result?.answers : undefined, []);
+
+  // Calculate Cattell 16PF dimensions using the correct calculation method
+  const calculatedCattell16PFDimensions = React.useMemo(() => {
+    if (isCattell16PFTest && result?.answers) {
+      console.log('Calculating Cattell 16PF with answers:', result.answers);
+      const cattellResult = calculateCattellScore(result.answers);
+      console.log('Cattell calculation result:', cattellResult);
+      return cattellResult.dimensions;
+    }
+    return {};
+  }, [isCattell16PFTest, result?.answers]);
 
   // Get properly typed dimensions based on test type
   const testSpecificDimensions = React.useMemo(() => {
