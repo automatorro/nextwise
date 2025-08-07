@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -134,6 +135,14 @@ const TestResult = () => {
       
       if (error) throw error;
       
+      // Point A (Data Fetching): Log the answers object immediately after fetching
+      console.log('=== POINT A: Data Fetching ===');
+      console.log('Raw data from database:', data);
+      console.log('Answers object from database:', data.answers);
+      console.log('Answers type:', typeof data.answers);
+      console.log('Answers keys:', data.answers ? Object.keys(data.answers) : 'No answers');
+      console.log('Sample answers (first 5):', data.answers ? Object.entries(data.answers).slice(0, 5) : 'No answers');
+      
       // Safely convert score data
       const safeScore = convertToScoreData(data.score);
       
@@ -168,9 +177,25 @@ const TestResult = () => {
   // Calculate Cattell 16PF dimensions using the correct calculation method
   const calculatedCattell16PFDimensions = React.useMemo(() => {
     if (isCattell16PFTest && result?.answers) {
-      console.log('Calculating Cattell 16PF with answers:', result.answers);
+      // Point B (Function Input): Log the data being passed to the calculation function
+      console.log('=== POINT B: Function Input ===');
+      console.log('isCattell16PFTest:', isCattell16PFTest);
+      console.log('Test name:', result.test_types.name);
+      console.log('Input answers for calculateCattellScore:', result.answers);
+      console.log('Input answers type:', typeof result.answers);
+      console.log('Input answers keys count:', Object.keys(result.answers).length);
+      console.log('Input answers sample entries:', Object.entries(result.answers).slice(0, 10));
+      
       const cattellResult = calculateCattellScore(result.answers);
-      console.log('Cattell calculation result:', cattellResult);
+      
+      // Point C (Function Output): Log the raw output from the calculation function
+      console.log('=== POINT C: Function Output ===');
+      console.log('calculateCattellScore raw output:', cattellResult);
+      console.log('Output type:', typeof cattellResult);
+      console.log('Output dimensions:', cattellResult.dimensions);
+      console.log('Output overall score:', cattellResult.overall);
+      console.log('Output interpretation:', cattellResult.interpretation);
+      
       return cattellResult.dimensions;
     }
     return {};
