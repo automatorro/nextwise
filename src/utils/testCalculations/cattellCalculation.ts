@@ -1,129 +1,69 @@
-
-export interface CattellScore {
-  overall: number;
-  dimensions: {
-    warmth: number;
-    reasoning: number;
-    emotional_stability: number;
-    dominance: number;
-    liveliness: number;
-    rule_consciousness: number;
-    social_boldness: number;
-    sensitivity: number;
-    vigilance: number;
-    abstractedness: number;
-    privateness: number;
-    apprehension: number;
-    openness_to_change: number;
-    self_reliance: number;
-    perfectionism: number;
-    tension: number;
-  };
-  interpretation: string;
+interface Answers {
+  [key: string]: number;
 }
 
-export const calculateCattellScore = (answers: Record<string, number>): CattellScore => {
-  console.log('=== CATTELL CALCULATION START ===');
-  console.log('Total answers received:', Object.keys(answers).length);
-  console.log('Answers object:', answers);
-  
-  const factors = {
-    warmth: 0,
-    reasoning: 0,
-    emotional_stability: 0,
-    dominance: 0,
-    liveliness: 0,
-    rule_consciousness: 0,
-    social_boldness: 0,
-    sensitivity: 0,
-    vigilance: 0,
-    abstractedness: 0,
-    privateness: 0,
-    apprehension: 0,
-    openness_to_change: 0,
-    self_reliance: 0,
-    perfectionism: 0,
-    tension: 0
-  };
-  
-  console.log('Initial factors:', factors);
-  
-  // Maparea întrebărilor la factori (presupunem 160 întrebări, câte 10 pentru fiecare factor)
-  for (const questionId in answers) {
-    try {
-      // --- START of each iteration ---
-      console.log(`Processing: ${questionId}, Answer: ${answers[questionId]}`);
-      
-      const answer = answers[questionId];
-      
-      // Validate the answer value
-      if (typeof answer !== 'number') {
-        console.warn(`Invalid answer type for ${questionId}: ${typeof answer}, value: ${answer}`);
-        continue;
-      }
-      
-      const questionNumber = parseInt(questionId.split('-')[1]);
-      console.log(`Parsed question number: ${questionNumber} from ${questionId}`);
-      
-      // Validate question number
-      if (isNaN(questionNumber) || questionNumber < 1) {
-        console.warn(`Invalid question number parsed: ${questionNumber} from ${questionId}`);
-        continue;
-      }
-      
-      const factorNames = Object.keys(factors);
-      const factorIndex = Math.floor((questionNumber - 1) / 10);
-      console.log(`Factor index calculated: ${factorIndex} for question ${questionNumber}`);
-      
-      if (factorIndex >= 0 && factorIndex < factorNames.length) {
-        const factorName = factorNames[factorIndex] as keyof typeof factors;
-        console.log(`Adding ${answer} to factor: ${factorName} (current value: ${factors[factorName]})`);
-        
-        factors[factorName] += answer;
-        
-        console.log(`Updated ${factorName} to: ${factors[factorName]}`);
-      } else {
-        console.warn(`Factor index ${factorIndex} out of bounds for question ${questionNumber}. Valid range: 0-${factorNames.length - 1}`);
-      }
-      
-    } catch (error) {
-      console.error(`Failed to process ${questionId}. Error:`, error.message);
-      console.error('Error stack:', error.stack);
-      // By using 'continue', we skip the broken iteration and move to the next one.
-      continue;
-    }
-  }
-  
-  console.log('Final factors after processing all questions:', factors);
-  
-  // Normalizarea la scală 1-10 (specific pentru Cattell)
-  const maxScorePerFactor = 10 * 3; // 10 întrebări × 3 puncte maxim
-  console.log(`Max score per factor: ${maxScorePerFactor}`);
-  
-  const normalizedScores = Object.fromEntries(
-    Object.entries(factors).map(([factor, score]) => {
-      const normalizedScore = Math.round(((score / maxScorePerFactor) * 9) + 1); // Scală 1-10
-      console.log(`Normalizing ${factor}: ${score} -> ${normalizedScore}`);
-      return [factor, normalizedScore];
-    })
-  ) as typeof factors;
-  
-  console.log('Normalized scores:', normalizedScores);
-  
-  // Calculul scorului general ca medie
-  const overall = Math.round(Object.values(normalizedScores).reduce((sum, score) => sum + score, 0) / 16);
-  console.log(`Overall score calculated: ${overall}`);
-  
-  const interpretation = `Profilul tău Cattell 16PF arată o personalitate complexă cu scoruri variate pe cei 16 factori. Factorul dominant este cel cu scorul cel mai mare.`;
-  
-  const finalResult = {
-    overall: Math.round((overall / 10) * 100), // Convertim la procente pentru consistență
-    dimensions: normalizedScores,
-    interpretation
-  };
-  
-  console.log('=== CATTELL CALCULATION END ===');
-  console.log('Final result:', finalResult);
-  
-  return finalResult;
+interface Dimensions {
+  [key: string]: number;
+}
+
+// This map correctly assigns each question to its corresponding factor.
+const questionFactorMap: { [key: number]: keyof Dimensions } = {
+  1: 'warmth', 2: 'reasoning', 3: 'emotional_stability',
+  4: 'dominance', 5: 'liveliness', 6: 'rule_consciousness',
+  7: 'social_boldness', 8: 'sensitivity', 9: 'vigilance',
+  10: 'abstractedness', 11: 'privateness', 12: 'apprehension',
+  13: 'openness_to_change', 14: 'self_reliance', 15: 'perfectionism',
+  16: 'tension', 17: 'warmth', 18: 'reasoning',
+  19: 'emotional_stability', 20: 'dominance', 21: 'liveliness',
+  22: 'rule_consciousness', 23: 'social_boldness', 24: 'sensitivity',
+  25: 'vigilance', 26: 'abstractedness', 27: 'privateness',
+  28: 'apprehension', 29: 'openness_to_change', 30: 'self_reliance',
+  31: 'perfectionism', 32: 'tension', 33: 'warmth',
+  34: 'reasoning', 35: 'emotional_stability', 36: 'dominance',
+  37: 'liveliness', 38: 'rule_consciousness', 39: 'social_boldness',
+  40: 'sensitivity', 41: 'vigilance', 42: 'abstractedness',
+  43: 'privateness', 44: 'apprehension', 45: 'openness_to_change',
+  46: 'self_reliance', 47: 'perfectionism', 48: 'tension'
 };
+
+const factorKeys: (keyof Dimensions)[] = [
+    'warmth', 'reasoning', 'emotional_stability', 'dominance', 'liveliness',
+    'rule_consciousness', 'social_boldness', 'sensitivity', 'vigilance',
+    'abstractedness', 'privateness', 'apprehension', 'openness_to_change',
+    'self_reliance', 'perfectionism', 'tension'
+];
+
+export function calculateCattellScore(answers: Answers) {
+  const rawScores: Dimensions = factorKeys.reduce((acc, key) => ({ ...acc, [key]: 0 }), {});
+  const MAX_SCORE_PER_FACTOR = 15; // 3 questions per factor * max score of 5
+
+  for (const questionId in answers) {
+      const questionNumber = parseInt(questionId.replace('question-', ''), 10);
+      const answerValue = answers[questionId];
+
+      if (!isNaN(questionNumber) && questionFactorMap[questionNumber] && answerValue >= 1 && answerValue <= 5) {
+          const factor = questionFactorMap[questionNumber];
+          rawScores[factor] += answerValue;
+      }
+  }
+
+  const normalizedScores: Dimensions = {};
+  let totalNormalizedScore = 0;
+  for (const factor of factorKeys) {
+    const score = rawScores[factor] || 0;
+    // Normalize score to a 1-10 scale, ensuring 0 maps to 1.
+    const normalized = Math.round((score / MAX_SCORE_PER_FACTOR) * 9) + 1;
+    normalizedScores[factor] = normalized;
+    totalNormalizedScore += score;
+  }
+
+  const MAX_TOTAL_SCORE = factorKeys.length * MAX_SCORE_PER_FACTOR;
+  const overallPercentage = Math.round((totalNormalizedScore / MAX_TOTAL_SCORE) * 100);
+
+  return {
+    dimensions: normalizedScores,
+    raw_scores: rawScores,
+    overall: overallPercentage,
+    interpretation: "Interpretarea va fi adăugată ulterior.", // Placeholder
+  };
+}
