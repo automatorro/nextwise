@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -209,6 +210,42 @@ const TestResult = () => {
     return result?.score.dimensions || {};
   }, [isBigFiveTest, isCognitiveTest, isCattell16PFTest, isEnneagramTest, isSJTTest, isBelbinTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, calculatedCattell16PFDimensions, calculatedEnneagramDimensions, calculatedSJTDimensions, result?.score]);
 
+  // Create a unified, correctly calculated score object
+  const unifiedScore = React.useMemo(() => {
+    if (!result) return null;
+
+    // For Cattell 16PF, recalculate the complete score
+    if (isCattell16PFTest && result.answers) {
+      const transformedAnswers = Object.entries(result.answers).reduce((acc, [key, value]) => {
+        acc[`question-${key}`] = value;
+        return acc;
+      }, {} as Record<string, number>);
+      
+      const cattellResult = calculateCattellScore(transformedAnswers);
+      
+      return {
+        overall: cattellResult.overall,
+        raw_score: Object.values(cattellResult.dimensions).reduce((sum, score) => sum + score, 0),
+        max_score: 160, // 16 factors × 10 max score per factor
+        interpretation: cattellResult.interpretation,
+        dimensions: cattellResult.dimensions,
+        detailed_interpretations: result.score.detailed_interpretations,
+        primary_roles: result.score.primary_roles,
+        secondary_roles: result.score.secondary_roles,
+        role_scores: result.score.role_scores,
+        recommendations: result.score.recommendations,
+        dominant_profile: result.score.dominant_profile,
+        secondary_profile: result.score.secondary_profile
+      };
+    }
+
+    // For other tests, use the original score but with updated dimensions if calculated
+    return {
+      ...result.score,
+      dimensions: testSpecificDimensions
+    };
+  }, [result, isCattell16PFTest, testSpecificDimensions]);
+
   const hasValidTestSpecificDimensions = testSpecificDimensions && Object.values(testSpecificDimensions).some(value => typeof value === 'number' && value > 0);
 
   // Use different dimensions for general display
@@ -229,7 +266,7 @@ const TestResult = () => {
     );
   }
 
-  if (error || !result) {
+  if (error || !result || !unifiedScore) {
     return (
       <div>
         <HomeNavigation />
@@ -268,7 +305,7 @@ const TestResult = () => {
           {/* Test Explanations - NEW SECTION */}
           <TestExplanations 
             testName={result.test_types.name}
-            score={{ ...result.score, dimensions: testSpecificDimensions }}
+            score={{ ...unifiedScore, dimensions: testSpecificDimensions }}
             language={language}
           />
 
@@ -278,7 +315,7 @@ const TestResult = () => {
               {/* Scoring Explanation for SJT - ALWAYS SHOW FIRST */}
               <ScoringExplanation 
                 testName={result.test_types.name}
-                overallScore={result.score.overall}
+                overallScore={unifiedScore.overall}
                 scoreType={scoreType}
                 dimensions={generalDisplayDimensions}
               />
@@ -286,13 +323,13 @@ const TestResult = () => {
               {/* SJT Results */}
               <SJTResults
                 score={{
-                  overall: result.score.overall,
+                  overall: unifiedScore.overall,
                   dimensions: generalDisplayDimensions,
-                  interpretation: result.score.interpretation,
-                  detailed_interpretations: result.score.detailed_interpretations,
-                  recommendations: result.score.recommendations || [],
-                  dominant_profile: result.score.dominant_profile,
-                  secondary_profile: result.score.secondary_profile
+                  interpretation: unifiedScore.interpretation,
+                  detailed_interpretations: unifiedScore.detailed_interpretations,
+                  recommendations: unifiedScore.recommendations || [],
+                  dominant_profile: unifiedScore.dominant_profile,
+                  secondary_profile: unifiedScore.secondary_profile
                 }}
               />
             </>
@@ -304,29 +341,29 @@ const TestResult = () => {
                   {/* Scoring Explanation for Belbin - ALWAYS SHOW FIRST */}
                   <ScoringExplanation 
                     testName={result.test_types.name}
-                    overallScore={result.score.overall}
+                    overallScore={unifiedScore.overall}
                     scoreType={scoreType}
                     dimensions={generalDisplayDimensions}
-                    roleScores={result.score.role_scores || result.score.dimensions}
+                    roleScores={unifiedScore.role_scores || unifiedScore.dimensions}
                   />
                   
                   {/* Belbin Role Results */}
                   <BelbinRoleResults
-                    roleScores={result.score.role_scores || result.score.dimensions || {}}
-                    primaryRoles={result.score.primary_roles || []}
-                    secondaryRoles={result.score.secondary_roles || []}
-                    interpretation={result.score.interpretation}
+                    roleScores={unifiedScore.role_scores || unifiedScore.dimensions || {}}
+                    primaryRoles={unifiedScore.primary_roles || []}
+                    secondaryRoles={unifiedScore.secondary_roles || []}
+                    interpretation={unifiedScore.interpretation}
                   />
                 </>
               ) : (
                 <>
-                  {/* Overall Score - only for non-Belbin and non-SJT tests */}
-                  {!isEnneagramTest && <OverallScoreCard score={result.score} />}
+                  {/* Overall Score - only for non-Belbin and non-SJT tests - PASS UNIFIED SCORE */}
+                  {!isEnneagramTest && <OverallScoreCard score={unifiedScore} />}
 
                   {/* Scoring Explanation - ALWAYS SHOW WITH DIMENSIONS */}
                   <ScoringExplanation 
                     testName={result.test_types.name}
-                    overallScore={result.score.overall}
+                    overallScore={unifiedScore.overall}
                     scoreType={scoreType}
                     dimensions={generalDisplayDimensions}
                   />
@@ -356,9 +393,9 @@ const TestResult = () => {
                   )}
 
                   {/* Detailed Interpretations for Big Five - ALWAYS SHOW IF EXISTS */}
-                  {isBigFiveTest && result.score.detailed_interpretations && (
+                  {isBigFiveTest && unifiedScore.detailed_interpretations && (
                     <DetailedInterpretations 
-                      interpretations={result.score.detailed_interpretations}
+                      interpretations={unifiedScore.detailed_interpretations}
                       testName={result.test_types.name}
                     />
                   )}
@@ -370,7 +407,7 @@ const TestResult = () => {
           {/* Charts Section */}
           <TestResultCharts
             testName={result.test_types.name}
-            score={{ ...result.score, dimensions: testSpecificDimensions }}
+            score={{ ...unifiedScore, dimensions: testSpecificDimensions }}
           />
 
           {/* Detailed Analysis Section - AVAILABLE FOR ALL TESTS */}
@@ -386,7 +423,7 @@ const TestResult = () => {
                 dimensions={generalDisplayDimensions} 
                 resultId={resultId!}
                 testType={result.test_types.name}
-                score={result.score}
+                score={unifiedScore}
               />
             </CardContent>
           </Card>
