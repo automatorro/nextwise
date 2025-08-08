@@ -23,6 +23,10 @@ export interface CattellScore {
 }
 
 export const calculateCattellScore = (answers: Record<string, number>): CattellScore => {
+  console.log('=== CATTELL CALCULATION START ===');
+  console.log('Total answers received:', Object.keys(answers).length);
+  console.log('Answers object:', answers);
+  
   const factors = {
     warmth: 0,
     reasoning: 0,
@@ -42,35 +46,84 @@ export const calculateCattellScore = (answers: Record<string, number>): CattellS
     tension: 0
   };
   
+  console.log('Initial factors:', factors);
+  
   // Maparea întrebărilor la factori (presupunem 160 întrebări, câte 10 pentru fiecare factor)
-  Object.entries(answers).forEach(([questionId, answer]) => {
-    const questionNumber = parseInt(questionId.split('-')[1]);
-    const factorNames = Object.keys(factors);
-    const factorIndex = Math.floor((questionNumber - 1) / 10);
-    
-    if (factorIndex >= 0 && factorIndex < factorNames.length) {
-      const factorName = factorNames[factorIndex] as keyof typeof factors;
-      factors[factorName] += answer;
+  for (const questionId in answers) {
+    try {
+      // --- START of each iteration ---
+      console.log(`Processing: ${questionId}, Answer: ${answers[questionId]}`);
+      
+      const answer = answers[questionId];
+      
+      // Validate the answer value
+      if (typeof answer !== 'number') {
+        console.warn(`Invalid answer type for ${questionId}: ${typeof answer}, value: ${answer}`);
+        continue;
+      }
+      
+      const questionNumber = parseInt(questionId.split('-')[1]);
+      console.log(`Parsed question number: ${questionNumber} from ${questionId}`);
+      
+      // Validate question number
+      if (isNaN(questionNumber) || questionNumber < 1) {
+        console.warn(`Invalid question number parsed: ${questionNumber} from ${questionId}`);
+        continue;
+      }
+      
+      const factorNames = Object.keys(factors);
+      const factorIndex = Math.floor((questionNumber - 1) / 10);
+      console.log(`Factor index calculated: ${factorIndex} for question ${questionNumber}`);
+      
+      if (factorIndex >= 0 && factorIndex < factorNames.length) {
+        const factorName = factorNames[factorIndex] as keyof typeof factors;
+        console.log(`Adding ${answer} to factor: ${factorName} (current value: ${factors[factorName]})`);
+        
+        factors[factorName] += answer;
+        
+        console.log(`Updated ${factorName} to: ${factors[factorName]}`);
+      } else {
+        console.warn(`Factor index ${factorIndex} out of bounds for question ${questionNumber}. Valid range: 0-${factorNames.length - 1}`);
+      }
+      
+    } catch (error) {
+      console.error(`Failed to process ${questionId}. Error:`, error.message);
+      console.error('Error stack:', error.stack);
+      // By using 'continue', we skip the broken iteration and move to the next one.
+      continue;
     }
-  });
+  }
+  
+  console.log('Final factors after processing all questions:', factors);
   
   // Normalizarea la scală 1-10 (specific pentru Cattell)
   const maxScorePerFactor = 10 * 3; // 10 întrebări × 3 puncte maxim
+  console.log(`Max score per factor: ${maxScorePerFactor}`);
+  
   const normalizedScores = Object.fromEntries(
-    Object.entries(factors).map(([factor, score]) => [
-      factor,
-      Math.round(((score / maxScorePerFactor) * 9) + 1) // Scală 1-10
-    ])
+    Object.entries(factors).map(([factor, score]) => {
+      const normalizedScore = Math.round(((score / maxScorePerFactor) * 9) + 1); // Scală 1-10
+      console.log(`Normalizing ${factor}: ${score} -> ${normalizedScore}`);
+      return [factor, normalizedScore];
+    })
   ) as typeof factors;
+  
+  console.log('Normalized scores:', normalizedScores);
   
   // Calculul scorului general ca medie
   const overall = Math.round(Object.values(normalizedScores).reduce((sum, score) => sum + score, 0) / 16);
+  console.log(`Overall score calculated: ${overall}`);
   
   const interpretation = `Profilul tău Cattell 16PF arată o personalitate complexă cu scoruri variate pe cei 16 factori. Factorul dominant este cel cu scorul cel mai mare.`;
   
-  return {
+  const finalResult = {
     overall: Math.round((overall / 10) * 100), // Convertim la procente pentru consistență
     dimensions: normalizedScores,
     interpretation
   };
+  
+  console.log('=== CATTELL CALCULATION END ===');
+  console.log('Final result:', finalResult);
+  
+  return finalResult;
 };
