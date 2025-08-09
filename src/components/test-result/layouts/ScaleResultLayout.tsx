@@ -15,12 +15,12 @@ import { dimensionsToObject } from '@/utils/dimensionsConverter';
 
 interface ScaleResultLayoutProps {
   score: StandardizedScore;
-  testName: string;
-  completedAt: string;
-  resultId: string;
+  testName?: string;
+  completedAt?: string;
+  resultId?: string;
 }
 
-const ScaleResultLayout = ({ score, testName, completedAt, resultId }: ScaleResultLayoutProps) => {
+export const ScaleResultLayout = ({ score, testName, completedAt, resultId }: ScaleResultLayoutProps) => {
   const { language } = useLanguage();
   const labels = getResultLabels(language);
 
@@ -30,10 +30,14 @@ const ScaleResultLayout = ({ score, testName, completedAt, resultId }: ScaleResu
   return (
     <div className="space-y-8">
       {/* Header */}
-      <TestResultHeader testName={testName} completedAt={completedAt} />
+      {testName && completedAt && (
+        <TestResultHeader testName={testName} completedAt={completedAt} />
+      )}
 
       {/* Test Explanations */}
-      <TestExplanations testName={testName} score={score} language={language} />
+      {testName && (
+        <TestExplanations testName={testName} score={score} language={language} />
+      )}
 
       {/* Overall Score Display */}
       <OverallScoreCard score={{
@@ -45,14 +49,16 @@ const ScaleResultLayout = ({ score, testName, completedAt, resultId }: ScaleResu
       }} />
 
       {/* Scoring Explanation */}
-      <ScoringExplanation 
-        testName={testName}
-        overallScore={score.overall}
-        scoreType="raw"
-      />
+      {testName && (
+        <ScoringExplanation 
+          testName={testName}
+          overallScore={score.overall}
+          scoreType="raw"
+        />
+      )}
 
       {/* Detailed Interpretations */}
-      {score.detailed_interpretations && (
+      {score.detailed_interpretations && testName && (
         <DetailedInterpretations
           interpretations={score.detailed_interpretations}
           testName={testName}
@@ -60,32 +66,32 @@ const ScaleResultLayout = ({ score, testName, completedAt, resultId }: ScaleResu
       )}
 
       {/* AI Analysis Section */}
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>{labels.generateAnalysis}</CardTitle>
-          <p className="text-sm text-gray-600">
-            {labels.analysisDescription}
-          </p>
-        </CardHeader>
-        <CardContent>
-          <DetailedAnalysisSection 
-            dimensions={dimensionsAsObject} 
-            resultId={resultId}
-            testType={testName}
-            score={{
-              overall: score.overall,
-              raw_score: score.raw_score,
-              max_score: score.max_score,
-              interpretation: score.interpretation
-            }}
-          />
-        </CardContent>
-      </Card>
+      {resultId && testName && (
+        <Card className="mb-8">
+          <CardHeader>
+            <CardTitle>{labels.generateAnalysis}</CardTitle>
+            <p className="text-sm text-gray-600">
+              {labels.analysisDescription}
+            </p>
+          </CardHeader>
+          <CardContent>
+            <DetailedAnalysisSection 
+              dimensions={dimensionsAsObject} 
+              resultId={resultId}
+              testType={testName}
+              score={{
+                overall: score.overall,
+                raw_score: score.raw_score,
+                max_score: score.max_score,
+                interpretation: score.interpretation
+              }}
+            />
+          </CardContent>
+        </Card>
+      )}
 
       {/* Actions */}
       <TestResultActions />
     </div>
   );
 };
-
-export default ScaleResultLayout;

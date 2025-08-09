@@ -1,75 +1,42 @@
 
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
-import DimensionalResultLayout from './layouts/DimensionalResultLayout';
-import ProfileResultLayout from './layouts/ProfileResultLayout';
-import ScaleResultLayout from './layouts/ScaleResultLayout';
-import RoleResultLayout from './layouts/RoleResultLayout';
+import { DimensionalResultLayout } from './layouts/DimensionalResultLayout';
+import { ProfileResultLayout } from './layouts/ProfileResultLayout';
+import { ScaleResultLayout } from './layouts/ScaleResultLayout';
 
 interface TestResultDisplayProps {
-  score: StandardizedScore;
-  testName: string;
-  completedAt: string;
-  resultId: string;
+  score: StandardizedScore | null;
+  testName?: string;
 }
 
-const TestResultDisplay = ({ score, testName, completedAt, resultId }: TestResultDisplayProps) => {
-  console.log('TestResultDisplay rendering with score type:', score.type);
-  console.log('Score data:', score);
+export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, testName }) => {
+  if (!score) {
+    // This can be replaced with a loading skeleton component later
+    return <div>Loading results...</div>;
+  }
 
-  // Route to appropriate layout based on score type
+  // This is the core logic: it routes the score to the correct layout component.
   switch (score.type) {
     case 'dimensional':
-      return (
-        <DimensionalResultLayout
-          score={score}
-          testName={testName}
-          completedAt={completedAt}
-          resultId={resultId}
-        />
-      );
-    
+      return <DimensionalResultLayout score={score} testName={testName} />;
+
     case 'profile':
-      return (
-        <ProfileResultLayout
-          score={score}
-          testName={testName}
-          completedAt={completedAt}
-          resultId={resultId}
-        />
-      );
-    
+      return <ProfileResultLayout score={score} testName={testName} />;
+
     case 'scale':
-      return (
-        <ScaleResultLayout
-          score={score}
-          testName={testName}
-          completedAt={completedAt}
-          resultId={resultId}
-        />
-      );
-    
-    case 'role':
-      return (
-        <RoleResultLayout
-          score={score}
-          testName={testName}
-          completedAt={completedAt}
-          resultId={resultId}
-        />
-      );
-    
+       return <ScaleResultLayout score={score} testName={testName} />;
+
+    // case 'role':
+    //   return <RoleResultLayout score={score} />; // To be implemented in the future
+
     default:
-      console.warn('Unknown score type, falling back to dimensional layout:', score.type);
       return (
-        <DimensionalResultLayout
-          score={score}
-          testName={testName}
-          completedAt={completedAt}
-          resultId={resultId}
-        />
+        <div className="text-center p-4">
+          <h2 className="text-xl font-semibold text-red-600">Eroare de Afișare</h2>
+          <p>Nu a putut fi determinat tipul de rezultat pentru acest test.</p>
+          <p>Nume Test: {testName || 'Nespecificat'}</p>
+        </div>
       );
   }
 };
-
-export default TestResultDisplay;
