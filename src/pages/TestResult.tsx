@@ -7,7 +7,7 @@ import { Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 import { useTestCalculation } from '@/hooks/useTestCalculation';
-import TestResultDisplay from '@/components/test-result/TestResultDisplay';
+import { TestResultDisplay } from '@/components/test-result/TestResultDisplay';
 import { useLanguage } from '@/hooks/useLanguage';
 import { getResultLabels } from '@/utils/testResultTranslations';
 import HomeNavigation from '@/components/home/HomeNavigation';
