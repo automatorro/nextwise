@@ -17,6 +17,11 @@ interface SJTResultsProps {
 }
 
 export const SJTResults: React.FC<SJTResultsProps> = ({ score }) => {
+  // Defensive checks
+  if (!score || typeof score !== 'object') {
+    return null;
+  }
+
   const getScoreLevel = (value: number) => {
     if (value >= 75) return { level: 'Foarte ridicat', variant: 'default' as const };
     if (value >= 60) return { level: 'Ridicat', variant: 'secondary' as const };
@@ -36,6 +41,13 @@ export const SJTResults: React.FC<SJTResultsProps> = ({ score }) => {
     return labels[profile] || profile;
   };
 
+  // Validate dimensions
+  const validDimensions = score.dimensions && typeof score.dimensions === 'object' 
+    ? Object.entries(score.dimensions).filter(([_, value]) => typeof value === 'number' && value >= 0)
+    : [];
+
+  const safeInterpretation = score.interpretation || 'Interpretare indisponibilă';
+
   return (
     <div className="space-y-6">
       <Card>
@@ -44,10 +56,12 @@ export const SJTResults: React.FC<SJTResultsProps> = ({ score }) => {
         </CardHeader>
         <CardContent>
           <div className="text-center space-y-4">
-            <div className="text-2xl font-bold text-blue-600">
-              {score.dominant_profile && getProfileLabel(score.dominant_profile)}
-            </div>
-            <p className="text-gray-700">{score.interpretation}</p>
+            {score.dominant_profile && (
+              <div className="text-2xl font-bold text-blue-600">
+                {getProfileLabel(score.dominant_profile)}
+              </div>
+            )}
+            <p className="text-gray-700">{safeInterpretation}</p>
             
             {score.dominant_profile && score.secondary_profile && (
               <div className="flex justify-center gap-2 mt-4">
@@ -63,35 +77,39 @@ export const SJTResults: React.FC<SJTResultsProps> = ({ score }) => {
         </CardContent>
       </Card>
 
-      <SJTRadarChart data={score.dimensions} />
+      {validDimensions.length > 0 && (
+        <SJTRadarChart data={score.dimensions} />
+      )}
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Analiza Profilurilor de Carieră</CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {Object.entries(score.dimensions).map(([key, value]) => {
-            const scoreLevel = getScoreLevel(value);
-            
-            return (
-              <div key={key} className="border rounded-lg p-4">
-                <div className="flex justify-between items-center mb-2">
-                  <h4 className="font-medium">{getProfileLabel(key)}</h4>
-                  <div className="flex items-center gap-2">
-                    <Badge variant={scoreLevel.variant}>{scoreLevel.level}</Badge>
-                    <span className="font-bold text-blue-600">{value}%</span>
+      {validDimensions.length > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Analiza Profilurilor de Carieră</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {validDimensions.map(([key, value]) => {
+              const scoreLevel = getScoreLevel(value);
+              
+              return (
+                <div key={key} className="border rounded-lg p-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="font-medium">{getProfileLabel(key)}</h4>
+                    <div className="flex items-center gap-2">
+                      <Badge variant={scoreLevel.variant}>{scoreLevel.level}</Badge>
+                      <span className="font-bold text-blue-600">{Math.round(value)}%</span>
+                    </div>
                   </div>
+                  <p className="text-sm text-gray-800">
+                    {score.detailed_interpretations?.[key] || 'Interpretare generală pentru acest profil'}
+                  </p>
                 </div>
-                <p className="text-sm text-gray-800">
-                  {score.detailed_interpretations?.[key] || 'Interpretare generală pentru acest profil'}
-                </p>
-              </div>
-            );
-          })}
-        </CardContent>
-      </Card>
+              );
+            })}
+          </CardContent>
+        </Card>
+      )}
 
-      {score.recommendations && score.recommendations.length > 0 && (
+      {score.recommendations && Array.isArray(score.recommendations) && score.recommendations.length > 0 && (
         <Card>
           <CardHeader>
             <CardTitle>Recomandări de Carieră</CardTitle>

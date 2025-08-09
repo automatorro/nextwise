@@ -11,6 +11,19 @@ interface DimensionExplanationsProps {
 }
 
 const DimensionExplanations = ({ testName, dimensions }: DimensionExplanationsProps) => {
+  // Defensive checks - don't render if no meaningful dimensions
+  if (!dimensions || typeof dimensions !== 'object') {
+    return null;
+  }
+
+  const validDimensions = Object.entries(dimensions).filter(([_, value]) => 
+    typeof value === 'number' && value > 0
+  );
+
+  if (validDimensions.length === 0) {
+    return null;
+  }
+
   const getDimensionLabel = (key: string): string => {
     const labels: { [key: string]: string } = {
       // Big Five
@@ -19,6 +32,24 @@ const DimensionExplanations = ({ testName, dimensions }: DimensionExplanationsPr
       extraversion: 'Extraversiune',
       agreeableness: 'Agreabilitate',
       neuroticism: 'Nevrotism',
+      
+      // Cattell 16PF
+      warmth: 'Căldură',
+      reasoning: 'Raționament',
+      emotional_stability: 'Stabilitate Emoțională',
+      dominance: 'Dominanță',
+      liveliness: 'Vivacitate',
+      rule_consciousness: 'Conștiința Regulilor',
+      social_boldness: 'Îndrăzneală Socială',
+      sensitivity: 'Sensibilitate',
+      vigilance: 'Vigilență',
+      abstractedness: 'Abstractizare',
+      privateness: 'Caracter Privat',
+      apprehension: 'Aprehensiune',
+      openness_to_change: 'Deschidere către Schimbare',
+      self_reliance: 'Încredere în Sine',
+      perfectionism: 'Perfecționism',
+      tension: 'Tensiune',
       
       // SJT Career dimensions
       leadership: 'Leadership',
@@ -52,13 +83,7 @@ const DimensionExplanations = ({ testName, dimensions }: DimensionExplanationsPr
     return labels[key] || key.charAt(0).toUpperCase() + key.slice(1).replace(/_/g, ' ');
   };
 
-  const validDimensions = Object.entries(dimensions).filter(([_, value]) => 
-    typeof value === 'number' && value > 0
-  );
-
-  if (validDimensions.length === 0) {
-    return null;
-  }
+  const isCattellTest = testName.includes('Cattell') || testName.includes('16PF');
 
   return (
     <Card className="mb-8">
@@ -70,21 +95,28 @@ const DimensionExplanations = ({ testName, dimensions }: DimensionExplanationsPr
       </CardHeader>
       <CardContent>
         <div className="grid gap-6">
-          {validDimensions.map(([key, value]) => (
-            <div key={key} className="border-l-4 border-blue-500 pl-4 py-2">
-              <div className="flex items-center justify-between mb-2">
-                <h4 className="font-semibold text-lg">{getDimensionLabel(key)}</h4>
-                <div className="flex items-center gap-2">
-                  <Badge variant={getScoreBadgeVariant(value, testName)}>
-                    {Math.round(value)}%
-                  </Badge>
+          {validDimensions.map(([key, value]) => {
+            const safeValue = Math.max(0, typeof value === 'number' ? value : 0);
+            const explanation = getDimensionExplanation(testName, key);
+            
+            return (
+              <div key={key} className="border-l-4 border-blue-500 pl-4 py-2">
+                <div className="flex items-center justify-between mb-2">
+                  <h4 className="font-semibold text-lg">{getDimensionLabel(key)}</h4>
+                  <div className="flex items-center gap-2">
+                    <Badge variant={getScoreBadgeVariant(safeValue, testName)}>
+                      {isCattellTest ? `${Math.round(safeValue)}/10` : `${Math.round(safeValue)}%`}
+                    </Badge>
+                  </div>
                 </div>
+                {explanation && (
+                  <p className="text-gray-700 leading-relaxed">
+                    {explanation}
+                  </p>
+                )}
               </div>
-              <p className="text-gray-700 leading-relaxed">
-                {getDimensionExplanation(testName, key)}
-              </p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>

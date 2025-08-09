@@ -38,11 +38,7 @@ interface ScoreData {
   interpretation: string;
   dimensions?: { [key: string]: number };
   detailed_interpretations?: {
-    openness?: string;
-    conscientiousness?: string;
-    extraversion?: string;
-    agreeableness?: string;
-    neuroticism?: string;
+    [key: string]: string;
   };
   primary_roles?: string[];
   secondary_roles?: string[];
@@ -64,52 +60,45 @@ interface TestResultData {
   };
 }
 
-interface BigFiveDimensions {
-  openness: number;
-  conscientiousness: number;
-  extraversion: number;
-  agreeableness: number;
-  neuroticism: number;
-  [key: string]: number;
-}
-
-// Helper function to safely convert score data
-const convertToScoreData = (score: any): ScoreData => {
+// Standardized score data converter - ensures all components get consistent data structure
+const standardizeScoreData = (score: any, testName: string = ''): ScoreData => {
   if (!score || typeof score !== 'object') {
     return {
       overall: 0,
       raw_score: 0,
       max_score: 100,
-      interpretation: 'Interpretarea nu este disponibilă'
+      interpretation: 'Interpretarea nu este disponibilă',
+      dimensions: {},
+      detailed_interpretations: {},
+      primary_roles: [],
+      secondary_roles: [],
+      role_scores: {},
+      recommendations: [],
+      dominant_profile: undefined,
+      secondary_profile: undefined
     };
   }
 
   return {
-    overall: score.overall || 0,
-    raw_score: score.raw_score || 0,
-    max_score: score.max_score || 100,
-    interpretation: score.interpretation || 'Interpretarea nu este disponibilă',
-    dimensions: score.dimensions || {},
-    detailed_interpretations: score.detailed_interpretations || {},
-    primary_roles: score.primary_roles || [],
-    secondary_roles: score.secondary_roles || [],
-    role_scores: score.role_scores || {},
-    recommendations: score.recommendations || [],
+    overall: typeof score.overall === 'number' ? score.overall : 0,
+    raw_score: typeof score.raw_score === 'number' ? score.raw_score : 0,
+    max_score: typeof score.max_score === 'number' ? score.max_score : 100,
+    interpretation: typeof score.interpretation === 'string' ? score.interpretation : 'Interpretarea nu este disponibilă',
+    dimensions: score.dimensions && typeof score.dimensions === 'object' ? score.dimensions : {},
+    detailed_interpretations: score.detailed_interpretations && typeof score.detailed_interpretations === 'object' ? score.detailed_interpretations : {},
+    primary_roles: Array.isArray(score.primary_roles) ? score.primary_roles : [],
+    secondary_roles: Array.isArray(score.secondary_roles) ? score.secondary_roles : [],
+    role_scores: score.role_scores && typeof score.role_scores === 'object' ? score.role_scores : {},
+    recommendations: Array.isArray(score.recommendations) ? score.recommendations : [],
     dominant_profile: score.dominant_profile,
     secondary_profile: score.secondary_profile
   };
 };
 
-// Helper function to safely convert dimensions to the right format
-const convertToBigFiveDimensions = (dimensions: { [key: string]: number }): BigFiveDimensions => {
-  return {
-    openness: dimensions.openness || 0,
-    conscientiousness: dimensions.conscientiousness || 0,
-    extraversion: dimensions.extraversion || 0,
-    agreeableness: dimensions.agreeableness || 0,
-    neuroticism: dimensions.neuroticism || 0,
-    ...dimensions
-  };
+// Helper to check if dimensions data is meaningful
+const hasMeaningfulDimensions = (dimensions: { [key: string]: number } | undefined): boolean => {
+  if (!dimensions || typeof dimensions !== 'object') return false;
+  return Object.values(dimensions).some(value => typeof value === 'number' && value > 0);
 };
 
 const TestResult = () => {
@@ -135,53 +124,44 @@ const TestResult = () => {
       
       if (error) throw error;
       
-      // Safely convert score data
-      const safeScore = convertToScoreData(data.score);
-      
-      // Translate the interpretation based on current language
-      const translatedScore = {
-        ...safeScore,
-        interpretation: translateInterpretation(safeScore.interpretation, language)
-      };
-      
       return {
         ...data,
-        score: translatedScore,
         answers: data.answers as unknown as { [key: string]: number }
       } as TestResultData;
     },
     enabled: !!resultId
   });
 
-  // Calculate dimensions based on test type
-  const isBigFiveTest = result?.test_types.name.includes('Big Five');
-  const isCognitiveTest = result ? isCognitiveAbilitiesTest(result.test_types.name) : false;
-  const isBelbinTest = result ? isBelbinTeamRoles(result.test_types.name) : false;
-  const isCattell16PFTest = result?.test_types.name.includes('Cattell') || result?.test_types.name.includes('16PF');
-  const isEnneagramTest = result?.test_types.name.includes('Enneagram');
-  const isSJTTest = result?.test_types.name.includes('SJT') || result?.test_types.name.includes('Situational Judgment') || result?.test_types.name.includes('orientare') || result?.test_types.name.includes('cariera');
+  // Determine test types
+  const testName = result?.test_types?.name || '';
+  const isBigFiveTest = testName.includes('Big Five');
+  const isCognitiveTest = result ? isCognitiveAbilitiesTest(testName) : false;
+  const isBelbinTest = result ? isBelbinTeamRoles(testName) : false;
+  const isCattell16PFTest = testName.includes('Cattell') || testName.includes('16PF');
+  const isEnneagramTest = testName.includes('Enneagram');
+  const isSJTTest = testName.includes('SJT') || testName.includes('Situational Judgment') || testName.includes('orientare') || testName.includes('cariera');
   
+  // Calculate dimensions using appropriate calculation hooks
   const calculatedBigFiveDimensions = useBigFiveCalculation(isBigFiveTest ? result?.answers : undefined);
   const calculatedCognitiveDimensions = useCognitiveAbilitiesCalculation(isCognitiveTest ? result?.answers : undefined);
   const calculatedEnneagramDimensions = useEnneagramCalculation(isEnneagramTest ? result?.answers : undefined);
   const calculatedSJTDimensions = useSJTCalculation(isSJTTest ? result?.answers : undefined, []);
 
-  // Calculate Cattell 16PF dimensions using the correct calculation method
+  // Calculate Cattell 16PF dimensions
   const calculatedCattell16PFDimensions = React.useMemo(() => {
     if (isCattell16PFTest && result?.answers) {
-      // Transform the answers object to the expected format
       const transformedAnswers = Object.entries(result.answers).reduce((acc, [key, value]) => {
         acc[`question-${key}`] = value;
         return acc;
       }, {} as Record<string, number>);
       
       const cattellResult = calculateCattellScore(transformedAnswers);
-      return cattellResult.dimensions;
+      return cattellResult;
     }
-    return {};
+    return null;
   }, [isCattell16PFTest, result?.answers]);
 
-  // Get properly typed dimensions based on test type
+  // Get the appropriate dimensions based on test type
   const testSpecificDimensions = React.useMemo(() => {
     if (isBigFiveTest && calculatedBigFiveDimensions) {
       return calculatedBigFiveDimensions;
@@ -192,7 +172,7 @@ const TestResult = () => {
     }
 
     if (isCattell16PFTest && calculatedCattell16PFDimensions) {
-      return calculatedCattell16PFDimensions;
+      return calculatedCattell16PFDimensions.dimensions;
     }
 
     if (isEnneagramTest && calculatedEnneagramDimensions) {
@@ -204,52 +184,45 @@ const TestResult = () => {
     }
 
     if (isBelbinTest) {
-      return result?.score.role_scores || result?.score.dimensions || {};
+      return result?.score?.role_scores || result?.score?.dimensions || {};
     }
     
-    return result?.score.dimensions || {};
-  }, [isBigFiveTest, isCognitiveTest, isCattell16PFTest, isEnneagramTest, isSJTTest, isBelbinTest, calculatedBigFiveDimensions, calculatedCognitiveDimensions, calculatedCattell16PFDimensions, calculatedEnneagramDimensions, calculatedSJTDimensions, result?.score]);
+    return result?.score?.dimensions || {};
+  }, [
+    isBigFiveTest, isCognitiveTest, isCattell16PFTest, isEnneagramTest, isSJTTest, isBelbinTest,
+    calculatedBigFiveDimensions, calculatedCognitiveDimensions, calculatedCattell16PFDimensions,
+    calculatedEnneagramDimensions, calculatedSJTDimensions, result?.score
+  ]);
 
-  // Create a unified, correctly calculated score object
-  const unifiedScore = React.useMemo(() => {
+  // Create standardized score object
+  const standardizedScore = React.useMemo(() => {
     if (!result) return null;
 
-    // For Cattell 16PF, recalculate the complete score
-    if (isCattell16PFTest && result.answers) {
-      const transformedAnswers = Object.entries(result.answers).reduce((acc, [key, value]) => {
-        acc[`question-${key}`] = value;
-        return acc;
-      }, {} as Record<string, number>);
-      
-      const cattellResult = calculateCattellScore(transformedAnswers);
-      
-      return {
-        overall: cattellResult.overall,
-        raw_score: Object.values(cattellResult.dimensions).reduce((sum, score) => sum + score, 0),
-        max_score: 160, // 16 factors × 10 max score per factor
-        interpretation: cattellResult.interpretation,
-        dimensions: cattellResult.dimensions,
-        detailed_interpretations: result.score.detailed_interpretations,
-        primary_roles: result.score.primary_roles,
-        secondary_roles: result.score.secondary_roles,
-        role_scores: result.score.role_scores,
-        recommendations: result.score.recommendations,
-        dominant_profile: result.score.dominant_profile,
-        secondary_profile: result.score.secondary_profile
+    let baseScore = standardizeScoreData(result.score, testName);
+
+    // For Cattell 16PF, use the calculated result
+    if (isCattell16PFTest && calculatedCattell16PFDimensions) {
+      baseScore = {
+        ...baseScore,
+        overall: calculatedCattell16PFDimensions.overall,
+        raw_score: calculatedCattell16PFDimensions.raw_score,
+        max_score: calculatedCattell16PFDimensions.max_score,
+        interpretation: calculatedCattell16PFDimensions.interpretation,
+        dimensions: calculatedCattell16PFDimensions.dimensions,
+        detailed_interpretations: calculatedCattell16PFDimensions.detailed_interpretations
       };
+    } else {
+      // For other tests, use calculated dimensions if available
+      baseScore.dimensions = testSpecificDimensions;
     }
 
-    // For other tests, use the original score but with updated dimensions if calculated
-    return {
-      ...result.score,
-      dimensions: testSpecificDimensions
-    };
-  }, [result, isCattell16PFTest, testSpecificDimensions]);
+    // Translate interpretation if needed
+    if (baseScore.interpretation) {
+      baseScore.interpretation = translateInterpretation(baseScore.interpretation, language);
+    }
 
-  const hasValidTestSpecificDimensions = testSpecificDimensions && Object.values(testSpecificDimensions).some(value => typeof value === 'number' && value > 0);
-
-  // Use different dimensions for general display
-  const generalDisplayDimensions = testSpecificDimensions || {};
+    return baseScore;
+  }, [result, testName, isCattell16PFTest, calculatedCattell16PFDimensions, testSpecificDimensions, language]);
 
   if (isLoading) {
     return (
@@ -266,7 +239,7 @@ const TestResult = () => {
     );
   }
 
-  if (error || !result || !unifiedScore) {
+  if (error || !result || !standardizedScore) {
     return (
       <div>
         <HomeNavigation />
@@ -283,134 +256,109 @@ const TestResult = () => {
     );
   }
 
-  // Determine score type based on test
-  const getScoreType = (testName: string) => {
-    if (testName.includes('16PF') || testName.includes('Cattell')) return 'scale';
-    return 'percentage';
-  };
-
-  const scoreType = getScoreType(result?.test_types.name || '');
+  const scoreType = (testName.includes('16PF') || testName.includes('Cattell')) ? 'scale' : 'percentage';
 
   return (
     <div>
       <HomeNavigation />
       <div className="min-h-screen bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          {/* Header */}
+          {/* Header - Always show */}
           <TestResultHeader 
-            testName={result.test_types.name}
+            testName={testName}
             completedAt={result.completed_at}
           />
 
-          {/* Test Explanations - NEW SECTION */}
+          {/* Test Explanations - Always show */}
           <TestExplanations 
-            testName={result.test_types.name}
-            score={{ ...unifiedScore, dimensions: testSpecificDimensions }}
+            testName={testName}
+            score={standardizedScore}
             language={language}
           />
 
-          {/* SJT Test Results - Special handling */}
-          {isSJTTest ? (
-            <>
-              {/* Scoring Explanation for SJT - ALWAYS SHOW FIRST */}
-              <ScoringExplanation 
-                testName={result.test_types.name}
-                overallScore={unifiedScore.overall}
-                scoreType={scoreType}
-                dimensions={generalDisplayDimensions}
-              />
-              
-              {/* SJT Results */}
-              <SJTResults
-                score={{
-                  overall: unifiedScore.overall,
-                  dimensions: generalDisplayDimensions,
-                  interpretation: unifiedScore.interpretation,
-                  detailed_interpretations: unifiedScore.detailed_interpretations,
-                  recommendations: unifiedScore.recommendations || [],
-                  dominant_profile: unifiedScore.dominant_profile,
-                  secondary_profile: unifiedScore.secondary_profile
-                }}
-              />
-            </>
-          ) : (
-            <>
-              {/* Belbin Test Results - Special handling */}
-              {isBelbinTest ? (
-                <>
-                  {/* Scoring Explanation for Belbin - ALWAYS SHOW FIRST */}
-                  <ScoringExplanation 
-                    testName={result.test_types.name}
-                    overallScore={unifiedScore.overall}
-                    scoreType={scoreType}
-                    dimensions={generalDisplayDimensions}
-                    roleScores={unifiedScore.role_scores || unifiedScore.dimensions}
-                  />
-                  
-                  {/* Belbin Role Results */}
-                  <BelbinRoleResults
-                    roleScores={unifiedScore.role_scores || unifiedScore.dimensions || {}}
-                    primaryRoles={unifiedScore.primary_roles || []}
-                    secondaryRoles={unifiedScore.secondary_roles || []}
-                    interpretation={unifiedScore.interpretation}
-                  />
-                </>
-              ) : (
-                <>
-                  {/* Overall Score - only for non-Belbin and non-SJT tests - PASS UNIFIED SCORE */}
-                  {!isEnneagramTest && <OverallScoreCard score={unifiedScore} />}
-
-                  {/* Scoring Explanation - ALWAYS SHOW WITH DIMENSIONS */}
-                  <ScoringExplanation 
-                    testName={result.test_types.name}
-                    overallScore={unifiedScore.overall}
-                    scoreType={scoreType}
-                    dimensions={generalDisplayDimensions}
-                  />
-
-                  {/* Correct Answers Section - only for cognitive abilities tests */}
-                  {isCognitiveTest && (
-                    <CorrectAnswersSection 
-                      testTypeId={result.test_type_id}
-                      userAnswers={result.answers}
-                    />
-                  )}
-
-                  {/* Dimensions Analysis - ALWAYS SHOW IF DIMENSIONS EXIST */}
-                  {hasValidTestSpecificDimensions && (
-                    <DimensionsAnalysis 
-                      dimensions={generalDisplayDimensions}
-                      testName={result.test_types.name}
-                    />
-                  )}
-
-                  {/* Dimension Explanations - ALWAYS SHOW IF DIMENSIONS EXIST */}
-                  {hasValidTestSpecificDimensions && (
-                    <DimensionExplanations 
-                      testName={result.test_types.name}
-                      dimensions={generalDisplayDimensions}
-                    />
-                  )}
-
-                  {/* Detailed Interpretations for Big Five - ALWAYS SHOW IF EXISTS */}
-                  {isBigFiveTest && unifiedScore.detailed_interpretations && (
-                    <DetailedInterpretations 
-                      interpretations={unifiedScore.detailed_interpretations}
-                      testName={result.test_types.name}
-                    />
-                  )}
-                </>
-              )}
-            </>
-          )}
-
-          {/* Charts Section */}
-          <TestResultCharts
-            testName={result.test_types.name}
-            score={{ ...unifiedScore, dimensions: testSpecificDimensions }}
+          {/* Scoring Explanation - Always show */}
+          <ScoringExplanation 
+            testName={testName}
+            overallScore={standardizedScore.overall}
+            scoreType={scoreType}
+            dimensions={standardizedScore.dimensions}
+            roleScores={standardizedScore.role_scores}
           />
 
-          {/* Detailed Analysis Section - AVAILABLE FOR ALL TESTS */}
+          {/* Test-specific results sections */}
+          {isSJTTest && (
+            <SJTResults
+              score={{
+                overall: standardizedScore.overall,
+                dimensions: standardizedScore.dimensions || {},
+                interpretation: standardizedScore.interpretation,
+                detailed_interpretations: standardizedScore.detailed_interpretations,
+                recommendations: standardizedScore.recommendations,
+                dominant_profile: standardizedScore.dominant_profile,
+                secondary_profile: standardizedScore.secondary_profile
+              }}
+            />
+          )}
+
+          {isBelbinTest && (
+            <BelbinRoleResults
+              roleScores={standardizedScore.role_scores || standardizedScore.dimensions || {}}
+              primaryRoles={standardizedScore.primary_roles || []}
+              secondaryRoles={standardizedScore.secondary_roles || []}
+              interpretation={standardizedScore.interpretation}
+            />
+          )}
+
+          {/* Overall Score - show for non-Belbin, non-SJT, non-Enneagram tests */}
+          {!isBelbinTest && !isSJTTest && !isEnneagramTest && standardizedScore.overall > 0 && (
+            <OverallScoreCard score={standardizedScore} />
+          )}
+
+          {/* Correct Answers Section - only for cognitive tests */}
+          {isCognitiveTest && (
+            <CorrectAnswersSection 
+              testTypeId={result.test_type_id}
+              userAnswers={result.answers}
+            />
+          )}
+
+          {/* Dimensions Analysis - only if meaningful dimensions exist */}
+          {hasMeaningfulDimensions(standardizedScore.dimensions) && (
+            <DimensionsAnalysis 
+              dimensions={standardizedScore.dimensions!}
+              testName={testName}
+            />
+          )}
+
+          {/* Dimension Explanations - only if meaningful dimensions exist */}
+          {hasMeaningfulDimensions(standardizedScore.dimensions) && (
+            <DimensionExplanations 
+              testName={testName}
+              dimensions={standardizedScore.dimensions!}
+            />
+          )}
+
+          {/* Detailed Interpretations - only if they exist and are meaningful */}
+          {standardizedScore.detailed_interpretations && 
+           Object.keys(standardizedScore.detailed_interpretations).length > 0 && 
+           Object.values(standardizedScore.detailed_interpretations).some(interpretation => 
+             interpretation && interpretation.trim() !== '' && interpretation !== 'Interpretarea nu este disponibilă'
+           ) && (
+            <DetailedInterpretations 
+              interpretations={standardizedScore.detailed_interpretations}
+              testName={testName}
+            />
+          )}
+
+          {/* Charts Section - only if meaningful dimensions exist */}
+          {hasMeaningfulDimensions(standardizedScore.dimensions) && (
+            <TestResultCharts
+              testName={testName}
+              score={standardizedScore}
+            />
+          )}
+
+          {/* Detailed Analysis Section - Always available */}
           <Card className="mb-8">
             <CardHeader>
               <CardTitle>{labels.generateAnalysis}</CardTitle>
@@ -420,15 +368,15 @@ const TestResult = () => {
             </CardHeader>
             <CardContent>
               <DetailedAnalysisSection 
-                dimensions={generalDisplayDimensions} 
+                dimensions={standardizedScore.dimensions || {}} 
                 resultId={resultId!}
-                testType={result.test_types.name}
-                score={unifiedScore}
+                testType={testName}
+                score={standardizedScore}
               />
             </CardContent>
           </Card>
 
-          {/* Actions */}
+          {/* Actions - Always show */}
           <TestResultActions />
         </div>
       </div>

@@ -14,7 +14,16 @@ interface DimensionsAnalysisProps {
 const DimensionsAnalysis = ({ dimensions, testName = '' }: DimensionsAnalysisProps) => {
   const { language } = useLanguage();
   
-  if (!dimensions || Object.keys(dimensions).length === 0) {
+  // Defensive checks - don't render if no meaningful dimensions
+  if (!dimensions || typeof dimensions !== 'object') {
+    return null;
+  }
+
+  const validDimensions = Object.entries(dimensions).filter(([_, value]) => 
+    typeof value === 'number' && value > 0
+  );
+
+  if (validDimensions.length === 0) {
     return null;
   }
 
@@ -35,6 +44,7 @@ const DimensionsAnalysis = ({ dimensions, testName = '' }: DimensionsAnalysisPro
   };
 
   const isEnneagramTest = testName.includes('Enneagram');
+  const isCattellTest = testName.includes('Cattell') || testName.includes('16PF');
 
   return (
     <Card className="mb-8">
@@ -45,22 +55,38 @@ const DimensionsAnalysis = ({ dimensions, testName = '' }: DimensionsAnalysisPro
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
-          {Object.entries(dimensions).map(([key, value]) => (
-            <div key={key}>
-              <div className="flex items-center justify-between mb-2">
-                <h3 className="font-medium">
-                  {isEnneagramTest ? getEnneagramTypeName(key) : getDimensionLabel(testName, key)}
-                </h3>
-                <span className={`font-bold ${getScoreColor(value)}`}>
-                  {isEnneagramTest ? `${value} ${language === 'en' ? 'pts' : 'pct'}` : `${value}%`}
-                </span>
+          {validDimensions.map(([key, value]) => {
+            // Ensure value is a valid number
+            const safeValue = typeof value === 'number' ? Math.max(0, value) : 0;
+            
+            return (
+              <div key={key}>
+                <div className="flex items-center justify-between mb-2">
+                  <h3 className="font-medium">
+                    {isEnneagramTest ? getEnneagramTypeName(key) : getDimensionLabel(testName, key)}
+                  </h3>
+                  <span className={`font-bold ${getScoreColor(safeValue)}`}>
+                    {isEnneagramTest 
+                      ? `${safeValue} ${language === 'en' ? 'pts' : 'pct'}` 
+                      : isCattellTest
+                        ? `${safeValue}/10`
+                        : `${safeValue}%`
+                    }
+                  </span>
+                </div>
+                <Progress 
+                  value={
+                    isEnneagramTest 
+                      ? Math.min(100, (safeValue / 20) * 100) 
+                      : isCattellTest
+                        ? (safeValue / 10) * 100
+                        : safeValue
+                  } 
+                  className="w-full" 
+                />
               </div>
-              <Progress 
-                value={isEnneagramTest ? Math.min(100, (value / 20) * 100) : value} 
-                className="w-full" 
-              />
-            </div>
-          ))}
+            );
+          })}
         </div>
       </CardContent>
     </Card>

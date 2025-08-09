@@ -21,6 +21,16 @@ const OverallScoreCard = ({ score }: OverallScoreCardProps) => {
   const { language } = useLanguage();
   const labels = getResultLabels(language);
 
+  // Defensive checks - don't render if no meaningful score
+  if (!score || typeof score.overall !== 'number' || score.overall <= 0) {
+    return null;
+  }
+
+  const safeOverall = Math.max(0, Math.min(100, score.overall));
+  const safeRawScore = typeof score.raw_score === 'number' ? score.raw_score : 0;
+  const safeMaxScore = typeof score.max_score === 'number' && score.max_score > 0 ? score.max_score : 100;
+  const safeInterpretation = score.interpretation || labels.noInterpretationAvailable || 'Scor calculat';
+
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -33,20 +43,20 @@ const OverallScoreCard = ({ score }: OverallScoreCardProps) => {
         <div className="flex items-center justify-between mb-4">
           <div>
             <div className="text-3xl font-bold mb-2">
-              <span className={getScoreColor(score.overall)}>
-                {score.overall}%
+              <span className={getScoreColor(safeOverall)}>
+                {safeOverall}%
               </span>
             </div>
-            <Badge variant={getScoreBadgeVariant(score.overall)}>
-              {score.interpretation}
+            <Badge variant={getScoreBadgeVariant(safeOverall)}>
+              {safeInterpretation}
             </Badge>
           </div>
           <div className="text-right text-sm text-gray-600">
-            <div>{labels.scoredPoints}: {score.raw_score}</div>
-            <div>{labels.maxPoints}: {score.max_score}</div>
+            <div>{labels.scoredPoints}: {safeRawScore}</div>
+            <div>{labels.maxPoints}: {safeMaxScore}</div>
           </div>
         </div>
-        <Progress value={score.overall} className="w-full" />
+        <Progress value={safeOverall} className="w-full" />
       </CardContent>
     </Card>
   );
