@@ -2,61 +2,90 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { TrendingUp } from 'lucide-react';
-import { getScoreColor, getScoreBadgeVariant } from '@/utils/testScoring';
 import { useLanguage } from '@/hooks/useLanguage';
 import { getResultLabels } from '@/utils/testResultTranslations';
 
+interface ScoreData {
+  overall: number;
+  raw_score: number;
+  max_score: number;
+  interpretation: string;
+  severity_level?: string;
+}
+
 interface OverallScoreCardProps {
-  score: {
-    overall: number;
-    raw_score: number;
-    max_score: number;
-    interpretation: string;
-  };
+  score: ScoreData;
 }
 
 const OverallScoreCard = ({ score }: OverallScoreCardProps) => {
   const { language } = useLanguage();
   const labels = getResultLabels(language);
 
-  // Defensive checks - don't render if no meaningful score
-  if (!score || typeof score.overall !== 'number' || score.overall <= 0) {
+  // Defensive checks
+  if (!score || typeof score.overall !== 'number') {
     return null;
   }
 
-  const safeOverall = Math.max(0, Math.min(100, score.overall));
-  const safeRawScore = typeof score.raw_score === 'number' ? score.raw_score : 0;
-  const safeMaxScore = typeof score.max_score === 'number' && score.max_score > 0 ? score.max_score : 100;
-  const safeInterpretation = score.interpretation || labels.noInterpretationAvailable || 'Scor calculat';
+  const getScoreBadgeVariant = (score: number) => {
+    if (score >= 80) return 'default';
+    if (score >= 60) return 'secondary';
+    if (score >= 40) return 'outline';
+    return 'destructive';
+  };
+
+  const getSeverityBadgeVariant = (severity: string) => {
+    switch (severity?.toLowerCase()) {
+      case 'minimal':
+        return 'default';
+      case 'ușoară':
+      case 'light':
+        return 'secondary';
+      case 'moderată':
+      case 'moderate':
+        return 'outline';
+      case 'severă':
+      case 'severe':
+        return 'destructive';
+      default:
+        return 'secondary';
+    }
+  };
 
   return (
     <Card className="mb-8">
       <CardHeader>
-        <CardTitle className="flex items-center">
-          <TrendingUp className="w-5 h-5 mr-2" />
-          {labels.overallScoreTitle}
-        </CardTitle>
+        <CardTitle>{labels.overallScoreTitle}</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <div className="text-3xl font-bold mb-2">
-              <span className={getScoreColor(safeOverall)}>
-                {safeOverall}%
-              </span>
-            </div>
-            <Badge variant={getScoreBadgeVariant(safeOverall)}>
-              {safeInterpretation}
-            </Badge>
+        <div className="text-center space-y-4">
+          <div className="text-6xl font-bold text-blue-600">
+            {score.overall}%
           </div>
-          <div className="text-right text-sm text-gray-600">
-            <div>{labels.scoredPoints}: {safeRawScore}</div>
-            <div>{labels.maxPoints}: {safeMaxScore}</div>
+          
+          {score.severity_level && (
+            <Badge variant={getSeverityBadgeVariant(score.severity_level)} className="text-sm">
+              {score.severity_level}
+            </Badge>
+          )}
+          
+          <Badge variant={getScoreBadgeVariant(score.overall)} className="text-lg px-4 py-2">
+            {score.overall >= 80 ? 'Excelent' : 
+             score.overall >= 60 ? 'Bun' : 
+             score.overall >= 40 ? 'Mediu' : 'Scăzut'}
+          </Badge>
+          
+          <div className="text-gray-600 space-y-2">
+            <p>
+              {labels.scoredPoints}: {score.raw_score} / {labels.maxPoints}: {score.max_score}
+            </p>
+            
+            {score.interpretation && score.interpretation !== labels.noInterpretationAvailable && (
+              <p className="mt-4 text-lg font-medium text-gray-800">
+                {score.interpretation}
+              </p>
+            )}
           </div>
         </div>
-        <Progress value={safeOverall} className="w-full" />
       </CardContent>
     </Card>
   );
