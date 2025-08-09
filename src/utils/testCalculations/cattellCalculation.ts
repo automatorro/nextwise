@@ -1,5 +1,6 @@
-
 // src/utils/testCalculations/cattellCalculation.ts
+
+import { StandardizedScore } from '@/types/tests';
 
 interface Answers {
   [key: string]: number;
@@ -92,7 +93,7 @@ const questionFactorMap: { [key: number]: keyof Dimensions } = {
 
 const factorKeys = Object.keys(interpretationMap) as (keyof Dimensions)[];
 
-export function calculateCattellScore(answers: Answers) {
+export function calculateCattellScore(answers: Answers): StandardizedScore {
     const rawScores: Dimensions = factorKeys.reduce((acc, key) => ({ ...acc, [key]: 0 }), {});
     const MAX_SCORE_PER_FACTOR = 15;
 
@@ -123,8 +124,16 @@ export function calculateCattellScore(answers: Answers) {
     const MAX_TOTAL_SCORE = factorKeys.length * MAX_SCORE_PER_FACTOR;
     const overallPercentage = Math.round((totalNormalizedScore / MAX_TOTAL_SCORE) * 100);
 
+    // Convert to StandardizedScore format
+    const dimensionsArray = Object.entries(normalizedScores).map(([key, value]) => ({
+        id: key,
+        name: key.charAt(0).toUpperCase() + key.slice(1).replace('_', ' '),
+        score: value
+    }));
+
     return {
-        dimensions: normalizedScores,
+        type: 'dimensional',
+        dimensions: dimensionsArray,
         detailed_interpretations: detailedInterpretations,
         overall: overallPercentage,
         raw_score: totalNormalizedScore,

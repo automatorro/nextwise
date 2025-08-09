@@ -56,26 +56,8 @@ const TestResult = () => {
     enabled: !!resultId
   });
 
-  // Fetch questions for calculation (if needed)
-  const { data: questions } = useQuery({
-    queryKey: ['test-questions', result?.test_type_id],
-    queryFn: async () => {
-      if (!result?.test_type_id) return [];
-      
-      const { data, error } = await supabase
-        .from('test_questions')
-        .select('*')
-        .eq('test_type_id', result.test_type_id)
-        .order('question_order');
-
-      if (error) throw error;
-      return data || [];
-    },
-    enabled: !!result?.test_type_id
-  });
-
   // Calculate standardized score using the central hook
-  const calculatedScore = useTestCalculation(result || null, questions || []);
+  const calculatedScore = useTestCalculation(result?.test_types?.name, result?.answers);
 
   if (isLoading) {
     return (

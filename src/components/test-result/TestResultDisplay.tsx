@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StandardizedScore } from '@/hooks/useTestCalculation';
+import { StandardizedScore } from '@/types/tests';
 import DimensionalResultLayout from './layouts/DimensionalResultLayout';
 import ProfileResultLayout from './layouts/ProfileResultLayout';
 import ScaleResultLayout from './layouts/ScaleResultLayout';

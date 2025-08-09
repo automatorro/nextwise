@@ -1,17 +1,7 @@
 
-export interface DISCScore {
-  overall: number;
-  dimensions: {
-    dominance: number;
-    influence: number;
-    steadiness: number;
-    conscientiousness: number;
-  };
-  dominant_style: string;
-  interpretation: string;
-}
+import { StandardizedScore } from '@/types/tests';
 
-export const calculateDISCScore = (answers: Record<string, number>): DISCScore => {
+export const calculateDISCScore = (answers: Record<string, number>): StandardizedScore => {
   const scores = {
     dominance: 0,
     influence: 0,
@@ -58,10 +48,18 @@ export const calculateDISCScore = (answers: Record<string, number>): DISCScore =
   
   const overall = Math.round(Object.values(normalizedScores).reduce((sum, score) => sum + score, 0) / 4);
   
+  // Convert to StandardizedScore format
+  const dimensionsArray = Object.entries(normalizedScores).map(([key, value]) => ({
+    id: key,
+    name: styleNames[key as keyof typeof styleNames].split(' - ')[0],
+    score: value
+  }));
+
   return {
+    type: 'dimensional',
+    dimensions: dimensionsArray,
     overall,
-    dimensions: normalizedScores,
-    dominant_style: dominantStyle,
-    interpretation: styleNames[dominantStyle as keyof typeof styleNames]
+    interpretation: styleNames[dominantStyle as keyof typeof styleNames],
+    dominant_profile: dominantStyle
   };
 };

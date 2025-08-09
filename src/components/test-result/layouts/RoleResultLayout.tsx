@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { StandardizedScore } from '@/hooks/useTestCalculation';
+import { StandardizedScore } from '@/types/tests';
 import TestResultHeader from '../TestResultHeader';
 import { TestExplanations } from '@/components/tests/TestExplanations';
 import { ScoringExplanation } from '../ScoringExplanation';
