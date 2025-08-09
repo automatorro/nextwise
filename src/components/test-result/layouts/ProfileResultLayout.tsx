@@ -66,6 +66,8 @@ const ProfileResultLayout = ({ score, testName, completedAt, resultId }: Profile
             testType={testName}
             score={{
               overall: score.overall,
+              raw_score: score.raw_score,
+              max_score: score.max_score,
               interpretation: score.interpretation
             }}
           />

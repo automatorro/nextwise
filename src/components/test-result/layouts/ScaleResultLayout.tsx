@@ -5,7 +5,6 @@ import TestResultHeader from '../TestResultHeader';
 import { TestExplanations } from '@/components/tests/TestExplanations';
 import { ScoringExplanation } from '../ScoringExplanation';
 import OverallScoreCard from '../OverallScoreCard';
-import DimensionsAnalysis from '../DimensionsAnalysis';
 import DetailedInterpretations from '../DetailedInterpretations';
 import DetailedAnalysisSection from '../DetailedAnalysisSection';
 import TestResultActions from '../TestResultActions';
@@ -24,18 +23,6 @@ const ScaleResultLayout = ({ score, testName, completedAt, resultId }: ScaleResu
   const { language } = useLanguage();
   const labels = getResultLabels(language);
 
-  const hasMeaningfulDimensions = score.dimensions && 
-    Object.keys(score.dimensions).length > 0 && 
-    Object.values(score.dimensions).some(value => value > 0);
-
-  const hasDetailedInterpretations = score.detailed_interpretations && 
-    Object.keys(score.detailed_interpretations).length > 0 &&
-    Object.values(score.detailed_interpretations).some(interpretation => 
-      interpretation && interpretation.trim() !== '' && interpretation !== 'Interpretarea nu este disponibilă'
-    );
-
-  const scoreType = (testName.includes('16PF') || testName.includes('Cattell')) ? 'scale' : 'percentage';
-
   return (
     <div className="space-y-8">
       {/* Header */}
@@ -44,15 +31,7 @@ const ScaleResultLayout = ({ score, testName, completedAt, resultId }: ScaleResu
       {/* Test Explanations */}
       <TestExplanations testName={testName} score={score} language={language} />
 
-      {/* Scoring Explanation */}
-      <ScoringExplanation 
-        testName={testName}
-        overallScore={score.overall}
-        scoreType={scoreType}
-        dimensions={score.dimensions}
-      />
-
-      {/* Overall Score */}
+      {/* Overall Score Display */}
       <OverallScoreCard score={{
         overall: score.overall,
         raw_score: score.raw_score,
@@ -61,18 +40,19 @@ const ScaleResultLayout = ({ score, testName, completedAt, resultId }: ScaleResu
         severity_level: score.severity_level
       }} />
 
-      {/* Dimensions Analysis - if available */}
-      {hasMeaningfulDimensions && (
-        <DimensionsAnalysis 
-          dimensions={score.dimensions!}
-          testName={testName}
-        />
-      )}
+      {/* Scoring Explanation */}
+      <ScoringExplanation 
+        testName={testName}
+        overallScore={score.overall}
+        scoreType="raw"
+        rawScore={score.raw_score}
+        maxScore={score.max_score}
+      />
 
       {/* Detailed Interpretations */}
-      {hasDetailedInterpretations && (
-        <DetailedInterpretations 
-          interpretations={score.detailed_interpretations!}
+      {score.detailed_interpretations && (
+        <DetailedInterpretations
+          interpretations={score.detailed_interpretations}
           testName={testName}
         />
       )}
@@ -92,6 +72,8 @@ const ScaleResultLayout = ({ score, testName, completedAt, resultId }: ScaleResu
             testType={testName}
             score={{
               overall: score.overall,
+              raw_score: score.raw_score,
+              max_score: score.max_score,
               interpretation: score.interpretation
             }}
           />

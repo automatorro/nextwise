@@ -61,6 +61,8 @@ const RoleResultLayout = ({ score, testName, completedAt, resultId }: RoleResult
             testType={testName}
             score={{
               overall: score.overall,
+              raw_score: score.raw_score,
+              max_score: score.max_score,
               interpretation: score.interpretation
             }}
           />

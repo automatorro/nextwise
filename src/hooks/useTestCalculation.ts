@@ -365,13 +365,15 @@ const calculateHEXACO = (answers: { [key: string]: number }): StandardizedScore 
 const calculateGeneric = (answers: { [key: string]: number }, existingScore?: any): StandardizedScore => {
   // Fallback calculation for unknown test types
   const totalAnswers = Object.keys(answers).length;
-  const overall = existingScore?.overall || Math.round((totalAnswers / Math.max(totalAnswers, 1)) * 100);
+  const rawScore = typeof existingScore?.raw_score === 'number' ? existingScore.raw_score : totalAnswers;
+  const maxScore = typeof existingScore?.max_score === 'number' ? existingScore.max_score : 100;
+  const overall = typeof existingScore?.overall === 'number' ? existingScore.overall : Math.round((totalAnswers / Math.max(totalAnswers, 1)) * 100);
   
   return {
     type: 'scale',
     overall,
-    raw_score: existingScore?.raw_score || totalAnswers,
-    max_score: existingScore?.max_score || 100,
+    raw_score: rawScore,
+    max_score: maxScore,
     interpretation: existingScore?.interpretation || 'Rezultat calculat generic',
     dimensions: existingScore?.dimensions || {}
   };
