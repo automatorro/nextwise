@@ -1,4 +1,5 @@
 
+
 import { StandardizedScore } from '@/types/tests';
 
 interface CattellAnswers {
@@ -27,9 +28,9 @@ const interpretationMap = {
     tension: { low: "Sunteți relaxat, liniștit și răbdător.", high: "Sunteți tensionat, energic și nerăbdător." }
 };
 
-const factorKeys = Object.keys(interpretationMap) as (keyof Dimensions)[];
+const factorKeys = Object.keys(interpretationMap) as string[];
 
-const questionFactorMap: { [key: number]: keyof Dimensions } = {
+const questionFactorMap: { [key: number]: string } = {
     1: 'warmth', 2: 'reasoning', 3: 'emotional_stability', 4: 'dominance', 5: 'liveliness', 6: 'rule_consciousness', 7: 'social_boldness', 8: 'sensitivity', 9: 'vigilance', 10: 'abstractedness', 11: 'privateness', 12: 'apprehension', 13: 'openness_to_change', 14: 'self_reliance', 15: 'perfectionism', 16: 'tension', 17: 'warmth', 18: 'reasoning', 19: 'emotional_stability', 20: 'dominance', 21: 'liveliness', 22: 'rule_consciousness', 23: 'social_boldness', 24: 'sensitivity', 25: 'vigilance', 26: 'abstractedness', 27: 'privateness', 28: 'apprehension', 29: 'openness_to_change', 30: 'self_reliance', 31: 'perfectionism', 32: 'tension', 33: 'warmth', 34: 'reasoning', 35: 'emotional_stability', 36: 'dominance', 37: 'liveliness', 38: 'rule_consciousness', 39: 'social_boldness', 40: 'sensitivity', 41: 'vigilance', 42: 'abstractedness', 43: 'privateness', 44: 'apprehension', 45: 'openness_to_change', 46: 'self_reliance', 47: 'perfectionism', 48: 'tension'
 };
 
@@ -54,7 +55,7 @@ export function calculateCattellScore(answers: CattellAnswers): StandardizedScor
         const normalized = Math.round((score / MAX_SCORE_PER_FACTOR) * 9) + 1;
         
         dimensions.push({ id: factor, name: factor.replace(/_/g, ' '), score: normalized });
-        detailed_interpretations[factor] = normalized <= 5 ? interpretationMap[factor].low : interpretationMap[factor].high;
+        detailed_interpretations[factor] = normalized <= 5 ? interpretationMap[factor as keyof typeof interpretationMap].low : interpretationMap[factor as keyof typeof interpretationMap].high;
         totalRawScore += score;
     }
 
@@ -71,3 +72,4 @@ export function calculateCattellScore(answers: CattellAnswers): StandardizedScor
         detailed_interpretations,
     };
 }
+
