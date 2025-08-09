@@ -1,88 +1,56 @@
 
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
-import TestResultHeader from '../TestResultHeader';
+import { OverallScoreCard } from '../OverallScoreCard';
 import { TestExplanations } from '@/components/tests/TestExplanations';
-import { ScoringExplanation } from '../ScoringExplanation';
-import BelbinRoleResults from '../BelbinRoleResults';
-import DetailedAnalysisSection from '../DetailedAnalysisSection';
-import TestResultActions from '../TestResultActions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useLanguage } from '@/hooks/useLanguage';
-import { getResultLabels } from '@/utils/testResultTranslations';
-import { dimensionsToObject } from '@/utils/dimensionsConverter';
 
 interface RoleResultLayoutProps {
   score: StandardizedScore;
   testName?: string;
-  completedAt?: string;
-  resultId?: string;
 }
 
-export const RoleResultLayout = ({ score, testName, completedAt, resultId }: RoleResultLayoutProps) => {
-  const { language } = useLanguage();
-  const labels = getResultLabels(language);
-
-  // Convert dimensions array to object format for components that expect it
-  const dimensionsAsObject = dimensionsToObject(score.dimensions);
+export const RoleResultLayout: React.FC<RoleResultLayoutProps> = ({ score, testName }) => {
+  const { roles } = score;
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      {testName && completedAt && (
-        <TestResultHeader testName={testName} completedAt={completedAt} />
-      )}
-
-      {/* Test Explanations */}
-      {testName && (
-        <TestExplanations testName={testName} score={score} language={language} />
-      )}
-
-      {/* Scoring Explanation */}
-      {testName && (
-        <ScoringExplanation 
-          testName={testName}
-          overallScore={score.overall}
-          scoreType="percentage"
-          roleScores={dimensionsAsObject}
-        />
-      )}
-
-      {/* Belbin Role Results */}
-      <BelbinRoleResults
-        roleScores={dimensionsAsObject}
-        primaryRoles={score.roles?.primary || []}
-        secondaryRoles={score.roles?.secondary || []}
+    <div className="space-y-6">
+      <OverallScoreCard
+        scorePercentage={score.overall}
+        rawScore={score.raw_score}
+        maxScore={score.max_score}
         interpretation={score.interpretation}
+        testName={testName}
       />
 
-      {/* AI Analysis Section */}
-      {resultId && testName && (
-        <Card className="mb-8">
+      {roles && (roles.primary?.length > 0 || roles.secondary?.length > 0) && (
+        <Card>
           <CardHeader>
-            <CardTitle>{labels.generateAnalysis}</CardTitle>
-            <p className="text-sm text-gray-600">
-              {labels.analysisDescription}
-            </p>
+            <CardTitle>Rolurile Tale în Echipă</CardTitle>
           </CardHeader>
-          <CardContent>
-            <DetailedAnalysisSection 
-              dimensions={dimensionsAsObject} 
-              resultId={resultId}
-              testType={testName}
-              score={{
-                overall: score.overall,
-                raw_score: score.raw_score,
-                max_score: score.max_score,
-                interpretation: score.interpretation
-              }}
-            />
+          <CardContent className="space-y-4">
+            {roles.primary?.length > 0 && (
+              <div>
+                <h3 className="font-semibold">Roluri Primare</h3>
+                <ul className="list-disc pl-5 text-muted-foreground">
+                  {roles.primary.map((role) => <li key={role}>{role}</li>)}
+                </ul>
+              </div>
+            )}
+            {roles.secondary?.length > 0 && (
+              <div>
+                <h3 className="font-semibold">Roluri Secundare</h3>
+                <ul className="list-disc pl-5 text-muted-foreground">
+                  {roles.secondary.map((role) => <li key={role}>{role}</li>)}
+                </ul>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
 
-      {/* Actions */}
-      <TestResultActions />
+      {/* THE FIX IS HERE: The 'language' prop has been removed */}
+      <TestExplanations score={score} testName={testName} />
     </div>
   );
 };
