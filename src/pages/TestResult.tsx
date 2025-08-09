@@ -4,7 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTestCalculation } from '@/hooks/useTestCalculation';
 import { TestResultDisplay } from '@/components/test-result/TestResultDisplay';
-import { PageLoader } from '@/components/layout/PageLoader';
 
 // Helper to check if a value is a Record (object with string keys)
 function isRecord(value: unknown): value is Record<string, any> {
@@ -34,7 +33,7 @@ export default function TestResult() {
   const calculatedScore = useTestCalculation(result?.test_types?.name, validAnswers);
 
   if (isLoading) {
-    return <PageLoader />;
+    return null;
   }
 
   return (

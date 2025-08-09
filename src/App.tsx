@@ -25,6 +25,17 @@ import Footer from "./components/home/Footer";
 
 const queryClient = new QueryClient();
 
+// MainLayout component for consistent page structure
+const MainLayout = ({ children }: { children: React.ReactNode }) => (
+  <div className="min-h-screen bg-gray-50">
+    <HomeNavigation />
+    <div className="pt-20">
+      {children}
+    </div>
+    <Footer />
+  </div>
+);
+
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -55,7 +66,9 @@ function App() {
                 } />
                 <Route path="/test-result/:resultId" element={
                   <ProtectedRoute>
-                    <TestResult />
+                    <MainLayout>
+                      <TestResult />
+                    </MainLayout>
                   </ProtectedRoute>
                 } />
                 <Route path="/my-profile" element={
