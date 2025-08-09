@@ -6,6 +6,11 @@ import { useTestCalculation } from '@/hooks/useTestCalculation';
 import { TestResultDisplay } from '@/components/test-result/TestResultDisplay';
 import { PageLoader } from '@/components/layout/PageLoader';
 
+// Helper to check if a value is a Record (object with string keys)
+function isRecord(value: unknown): value is Record<string, any> {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
 export default function TestResult() {
   const { resultId } = useParams<{ resultId: string }>();
 
@@ -23,8 +28,10 @@ export default function TestResult() {
     enabled: !!resultId,
   });
 
-  // Use our new central hook to get the calculated score
-  const calculatedScore = useTestCalculation(result?.test_types?.name, result?.answers);
+  // We ensure answers is a valid object before passing it to the hook
+  const validAnswers = isRecord(result?.answers) ? result.answers : undefined;
+
+  const calculatedScore = useTestCalculation(result?.test_types?.name, validAnswers);
 
   if (isLoading) {
     return <PageLoader />;
