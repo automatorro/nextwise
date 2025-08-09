@@ -45,8 +45,6 @@ const ScaleResultLayout = ({ score, testName, completedAt, resultId }: ScaleResu
         testName={testName}
         overallScore={score.overall}
         scoreType="raw"
-        rawScore={score.raw_score}
-        maxScore={score.max_score}
       />
 
       {/* Detailed Interpretations */}
