@@ -37,12 +37,14 @@ export function calculateCattellScore(answers: CattellAnswers): StandardizedScor
     const MAX_SCORE_PER_FACTOR = 15;
 
     for (const questionId in answers) {
-        // This line contains the fix
-        const questionNumber = parseInt(String(questionId).replace('question-', ''), 10);
-        const answerValue = answers[questionId];
-        if (!isNaN(questionNumber) && questionFactorMap[questionNumber] && answerValue >= 1 && answerValue <= 5) {
-            const factor = questionFactorMap[questionNumber];
-            rawScores[factor] += answerValue;
+        // THE NEW, MORE ROBUST FIX IS HERE
+        if (typeof questionId === 'string') {
+            const questionNumber = parseInt(questionId.replace('question-', ''), 10);
+            const answerValue = answers[questionId];
+            if (!isNaN(questionNumber) && questionFactorMap[questionNumber] && answerValue >= 1 && answerValue <= 5) {
+                const factor = questionFactorMap[questionNumber];
+                rawScores[factor] += answerValue;
+            }
         }
     }
 
