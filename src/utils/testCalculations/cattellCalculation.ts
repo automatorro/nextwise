@@ -1,4 +1,3 @@
-
 import { StandardizedScore } from '@/types/tests';
 
 interface CattellAnswers {
@@ -38,7 +37,7 @@ export function calculateCattellScore(answers: CattellAnswers): StandardizedScor
     const MAX_SCORE_PER_FACTOR = 15;
 
     for (const questionId in answers) {
-        // THE FIX IS HERE: We ensure questionId is treated as a string.
+        // This line contains the fix
         const questionNumber = parseInt(String(questionId).replace('question-', ''), 10);
         const answerValue = answers[questionId];
         if (!isNaN(questionNumber) && questionFactorMap[questionNumber] && answerValue >= 1 && answerValue <= 5) {
@@ -54,7 +53,7 @@ export function calculateCattellScore(answers: CattellAnswers): StandardizedScor
     for (const factor of factorKeys) {
         const score = rawScores[factor] || 0;
         const normalized = Math.round((score / MAX_SCORE_PER_FACTOR) * 9) + 1;
-
+        
         dimensions.push({ id: factor, name: factor.replace(/_/g, ' '), score: normalized });
         detailed_interpretations[factor] = normalized <= 5 ? interpretationMap[factor].low : interpretationMap[factor].high;
         totalRawScore += score;
