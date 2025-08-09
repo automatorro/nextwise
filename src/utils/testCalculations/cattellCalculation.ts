@@ -1,7 +1,6 @@
 
-import { StandardizedScore, TestResultType } from '@/types/tests';
+import { StandardizedScore } from '@/types/tests';
 
-// This interface is local to the calculation file
 interface CattellAnswers {
   [key: string]: number;
 }
@@ -39,7 +38,8 @@ export function calculateCattellScore(answers: CattellAnswers): StandardizedScor
     const MAX_SCORE_PER_FACTOR = 15;
 
     for (const questionId in answers) {
-        const questionNumber = parseInt(questionId.replace('question-', ''), 10);
+        // THE FIX IS HERE: We ensure questionId is treated as a string.
+        const questionNumber = parseInt(String(questionId).replace('question-', ''), 10);
         const answerValue = answers[questionId];
         if (!isNaN(questionNumber) && questionFactorMap[questionNumber] && answerValue >= 1 && answerValue <= 5) {
             const factor = questionFactorMap[questionNumber];
