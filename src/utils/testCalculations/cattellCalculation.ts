@@ -1,3 +1,4 @@
+
 import { StandardizedScore } from '@/types/tests';
 
 interface CattellAnswers {
