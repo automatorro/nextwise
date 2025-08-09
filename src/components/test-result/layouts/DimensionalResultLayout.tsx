@@ -2,7 +2,7 @@
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
 import OverallScoreCard from '../OverallScoreCard';
-import DimensionsAnalysis from '../DimensionsAnalysis';
+import { DimensionsAnalysis } from '../DimensionsAnalysis';
 import { TestExplanations } from '@/components/tests/TestExplanations';
 import { ScoringExplanation } from '../ScoringExplanation';
 
