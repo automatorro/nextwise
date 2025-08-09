@@ -1,69 +1,29 @@
-
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
 import { DimensionalResultLayout } from './layouts/DimensionalResultLayout';
-import { ProfileResultLayout } from './layouts/ProfileResultLayout';
-import { ScaleResultLayout } from './layouts/ScaleResultLayout';
+// We will add other layouts later
 
 interface TestResultDisplayProps {
   score: StandardizedScore | null;
   testName?: string;
-  completedAt?: string;
-  resultId?: string;
 }
 
-export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ 
-  score, 
-  testName, 
-  completedAt, 
-  resultId 
-}) => {
+export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, testName }) => {
   if (!score) {
-    // This can be replaced with a loading skeleton component later
     return <div>Loading results...</div>;
   }
 
-  // This is the core logic: it routes the score to the correct layout component.
   switch (score.type) {
     case 'dimensional':
-      return (
-        <DimensionalResultLayout 
-          score={score} 
-          testName={testName} 
-          completedAt={completedAt}
-          resultId={resultId}
-        />
-      );
+      return <DimensionalResultLayout score={score} testName={testName} />;
 
-    case 'profile':
-      return (
-        <ProfileResultLayout 
-          score={score} 
-          testName={testName} 
-          completedAt={completedAt}
-          resultId={resultId}
-        />
-      );
-
-    case 'scale':
-      return (
-        <ScaleResultLayout 
-          score={score} 
-          testName={testName} 
-          completedAt={completedAt}
-          resultId={resultId}
-        />
-      );
-
-    // case 'role':
-    //   return <RoleResultLayout score={score} />; // To be implemented in the future
+    // Other cases will be added here
 
     default:
       return (
         <div className="text-center p-4">
-          <h2 className="text-xl font-semibold text-red-600">Eroare de Afișare</h2>
-          <p>Nu a putut fi determinat tipul de rezultat pentru acest test.</p>
-          <p>Nume Test: {testName || 'Nespecificat'}</p>
+          <h2 className="text-xl font-semibold">Rezultat în Procesare</h2>
+          <p>{score.interpretation}</p>
         </div>
       );
   }
