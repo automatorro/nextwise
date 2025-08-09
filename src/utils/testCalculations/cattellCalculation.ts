@@ -7,7 +7,6 @@ interface Dimensions {
     [key: string]: number;
 }
 
-// ... [restul codului, interpretationMap, factorKeys, questionFactorMap rămân la fel]
 const interpretationMap = {
     warmth: { low: "Sunteți o persoană rezervată, distantă și critică.", high: "Sunteți o persoană caldă, deschisă și amabilă." },
     reasoning: { low: "Aveți o gândire concretă și o capacitate de învățare mai lentă.", high: "Sunteți o persoană inteligentă, cu o gândire abstractă." },
@@ -33,14 +32,11 @@ const questionFactorMap: { [key: number]: keyof Dimensions } = {
     1: 'warmth', 2: 'reasoning', 3: 'emotional_stability', 4: 'dominance', 5: 'liveliness', 6: 'rule_consciousness', 7: 'social_boldness', 8: 'sensitivity', 9: 'vigilance', 10: 'abstractedness', 11: 'privateness', 12: 'apprehension', 13: 'openness_to_change', 14: 'self_reliance', 15: 'perfectionism', 16: 'tension', 17: 'warmth', 18: 'reasoning', 19: 'emotional_stability', 20: 'dominance', 21: 'liveliness', 22: 'rule_consciousness', 23: 'social_boldness', 24: 'sensitivity', 25: 'vigilance', 26: 'abstractedness', 27: 'privateness', 28: 'apprehension', 29: 'openness_to_change', 30: 'self_reliance', 31: 'perfectionism', 32: 'tension', 33: 'warmth', 34: 'reasoning', 35: 'emotional_stability', 36: 'dominance', 37: 'liveliness', 38: 'rule_consciousness', 39: 'social_boldness', 40: 'sensitivity', 41: 'vigilance', 42: 'abstractedness', 43: 'privateness', 44: 'apprehension', 45: 'openness_to_change', 46: 'self_reliance', 47: 'perfectionism', 48: 'tension'
 };
 
-
 export function calculateCattellScore(answers: CattellAnswers): StandardizedScore {
     const rawScores: Dimensions = factorKeys.reduce((acc, key) => ({ ...acc, [key]: 0 }), {});
     const MAX_SCORE_PER_FACTOR = 15;
 
-    // THE "BULLETPROOF" FIX IS HERE: We use Object.keys() to get a guaranteed string array.
     Object.keys(answers).forEach(questionId => {
-        // Now, TypeScript knows for a fact that questionId is a string.
         const questionNumber = parseInt(questionId.replace('question-', ''), 10);
         const answerValue = answers[questionId];
         if (!isNaN(questionNumber) && questionFactorMap[questionNumber] && answerValue >= 1 && answerValue <= 5) {
