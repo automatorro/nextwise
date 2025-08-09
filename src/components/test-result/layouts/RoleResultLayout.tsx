@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
-import { OverallScoreCard } from '../OverallScoreCard';
+import OverallScoreCard from '../OverallScoreCard';
 import { TestExplanations } from '@/components/tests/TestExplanations';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
@@ -16,11 +16,12 @@ export const RoleResultLayout: React.FC<RoleResultLayoutProps> = ({ score, testN
   return (
     <div className="space-y-6">
       <OverallScoreCard
-        scorePercentage={score.overall}
-        rawScore={score.raw_score}
-        maxScore={score.max_score}
-        interpretation={score.interpretation}
-        testName={testName}
+        score={{
+          overall: score.overall,
+          raw_score: score.raw_score,
+          max_score: score.max_score,
+          interpretation: score.interpretation
+        }}
       />
 
       {roles && (roles.primary?.length > 0 || roles.secondary?.length > 0) && (
@@ -49,7 +50,6 @@ export const RoleResultLayout: React.FC<RoleResultLayoutProps> = ({ score, testN
         </Card>
       )}
 
-      {/* THE FIX IS HERE: The 'language' prop has been removed */}
       <TestExplanations score={score} testName={testName} />
     </div>
   );
