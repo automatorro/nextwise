@@ -1,93 +1,38 @@
 
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
-import TestResultHeader from '../TestResultHeader';
-import { TestExplanations } from '@/components/tests/TestExplanations';
-import { ScoringExplanation } from '../ScoringExplanation';
-import { SJTResults } from '../SJTResults';
-import DetailedAnalysisSection from '../DetailedAnalysisSection';
-import TestResultActions from '../TestResultActions';
+import { OverallScoreCard } from '../OverallScoreCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useLanguage } from '@/hooks/useLanguage';
-import { getResultLabels } from '@/utils/testResultTranslations';
-import { dimensionsToObject } from '@/utils/dimensionsConverter';
 
 interface ProfileResultLayoutProps {
   score: StandardizedScore;
   testName?: string;
-  completedAt?: string;
-  resultId?: string;
 }
 
-export const ProfileResultLayout = ({ score, testName, completedAt, resultId }: ProfileResultLayoutProps) => {
-  const { language } = useLanguage();
-  const labels = getResultLabels(language);
-
-  // Convert dimensions array to object format for components that expect it
-  const dimensionsAsObject = dimensionsToObject(score.dimensions);
+export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score, testName }) => {
+  const dominantProfile = score.dominant_profile;
+  const profileDetails = score.profile_details?.[dominantProfile || ''];
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      {testName && completedAt && (
-        <TestResultHeader testName={testName} completedAt={completedAt} />
-      )}
-
-      {/* Test Explanations */}
-      {testName && (
-        <TestExplanations testName={testName} score={score} language={language} />
-      )}
-
-      {/* Scoring Explanation */}
-      {testName && (
-        <ScoringExplanation 
-          testName={testName}
-          overallScore={score.overall}
-          scoreType="percentage"
-          dimensions={dimensionsAsObject}
-        />
-      )}
-
-      {/* SJT Results - specialized for profile-based tests */}
-      <SJTResults
-        score={{
-          overall: score.overall || 0,
-          dimensions: dimensionsAsObject,
-          interpretation: score.interpretation || '',
-          detailed_interpretations: score.detailed_interpretations,
-          recommendations: score.recommendations || [],
-          dominant_profile: score.dominant_profile,
-          secondary_profile: score.secondary_profile
-        }}
+    <div className="space-y-6">
+      <OverallScoreCard
+        scorePercentage={score.overall}
+        rawScore={score.raw_score}
+        maxScore={score.max_score}
+        interpretation={score.interpretation}
+        testName={testName}
       />
 
-      {/* AI Analysis Section */}
-      {resultId && testName && (
-        <Card className="mb-8">
+      {dominantProfile && profileDetails && (
+        <Card>
           <CardHeader>
-            <CardTitle>{labels.generateAnalysis}</CardTitle>
-            <p className="text-sm text-gray-600">
-              {labels.analysisDescription}
-            </p>
+            <CardTitle>Profilul tău Dominant: {profileDetails.name}</CardTitle>
           </CardHeader>
           <CardContent>
-            <DetailedAnalysisSection 
-              dimensions={dimensionsAsObject} 
-              resultId={resultId}
-              testType={testName}
-              score={{
-                overall: score.overall,
-                raw_score: score.raw_score,
-                max_score: score.max_score,
-                interpretation: score.interpretation
-              }}
-            />
+            <p className="text-muted-foreground">{profileDetails.description}</p>
           </CardContent>
         </Card>
       )}
-
-      {/* Actions */}
-      <TestResultActions />
     </div>
   );
 };
