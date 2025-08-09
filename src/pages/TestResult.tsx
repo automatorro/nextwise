@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
@@ -51,7 +50,7 @@ interface ScoreData {
 interface TestResultData {
   id: string;
   test_type_id: string;
-  score: ScoreData;
+  score: any;
   answers: { [key: string]: number };
   completed_at: string;
   test_types: {
@@ -124,9 +123,11 @@ const TestResult = () => {
       
       if (error) throw error;
       
+      // Properly handle the Json type conversion
       return {
         ...data,
-        answers: data.answers as unknown as { [key: string]: number }
+        answers: data.answers as unknown as { [key: string]: number },
+        score: data.score // Keep as any, will be standardized later
       } as TestResultData;
     },
     enabled: !!resultId

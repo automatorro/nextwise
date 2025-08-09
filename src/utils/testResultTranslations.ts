@@ -9,7 +9,8 @@ export const getResultLabels = (language: string) => {
     completedOn: language === 'en' ? 'Completed on' : 'Completat pe',
     noResultsFound: language === 'en' ? 'No results found' : 'Nu au fost găsite rezultate',
     generateAnalysis: language === 'en' ? 'AI Analysis' : 'Analiză AI',
-    analysisDescription: language === 'en' ? 'Get a detailed AI analysis of your test results with personalized insights and recommendations.' : 'Obțineți o analiză AI detaliată a rezultatelor testului cu perspective și recomandări personalizate.'
+    analysisDescription: language === 'en' ? 'Get a detailed AI analysis of your test results with personalized insights and recommendations.' : 'Obțineți o analiză AI detaliată a rezultatelor testului cu perspective și recomandări personalizate.',
+    noInterpretationAvailable: language === 'en' ? 'No interpretation available' : 'Interpretarea nu este disponibilă'
   };
 };
 
