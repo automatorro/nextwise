@@ -1,97 +1,52 @@
 
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
-import TestResultHeader from '../TestResultHeader';
+import OverallScoreCard from '../OverallScoreCard';
+import DimensionsAnalysis from '../DimensionsAnalysis';
 import { TestExplanations } from '@/components/tests/TestExplanations';
 import { ScoringExplanation } from '../ScoringExplanation';
-import DimensionsAnalysis from '../DimensionsAnalysis';
-import DetailedInterpretations from '../DetailedInterpretations';
-import DetailedAnalysisSection from '../DetailedAnalysisSection';
-import TestResultActions from '../TestResultActions';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useLanguage } from '@/hooks/useLanguage';
-import { getResultLabels } from '@/utils/testResultTranslations';
-import { dimensionsToObject } from '@/utils/dimensionsConverter';
 
 interface DimensionalResultLayoutProps {
   score: StandardizedScore;
   testName?: string;
-  completedAt?: string;
-  resultId?: string;
 }
 
-export const DimensionalResultLayout = ({ score, testName, completedAt, resultId }: DimensionalResultLayoutProps) => {
-  const { language } = useLanguage();
-  const labels = getResultLabels(language);
-
-  // Convert dimensions array to object format for components that expect it
-  const dimensionsAsObject = dimensionsToObject(score.dimensions);
+export const DimensionalResultLayout: React.FC<DimensionalResultLayoutProps> = ({ score, testName }) => {
+  const hasDimensions = score.dimensions && score.dimensions.length > 0;
 
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      {testName && completedAt && (
-        <TestResultHeader testName={testName} completedAt={completedAt} />
-      )}
+    <div className="space-y-6">
+      <OverallScoreCard
+        score={{
+          overall: score.overall || 0,
+          raw_score: score.raw_score || 0,
+          max_score: score.max_score || 0,
+          interpretation: score.interpretation || ''
+        }}
+      />
 
-      {/* Test Explanations */}
-      {testName && (
-        <TestExplanations testName={testName} score={score} language={language} />
-      )}
+      <ScoringExplanation 
+        testName={testName || ''}
+        overallScore={score.overall}
+        scoreType="percentage"
+      />
 
-      {/* Scoring Explanation */}
-      {testName && (
-        <ScoringExplanation 
-          testName={testName}
-          overallScore={score.overall}
-          scoreType="percentage"
-          dimensions={dimensionsAsObject}
-        />
-      )}
-
-      {/* Dimensions Analysis */}
-      {score.dimensions && testName && (
+      {hasDimensions && (
         <DimensionsAnalysis
-          dimensions={dimensionsAsObject}
+          dimensions={score.dimensions.reduce((acc, dim) => {
+            acc[dim.id] = dim.score;
+            return acc;
+          }, {} as { [key: string]: number })}
           testName={testName}
         />
       )}
 
-      {/* Detailed Interpretations */}
-      {score.detailed_interpretations && testName && (
-        <DetailedInterpretations
-          interpretations={score.detailed_interpretations}
-          testName={testName}
+      {hasDimensions && (
+        <TestExplanations
+          score={score}
+          testName={testName || ''}
         />
       )}
-
-      {/* AI Analysis Section */}
-      {resultId && testName && (
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>{labels.generateAnalysis}</CardTitle>
-            <p className="text-sm text-gray-600">
-              {labels.analysisDescription}
-            </p>
-          </CardHeader>
-          <CardContent>
-            <DetailedAnalysisSection 
-              dimensions={dimensionsAsObject} 
-              resultId={resultId}
-              testType={testName}
-              score={{
-                overall: score.overall,
-                raw_score: score.raw_score,
-                max_score: score.max_score,
-                interpretation: score.interpretation
-              }}
-            />
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Actions */}
-      <TestResultActions />
     </div>
   );
 };
