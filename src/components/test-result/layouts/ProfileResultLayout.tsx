@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
-import { OverallScoreCard } from '../OverallScoreCard';
+import OverallScoreCard from '../OverallScoreCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface ProfileResultLayoutProps {
@@ -16,11 +16,12 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
   return (
     <div className="space-y-6">
       <OverallScoreCard
-        scorePercentage={score.overall}
-        rawScore={score.raw_score}
-        maxScore={score.max_score}
-        interpretation={score.interpretation}
-        testName={testName}
+        score={{
+          overall: score.overall || 0,
+          raw_score: score.raw_score || 0,
+          max_score: score.max_score || 0,
+          interpretation: score.interpretation || ''
+        }}
       />
 
       {dominantProfile && profileDetails && (

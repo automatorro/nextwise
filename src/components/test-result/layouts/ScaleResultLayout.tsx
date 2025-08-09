@@ -1,97 +1,36 @@
 
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
-import TestResultHeader from '../TestResultHeader';
-import { TestExplanations } from '@/components/tests/TestExplanations';
-import { ScoringExplanation } from '../ScoringExplanation';
 import OverallScoreCard from '../OverallScoreCard';
-import DetailedInterpretations from '../DetailedInterpretations';
-import DetailedAnalysisSection from '../DetailedAnalysisSection';
-import TestResultActions from '../TestResultActions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useLanguage } from '@/hooks/useLanguage';
-import { getResultLabels } from '@/utils/testResultTranslations';
-import { dimensionsToObject } from '@/utils/dimensionsConverter';
 
 interface ScaleResultLayoutProps {
   score: StandardizedScore;
   testName?: string;
-  completedAt?: string;
-  resultId?: string;
 }
 
-export const ScaleResultLayout = ({ score, testName, completedAt, resultId }: ScaleResultLayoutProps) => {
-  const { language } = useLanguage();
-  const labels = getResultLabels(language);
-
-  // Convert dimensions array to object format for components that expect it
-  const dimensionsAsObject = dimensionsToObject(score.dimensions);
-
+export const ScaleResultLayout: React.FC<ScaleResultLayoutProps> = ({ score, testName }) => {
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      {testName && completedAt && (
-        <TestResultHeader testName={testName} completedAt={completedAt} />
-      )}
+    <div className="space-y-6">
+      <OverallScoreCard
+        score={{
+          overall: score.overall || 0,
+          raw_score: score.raw_score || 0,
+          max_score: score.max_score || 0,
+          interpretation: score.interpretation || ''
+        }}
+      />
 
-      {/* Test Explanations */}
-      {testName && (
-        <TestExplanations testName={testName} score={score} language={language} />
-      )}
-
-      {/* Overall Score Display */}
-      <OverallScoreCard score={{
-        overall: score.overall,
-        raw_score: score.raw_score,
-        max_score: score.max_score,
-        interpretation: score.interpretation,
-        severity_level: score.severity_level
-      }} />
-
-      {/* Scoring Explanation */}
-      {testName && (
-        <ScoringExplanation 
-          testName={testName}
-          overallScore={score.overall}
-          scoreType="raw"
-        />
-      )}
-
-      {/* Detailed Interpretations */}
-      {score.detailed_interpretations && testName && (
-        <DetailedInterpretations
-          interpretations={score.detailed_interpretations}
-          testName={testName}
-        />
-      )}
-
-      {/* AI Analysis Section */}
-      {resultId && testName && (
-        <Card className="mb-8">
+      {score.scale_level && (
+        <Card>
           <CardHeader>
-            <CardTitle>{labels.generateAnalysis}</CardTitle>
-            <p className="text-sm text-gray-600">
-              {labels.analysisDescription}
-            </p>
+            <CardTitle>Nivelul tău:</CardTitle>
           </CardHeader>
           <CardContent>
-            <DetailedAnalysisSection 
-              dimensions={dimensionsAsObject} 
-              resultId={resultId}
-              testType={testName}
-              score={{
-                overall: score.overall,
-                raw_score: score.raw_score,
-                max_score: score.max_score,
-                interpretation: score.interpretation
-              }}
-            />
+            <p className="text-2xl font-bold">{score.scale_level}</p>
           </CardContent>
         </Card>
       )}
-
-      {/* Actions */}
-      <TestResultActions />
     </div>
   );
 };
