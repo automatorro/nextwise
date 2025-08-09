@@ -37,9 +37,8 @@ export function calculateCattellScore(answers: CattellAnswers): StandardizedScor
     const rawScores: Dimensions = factorKeys.reduce((acc, key) => ({ ...acc, [key]: 0 }), {});
     const MAX_SCORE_PER_FACTOR = 15;
 
-    Object.keys(answers).forEach(questionId => {
-        const questionNumber = parseInt(questionId.replace('question-', ''), 10);
-        const answerValue = answers[questionId];
+    Object.entries(answers).forEach(([questionId, answerValue]) => {
+        const questionNumber = parseInt(String(questionId).replace('question-', ''), 10);
         if (!isNaN(questionNumber) && questionFactorMap[questionNumber] && answerValue >= 1 && answerValue <= 5) {
             const factor = questionFactorMap[questionNumber];
             rawScores[factor] += answerValue;
