@@ -1,4 +1,3 @@
-
 import { useMemo } from 'react';
 
 export interface StandardizedScore {
@@ -196,18 +195,55 @@ const calculateEnneagram = (answers: { [key: string]: number }): StandardizedSco
   const { calculateEnneagramScore } = require('@/utils/testCalculations/enneagramCalculation');
   const result = calculateEnneagramScore(answers);
   
-  // Convert raw scores to percentages
-  const maxScore = Math.max(...Object.values(result));
+  // Ensure result is an object with numeric values
+  if (!result || typeof result !== 'object') {
+    console.warn('Invalid Enneagram result, using fallback');
+    return {
+      type: 'dimensional',
+      overall: 50,
+      raw_score: 0,
+      max_score: 100,
+      interpretation: 'Rezultatele Enneagram nu au putut fi calculate corect.',
+      dimensions: {}
+    };
+  }
+
+  // Convert raw scores to percentages with proper type checking
+  const numericValues = Object.values(result).filter((value): value is number => typeof value === 'number');
+  
+  if (numericValues.length === 0) {
+    console.warn('No numeric values in Enneagram result');
+    return {
+      type: 'dimensional',
+      overall: 50,
+      raw_score: 0,
+      max_score: 100,
+      interpretation: 'Rezultatele Enneagram nu conțin valori numerice valide.',
+      dimensions: {}
+    };
+  }
+
+  const maxScore = Math.max(...numericValues);
   const dimensions: { [key: string]: number } = {};
+  
   Object.entries(result).forEach(([key, value]) => {
-    dimensions[key] = Math.round((value / maxScore) * 100);
+    if (typeof value === 'number') {
+      dimensions[key] = Math.round((value / maxScore) * 100);
+    }
   });
+  
+  const validDimensionValues = Object.values(dimensions);
+  const overall = validDimensionValues.length > 0 
+    ? Math.round(validDimensionValues.reduce((sum, score) => sum + score, 0) / validDimensionValues.length)
+    : 50;
+  
+  const rawScore = numericValues.reduce((sum, score) => sum + score, 0);
   
   return {
     type: 'dimensional',
-    overall: Math.round(Object.values(dimensions).reduce((sum, score) => sum + score, 0) / 9),
-    raw_score: Object.values(result).reduce((sum, score) => sum + score, 0),
-    max_score: maxScore * 9,
+    overall,
+    raw_score: rawScore,
+    max_score: maxScore * validDimensionValues.length,
     interpretation: 'Rezultatele Enneagram arată distribuția scorurilor pentru cele 9 tipuri de personalitate.',
     dimensions
   };
@@ -365,9 +401,9 @@ const calculateHEXACO = (answers: { [key: string]: number }): StandardizedScore 
 const calculateGeneric = (answers: { [key: string]: number }, existingScore?: any): StandardizedScore => {
   // Fallback calculation for unknown test types
   const totalAnswers = Object.keys(answers).length;
-  const rawScore = typeof existingScore?.raw_score === 'number' ? existingScore.raw_score : totalAnswers;
-  const maxScore = typeof existingScore?.max_score === 'number' ? existingScore.max_score : 100;
-  const overall = typeof existingScore?.overall === 'number' ? existingScore.overall : Math.round((totalAnswers / Math.max(totalAnswers, 1)) * 100);
+  const rawScore = (typeof existingScore?.raw_score === 'number') ? existingScore.raw_score : totalAnswers;
+  const maxScore = (typeof existingScore?.max_score === 'number') ? existingScore.max_score : 100;
+  const overall = (typeof existingScore?.overall === 'number') ? existingScore.overall : Math.round((totalAnswers / Math.max(totalAnswers, 1)) * 100);
   
   return {
     type: 'scale',
