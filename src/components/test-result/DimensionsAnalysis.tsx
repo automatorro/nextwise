@@ -1,96 +1,42 @@
-
 import React from 'react';
+import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Legend } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Progress } from '@/components/ui/progress';
-import { getDimensionLabel } from '@/utils/testLabels';
-import { getScoreColor } from '@/utils/testScoring';
-import { useLanguage } from '@/hooks/useLanguage';
+import { StandardizedScore } from '@/types/tests';
 
 interface DimensionsAnalysisProps {
-  dimensions: { [key: string]: number };
-  testName?: string;
+  // Am schimbat 'score' în 'dimensions' pentru claritate
+  dimensions?: { id: string; name: string; score: number }[]; 
 }
 
-const DimensionsAnalysis = ({ dimensions, testName = '' }: DimensionsAnalysisProps) => {
-  const { language } = useLanguage();
-  
-  // Defensive checks - don't render if no meaningful dimensions
-  if (!dimensions || typeof dimensions !== 'object') {
-    return null;
+export const DimensionsAnalysis: React.FC<DimensionsAnalysisProps> = ({ dimensions }) => {
+  // Verificare robustă a datelor
+  if (!dimensions || dimensions.length === 0) {
+    return null; 
   }
 
-  const validDimensions = Object.entries(dimensions).filter(([_, value]) => 
-    typeof value === 'number' && value > 0
-  );
-
-  if (validDimensions.length === 0) {
-    return null;
-  }
-
-  // Get proper type names for Enneagram
-  const getEnneagramTypeName = (key: string) => {
-    const typeNames = {
-      type1: language === 'en' ? 'The Reformer' : 'Reformatorul',
-      type2: language === 'en' ? 'The Helper' : 'Ajutătorul',
-      type3: language === 'en' ? 'The Achiever' : 'Realizatorul',
-      type4: language === 'en' ? 'The Individualist' : 'Individualistul',
-      type5: language === 'en' ? 'The Investigator' : 'Investigatorul',
-      type6: language === 'en' ? 'The Loyalist' : 'Loyalul',
-      type7: language === 'en' ? 'The Enthusiast' : 'Entuziastul',
-      type8: language === 'en' ? 'The Challenger' : 'Provocatorul',
-      type9: language === 'en' ? 'The Peacemaker' : 'Mediatorul'
-    };
-    return typeNames[key as keyof typeof typeNames] || key;
-  };
-
-  const isEnneagramTest = testName.includes('Enneagram');
-  const isCattellTest = testName.includes('Cattell') || testName.includes('16PF');
+  // Transformăm datele din formatul nostru în formatul cerut de librăria de grafice
+  const chartData = dimensions.map(dim => ({
+    subject: dim.name.charAt(0).toUpperCase() + dim.name.slice(1),
+    score: dim.score,
+    fullMark: 10, // Scorul este pe o scală de la 1 la 10
+  }));
 
   return (
-    <Card className="mb-8">
+    <Card>
       <CardHeader>
-        <CardTitle>
-          {language === 'en' ? 'Dimension Analysis' : 'Analiza pe Dimensiuni'}
-        </CardTitle>
+        <CardTitle>Profilul de Carieră SJT</CardTitle> 
       </CardHeader>
       <CardContent>
-        <div className="space-y-6">
-          {validDimensions.map(([key, value]) => {
-            // Ensure value is a valid number
-            const safeValue = typeof value === 'number' ? Math.max(0, value) : 0;
-            
-            return (
-              <div key={key}>
-                <div className="flex items-center justify-between mb-2">
-                  <h3 className="font-medium">
-                    {isEnneagramTest ? getEnneagramTypeName(key) : getDimensionLabel(testName, key)}
-                  </h3>
-                  <span className={`font-bold ${getScoreColor(safeValue)}`}>
-                    {isEnneagramTest 
-                      ? `${safeValue} ${language === 'en' ? 'pts' : 'pct'}` 
-                      : isCattellTest
-                        ? `${safeValue}/10`
-                        : `${safeValue}%`
-                    }
-                  </span>
-                </div>
-                <Progress 
-                  value={
-                    isEnneagramTest 
-                      ? Math.min(100, (safeValue / 20) * 100) 
-                      : isCattellTest
-                        ? (safeValue / 10) * 100
-                        : safeValue
-                  } 
-                  className="w-full" 
-                />
-              </div>
-            );
-          })}
-        </div>
+        <ResponsiveContainer width="100%" height={400}>
+          <RadarChart cx="50%" cy="50%" outerRadius="80%" data={chartData}>
+            <PolarGrid />
+            <PolarAngleAxis dataKey="subject" />
+            <PolarRadiusAxis angle={30} domain={[0, 10]} />
+            <Radar name="Scorul Tău" dataKey="score" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+            <Legend />
+          </RadarChart>
+        </ResponsiveContainer>
       </CardContent>
     </Card>
   );
 };
-
-export default DimensionsAnalysis;
