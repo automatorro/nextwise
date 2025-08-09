@@ -52,7 +52,7 @@ export const DimensionalResultLayout = ({ score, testName, completedAt, resultId
       {/* Dimensions Analysis */}
       {score.dimensions && testName && (
         <DimensionsAnalysis
-          dimensions={score.dimensions}
+          dimensions={dimensionsAsObject}
           testName={testName}
         />
       )}
