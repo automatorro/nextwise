@@ -13,4 +13,7 @@ export interface StandardizedScore {
   profile_details?: { [key: string]: { name: string; description: string } };
   roles?: { primary: string[]; secondary: string[] };
   scale_level?: string;
+  severity_level?: string;
+  recommendations?: string[];
+  secondary_profile?: string;
 }

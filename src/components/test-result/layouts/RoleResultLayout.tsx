@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
 import TestResultHeader from '../TestResultHeader';
@@ -9,6 +10,7 @@ import TestResultActions from '../TestResultActions';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/hooks/useLanguage';
 import { getResultLabels } from '@/utils/testResultTranslations';
+import { dimensionsToObject } from '@/utils/dimensionsConverter';
 
 interface RoleResultLayoutProps {
   score: StandardizedScore;
@@ -20,6 +22,9 @@ interface RoleResultLayoutProps {
 const RoleResultLayout = ({ score, testName, completedAt, resultId }: RoleResultLayoutProps) => {
   const { language } = useLanguage();
   const labels = getResultLabels(language);
+
+  // Convert dimensions array to object format for components that expect it
+  const dimensionsAsObject = dimensionsToObject(score.dimensions);
 
   return (
     <div className="space-y-8">
@@ -39,7 +44,7 @@ const RoleResultLayout = ({ score, testName, completedAt, resultId }: RoleResult
 
       {/* Belbin Role Results */}
       <BelbinRoleResults
-        roleScores={score.dimensions || {}}
+        roleScores={dimensionsAsObject}
         primaryRoles={score.roles?.primary || []}
         secondaryRoles={score.roles?.secondary || []}
         interpretation={score.interpretation}
@@ -55,7 +60,7 @@ const RoleResultLayout = ({ score, testName, completedAt, resultId }: RoleResult
         </CardHeader>
         <CardContent>
           <DetailedAnalysisSection 
-            dimensions={score.dimensions || {}} 
+            dimensions={dimensionsAsObject} 
             resultId={resultId}
             testType={testName}
             score={{
