@@ -1,4 +1,3 @@
-
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -27,11 +26,11 @@ export default function TestResult() {
     enabled: !!resultId,
   });
 
-  // We ensure answers is a valid object before passing it to the hook
   const validAnswers = isRecord(result?.answers) ? result.answers : undefined;
-
   const calculatedScore = useTestCalculation(result?.test_types?.name, validAnswers);
 
+  // The MainLayout now handles the main loading state.
+  // We return null here while data is loading.
   if (isLoading) {
     return null;
   }
