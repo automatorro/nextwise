@@ -8,9 +8,16 @@ import { ScaleResultLayout } from './layouts/ScaleResultLayout';
 interface TestResultDisplayProps {
   score: StandardizedScore | null;
   testName?: string;
+  completedAt?: string;
+  resultId?: string;
 }
 
-export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, testName }) => {
+export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ 
+  score, 
+  testName, 
+  completedAt, 
+  resultId 
+}) => {
   if (!score) {
     // This can be replaced with a loading skeleton component later
     return <div>Loading results...</div>;
@@ -19,13 +26,34 @@ export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, tes
   // This is the core logic: it routes the score to the correct layout component.
   switch (score.type) {
     case 'dimensional':
-      return <DimensionalResultLayout score={score} testName={testName} />;
+      return (
+        <DimensionalResultLayout 
+          score={score} 
+          testName={testName} 
+          completedAt={completedAt}
+          resultId={resultId}
+        />
+      );
 
     case 'profile':
-      return <ProfileResultLayout score={score} testName={testName} />;
+      return (
+        <ProfileResultLayout 
+          score={score} 
+          testName={testName} 
+          completedAt={completedAt}
+          resultId={resultId}
+        />
+      );
 
     case 'scale':
-       return <ScaleResultLayout score={score} testName={testName} />;
+      return (
+        <ScaleResultLayout 
+          score={score} 
+          testName={testName} 
+          completedAt={completedAt}
+          resultId={resultId}
+        />
+      );
 
     // case 'role':
     //   return <RoleResultLayout score={score} />; // To be implemented in the future
