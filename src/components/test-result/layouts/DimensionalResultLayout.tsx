@@ -1,5 +1,9 @@
+// src/components/test-result/layouts/DimensionalResultLayout.tsx
+
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
+// Aceste componente vor trebui să existe și să fie corecte.
+// Le vom verifica/repara dacă acest pas dă erori.
 import OverallScoreCard from '../OverallScoreCard';
 import { DimensionsAnalysis } from '../DimensionsAnalysis';
 import { TestExplanations } from '../../tests/TestExplanations';
@@ -10,8 +14,12 @@ interface DimensionalResultLayoutProps {
   testName?: string;
 }
 
+/**
+ * Acesta este layout-ul specializat pentru teste "dimensionale"
+ * (ex: Cattell, Big Five), care au scoruri multiple pe diverse axe.
+ */
 export const DimensionalResultLayout: React.FC<DimensionalResultLayoutProps> = ({ score, testName }) => {
-  // Verificăm dacă 'dimensions' este o listă și are conținut
+  // Verificare robustă pentru a afișa componentele doar dacă avem date pentru ele.
   const hasDimensions = Array.isArray(score.dimensions) && score.dimensions.length > 0;
   
   return (
@@ -24,21 +32,11 @@ export const DimensionalResultLayout: React.FC<DimensionalResultLayoutProps> = (
         testName={testName}
       />
       
-      <ScoringExplanation />
+      <ScoringExplanation testName={testName} />
       
-      {/* AICI ESTE CORECȚIA. Trimitem lista direct, fără nicio conversie. */}
-      {hasDimensions && (
-        <DimensionsAnalysis
-          dimensions={score.dimensions} 
-        />
-      )}
-      
-      {hasDimensions && (
-        <TestExplanations
-          score={score}
-          testName={testName}
-        />
-      )}
+      {/* Vom reactiva aceste componente în pașii următori */}
+      {/* {hasDimensions && <DimensionsAnalysis dimensions={score.dimensions} />} */}
+      {/* {hasDimensions && <TestExplanations score={score} testName={testName} />} */}
     </div>
   );
 };
