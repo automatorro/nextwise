@@ -33,7 +33,7 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
     setAnalysis(null);
 
     try {
-      const { data, error } = await supabase.functions.invoke('get-ai-test-analysis', {
+      const { data, error } = await supabase.functions.invoke('analyze-test-result', {
         body: { score, testName },
       });
 
