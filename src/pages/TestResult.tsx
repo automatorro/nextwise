@@ -1,10 +1,11 @@
+// src/pages/TestResult.tsx
+
 import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useTestCalculation } from '@/hooks/useTestCalculation';
 import { TestResultDisplay } from '@/components/test-result/TestResultDisplay';
 
-// Helper to check if a value is a Record (object with string keys)
 function isRecord(value: unknown): value is Record<string, any> {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
@@ -27,16 +28,18 @@ export default function TestResult() {
   });
 
   const validAnswers = isRecord(result?.answers) ? result.answers : undefined;
+  
+  // Apelăm "motorul"
   const calculatedScore = useTestCalculation(result?.test_types?.name, validAnswers);
 
-  // The MainLayout now handles the main loading state.
-  // We return null here while data is loading.
+  // Layout-ul principal gestionează starea de încărcare
   if (isLoading) {
     return null;
   }
 
   return (
     <div className="container mx-auto p-4 md:p-8">
+      {/* Montăm "caroseria" */}
       <TestResultDisplay
         score={calculatedScore}
         testName={result?.test_types?.name}
