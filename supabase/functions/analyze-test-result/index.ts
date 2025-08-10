@@ -1,42 +1,40 @@
-import { corsHeaders } from '../_shared/cors.ts'
+// supabase/functions/analyze-test-result/index.ts
 
-console.log(`Function "analyze-test-result" up and running!`)
+console.log(`Function "analyze-test-result" up and running!`);
+
+// Setările CORS sunt acum definite direct aici, eliminând dependențele externe.
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
 
 Deno.serve(async (req) => {
-  // Manevrarea cererilor preflight pentru CORS
+  // Manevrarea cererilor de permisiune (preflight)
   if (req.method === 'OPTIONS') {
-    return new Response('ok', { headers: corsHeaders })
+    return new Response('ok', { headers: corsHeaders });
   }
   
   try {
-    const { score, testName } = await req.json()
+    const { score, testName } = await req.json();
     
-    // Aici va veni logica reală de apel la Gemini API.
-    // Deocamdată, folosim un răspuns demonstrativ.
-    const prompt = `
-      You are an expert career psychologist. Analyze the following test results for a user.
-      Test Name: ${testName}
-      Scores: ${JSON.stringify(score, null, 2)}
+    // Verificare minimă a datelor primite
+    if (!score || !testName) {
+      throw new Error('Lipsesc datele testului (scor sau nume).');
+    }
 
-      Provide a detailed, insightful, and encouraging analysis. Structure your response in Markdown format.
-      Include the following sections:
-      - **Profil General:** A summary of the user's personality or profile based on the scores.
-      - **Puncte Forte:** Highlight the key strengths revealed by the test.
-      - **Zone de Dezvoltare:** Gently point out areas where the user could improve or be more aware.
-      - **Recomandări de Carieră:** Suggest 2-3 career paths or types of roles that would be a good fit, and explain why.
-    `;
-    
+    // Aici va veni logica reală de apel la Gemini API.
+    // Deocamdată, folosim un răspuns demonstrativ pentru a testa conexiunea.
     const aiResponse = `
 ### Profil General
-Acesta este un răspuns demonstrativ de la funcția **analyze-test-result**. Profilul dumneavoastră **${testName}** indică o personalitate complexă.
+Acesta este un răspuns demonstrativ de la funcția **analyze-test-result**. Conexiunea a funcționat! Profilul dumneavoastră **${testName}** indică o personalitate complexă și echilibrată.
 
 ### Puncte Forte
-- **Reziliență:** Scorul ridicat la stabilitate emoțională sugerează că sunteți o persoană calmă.
-- **Creativitate:** Deschiderea spre experiențe noi arată o minte curioasă și inovatoare.
+- **Reziliență:** Scorul ridicat la stabilitate emoțională sugerează că sunteți o persoană calmă, capabilă să gestioneze stresul eficient.
+- **Creativitate:** Deschiderea spre experiențe noi arată o minte curioasă, dornică să exploreze idei noi și abordări neconvenționale.
 
 ### Recomandări de Carieră
-1.  **Product Manager**
-2.  **UX/UI Designer**
+1.  **Product Manager:** Datorită echilibrului excelent între creativitate și gândire analitică.
+2.  **Consultant în Management:** Abilitatea de a înțelege sisteme complexe și de a oferi soluții inovatoare este un atu major.
     `;
 
     return new Response(
@@ -45,11 +43,13 @@ Acesta este un răspuns demonstrativ de la funcția **analyze-test-result**. Pro
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 200,
       }
-    )
+    );
   } catch (error) {
+    console.error("Server Error in analyze-test-result:", error);
     return new Response(JSON.stringify({ error: error.message }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      status: 400,
-    })
+      // Folosim 500 pentru erori interne neașteptate
+      status: 500, 
+    });
   }
-})
+});
