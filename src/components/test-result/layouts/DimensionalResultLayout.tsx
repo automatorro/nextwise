@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
 import OverallScoreCard from '../OverallScoreCard';
 import { DimensionsAnalysis } from '../DimensionsAnalysis';
-import { TestExplanations } from '@/components/tests/TestExplanations';
+import { TestExplanations } from '../../tests/TestExplanations';
 import { ScoringExplanation } from '../ScoringExplanation';
 
 interface DimensionalResultLayoutProps {
@@ -12,39 +11,32 @@ interface DimensionalResultLayoutProps {
 }
 
 export const DimensionalResultLayout: React.FC<DimensionalResultLayoutProps> = ({ score, testName }) => {
-  const hasDimensions = score.dimensions && score.dimensions.length > 0;
-
+  // Verificăm dacă 'dimensions' este o listă și are conținut
+  const hasDimensions = Array.isArray(score.dimensions) && score.dimensions.length > 0;
+  
   return (
     <div className="space-y-6">
       <OverallScoreCard
-        score={{
-          overall: score.overall || 0,
-          raw_score: score.raw_score || 0,
-          max_score: score.max_score || 0,
-          interpretation: score.interpretation || ''
-        }}
+        scorePercentage={score.overall}
+        rawScore={score.raw_score}
+        maxScore={score.max_score}
+        interpretation={score.interpretation}
+        testName={testName}
       />
-
-      <ScoringExplanation 
-        testName={testName || ''}
-        overallScore={score.overall}
-        scoreType="percentage"
-      />
-
+      
+      <ScoringExplanation />
+      
+      {/* AICI ESTE CORECȚIA. Trimitem lista direct, fără nicio conversie. */}
       {hasDimensions && (
         <DimensionsAnalysis
-          dimensions={score.dimensions.reduce((acc, dim) => {
-            acc[dim.id] = dim.score;
-            return acc;
-          }, {} as { [key: string]: number })}
-          testName={testName}
+          dimensions={score.dimensions} 
         />
       )}
-
+      
       {hasDimensions && (
         <TestExplanations
           score={score}
-          testName={testName || ''}
+          testName={testName}
         />
       )}
     </div>
