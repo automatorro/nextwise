@@ -4,16 +4,17 @@ import OverallScoreCard from '../OverallScoreCard';
 import { DimensionsAnalysis } from '../DimensionsAnalysis';
 import { TestExplanations } from '../../tests/TestExplanations';
 import { ScoringExplanation } from '../ScoringExplanation';
+import { AiAnalysisCard } from '../AiAnalysisCard'; // <-- IMPORT NOU
 
 interface DimensionalResultLayoutProps {
   score: StandardizedScore;
   testName?: string;
+  resultId?: string; // <-- PROPRIETATE NOUĂ
 }
 
-export const DimensionalResultLayout: React.FC<DimensionalResultLayoutProps> = ({ score, testName }) => {
+export const DimensionalResultLayout: React.FC<DimensionalResultLayoutProps> = ({ score, testName, resultId }) => {
   const hasDimensions = Array.isArray(score.dimensions) && score.dimensions.length > 0;
   
-  // Adaptor sigur pentru a garanta compatibilitatea cu componenta veche
   const cardScoreData = {
     overall: score.overall ?? 0,
     raw_score: score.raw_score ?? 0,
@@ -29,6 +30,9 @@ export const DimensionalResultLayout: React.FC<DimensionalResultLayoutProps> = (
         score={cardScoreData}
         testName={testName}
       />
+      
+      {/* CARDUL DE ANALIZĂ AI A FOST ADĂUGAT AICI */}
+      <AiAnalysisCard score={score} testName={testName} resultId={resultId} />
       
       <ScoringExplanation testName={testName} />
       
