@@ -41,7 +41,7 @@ Deno.serve(async (req) => {
       (Pe baza întregului profil, sugerează 3-4 roluri sau domenii de carieră specifice care se potrivesc foarte bine cu punctele forte identificate. Pentru FIECARE recomandare, explică pe scurt DE CE se potrivește, legând-o direct de o trăsătură specifică din test.)
     `;
 
-    const model = genAI.getGenerativeModel({ model: 'gemini-pro' });
+    const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
     const generationConfig = { temperature: 0.7, maxOutputTokens: 2048 };
     const safetySettings = [
       { category: HarmCategory.HARM_CATEGORY_HARASSMENT, threshold: HarmBlockThreshold.BLOCK_NONE },
