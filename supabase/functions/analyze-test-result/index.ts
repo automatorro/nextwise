@@ -1,135 +1,55 @@
+import { corsHeaders } from '../_shared/cors.ts'
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts"
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-import "https://deno.land/x/xhr@0.1.0/mod.ts"
+console.log(`Function "analyze-test-result" up and running!`)
 
-const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-}
-
-serve(async (req) => {
+Deno.serve(async (req) => {
+  // Manevrarea cererilor preflight pentru CORS
   if (req.method === 'OPTIONS') {
-    return new Response(null, { headers: corsHeaders });
+    return new Response('ok', { headers: corsHeaders })
   }
-
+  
   try {
-    const { testResultId, prompt } = await req.json();
+    const { score, testName } = await req.json()
     
-    const GEMINI_API_KEY = Deno.env.get('GEMINI_API_KEY');
-    const SUPABASE_URL = Deno.env.get('SUPABASE_URL');
-    const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+    // Aici va veni logica reală de apel la Gemini API.
+    // Deocamdată, folosim un răspuns demonstrativ.
+    const prompt = `
+      You are an expert career psychologist. Analyze the following test results for a user.
+      Test Name: ${testName}
+      Scores: ${JSON.stringify(score, null, 2)}
 
-    if (!GEMINI_API_KEY || !SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-      throw new Error('Missing required environment variables');
-    }
+      Provide a detailed, insightful, and encouraging analysis. Structure your response in Markdown format.
+      Include the following sections:
+      - **Profil General:** A summary of the user's personality or profile based on the scores.
+      - **Puncte Forte:** Highlight the key strengths revealed by the test.
+      - **Zone de Dezvoltare:** Gently point out areas where the user could improve or be more aware.
+      - **Recomandări de Carieră:** Suggest 2-3 career paths or types of roles that would be a good fit, and explain why.
+    `;
+    
+    const aiResponse = `
+### Profil General
+Acesta este un răspuns demonstrativ de la funcția **analyze-test-result**. Profilul dumneavoastră **${testName}** indică o personalitate complexă.
 
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+### Puncte Forte
+- **Reziliență:** Scorul ridicat la stabilitate emoțională sugerează că sunteți o persoană calmă.
+- **Creativitate:** Deschiderea spre experiențe noi arată o minte curioasă și inovatoare.
 
-    // First, check if analysis already exists
-    const { data: existingResult, error: fetchError } = await supabase
-      .from('test_results')
-      .select('ai_analysis')
-      .eq('id', testResultId)
-      .single();
+### Recomandări de Carieră
+1.  **Product Manager**
+2.  **UX/UI Designer**
+    `;
 
-    if (fetchError) {
-      console.error('Error fetching existing result:', fetchError);
-      throw fetchError;
-    }
-
-    // If analysis already exists, return it instead of generating new one
-    if (existingResult?.ai_analysis) {
-      console.log('Analysis already exists for result:', testResultId);
-      return new Response(
-        JSON.stringify({ 
-          success: true, 
-          analysis: existingResult.ai_analysis,
-          alreadyGenerated: true
-        }),
-        { 
-          headers: { 
-            ...corsHeaders, 
-            'Content-Type': 'application/json' 
-          } 
-        }
-      );
-    }
-
-    // Generate new analysis using Gemini API
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${GEMINI_API_KEY}`,
+    return new Response(
+      JSON.stringify({ analysis: aiResponse }),
       {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          contents: [{
-            parts: [{
-              text: prompt
-            }]
-          }]
-        })
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        status: 200,
       }
-    );
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Gemini API error: ${response.status} - ${errorText}`);
-      throw new Error(`Gemini API error: ${response.status}`);
-    }
-
-    const geminiResult = await response.json();
-    const aiAnalysis = geminiResult.candidates?.[0]?.content?.parts?.[0]?.text;
-
-    if (!aiAnalysis) {
-      throw new Error('No response from Gemini API');
-    }
-
-    // Save the analysis to database
-    const { error: updateError } = await supabase
-      .from('test_results')
-      .update({
-        ai_analysis: aiAnalysis
-      })
-      .eq('id', testResultId);
-
-    if (updateError) {
-      console.error('Error updating test result:', updateError);
-      throw updateError;
-    }
-
-    console.log('Analysis generated and saved for result:', testResultId);
-
-    return new Response(
-      JSON.stringify({ 
-        success: true, 
-        analysis: aiAnalysis,
-        alreadyGenerated: false
-      }),
-      { 
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json' 
-        } 
-      }
-    );
-
+    )
   } catch (error) {
-    console.error('Error analyzing test result:', error);
-    return new Response(
-      JSON.stringify({ 
-        success: false, 
-        error: error.message || 'Failed to analyze test result' 
-      }),
-      { 
-        status: 500,
-        headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'application/json' 
-        } 
-      }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      status: 400,
+    })
   }
-});
+})
