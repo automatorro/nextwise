@@ -1,5 +1,3 @@
-// supabase/functions/analyze-test-result/index.ts
-
 import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from 'npm:@google/generative-ai';
 
 const corsHeaders = {
@@ -7,7 +5,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// Asigură-te că ai setat GEMINI_API_KEY în variabilele de mediu din Supabase
+// Această linie va căuta cheia API pe care ai verificat-o la Pasul A
 const genAI = new GoogleGenerativeAI(Deno.env.get('GEMINI_API_KEY')!);
 
 Deno.serve(async (req) => {
@@ -16,7 +14,6 @@ Deno.serve(async (req) => {
   }
   
   try {
-    // Așteptăm să primim datele simplificate: testName și dimensions
     const { testName, dimensions } = await req.json();
     
     if (!testName || !dimensions) {
