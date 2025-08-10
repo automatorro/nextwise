@@ -1,5 +1,3 @@
-// src/components/test-result/AiAnalysisCard.tsx
-
 import React, { useState } from 'react';
 import { StandardizedScore } from '@/types/tests';
 import { supabase } from '@/integrations/supabase/client';
@@ -20,10 +18,10 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
   const { toast } = useToast();
 
   const handleAnalyze = async () => {
-    if (!score || !testName) {
+    if (!score?.dimensions || !testName) {
       toast({
         title: "Eroare",
-        description: "Nu se pot genera rezultatele fără datele testului.",
+        description: "Datele testului sunt incomplete pentru a genera o analiză.",
         variant: "destructive",
       });
       return;
@@ -33,8 +31,15 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
     setAnalysis(null);
 
     try {
+      // === AICI ESTE MODIFICAREA ===
+      // Trimitem doar informațiile esențiale, nu tot obiectul.
+      const payload = {
+        testName: testName,
+        dimensions: score.dimensions, 
+      };
+
       const { data, error } = await supabase.functions.invoke('analyze-test-result', {
-        body: { score, testName },
+        body: payload,
       });
 
       if (error) throw error;
@@ -63,7 +68,6 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
     }
   };
   
-  // Funcționalitatea de salvare va fi implementată ulterior
   const handleSaveToPlan = () => {
      toast({
         title: "Funcționalitate în dezvoltare",
@@ -82,30 +86,16 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
       <CardContent className="space-y-4">
         {!analysis && (
           <Button onClick={handleAnalyze} disabled={isLoading}>
-            {isLoading ? (
-              <>
-                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Se generează...
-              </>
-            ) : (
-              'Analizează cu AI'
-            )}
+            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Se generează...</> : 'Analizează cu AI'}
           </Button>
         )}
 
         {analysis && (
           <div className="p-4 border rounded-md bg-secondary/50 space-y-4">
-            <div
-              className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap"
-              dangerouslySetInnerHTML={{ __html: analysis }}
-            />
+            <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: analysis }} />
             <div className="flex items-center space-x-2 pt-4">
-               <Button variant="outline" size="sm" onClick={handleCopyToClipboard}>
-                  <Copy className="mr-2 h-4 w-4" /> Copiază
-               </Button>
-               <Button variant="outline" size="sm" onClick={handleSaveToPlan}>
-                  <Save className="mr-2 h-4 w-4" /> Salvează în Plan
-               </Button>
+               <Button variant="outline" size="sm" onClick={handleCopyToClipboard}><Copy className="mr-2 h-4 w-4" /> Copiază</Button>
+               <Button variant="outline" size="sm" onClick={handleSaveToPlan}><Save className="mr-2 h-4 w-4" /> Salvează în Plan</Button>
             </div>
           </div>
         )}
