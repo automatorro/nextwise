@@ -1,16 +1,13 @@
 import { StandardizedScore } from '@/types/tests';
 
-// Interfața acum acceptă numere, exact ce primește de la sistemul vechi.
+// Acceptăm numere, exact ce primim.
 interface DiscAnswers {
   [key: string]: number;
 }
 
-// "Traducătorul": mapează numerele primite la literele de care avem nevoie.
+// "Traducătorul" nostru intern.
 const answerMap: { [key: number]: 'D' | 'I' | 'S' | 'C' } = {
-  1: 'D',
-  2: 'I',
-  3: 'S',
-  4: 'C',
+  1: 'D', 2: 'I', 3: 'S', 4: 'C',
 };
 
 const profileDetails = {
@@ -24,7 +21,7 @@ export function calculateDiscScore(answers: DiscAnswers): StandardizedScore {
   const counts = { D: 0, I: 0, S: 0, C: 0 };
 
   Object.values(answers).forEach(numericAnswer => {
-    const letterAnswer = answerMap[numericAnswer]; // Folosim "traducătorul"
+    const letterAnswer = answerMap[numericAnswer]; // Traducem numărul în literă.
     if (letterAnswer) {
       counts[letterAnswer]++;
     }
