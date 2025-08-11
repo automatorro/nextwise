@@ -1,9 +1,7 @@
-// src/components/test-result/TestResultDisplay.tsx
-
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
-// Activăm importul pentru layout-ul specializat
 import { DimensionalResultLayout } from './layouts/DimensionalResultLayout';
+import { ProfileResultLayout } from './layouts/ProfileResultLayout'; // <-- Import nou
 
 interface TestResultDisplayProps {
   score: StandardizedScore | null;
@@ -16,10 +14,13 @@ export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, tes
   }
 
   switch (score.type) {
-    // Activăm afișarea pentru teste dimensionale
     case 'dimensional':
       return <DimensionalResultLayout score={score} testName={testName} />;
     
+    // === CAZ NOU PENTRU TESTUL DISC ===
+    case 'profile':
+      return <ProfileResultLayout score={score} testName={testName} />;
+
     default:
       return (
         <div className="text-center p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded">
