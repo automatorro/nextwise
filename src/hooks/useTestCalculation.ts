@@ -2,8 +2,9 @@
 
 import { useMemo } from 'react';
 import { StandardizedScore } from '@/types/tests';
-// Activăm importul pentru funcția de calcul
 import { calculateCattellScore } from '@/utils/testCalculations/cattellCalculation'; 
+// Aici adăugăm noua noastră funcție de calcul
+import { calculateDiscScore } from '@/utils/testCalculations/discCalculation';
 
 export const useTestCalculation = (
   testName: string | undefined,
@@ -15,9 +16,12 @@ export const useTestCalculation = (
     }
 
     switch (testName) {
-      // Activăm logica pentru testul Cattell
       case 'Cattell 16PF':
         return calculateCattellScore(answers);
+
+      // === AICI ACTIVĂM TESTUL DISC ===
+      case 'Test DISC - Stiluri de Comportament':
+        return calculateDiscScore(answers);
 
       default:
         console.warn(`Nu există logică de calcul în noul sistem pentru: ${testName}.`);
