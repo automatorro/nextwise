@@ -52,8 +52,8 @@ export const useTestSubmission = () => {
       const { calculateBelbinScore } = await import('@/utils/testCalculations/belbinCalculation');
       calculatedScore = calculateBelbinScore(answers);
     } else if (testName.includes('disc')) {
-      const { calculateDISCScore } = await import('@/utils/testCalculations/discCalculation');
-      calculatedScore = calculateDISCScore(answers);
+      const { calculateDiscScore } = await import('@/utils/testCalculations/discCalculation');
+      calculatedScore = calculateDiscScore(answers);
     } else if (testName.includes('enneagram')) {
       const { calculateEnneagramScore } = await import('@/utils/testCalculations/enneagramCalculation');
       calculatedScore = calculateEnneagramScore(answers);
