@@ -1,47 +1,37 @@
-// src/utils/testCalculations/discCalculation.ts
-
 import { StandardizedScore } from '@/types/tests';
 
+// Interfața acum acceptă numere, exact ce primește de la sistemul vechi.
 interface DiscAnswers {
-  [key: string]: 'D' | 'I' | 'S' | 'C';
+  [key: string]: number;
 }
 
-const profileDetails = {
-  D: {
-    name: "Dominanță (D)",
-    description: "Sunteți o persoană directă, hotărâtă și orientată spre rezultate. Vă asumați riscuri, luați decizii rapide și vă place să aveți controlul. Puteți fi perceput ca fiind exigent și nerăbdător, dar sunteți motorul care împinge proiectele înainte."
-  },
-  I: {
-    name: "Influență (I)",
-    description: "Sunteți o persoană sociabilă, optimistă și entuziastă. Vă place să colaborați, să convingeți și să motivați oamenii din jur. Energia și carisma dumneavoastră sunt contagioase, făcându-vă un excelent comunicator și membru de echipă."
-  },
-  S: {
-    name: "Stabilitate (S)",
-    description: "Sunteți o persoană calmă, răbdătoare și loială. Valorați siguranța și consecvența, fiind un coechipier de încredere și un bun ascultător. Preferiți un mediu de lucru stabil și predictibil și sunteți excelent în a menține armonia în echipă."
-  },
-  C: {
-    name: "Conștiinciozitate (C)",
-    description: "Sunteți o persoană precisă, analitică și organizată. Acordați o mare atenție detaliilor, calității și corectitudinii. Valorați logica și faptele, iar abordarea dumneavoastră metodică asigură că standardele înalte sunt întotdeauna respectate."
-  }
+// "Traducătorul": mapează numerele primite la literele de care avem nevoie.
+const answerMap: { [key: number]: 'D' | 'I' | 'S' | 'C' } = {
+  1: 'D',
+  2: 'I',
+  3: 'S',
+  4: 'C',
 };
 
-/**
- * Calculează scorul pentru testul DISC.
- * Identifică profilul cu cele mai multe răspunsuri.
- */
+const profileDetails = {
+  D: { name: "Dominanță (D)", description: "Sunteți o persoană directă, hotărâtă și orientată spre rezultate..." },
+  I: { name: "Influență (I)", description: "Sunteți o persoană sociabilă, optimistă și entuziastă..." },
+  S: { name: "Stabilitate (S)", description: "Sunteți o persoană calmă, răbdătoare și loială..." },
+  C: { name: "Conștiinciozitate (C)", description: "Sunteți o persoană precisă, analitică și organizată..." }
+};
+
 export function calculateDiscScore(answers: DiscAnswers): StandardizedScore {
   const counts = { D: 0, I: 0, S: 0, C: 0 };
-  
-  Object.values(answers).forEach(answer => {
-    if (counts.hasOwnProperty(answer)) {
-      counts[answer]++;
+
+  Object.values(answers).forEach(numericAnswer => {
+    const letterAnswer = answerMap[numericAnswer]; // Folosim "traducătorul"
+    if (letterAnswer) {
+      counts[letterAnswer]++;
     }
   });
 
-  // Găsește profilul dominant
   let dominantProfile: keyof typeof counts = 'D';
   let maxCount = 0;
-
   for (const profile in counts) {
     if (counts[profile as keyof typeof counts] > maxCount) {
       maxCount = counts[profile as keyof typeof counts];
@@ -53,7 +43,7 @@ export function calculateDiscScore(answers: DiscAnswers): StandardizedScore {
   const overallPercentage = totalAnswers > 0 ? Math.round((maxCount / totalAnswers) * 100) : 0;
 
   return {
-    type: 'profile', // Tipul de rezultat este 'profile'
+    type: 'profile',
     dominant_profile: dominantProfile,
     profile_details: profileDetails,
     overall: overallPercentage,
