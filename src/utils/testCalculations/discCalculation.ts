@@ -1,65 +1,64 @@
+// src/utils/testCalculations/discCalculation.ts
 
 import { StandardizedScore } from '@/types/tests';
 
-export const calculateDISCScore = (answers: Record<string, number>): StandardizedScore => {
-  const scores = {
-    dominance: 0,
-    influence: 0,
-    steadiness: 0,
-    conscientiousness: 0
-  };
+interface DiscAnswers {
+  [key: string]: 'D' | 'I' | 'S' | 'C';
+}
+
+const profileDetails = {
+  D: {
+    name: "Dominanță (D)",
+    description: "Sunteți o persoană directă, hotărâtă și orientată spre rezultate. Vă asumați riscuri, luați decizii rapide și vă place să aveți controlul. Puteți fi perceput ca fiind exigent și nerăbdător, dar sunteți motorul care împinge proiectele înainte."
+  },
+  I: {
+    name: "Influență (I)",
+    description: "Sunteți o persoană sociabilă, optimistă și entuziastă. Vă place să colaborați, să convingeți și să motivați oamenii din jur. Energia și carisma dumneavoastră sunt contagioase, făcându-vă un excelent comunicator și membru de echipă."
+  },
+  S: {
+    name: "Stabilitate (S)",
+    description: "Sunteți o persoană calmă, răbdătoare și loială. Valorați siguranța și consecvența, fiind un coechipier de încredere și un bun ascultător. Preferiți un mediu de lucru stabil și predictibil și sunteți excelent în a menține armonia în echipă."
+  },
+  C: {
+    name: "Conștiinciozitate (C)",
+    description: "Sunteți o persoană precisă, analitică și organizată. Acordați o mare atenție detaliilor, calității și corectitudinii. Valorați logica și faptele, iar abordarea dumneavoastră metodică asigură că standardele înalte sunt întotdeauna respectate."
+  }
+};
+
+/**
+ * Calculează scorul pentru testul DISC.
+ * Identifică profilul cu cele mai multe răspunsuri.
+ */
+export function calculateDiscScore(answers: DiscAnswers): StandardizedScore {
+  const counts = { D: 0, I: 0, S: 0, C: 0 };
   
-  // Maparea întrebărilor la stiluri DISC
-  // Presupunem că avem 24 de întrebări, câte 6 pentru fiecare stil
-  Object.entries(answers).forEach(([questionId, answer]) => {
-    const questionNumber = parseInt(questionId.split('-')[1]);
-    
-    if (questionNumber >= 1 && questionNumber <= 6) {
-      scores.dominance += answer;
-    } else if (questionNumber >= 7 && questionNumber <= 12) {
-      scores.influence += answer;
-    } else if (questionNumber >= 13 && questionNumber <= 18) {
-      scores.steadiness += answer;
-    } else if (questionNumber >= 19 && questionNumber <= 24) {
-      scores.conscientiousness += answer;
+  Object.values(answers).forEach(answer => {
+    if (counts.hasOwnProperty(answer)) {
+      counts[answer]++;
     }
   });
+
+  // Găsește profilul dominant
+  let dominantProfile: keyof typeof counts = 'D';
+  let maxCount = 0;
+
+  for (const profile in counts) {
+    if (counts[profile as keyof typeof counts] > maxCount) {
+      maxCount = counts[profile as keyof typeof counts];
+      dominantProfile = profile as keyof typeof counts;
+    }
+  }
   
-  // Normalizarea la procente
-  const maxScorePerDimension = 6 * 4; // 6 întrebări × 4 puncte maxim
-  const normalizedScores = {
-    dominance: Math.round((scores.dominance / maxScorePerDimension) * 100),
-    influence: Math.round((scores.influence / maxScorePerDimension) * 100),
-    steadiness: Math.round((scores.steadiness / maxScorePerDimension) * 100),
-    conscientiousness: Math.round((scores.conscientiousness / maxScorePerDimension) * 100)
-  };
-  
-  // Determinarea stilului dominant
-  const dominantStyle = Object.entries(normalizedScores).reduce((a, b) => 
-    normalizedScores[a[0] as keyof typeof normalizedScores] > normalizedScores[b[0] as keyof typeof normalizedScores] ? a : b
-  )[0];
-  
-  const styleNames = {
-    dominance: 'Dominance (D) - Orientat spre rezultate și control',
-    influence: 'Influence (I) - Orientat spre oameni și persuasiune',
-    steadiness: 'Steadiness (S) - Orientat spre stabilitate și cooperare',
-    conscientiousness: 'Conscientiousness (C) - Orientat spre precizie și calitate'
-  };
-  
-  const overall = Math.round(Object.values(normalizedScores).reduce((sum, score) => sum + score, 0) / 4);
-  
-  // Convert to StandardizedScore format
-  const dimensionsArray = Object.entries(normalizedScores).map(([key, value]) => ({
-    id: key,
-    name: styleNames[key as keyof typeof styleNames].split(' - ')[0],
-    score: value
-  }));
+  const totalAnswers = Object.keys(answers).length;
+  const overallPercentage = totalAnswers > 0 ? Math.round((maxCount / totalAnswers) * 100) : 0;
 
   return {
-    type: 'dimensional',
-    dimensions: dimensionsArray,
-    overall,
-    interpretation: styleNames[dominantStyle as keyof typeof styleNames],
-    dominant_profile: dominantStyle
+    type: 'profile', // Tipul de rezultat este 'profile'
+    dominant_profile: dominantProfile,
+    profile_details: profileDetails,
+    overall: overallPercentage,
+    interpretation: `Profilul tău principal este ${profileDetails[dominantProfile].name}. Acest lucru indică o tendință puternică spre a acționa și a gândi în modul descris mai jos.`,
+    raw_score: maxCount,
+    max_score: totalAnswers
   };
-};
+}
