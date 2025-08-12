@@ -13,7 +13,7 @@ import { useToast } from '@/components/ui/use-toast';
 import { PageLoader } from '@/components/layout/PageLoader';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { useLanguage } from '@/contexts/LanguageContext';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export default function TestRunner() {
   const { testId } = useParams<{ testId: string }>();
@@ -27,7 +27,8 @@ export default function TestRunner() {
   const [answers, setAnswers] = useState<{[key: string]: number}>({});
 
   // Hook-urile folosite corect
-  const { submitTest, isSubmitting } = useTestSubmission(); // Presupunând că adăugăm isSubmitting la hook
+  const { submitTest } = useTestSubmission();
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { saveProgress, clearProgress, hasSavedProgress, restoreProgress, isInitialized } = useTestProgress(testId!);
 
   const { data: testData, isLoading, error } = useQuery({
@@ -84,6 +85,7 @@ export default function TestRunner() {
   
   const handleSubmit = async () => {
     if (!testId) return;
+    setIsSubmitting(true);
     try {
       const result = await submitTest(testId, answers);
       clearProgress(); // Ștergem progresul după trimitere
@@ -95,18 +97,20 @@ export default function TestRunner() {
         description: "Nu am putut salva rezultatele. Te rugăm să încerci din nou.",
         variant: "destructive",
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   if (isLoading) return <PageLoader />;
-  if (error) return <TestErrorScreen message={error.message} />;
-  if (!testData || !questions.length) return <TestErrorScreen message="Testul nu a putut fi încărcat sau nu are întrebări." />;
+  if (error) return <TestErrorScreen title="Eroare" message={error.message} onReturnToTests={() => navigate('/tests')} />;
+  if (!testData || !questions.length) return <TestErrorScreen title="Eroare" message="Testul nu a putut fi încărcat sau nu are întrebări." onReturnToTests={() => navigate('/tests')} />;
 
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
 
   if (!testStarted) {
-    return <TestStartScreen testName={testData.name} onStart={() => setTestStarted(true)} />;
+    return <TestStartScreen testType={testData} questionsCount={totalQuestions} onStartTest={() => setTestStarted(true)} />;
   }
 
   return (
