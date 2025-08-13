@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { Navigate, useParams, useNavigate } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -24,6 +24,7 @@ import ProgressTracking from '@/components/premium/ProgressTracking';
 
 const CareerPaths = () => {
   const { planId } = useParams();
+  const navigate = useNavigate();
   const { subscription } = useSubscription();
   const { careerPlans } = useCareerPlans();
   const { t } = useLanguage();
@@ -76,13 +77,7 @@ const CareerPaths = () => {
           </p>
           <Button 
             className="bg-blue-600 hover:bg-blue-700 text-white"
-            onClick={() => {
-              // Find the tabs trigger for CV analyzer and click it
-              const cvAnalyzerTab = document.querySelector('[data-state="inactive"][value="cv-analyzer"]');
-              if (cvAnalyzerTab) {
-                (cvAnalyzerTab as HTMLElement).click();
-              }
-            }}
+            onClick={() => navigate('/career-paths?tab=cv-analyzer')}
           >
             <TrendingUp className="w-4 h-4 mr-2" />
             {t('cvOptimization.startAnalysis')}
