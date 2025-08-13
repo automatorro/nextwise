@@ -25,6 +25,7 @@ import { useCareerPlanGeneration } from '@/hooks/useCareerPlanGeneration';
 import { useTestResults } from '@/hooks/useTestResults';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/hooks/useLanguage';
+import TestInfluenceSection from './TestInfluenceSection';
 
 interface Props {
   maxPlans: number;
@@ -189,6 +190,9 @@ const CreateCareerPlanEnhanced = ({ maxPlans, currentPlansCount }: Props) => {
           </CardContent>
         </Card>
       )}
+
+      {/* Test Influence Section */}
+      <TestInfluenceSection testResults={testResults} />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Custom Plan Creation */}

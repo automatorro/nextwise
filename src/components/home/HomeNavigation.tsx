@@ -8,6 +8,7 @@ import LanguageSelector from './LanguageSelector';
 import UserMenu from './UserMenu';
 import MobileMenu from './MobileMenu';
 import GuestActions from './GuestActions';
+import GlobalProgressTracker from '@/components/career/GlobalProgressTracker';
 
 const HomeNavigation = () => {
   const { loading } = useLanguage();
@@ -48,6 +49,9 @@ const HomeNavigation = () => {
                 <>
                   <NavigationLinks />
                   <LanguageSelector />
+                  <div className="hidden lg:block">
+                    <GlobalProgressTracker />
+                  </div>
                   <UserMenu />
                   <MobileMenu 
                     isMenuOpen={isMenuOpen} 

@@ -2,6 +2,8 @@
 import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useTestResults } from '@/hooks/useTestResults';
+import { useCareerPlans } from '@/hooks/useCareerPlans';
 import { Link } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -14,37 +16,55 @@ import {
 import HomeNavigation from '@/components/home/HomeNavigation';
 import Footer from '@/components/home/Footer';
 import TestCategoriesPreview from '@/components/dashboard/TestCategoriesPreview';
+import OnboardingTutorial from '@/components/career/OnboardingTutorial';
 
 const Dashboard = () => {
   const { user } = useAuth();
   const { t } = useLanguage();
+  const { testResults } = useTestResults();
+  const { careerPlans } = useCareerPlans();
+
+  // Calculate real stats
+  const testsCompleted = testResults.length;
+  const careerPlansCount = careerPlans.length;
+  const avgProgress = careerPlans.length 
+    ? Math.round(careerPlans.reduce((sum, plan) => sum + (plan.progress_percentage || 0), 0) / careerPlans.length)
+    : 0;
+  const timeSaved = testsCompleted * 2; // Estimate 2 hours saved per test
+
+  // Show onboarding for new users
+  const isNewUser = testsCompleted === 0 && careerPlansCount === 0;
 
   const quickStats = [
     {
       title: t('dashboard.stats.testsCompleted'),
-      value: '0',
+      value: testsCompleted.toString(),
       icon: BarChart3,
       color: 'text-blue-600'
     },
     {
       title: t('dashboard.stats.careerPlans'),
-      value: '0',
+      value: careerPlansCount.toString(),
       icon: Target,
       color: 'text-green-600'
     },
     {
       title: t('dashboard.stats.timeSaved'),
-      value: '0h',
+      value: `${timeSaved}h`,
       icon: Clock,
       color: 'text-orange-600'
     },
     {
       title: t('dashboard.stats.careerProgress'),
-      value: '0%',
+      value: `${avgProgress}%`,
       icon: TrendingUp,
       color: 'text-purple-600'
     }
   ];
+
+  const handleOnboardingComplete = () => {
+    // User completed onboarding, they can start exploring
+  };
 
   return (
     <div>
@@ -61,6 +81,17 @@ const Dashboard = () => {
                 {t('dashboard.welcomeSubtext')}
               </p>
             </div>
+
+            {/* Onboarding Tutorial for New Users */}
+            {isNewUser && (
+              <div className="mb-8">
+                <OnboardingTutorial 
+                  onComplete={handleOnboardingComplete}
+                  userHasTests={testsCompleted > 0}
+                  userHasPlans={careerPlansCount > 0}
+                />
+              </div>
+            )}
 
             {/* Quick Stats */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">

@@ -416,6 +416,94 @@
       }
     }
   },
+  "testResult": {
+    "nextSteps": {
+      "title": "Ce urmează?",
+      "description": "Continuă călătoria cu acești pași recomandați",
+      "createCareerPlan": "Creează Planul de Carieră",
+      "careerPlanDescription": "Construiește o foaie de parcurs personalizată pentru a-ți atinge obiectivele profesionale",
+      "careerPlanDescriptionRelevant": "Rezultatele testului tău vor ajuta AI-ul să creeze un plan de carieră mai precis, adaptat personalității tale",
+      "personalityInsight": "Alegere excelentă!",
+      "aiWillUse": "AI-ul nostru va folosi rezultatele de la {{testName}} pentru a personaliza recomandările de carieră",
+      "startCareerPlanning": "Începe Planificarea Carierei",
+      "exploreMoreTests": "Susține Mai Multe Evaluări",
+      "moreTestsDescription": "Obține o imagine completă a abilităților și personalității tale",
+      "discoverMoreTests": "Descoperă Mai Multe Teste"
+    },
+    "categories": {
+      "personality": "Personalitate",
+      "cognitive": "Cognitiv",
+      "emotional": "Emoțional",
+      "leadership": "Leadership"
+    }
+  },
+  "globalProgress": {
+    "title": "Progresul Tău",
+    "overallProgress": "Progres General",
+    "milestones": {
+      "completeAssessment": "Completează Evaluarea",
+      "createCareerPlan": "Creează Plan de Carieră",
+      "trackDevelopment": "Urmărește Dezvoltarea"
+    },
+    "stats": {
+      "tests": "Teste",
+      "plans": "Planuri",
+      "avgProgress": "Progres Mediu"
+    }
+  },
+  "careerPlan": {
+    "limitReachedTitle": "Limita de planuri atinsă",
+    "limitReachedDescription": "Ai atins limita de creare a planurilor.",
+    "upgradeForUnlimited": "Fă upgrade pentru planuri nelimitate.",
+    "assessmentRequiredTitle": "Evaluare necesară",
+    "assessmentRequiredDescription": "Completează cel puțin un test pentru a genera un plan de carieră personalizat.",
+    "errorTitle": "Eroare",
+    "errorDescription": "A apărut o eroare la crearea planului de carieră. Te rugăm să încerci din nou.",
+    "milestonesIncluded": "Obiective incluse",
+    "weeks": "săptămâni",
+    "skills": "abilități",
+    "requiredSkills": "Abilități necesare",
+    "createCustomTitle": "Creează plan personalizat",
+    "createCustomDescription": "Generează un plan de carieră personalizat cu AI bazat pe rezultatele testelor și obiectivele tale.",
+    "targetRole": "Rolul țintă",
+    "targetRolePlaceholder": "ex. UX Designer, Product Manager",
+    "currentRole": "Rolul actual",
+    "currentRolePlaceholder": "ex. Junior Developer, Student",
+    "timeframe": "Perioada",
+    "timeframePlaceholder": "ex. 12 luni, 2 ani",
+    "objectiveDescription": "Descrierea obiectivului",
+    "objectiveDescriptionPlaceholder": "Descrie obiectivele și aspirațiile tale de carieră...",
+    "generatingPlan": "Generez planul...",
+    "generateWithAI": "Generează cu AI",
+    "availableTemplates": "Template-uri disponibile",
+    "popularTemplates": "Alege dintre template-urile noastre populare de dezvoltare de carieră",
+    "loadingTemplates": "Se încarcă template-urile...",
+    "months": "luni",
+    "difficulty": {
+      "beginner": "Începător",
+      "intermediate": "Intermediar",
+      "advanced": "Avansat"
+    },
+    "more": "mai multe",
+    "preview": "Previzualizare",
+    "creatingPlan": "Creez planul...",
+    "useTemplate": "Folosește template-ul",
+    "testInfluence": {
+      "title": "Rezultatele Testelor Tale vor Ghida AI-ul",
+      "description": "AI-ul va folosi evaluările completate pentru a crea un plan de carieră mai personalizat",
+      "noTestsTitle": "Completează Teste pentru Rezultate Mai Bune",
+      "noTestsDescription": "Susține evaluări de personalitate și competențe pentru a primi recomandări AI adaptate special pentru tine",
+      "bigFive": "Ajută la identificarea rolurilor care se potrivesc trăsăturilor de personalitate și preferințelor de lucru",
+      "disc": "Ghidează stilul de comunicare și recomandările de colaborare în echipă",
+      "belbin": "Sugerează roluri în echipă și oportunități de leadership care se potrivesc stilului tău natural",
+      "hexaco": "Oferă perspective asupra valorilor tale și modul în care se aliniază cu diferite căi de carieră",
+      "holland": "Potrivește interesele tale cu medii și industrii de carieră potrivite",
+      "enneagram": "Dezvăluie modele de motivare și zone de creștere pentru dezvoltarea carierei",
+      "general": "Oferă perspective valoroase pentru călătoria ta de dezvoltare în carieră",
+      "completed": "Completat",
+      "aiCombination": "AI-ul va combina perspectivele din toate cele {{count}} teste completate"
+    }
+  },
   "common": {
     "loading": "Se încarcă...",
     "error": "Eroare",

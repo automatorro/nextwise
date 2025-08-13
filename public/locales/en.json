@@ -416,6 +416,94 @@
       }
     }
   },
+  "testResult": {
+    "nextSteps": {
+      "title": "What's Next?",
+      "description": "Continue your journey with these recommended next steps",
+      "createCareerPlan": "Create Your Career Plan",
+      "careerPlanDescription": "Build a personalized roadmap to achieve your professional goals",
+      "careerPlanDescriptionRelevant": "Your test results will help AI create a more accurate career plan tailored to your personality",
+      "personalityInsight": "Great choice!",
+      "aiWillUse": "Our AI will use your {{testName}} results to personalize your career recommendations",
+      "startCareerPlanning": "Start Career Planning",
+      "exploreMoreTests": "Take More Assessments",
+      "moreTestsDescription": "Get a complete picture of your abilities and personality",
+      "discoverMoreTests": "Discover More Tests"
+    },
+    "categories": {
+      "personality": "Personality",
+      "cognitive": "Cognitive",
+      "emotional": "Emotional",
+      "leadership": "Leadership"
+    }
+  },
+  "globalProgress": {
+    "title": "Your Progress",
+    "overallProgress": "Overall Progress",
+    "milestones": {
+      "completeAssessment": "Complete Assessment",
+      "createCareerPlan": "Create Career Plan",
+      "trackDevelopment": "Track Development"
+    },
+    "stats": {
+      "tests": "Tests",
+      "plans": "Plans",
+      "avgProgress": "Avg Progress"
+    }
+  },
+  "careerPlan": {
+    "limitReachedTitle": "Plan Limit Reached",
+    "limitReachedDescription": "You have reached your plan creation limit.",
+    "upgradeForUnlimited": "Upgrade to create unlimited plans.",
+    "assessmentRequiredTitle": "Assessment Required",
+    "assessmentRequiredDescription": "Complete at least one test to generate a personalized career plan.",
+    "errorTitle": "Error",
+    "errorDescription": "There was an error creating your career plan. Please try again.",
+    "milestonesIncluded": "Milestones Included",
+    "weeks": "weeks",
+    "skills": "skills",
+    "requiredSkills": "Required Skills",
+    "createCustomTitle": "Create Custom Plan",
+    "createCustomDescription": "Generate a personalized career plan with AI based on your test results and goals.",
+    "targetRole": "Target Role",
+    "targetRolePlaceholder": "e.g., UX Designer, Product Manager",
+    "currentRole": "Current Role",
+    "currentRolePlaceholder": "e.g., Junior Developer, Student",
+    "timeframe": "Timeframe",
+    "timeframePlaceholder": "e.g., 12 months, 2 years",
+    "objectiveDescription": "Objective Description",
+    "objectiveDescriptionPlaceholder": "Describe your career goals and aspirations...",
+    "generatingPlan": "Generating Plan...",
+    "generateWithAI": "Generate with AI",
+    "availableTemplates": "Available Templates",
+    "popularTemplates": "Choose from our popular career development templates",
+    "loadingTemplates": "Loading templates...",
+    "months": "months",
+    "difficulty": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
+    },
+    "more": "more",
+    "preview": "Preview",
+    "creatingPlan": "Creating Plan...",
+    "useTemplate": "Use Template",
+    "testInfluence": {
+      "title": "Your Test Results Will Guide AI",
+      "description": "The AI will use your completed assessments to create a more personalized career plan",
+      "noTestsTitle": "Complete Tests for Better Results",
+      "noTestsDescription": "Take personality and skills assessments to get AI recommendations tailored specifically to you",
+      "bigFive": "Helps identify roles that match your personality traits and work preferences",
+      "disc": "Guides communication style and team collaboration recommendations",
+      "belbin": "Suggests team roles and leadership opportunities that fit your natural style",
+      "hexaco": "Provides insights into your values and how they align with different career paths",
+      "holland": "Matches your interests with suitable career environments and industries",
+      "enneagram": "Reveals motivation patterns and growth areas for career development",
+      "general": "Provides valuable insights for your career development journey",
+      "completed": "Completed",
+      "aiCombination": "AI will combine insights from all {{count}} completed tests"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

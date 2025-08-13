@@ -1,7 +1,8 @@
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
 import { DimensionalResultLayout } from './layouts/DimensionalResultLayout';
-import { ProfileResultLayout } from './layouts/ProfileResultLayout'; // <-- Import nou
+import { ProfileResultLayout } from './layouts/ProfileResultLayout';
+import TestResultNextSteps from './TestResultNextSteps';
 
 interface TestResultDisplayProps {
   score: StandardizedScore | null;
@@ -13,20 +14,28 @@ export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, tes
     return <div className="text-center p-8"><p className="text-muted-foreground">Se încarcă rezultatele...</p></div>;
   }
 
-  switch (score.type) {
-    case 'dimensional':
-      return <DimensionalResultLayout score={score} testName={testName} />;
-    
-    // === CAZ NOU PENTRU TESTUL DISC ===
-    case 'profile':
-      return <ProfileResultLayout score={score} testName={testName} />;
+  const renderResultLayout = () => {
+    switch (score.type) {
+      case 'dimensional':
+        return <DimensionalResultLayout score={score} testName={testName} />;
+      
+      case 'profile':
+        return <ProfileResultLayout score={score} testName={testName} />;
 
-    default:
-      return (
-        <div className="text-center p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded">
-          <h2 className="text-xl font-semibold">Rezultat Primit</h2>
-          <p>{score.interpretation}</p>
-        </div>
-      );
-  }
+      default:
+        return (
+          <div className="text-center p-4 bg-blue-50 border border-blue-200 text-blue-800 rounded">
+            <h2 className="text-xl font-semibold">Rezultat Primit</h2>
+            <p>{score.interpretation}</p>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div>
+      {renderResultLayout()}
+      <TestResultNextSteps testName={testName} testType={score.type} />
+    </div>
+  );
 };
