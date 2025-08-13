@@ -366,6 +366,46 @@
     "timeUp": "Time's Up!",
     "timeUpDescription": "Test time has expired. Submitting your answers automatically."
   },
+  "gamification": {
+    "achievements": {
+      "title": "Achievements",
+      "firstPlan": {
+        "title": "First Steps",
+        "description": "Created your first career plan"
+      },
+      "threePlans": {
+        "title": "Planner",
+        "description": "Created 3 career plans"
+      },
+      "firstCompletion": {
+        "title": "Achiever",
+        "description": "Completed your first career plan"
+      },
+      "aiCollaborator": {
+        "title": "AI Collaborator",
+        "description": "Used AI to generate a career plan"
+      },
+      "highAchiever": {
+        "title": "High Achiever",
+        "description": "Maintained 75% average progress"
+      },
+      "careerMaster": {
+        "title": "Career Master",
+        "description": "Created 5+ plans and completed 2+"
+      }
+    },
+    "streak": {
+      "title": "Progress Streak",
+      "days": "days",
+      "activeDays": "Active Days",
+      "stepsCompleted": "Steps Completed",
+      "milestonesReached": "Milestones Reached",
+      "messages": {
+        "onFire": "You're on fire! Keep up the amazing streak!",
+        "goodStreak": "Great streak! You're building momentum!"
+      }
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

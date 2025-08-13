@@ -17,6 +17,8 @@ import {
 import { useCareerPlans } from '@/hooks/useCareerPlans';
 import { useLanguage } from '@/hooks/useLanguage';
 import { format } from 'date-fns';
+import GamificationBadges from './GamificationBadges';
+import ProgressStreak from './ProgressStreak';
 
 const CareerDashboardReal = () => {
   const navigate = useNavigate();
@@ -92,6 +94,10 @@ const CareerDashboardReal = () => {
           {t('careerPaths.dashboard.createPlan')}
         </Button>
       </div>
+
+      {/* Gamification Elements */}
+      <GamificationBadges careerPlans={careerPlans} />
+      <ProgressStreak />
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {careerPlans.map((plan) => (

@@ -366,6 +366,46 @@
     "timeUp": "Timpul s-a terminat!",
     "timeUpDescription": "Timpul testului a expirat. Trimitem răspunsurile automat."
   },
+  "gamification": {
+    "achievements": {
+      "title": "Realizări",
+      "firstPlan": {
+        "title": "Primii Pași",
+        "description": "Ai creat primul plan de carieră"
+      },
+      "threePlans": {
+        "title": "Planificator",
+        "description": "Ai creat 3 planuri de carieră"
+      },
+      "firstCompletion": {
+        "title": "Realizator",
+        "description": "Ai completat primul plan de carieră"
+      },
+      "aiCollaborator": {
+        "title": "Colaborator AI",
+        "description": "Ai folosit AI pentru a genera un plan de carieră"
+      },
+      "highAchiever": {
+        "title": "Performant",
+        "description": "Ai menținut progresul mediu de 75%"
+      },
+      "careerMaster": {
+        "title": "Maestru în Carieră",
+        "description": "Ai creat 5+ planuri și completat 2+"
+      }
+    },
+    "streak": {
+      "title": "Șirul de Progres",
+      "days": "zile",
+      "activeDays": "Zile Active",
+      "stepsCompleted": "Pași Completați",
+      "milestonesReached": "Jaloane Atinse",
+      "messages": {
+        "onFire": "Ești în flăcări! Continuă acest șir uimitor!",
+        "goodStreak": "Șir excelent! Construiești momentum!"
+      }
+    }
+  },
   "common": {
     "loading": "Se încarcă...",
     "error": "Eroare",
