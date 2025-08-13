@@ -315,7 +315,15 @@
     "durationLabel": "Durată",
     "minutes": "minute",
     "startTest": "Începe Testul",
-    "startButton": "Începe Testul"
+    "startButton": "Începe Testul",
+    "questionProgress": "Întrebarea {{current}} din {{total}}",
+    "back": "Înapoi",
+    "next": "Următoarea",
+    "finishTest": "Finalizează Testul",
+    "submitting": "Se trimite...",
+    "submitError": "Eroare la trimitere",
+    "submitErrorDescription": "Nu am putut salva rezultatele. Te rugăm să încerci din nou.",
+    "loadError": "Testul nu a putut fi încărcat sau nu are întrebări."
   },
   "common": {
     "loading": "Se încarcă...",

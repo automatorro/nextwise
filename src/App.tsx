@@ -61,7 +61,9 @@ function App() {
                 } />
                 <Route path="/test/:testId" element={
                   <ProtectedRoute>
-                    <TestRunner />
+                    <MainLayout>
+                      <TestRunner />
+                    </MainLayout>
                   </ProtectedRoute>
                 } />
                 <Route path="/test-result/:resultId" element={

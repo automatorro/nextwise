@@ -315,7 +315,15 @@
     "durationLabel": "Duration",
     "minutes": "minutes",
     "startTest": "Start Test",
-    "startButton": "Start Test"
+    "startButton": "Start Test",
+    "questionProgress": "Question {{current}} of {{total}}",
+    "back": "Back",
+    "next": "Next",
+    "finishTest": "Finish Test",
+    "submitting": "Submitting...",
+    "submitError": "Submission Error",
+    "submitErrorDescription": "Could not save results. Please try again.",
+    "loadError": "Test could not be loaded or has no questions."
   },
   "common": {
     "loading": "Loading...",

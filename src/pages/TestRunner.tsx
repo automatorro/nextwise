@@ -1,6 +1,6 @@
 // src/pages/TestRunner.tsx
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
@@ -9,7 +9,7 @@ import { useTestProgress } from '@/hooks/useTestProgress';
 import { TestQuestion } from '@/components/test/TestQuestion';
 import TestStartScreen from "@/components/test/TestStartScreen"; // Corectat importul
 import TestErrorScreen from "@/components/test/TestErrorScreen"; // Corectat importul
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { PageLoader } from '@/components/layout/PageLoader';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
@@ -19,7 +19,7 @@ export default function TestRunner() {
   const { testId } = useParams<{ testId: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { language } = useLanguage();
+  const { t, language } = useLanguage();
 
   // Starea gestionată activ de TestRunner
   const [testStarted, setTestStarted] = useState(false);
@@ -30,6 +30,9 @@ export default function TestRunner() {
   const { submitTest } = useTestSubmission();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { saveProgress, clearProgress, hasSavedProgress, restoreProgress, isInitialized } = useTestProgress(testId!);
+  
+  // Auto-forwarding logic
+  const autoForwardTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const { data: testData, isLoading, error } = useQuery({
     queryKey: ['test-data', testId],
@@ -63,25 +66,56 @@ export default function TestRunner() {
 
 
   const handleAnswer = (questionId: string, answerValue: number) => {
+    // Clear any existing auto-forward timeout
+    if (autoForwardTimeoutRef.current) {
+      clearTimeout(autoForwardTimeoutRef.current);
+    }
+    
     const newAnswers = { ...answers, [questionId]: answerValue };
     setAnswers(newAnswers);
     saveProgress(currentQuestionIndex, newAnswers);
+    
+    // Auto-forward to next question if not on last question
+    if (currentQuestionIndex < totalQuestions - 1) {
+      autoForwardTimeoutRef.current = setTimeout(() => {
+        setCurrentQuestionIndex(prev => prev + 1);
+      }, 1500); // 1.5 second delay
+    }
   };
   
   const questions = testData?.test_questions || [];
   const totalQuestions = questions.length;
 
   const goToNextQuestion = () => {
+    // Clear auto-forward timeout when manually navigating
+    if (autoForwardTimeoutRef.current) {
+      clearTimeout(autoForwardTimeoutRef.current);
+    }
+    
     if (currentQuestionIndex < totalQuestions - 1) {
       setCurrentQuestionIndex(prev => prev + 1);
     }
   };
 
   const goToPreviousQuestion = () => {
+    // Clear auto-forward timeout when manually navigating
+    if (autoForwardTimeoutRef.current) {
+      clearTimeout(autoForwardTimeoutRef.current);
+    }
+    
     if (currentQuestionIndex > 0) {
       setCurrentQuestionIndex(prev => prev - 1);
     }
   };
+  
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (autoForwardTimeoutRef.current) {
+        clearTimeout(autoForwardTimeoutRef.current);
+      }
+    };
+  }, []);
   
   const handleSubmit = async () => {
     if (!testId) return;
@@ -93,8 +127,8 @@ export default function TestRunner() {
     } catch (err) {
       console.error("Submission failed:", err);
       toast({
-        title: "Eroare la trimitere",
-        description: "Nu am putut salva rezultatele. Te rugăm să încerci din nou.",
+        title: t('testRunner.submitError'),
+        description: t('testRunner.submitErrorDescription'),
         variant: "destructive",
       });
     } finally {
@@ -103,8 +137,8 @@ export default function TestRunner() {
   };
 
   if (isLoading) return <PageLoader />;
-  if (error) return <TestErrorScreen title="Eroare" message={error.message} onReturnToTests={() => navigate('/tests')} />;
-  if (!testData || !questions.length) return <TestErrorScreen title="Eroare" message="Testul nu a putut fi încărcat sau nu are întrebări." onReturnToTests={() => navigate('/tests')} />;
+  if (error) return <TestErrorScreen title={t('common.error')} message={error.message} onReturnToTests={() => navigate('/tests')} />;
+  if (!testData || !questions.length) return <TestErrorScreen title={t('common.error')} message={t('testRunner.loadError')} onReturnToTests={() => navigate('/tests')} />;
 
   const currentQuestion = questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === totalQuestions - 1;
@@ -118,7 +152,7 @@ export default function TestRunner() {
       <div className="space-y-6">
         <div className="text-center">
             <h2 className="text-2xl font-bold">{testData.name}</h2>
-            <p className="text-muted-foreground">Întrebarea {currentQuestionIndex + 1} din {totalQuestions}</p>
+            <p className="text-muted-foreground">{t('testRunner.questionProgress').replace('{{current}}', String(currentQuestionIndex + 1)).replace('{{total}}', String(totalQuestions))}</p>
             <Progress value={((currentQuestionIndex + 1) / totalQuestions) * 100} className="mt-2" />
         </div>
         <TestQuestion
@@ -129,15 +163,15 @@ export default function TestRunner() {
         />
         <div className="flex justify-between items-center mt-6">
           <Button variant="outline" onClick={goToPreviousQuestion} disabled={currentQuestionIndex === 0}>
-            Înapoi
+            {t('testRunner.back')}
           </Button>
           {isLastQuestion ? (
             <Button onClick={handleSubmit} disabled={isSubmitting}>
-              {isSubmitting ? 'Se trimite...' : 'Finalizează Testul'}
+              {isSubmitting ? t('testRunner.submitting') : t('testRunner.finishTest')}
             </Button>
           ) : (
             <Button onClick={goToNextQuestion}>
-              Următoarea
+              {t('testRunner.next')}
             </Button>
           )}
         </div>
