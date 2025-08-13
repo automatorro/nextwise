@@ -22,12 +22,54 @@ serve(async (req) => {
       throw new Error('GEMINI_API_KEY not configured');
     }
 
-    // Define program-specific prompts in Romanian
+    // Define program-specific prompts in Romanian with progression
+    const getProgression = (day: number) => {
+      if (day <= 3) return "introducere și conștientizare";
+      if (day <= 7) return "dezvoltare și practică";
+      if (day <= 10) return "consolidare și aplicare";
+      return "finalizare și integrare";
+    };
+
     const programPrompts = {
-      'motivation_reset': `Generează o sarcină practică pentru ziua ${day} dintr-un program de 14 zile pentru resetarea motivației. Concentrează-te pe construirea încrederii, stabilirea obiectivelor clare și dezvoltarea obiceiurilor pozitive.`,
-      'leadership_transition': `Generează o sarcină practică pentru ziua ${day} dintr-un program de 14 zile pentru tranziția în leadership. Concentrează-te pe abilitățile de leadership, managementul echipei și luarea deciziilor.`,
-      'interview_training': `Generează o sarcină practică pentru ziua ${day} dintr-un program de 14 zile pentru pregătirea interviurilor. Concentrează-te pe pregătirea pentru interviuri, abilitățile de comunicare și construirea încrederii.`,
-      'career_clarity': `Generează o sarcină practică pentru ziua ${day} dintr-un program de 14 zile pentru claritatea în carieră. Concentrează-te pe autodescoperire, explorarea carierei și stabilirea obiectivelor.`
+      'motivation_reset': `Ești un coach de motivație expert. Generează o sarcină pentru ziua ${day}/14 dintr-un program pentru RESETAREA MOTIVAȚIEI. 
+
+      FAZA: ${getProgression(day)}
+      
+      FOCUS SPECIFIC pentru motivation_reset:
+      - Zilele 1-3: Identificarea blocajelor, evaluarea stării actuale de motivație
+      - Zilele 4-7: Redefinirea obiectivelor, crearea rutinelor energizante
+      - Zilele 8-10: Implementarea strategiilor de menținere a motivației 
+      - Zilele 11-14: Consolidarea obiceiurilor noi, planul pe termen lung`,
+
+      'leadership_transition': `Ești un coach de leadership senior. Generează o sarcină pentru ziua ${day}/14 dintr-un program pentru TRANZIȚIA ÎN LEADERSHIP.
+
+      FAZA: ${getProgression(day)}
+      
+      FOCUS SPECIFIC pentru leadership_transition:
+      - Zilele 1-3: Evaluarea stilului de leadership actual, identificarea zonelor de dezvoltare
+      - Zilele 4-7: Practicarea abilităților de comunicare și delegare
+      - Zilele 8-10: Managementul conflictelor și luarea deciziilor dificile
+      - Zilele 11-14: Crearea viziunii de echipă, planul de dezvoltare ca lider`,
+
+      'interview_training': `Ești un expert în recrutare și coaching pentru interviuri. Generează o sarcină pentru ziua ${day}/14 dintr-un program pentru PREGĂTIREA INTERVIURILOR.
+
+      FAZA: ${getProgression(day)}
+      
+      FOCUS SPECIFIC pentru interview_training:
+      - Zilele 1-3: Analiza profilului profesional, identificarea punctelor forte
+      - Zilele 4-7: Practicarea răspunsurilor la întrebări comune, storytelling
+      - Zilele 8-10: Simularea interviurilor, gestionarea stresului 
+      - Zilele 11-14: Pregătirea pentru diferite tipuri de interviuri, follow-up`,
+
+      'career_clarity': `Ești un consilier de carieră cu experiență vastă. Generează o sarcină pentru ziua ${day}/14 dintr-un program pentru CLARITATEA ÎN CARIERĂ.
+
+      FAZA: ${getProgression(day)}
+      
+      FOCUS SPECIFIC pentru career_clarity:
+      - Zilele 1-3: Autodescoperirea valorilor, aptitudinilor și intereselor
+      - Zilele 4-7: Explorarea opțiunilor de carieră, research-ul pieței
+      - Zilele 8-10: Definirea obiectivelor de carieră pe termen scurt și lung
+      - Zilele 11-14: Crearea planului de acțiune, primii pași concreti`
     };
 
     const systemPrompt = programPrompts[programType as keyof typeof programPrompts] || 
@@ -36,20 +78,20 @@ serve(async (req) => {
     const fullPrompt = `${systemPrompt}
 
     Creează o sarcină specifică și acționabilă pentru ziua ${day}. Sarcina trebuie să:
+    - Fie adaptată exact la faza programului (${getProgression(day)})
     - Poată fi completată în 15-30 de minute
-    - Fie practică și aplicabilă în situații de lucru reale
-    - Includă instrucțiuni clare și rezultate așteptate
-    - Se bazeze pe învățarea din zilele anterioare
-    - Fie captivantă și motivantă
+    - Fie practică și aplicabilă în situații reale
+    - Includă instrucțiuni pas cu pas foarte clare
+    - Fie captivantă și să construiască pe zilele anterioare
 
-    IMPORTANT: Răspunde DOAR în limba română. Toate textele, instrucțiunile și întrebările trebuie să fie în română.
+    IMPORTANT: Răspunde EXCLUSIV în limba română. 
 
-    Răspunde cu un obiect JSON cu această structură exactă:
+    Răspunde cu un obiect JSON valid cu această structură exactă:
     {
-      "title": "Titlul sarcinii",
-      "task": "Descrierea detaliată a sarcinii cu instrucțiuni clare",
-      "estimated_duration": "15-20 minute",
-      "reflection_question": "Întrebare pentru reflecția de la sfârșitul zilei"
+      "title": "Titlul sarcinii pentru ziua ${day}",
+      "task": "Descrierea detaliată a sarcinii cu instrucțiuni pas cu pas",
+      "estimated_duration": "15-30 minute", 
+      "reflection_question": "Întrebare specifică pentru reflecția de la sfârșitul zilei"
     }`;
 
     const response = await fetch(
@@ -80,13 +122,25 @@ serve(async (req) => {
       throw new Error('No response from Gemini API');
     }
 
-    // Clean the response to extract only JSON
-    const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+    // Clean and extract JSON with improved parsing
+    let cleanedResponse = aiResponse.trim();
+    
+    // Remove markdown code blocks if present
+    cleanedResponse = cleanedResponse.replace(/```json\s*|\s*```/g, '');
+    
+    // Extract JSON object
+    const jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('No valid JSON found in AI response');
     }
-
-    const taskContent = JSON.parse(jsonMatch[0]);
+    
+    let taskContent;
+    try {
+      taskContent = JSON.parse(jsonMatch[0]);
+    } catch (parseError) {
+      console.error('JSON Parse Error:', parseError, 'Raw response:', aiResponse);
+      throw new Error(`Failed to parse JSON: ${parseError.message}`);
+    }
 
     console.log(`Generated daily task for program ${programType}, day ${day}`);
 

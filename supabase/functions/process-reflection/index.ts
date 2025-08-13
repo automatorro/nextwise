@@ -22,28 +22,46 @@ serve(async (req) => {
       throw new Error('GEMINI_API_KEY not configured');
     }
 
-    const fullPrompt = `Ești un expert coach de carieră care analizează o reflecție zilnică pentru un program ${programType}.
+    // Define program-specific coaching styles
+    const getProgression = (day: number) => {
+      if (day <= 3) return "introducere și conștientizare";
+      if (day <= 7) return "dezvoltare și practică";  
+      if (day <= 10) return "consolidare și aplicare";
+      return "finalizare și integrare";
+    };
+
+    const programContext = {
+      'motivation_reset': `un program specializat pentru RESETAREA MOTIVAȚIEI. Concentrează-te pe energie, obiective clare și obiceiuri pozitive.`,
+      'leadership_transition': `un program specializat pentru TRANZIȚIA ÎN LEADERSHIP. Concentrează-te pe abilitățile de leadership, managementul echipei și luarea deciziilor.`,
+      'interview_training': `un program specializat pentru PREGĂTIREA INTERVIURILOR. Concentrează-te pe comunicare, prezentare și încredere în sine.`,
+      'career_clarity': `un program specializat pentru CLARITATEA ÎN CARIERĂ. Concentrează-te pe autodescoperire, explorare și planificare strategică.`
+    };
+
+    const context = programContext[programType as keyof typeof programContext] || 'un program de dezvoltare profesională';
+
+    const fullPrompt = `Ești un expert coach de carieră care analizează o reflecție zilnică pentru ${context}
     
-    Reflecția pentru ziua ${day}: "${reflection}"
+    ZIUA ${day}/14 - FAZA: ${getProgression(day)}
+    Reflecția utilizatorului: "${reflection}"
     
-    Oferă feedback constructiv și încurajator care:
-    - Recunoaște eforturile și perspectivele lor
-    - Identifică învățămintele cheie și zonele de creștere
-    - Oferă sugestii specifice pentru îmbunătățire
-    - Conectează învățarea de astăzi cu dezvoltarea carierei
-    - Menține un ton de susținere și motivant
+    Oferă feedback personalizat și specific programului care:
+    - Recunoaște eforturile și perspectivele specifice tipului de program
+    - Identifică învățămintele cheie relevaante pentru ${programType.replace('_', ' ')}
+    - Oferă sugestii specifice și acționabile pentru îmbunătățire
+    - Conectează învățarea cu obiectivele programului
+    - Menține un ton profesional dar încurajator
 
-    ${day < 14 ? 'De asemenea, generează sarcina pentru ziua următoare.' : 'Aceasta este ziua finală, oferă feedback pentru finalizarea programului.'}
+    ${day < 14 ? `De asemenea, sugerează direcția pentru ziua următoare (${day + 1}) în contextul fazei "${getProgression(day + 1)}".` : 'Aceasta este ziua finală - oferă feedback de finalizare și un scor bazat pe progresul din reflecție.'}
 
-    IMPORTANT: Răspunde ÎNTOTDEAUNA în limba română. Toate mesajele, feedback-ul și sarcinile trebuie să fie în română.
+    IMPORTANT: Răspunde EXCLUSIV în limba română.
 
-    Răspunde cu un obiect JSON cu această structură exactă:
+    Răspunde cu un obiect JSON valid cu această structură exactă:
     {
-      "feedback": "Mesaj personalizat de feedback",
-      "nextTask": ${day < 14 ? '{"title": "Titlul sarcinii următoare", "task": "Descrierea sarcinii următoare", "estimated_duration": "15-20 minute", "reflection_question": "Întrebarea pentru reflecția următoare"}' : 'null'},
+      "feedback": "Mesaj personalizat de feedback specific programului",
+      "nextTask": ${day < 14 ? '{"title": "Titlul sarcinii pentru ziua următoare", "task": "Descrierea sarcinii următoare adaptată programului", "estimated_duration": "15-30 minute", "reflection_question": "Întrebarea pentru reflecția următoare"}' : 'null'},
       "shouldComplete": ${day >= 14 ? 'true' : 'false'},
-      "finalFeedback": ${day >= 14 ? '"Feedback final pentru finalizarea programului și scor"' : 'null'},
-      "finalScore": ${day >= 14 ? '85' : 'null'}
+      "finalFeedback": ${day >= 14 ? '"Feedback final pentru finalizarea programului cu evaluare și recomandări"' : 'null'},
+      "finalScore": ${day >= 14 ? 'un număr între 70-100 bazat pe progresul din reflecție' : 'null'}
     }`;
 
     const response = await fetch(
@@ -74,12 +92,25 @@ serve(async (req) => {
       throw new Error('No response from Gemini API');
     }
 
-    const jsonMatch = aiResponse.match(/\{[\s\S]*\}/);
+    // Clean and extract JSON with improved parsing
+    let cleanedResponse = aiResponse.trim();
+    
+    // Remove markdown code blocks if present
+    cleanedResponse = cleanedResponse.replace(/```json\s*|\s*```/g, '');
+    
+    // Extract JSON object
+    const jsonMatch = cleanedResponse.match(/\{[\s\S]*\}/);
     if (!jsonMatch) {
       throw new Error('No valid JSON found in AI response');
     }
-
-    const feedbackContent = JSON.parse(jsonMatch[0]);
+    
+    let feedbackContent;
+    try {
+      feedbackContent = JSON.parse(jsonMatch[0]);
+    } catch (parseError) {
+      console.error('JSON Parse Error:', parseError, 'Raw response:', aiResponse);
+      throw new Error(`Failed to parse JSON: ${parseError.message}`);
+    }
 
     console.log(`Processed reflection for program ${programType}, day ${day}`);
 

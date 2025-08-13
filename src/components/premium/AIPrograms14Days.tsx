@@ -6,7 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useAIPrograms } from '@/hooks/useAIPrograms';
 import { useProgressTracking } from '@/hooks/useProgressTracking';
-import { Calendar, Clock, CheckCircle, Play, Target, BookOpen, ArrowLeft } from 'lucide-react';
+import { Calendar, Clock, CheckCircle, Play, Target, BookOpen, ArrowLeft, Zap, Crown, Mic, Compass, Loader2 } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 
 const AIPrograms14Days = () => {
@@ -20,31 +20,75 @@ const AIPrograms14Days = () => {
   const programTypes = [
     {
       id: 'motivation_reset',
-      icon: '🎯',
-      color: 'bg-blue-500',
+      icon: Zap,
+      gradient: 'from-blue-500 to-cyan-500',
+      bgClass: 'bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/20 dark:to-cyan-950/20',
+      iconColor: 'text-blue-600 dark:text-blue-400',
+      badgeColor: 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+      borderColor: 'border-blue-200 dark:border-blue-800',
       title: 'Resetare Motivație',
-      description: 'Program de 14 zile pentru redescoperirea motivației și entuziasmului în carieră'
+      description: 'Program de 14 zile pentru redescoperirea motivației și entuziasmului în carieră',
+      features: ['Self-assessment energie', 'Redefinirea obiectivelor', 'Obiceiuri energizante', 'Plan de menținere'],
+      phase: {
+        1: 'Identificarea blocajelor motivaționale',
+        2: 'Redefinirea obiectivelor personale', 
+        3: 'Implementarea rutinelor energizante',
+        4: 'Consolidarea obiceiurilor noi'
+      }
     },
     {
       id: 'leadership_transition',
-      icon: '👑',
-      color: 'bg-purple-500',
+      icon: Crown,
+      gradient: 'from-purple-500 to-pink-500',
+      bgClass: 'bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20',
+      iconColor: 'text-purple-600 dark:text-purple-400',
+      badgeColor: 'bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300',
+      borderColor: 'border-purple-200 dark:border-purple-800',
       title: 'Tranziție în Leadership',
-      description: 'Dezvoltă abilitățile de leadership și pregătește-te pentru roluri de conducere'
+      description: 'Dezvoltă abilitățile de leadership și pregătește-te pentru roluri de conducere',
+      features: ['Stiluri de leadership', 'Comunicare în echipă', 'Delegare eficientă', 'Luarea deciziilor'],
+      phase: {
+        1: 'Evaluarea stilului de leadership actual',
+        2: 'Practicarea abilităților de comunicare',
+        3: 'Managementul conflictelor și decizii',
+        4: 'Crearea viziunii de echipă'
+      }
     },
     {
       id: 'interview_training',
-      icon: '💼',
-      color: 'bg-green-500',
+      icon: Mic,
+      gradient: 'from-green-500 to-emerald-500',
+      bgClass: 'bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/20 dark:to-emerald-950/20',
+      iconColor: 'text-green-600 dark:text-green-400',
+      badgeColor: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+      borderColor: 'border-green-200 dark:border-green-800',
       title: 'Pregătire Interviuri',
-      description: 'Antrenament intensiv pentru interviul perfect și comunicare eficientă'
+      description: 'Antrenament intensiv pentru interviul perfect și comunicare eficientă',
+      features: ['Analiza profilului', 'Storytelling eficient', 'Simulări de interviuri', 'Gestionarea stresului'],
+      phase: {
+        1: 'Analiza profilului profesional',
+        2: 'Practicarea răspunsurilor comune',
+        3: 'Simularea interviurilor reale',
+        4: 'Pregătirea pentru tipuri diferite'
+      }
     },
     {
       id: 'career_clarity',
-      icon: '🔍',
-      color: 'bg-orange-500',
+      icon: Compass,
+      gradient: 'from-orange-500 to-red-500',
+      bgClass: 'bg-gradient-to-br from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20',
+      iconColor: 'text-orange-600 dark:text-orange-400',
+      badgeColor: 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300',
+      borderColor: 'border-orange-200 dark:border-orange-800',
       title: 'Claritate în Carieră',
-      description: 'Descoperă-ți pasiunea și direcția clară pentru dezvoltarea carierei'
+      description: 'Descoperă-ți pasiunea și direcția clară pentru dezvoltarea carierei',
+      features: ['Autodescoperire', 'Explorarea opțiunilor', 'Obiective pe termen lung', 'Plan de acțiune'],
+      phase: {
+        1: 'Autodescoperirea valorilor și aptitudinilor',
+        2: 'Explorarea opțiunilor de carieră',
+        3: 'Definirea obiectivelor clare',
+        4: 'Crearea planului de acțiune'
+      }
     }
   ];
 
@@ -110,6 +154,14 @@ const AIPrograms14Days = () => {
     const isCompleted = activeProgram.is_completed;
     const dailyTask = activeProgram.daily_tasks[currentDay - 1];
     const programConfig = programTypes.find(p => p.id === activeProgram.program_type);
+    const IconComponent = programConfig?.icon || Target;
+    
+    const getPhaseDescription = (day: number) => {
+      if (day <= 3) return programConfig?.phase[1] || 'Faza de introducere';
+      if (day <= 7) return programConfig?.phase[2] || 'Faza de dezvoltare';
+      if (day <= 10) return programConfig?.phase[3] || 'Faza de consolidare';
+      return programConfig?.phase[4] || 'Faza finală';
+    };
 
     return (
       <div className="space-y-6">
@@ -133,13 +185,32 @@ const AIPrograms14Days = () => {
           )}
         </div>
 
-        <div>
-          <h2 className="text-2xl font-bold text-foreground flex items-center gap-3">
-            <span className="text-3xl">{programConfig?.icon}</span>
-            {programConfig?.title || activeProgram.program_type}
-          </h2>
-          <p className="text-muted-foreground">
-            Ziua {currentDay} din 14
+        <div className={`${programConfig?.bgClass || 'bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/20 dark:to-purple-950/20'} p-6 rounded-xl border ${programConfig?.borderColor || 'border-blue-200'}`}>
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center space-x-3">
+              <div className={`p-3 rounded-xl bg-gradient-to-br ${programConfig?.gradient || 'from-blue-500 to-purple-500'} shadow-lg`}>
+                <IconComponent className="h-6 w-6 text-white" />
+              </div>
+              <div>
+                <h2 className="text-xl font-semibold">{programConfig?.title || activeProgram.program_type}</h2>
+                <p className="text-sm text-muted-foreground">
+                  {getPhaseDescription(currentDay)}
+                </p>
+              </div>
+            </div>
+            <Badge className={programConfig?.badgeColor || 'bg-blue-100 text-blue-800'}>
+              Ziua {currentDay}/14
+            </Badge>
+          </div>
+          
+          <div className="w-full bg-secondary rounded-full h-3 mb-2">
+            <div 
+              className={`h-3 rounded-full transition-all duration-300 bg-gradient-to-r ${programConfig?.gradient || 'from-blue-500 to-purple-500'}`}
+              style={{ width: `${(currentDay / 14) * 100}%` }}
+            />
+          </div>
+          <p className="text-sm text-muted-foreground">
+            {Math.round((currentDay / 14) * 100)}% completat
           </p>
         </div>
 
@@ -219,11 +290,11 @@ const AIPrograms14Days = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <h3 className="font-medium mb-2 text-blue-900">{dailyTask.title}</h3>
-                <p className="text-blue-800 leading-relaxed">{dailyTask.task}</p>
+              <div className={`p-4 ${programConfig?.bgClass || 'bg-blue-50'} rounded-lg border ${programConfig?.borderColor || 'border-blue-200'}`}>
+                <h3 className={`font-medium mb-2 ${programConfig?.iconColor || 'text-blue-900'}`}>{dailyTask.title}</h3>
+                <p className={`${programConfig?.iconColor || 'text-blue-800'} leading-relaxed`}>{dailyTask.task}</p>
                 {dailyTask.estimated_duration && (
-                  <div className="flex items-center gap-1 mt-3 text-sm text-blue-600">
+                  <div className={`flex items-center gap-1 mt-3 text-sm ${programConfig?.iconColor || 'text-blue-600'}`}>
                     <Clock className="w-4 h-4" />
                     Timp estimat: {dailyTask.estimated_duration}
                   </div>
@@ -292,41 +363,70 @@ const AIPrograms14Days = () => {
       </div>
 
       <div className="grid gap-6 md:grid-cols-2">
-        {programTypes.map((program) => (
-          <Card key={program.id} className="cursor-pointer hover:shadow-lg transition-all duration-200">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-3">
-                <div className={`w-12 h-12 rounded-full ${program.color} flex items-center justify-center text-white text-xl`}>
-                  {program.icon}
+        {programTypes.map((program) => {
+          const IconComponent = program.icon;
+          return (
+            <Card key={program.id} className={`${program.bgClass} hover:shadow-lg transition-all duration-300 border-0 cursor-pointer group`}>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-3">
+                  <div className={`p-3 rounded-xl bg-gradient-to-br ${program.gradient} shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <IconComponent className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold">{program.title}</h3>
+                    <Badge className={`${program.badgeColor} mt-1`}>Premium</Badge>
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {program.description}
+                </p>
+                
+                <div className="space-y-2">
+                  <h4 className="text-sm font-medium text-muted-foreground">Ce vei dezvolta:</h4>
+                  <ul className="space-y-1">
+                    {program.features.map((feature, index) => (
+                      <li key={index} className="text-sm flex items-center">
+                        <CheckCircle className={`h-3 w-3 mr-2 ${program.iconColor}`} />
+                        {feature}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                {program.title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground leading-relaxed">
-                {program.description}
-              </p>
-              <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                <div className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  14 zile
+
+                <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    14 zile
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Clock className="w-4 h-4" />
+                    15-30 min/zi
+                  </div>
                 </div>
-                <div className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
-                  15-30 min/zi
-                </div>
-              </div>
-              <Button 
-                onClick={() => handleStartProgram(program.id)}
-                disabled={isLoading}
-                className="w-full"
-              >
-                <Play className="w-4 h-4 mr-2" />
-                Începe Programul
-              </Button>
-            </CardContent>
-          </Card>
-        ))}
+                
+                <Button 
+                  onClick={() => handleStartProgram(program.id)}
+                  disabled={isLoading}
+                  className={`w-full bg-gradient-to-r ${program.gradient} hover:shadow-lg transition-all duration-300`}
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Se inițializează...
+                    </>
+                  ) : (
+                    <>
+                      <Play className="w-4 h-4 mr-2" />
+                      Începe Programul
+                    </>
+                  )}
+                </Button>
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
     </div>
   );
