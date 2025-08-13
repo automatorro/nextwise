@@ -281,7 +281,17 @@
   "cvOptimization": {
     "title": "CV Optimization",
     "description": "Analyze your CV against a job description to improve your chances. Get detailed feedback and optimization suggestions.",
-    "startAnalysis": "Start Analysis"
+    "startAnalysis": "Start Analysis",
+    "optimizeCV": "Optimize CV for this Job",
+    "generateCoverLetter": "Generate Cover Letter",
+    "optimizingCV": "Optimizing CV...",
+    "generatingCoverLetter": "Generating cover letter...",
+    "optimizedCV": "Optimized CV",
+    "coverLetter": "Cover Letter",
+    "copyToClipboard": "Copy to Clipboard",
+    "copiedToClipboard": "Copied to clipboard!",
+    "optimizationFailed": "CV optimization failed",
+    "coverLetterFailed": "Cover letter generation failed"
   },
   "profile": {
     "title": "My Profile",

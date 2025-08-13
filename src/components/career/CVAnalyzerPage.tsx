@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useLanguage } from '@/hooks/useLanguage';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { Loader2, FileText, Briefcase, TrendingUp } from 'lucide-react';
+import { Loader2, FileText, Briefcase, TrendingUp, Copy, Mail } from 'lucide-react';
 
 interface CVAnalysisResult {
   matchScore: number;
@@ -30,6 +30,10 @@ const CVAnalyzerPage = () => {
   const [jobDescriptionText, setJobDescriptionText] = useState('');
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState<CVAnalysisResult | null>(null);
+  const [isOptimizingCV, setIsOptimizingCV] = useState(false);
+  const [optimizedCV, setOptimizedCV] = useState<string | null>(null);
+  const [isGeneratingCoverLetter, setIsGeneratingCoverLetter] = useState(false);
+  const [coverLetter, setCoverLetter] = useState<string | null>(null);
 
   const handleAnalyze = async () => {
     if (!cvText.trim() || !jobDescriptionText.trim()) {
@@ -68,6 +72,93 @@ const CVAnalyzerPage = () => {
       });
     } finally {
       setIsAnalyzing(false);
+    }
+  };
+
+  const handleOptimizeCV = async () => {
+    if (!cvText.trim() || !jobDescriptionText.trim()) {
+      return;
+    }
+
+    setIsOptimizingCV(true);
+    
+    try {
+      const { data, error } = await supabase.functions.invoke('rewrite-cv', {
+        body: {
+          cvText: cvText.trim(),
+          jobDescriptionText: jobDescriptionText.trim(),
+          analysisResult: analysisResult
+        }
+      });
+
+      if (error) {
+        console.error('Error calling rewrite-cv function:', error);
+        throw error;
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      setOptimizedCV(data.optimizedCV);
+      toast.success('CV optimized successfully!');
+      
+    } catch (error) {
+      console.error('CV optimization error:', error);
+      toast.error(t('cvOptimization.optimizationFailed'), {
+        description: 'Unable to optimize CV. Please try again later.'
+      });
+    } finally {
+      setIsOptimizingCV(false);
+    }
+  };
+
+  const handleGenerateCoverLetter = async () => {
+    if (!cvText.trim() || !jobDescriptionText.trim()) {
+      return;
+    }
+
+    setIsGeneratingCoverLetter(true);
+    
+    try {
+      const cvToUse = optimizedCV || cvText.trim();
+      
+      const { data, error } = await supabase.functions.invoke('generate-cover-letter', {
+        body: {
+          cvText: cvToUse,
+          jobDescriptionText: jobDescriptionText.trim()
+        }
+      });
+
+      if (error) {
+        console.error('Error calling generate-cover-letter function:', error);
+        throw error;
+      }
+
+      if (data?.error) {
+        throw new Error(data.error);
+      }
+
+      setCoverLetter(data.coverLetter);
+      toast.success('Cover letter generated successfully!');
+      
+    } catch (error) {
+      console.error('Cover letter generation error:', error);
+      toast.error(t('cvOptimization.coverLetterFailed'), {
+        description: 'Unable to generate cover letter. Please try again later.'
+      });
+    } finally {
+      setIsGeneratingCoverLetter(false);
+    }
+  };
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast.success(t('cvOptimization.copiedToClipboard'));
+    } catch (error) {
+      console.error('Failed to copy to clipboard:', error);
+      toast.error('Failed to copy to clipboard');
     }
   };
 
@@ -154,6 +245,46 @@ const CVAnalyzerPage = () => {
                 <p className="text-gray-600">Match Score</p>
               </div>
 
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  onClick={handleOptimizeCV}
+                  disabled={isOptimizingCV}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  {isOptimizingCV ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {t('cvOptimization.optimizingCV')}
+                    </>
+                  ) : (
+                    <>
+                      <TrendingUp className="w-4 h-4" />
+                      {t('cvOptimization.optimizeCV')}
+                    </>
+                  )}
+                </Button>
+                <Button
+                  onClick={handleGenerateCoverLetter}
+                  disabled={isGeneratingCoverLetter}
+                  variant="outline"
+                  className="flex items-center gap-2"
+                >
+                  {isGeneratingCoverLetter ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      {t('cvOptimization.generatingCoverLetter')}
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="w-4 h-4" />
+                      {t('cvOptimization.generateCoverLetter')}
+                    </>
+                  )}
+                </Button>
+              </div>
+
               {/* Keywords Analysis */}
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -218,6 +349,56 @@ const CVAnalyzerPage = () => {
             </CardContent>
           </Card>
         </div>
+      )}
+
+      {/* Optimized CV Results */}
+      {optimizedCV && (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              {t('cvOptimization.optimizedCV')}
+              <Button
+                onClick={() => copyToClipboard(optimizedCV)}
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Copy className="w-4 h-4" />
+                {t('cvOptimization.copyToClipboard')}
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <pre className="whitespace-pre-wrap text-sm font-mono">{optimizedCV}</pre>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Cover Letter Results */}
+      {coverLetter && (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="flex items-center justify-between">
+              {t('cvOptimization.coverLetter')}
+              <Button
+                onClick={() => copyToClipboard(coverLetter)}
+                variant="outline"
+                size="sm"
+                className="flex items-center gap-2"
+              >
+                <Copy className="w-4 h-4" />
+                {t('cvOptimization.copyToClipboard')}
+              </Button>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <pre className="whitespace-pre-wrap text-sm">{coverLetter}</pre>
+            </div>
+          </CardContent>
+        </Card>
       )}
     </div>
   );

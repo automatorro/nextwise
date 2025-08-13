@@ -281,7 +281,17 @@
   "cvOptimization": {
     "title": "Optimizare CV",
     "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele.",
-    "startAnalysis": "Începe Analiza"
+    "startAnalysis": "Începe Analiza",
+    "optimizeCV": "Optimizează CV-ul pentru acest Job",
+    "generateCoverLetter": "Generează Scrisoarea de Intenție",
+    "optimizingCV": "Optimizez CV-ul...",
+    "generatingCoverLetter": "Generez scrisoarea de intenție...",
+    "optimizedCV": "CV Optimizat",
+    "coverLetter": "Scrisoarea de Intenție",
+    "copyToClipboard": "Copiază în Clipboard",
+    "copiedToClipboard": "Copiat în clipboard!",
+    "optimizationFailed": "Optimizarea CV-ului a eșuat",
+    "coverLetterFailed": "Generarea scrisorii de intenție a eșuat"
   },
   "profile": {
     "title": "Profilul Meu",
