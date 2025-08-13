@@ -7,6 +7,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useTestSubmission } from '@/hooks/useTestSubmission';
 import { useTestProgress } from '@/hooks/useTestProgress';
 import { TestQuestion } from '@/components/test/TestQuestion';
+import TestTimer from '@/components/test-runner/TestTimer';
+import ExitTestDialog from '@/components/test-runner/ExitTestDialog';
 import TestStartScreen from "@/components/test/TestStartScreen"; // Corectat importul
 import TestErrorScreen from "@/components/test/TestErrorScreen"; // Corectat importul
 import { useToast } from '@/hooks/use-toast';
@@ -25,6 +27,7 @@ export default function TestRunner() {
   const [testStarted, setTestStarted] = useState(false);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [answers, setAnswers] = useState<{[key: string]: number}>({});
+  const [showExitDialog, setShowExitDialog] = useState(false);
 
   // Hook-urile folosite corect
   const { submitTest } = useTestSubmission();
@@ -117,6 +120,19 @@ export default function TestRunner() {
     };
   }, []);
   
+  const handleExitTest = () => {
+    clearProgress();
+    navigate('/tests');
+  };
+
+  const handleTimeUp = () => {
+    toast({
+      title: t('testRunner.timeUp'),
+      description: t('testRunner.timeUpDescription'),
+      variant: "destructive",
+    });
+    handleSubmit();
+  };
   const handleSubmit = async () => {
     if (!testId) return;
     setIsSubmitting(true);
@@ -150,11 +166,27 @@ export default function TestRunner() {
   return (
     <div className="container mx-auto p-4 md:p-8 max-w-2xl">
       <div className="space-y-6">
-        <div className="text-center">
+        <div className="flex justify-between items-center">
+          <div className="flex-1">
             <h2 className="text-2xl font-bold">{testData.name}</h2>
             <p className="text-muted-foreground">{t('testRunner.questionProgress').replace('{{current}}', String(currentQuestionIndex + 1)).replace('{{total}}', String(totalQuestions))}</p>
-            <Progress value={((currentQuestionIndex + 1) / totalQuestions) * 100} className="mt-2" />
+          </div>
+          <div className="flex items-center space-x-4">
+            <TestTimer
+              durationMinutes={testData.estimated_duration}
+              onTimeUp={handleTimeUp}
+              isActive={testStarted}
+            />
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => setShowExitDialog(true)}
+            >
+              {t('testRunner.exitTest')}
+            </Button>
+          </div>
         </div>
+        <Progress value={((currentQuestionIndex + 1) / totalQuestions) * 100} className="mt-2" />
         <TestQuestion
           question={currentQuestion}
           selectedAnswer={answers[currentQuestion.id]}
@@ -175,8 +207,14 @@ export default function TestRunner() {
             </Button>
           )}
         </div>
+        </div>
+        <ExitTestDialog
+          open={showExitDialog}
+          onConfirm={handleExitTest}
+          onCancel={() => setShowExitDialog(false)}
+          hasAnswers={Object.keys(answers).length > 0}
+        />
       </div>
-    </div>
   );
 }
 

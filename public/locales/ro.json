@@ -323,7 +323,10 @@
     "submitting": "Se trimite...",
     "submitError": "Eroare la trimitere",
     "submitErrorDescription": "Nu am putut salva rezultatele. Te rugăm să încerci din nou.",
-    "loadError": "Testul nu a putut fi încărcat sau nu are întrebări."
+    "loadError": "Testul nu a putut fi încărcat sau nu are întrebări.",
+    "exitTest": "Ieși din Test",
+    "timeUp": "Timpul s-a terminat!",
+    "timeUpDescription": "Timpul testului a expirat. Trimitem răspunsurile automat."
   },
   "common": {
     "loading": "Se încarcă...",

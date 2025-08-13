@@ -323,7 +323,10 @@
     "submitting": "Submitting...",
     "submitError": "Submission Error",
     "submitErrorDescription": "Could not save results. Please try again.",
-    "loadError": "Test could not be loaded or has no questions."
+    "loadError": "Test could not be loaded or has no questions.",
+    "exitTest": "Exit Test",
+    "timeUp": "Time's Up!",
+    "timeUpDescription": "Test time has expired. Submitting your answers automatically."
   },
   "common": {
     "loading": "Loading...",
