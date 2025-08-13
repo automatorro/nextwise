@@ -107,7 +107,7 @@ const CareerPaths = () => {
             </p>
           </div>
 
-          <Tabs defaultValue="my-plans" className="space-y-6">
+          <Tabs defaultValue={new URLSearchParams(window.location.search).get('tab') || "my-plans"} className="space-y-6">
             {isMobile ? (
               // Mobile layout: horizontal scroll
               <div className="overflow-x-auto">
