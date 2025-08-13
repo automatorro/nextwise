@@ -193,11 +193,13 @@ export type Database = {
           description: string | null
           id: string
           is_completed: boolean
+          last_validation_check: string | null
           milestone_order: number
           resources: Json | null
           target_date: string | null
           title: string
           updated_at: string
+          validation_status: Json | null
         }
         Insert: {
           career_path_id: string
@@ -206,11 +208,13 @@ export type Database = {
           description?: string | null
           id?: string
           is_completed?: boolean
+          last_validation_check?: string | null
           milestone_order?: number
           resources?: Json | null
           target_date?: string | null
           title: string
           updated_at?: string
+          validation_status?: Json | null
         }
         Update: {
           career_path_id?: string
@@ -219,11 +223,13 @@ export type Database = {
           description?: string | null
           id?: string
           is_completed?: boolean
+          last_validation_check?: string | null
           milestone_order?: number
           resources?: Json | null
           target_date?: string | null
           title?: string
           updated_at?: string
+          validation_status?: Json | null
         }
         Relationships: [
           {
@@ -438,6 +444,47 @@ export type Database = {
         }
         Relationships: []
       }
+      resource_validation_logs: {
+        Row: {
+          checked_at: string
+          created_at: string
+          error_message: string | null
+          id: string
+          is_active: boolean
+          milestone_id: string | null
+          resource_url: string
+          status_code: number | null
+        }
+        Insert: {
+          checked_at?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          is_active?: boolean
+          milestone_id?: string | null
+          resource_url: string
+          status_code?: number | null
+        }
+        Update: {
+          checked_at?: string
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          is_active?: boolean
+          milestone_id?: string | null
+          resource_url?: string
+          status_code?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "resource_validation_logs_milestone_id_fkey"
+            columns: ["milestone_id"]
+            isOneToOne: false
+            referencedRelation: "career_milestones"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       subscriptions: {
         Row: {
           created_at: string | null
@@ -490,6 +537,7 @@ export type Database = {
           icon: string | null
           id: string
           name: string
+          name_en: string | null
         }
         Insert: {
           created_at?: string | null
@@ -497,6 +545,7 @@ export type Database = {
           icon?: string | null
           id?: string
           name: string
+          name_en?: string | null
         }
         Update: {
           created_at?: string | null
@@ -504,6 +553,7 @@ export type Database = {
           icon?: string | null
           id?: string
           name?: string
+          name_en?: string | null
         }
         Relationships: []
       }
@@ -600,9 +650,11 @@ export type Database = {
           category_id: string
           created_at: string | null
           description: string | null
+          description_en: string | null
           estimated_duration: number
           id: string
           name: string
+          name_en: string | null
           questions_count: number
           subscription_required: Database["public"]["Enums"]["subscription_type"]
         }
@@ -610,9 +662,11 @@ export type Database = {
           category_id: string
           created_at?: string | null
           description?: string | null
+          description_en?: string | null
           estimated_duration?: number
           id?: string
           name: string
+          name_en?: string | null
           questions_count?: number
           subscription_required?: Database["public"]["Enums"]["subscription_type"]
         }
@@ -620,9 +674,11 @@ export type Database = {
           category_id?: string
           created_at?: string | null
           description?: string | null
+          description_en?: string | null
           estimated_duration?: number
           id?: string
           name?: string
+          name_en?: string | null
           questions_count?: number
           subscription_required?: Database["public"]["Enums"]["subscription_type"]
         }
@@ -713,6 +769,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
         }
         Returns: boolean
+      }
+      increment_tests_taken: {
+        Args: { p_user_id: string }
+        Returns: undefined
       }
       is_admin: {
         Args: { _user_id: string }
