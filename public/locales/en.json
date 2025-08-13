@@ -310,6 +310,13 @@
     "startTest": "Start test",
     "noTestsFound": "No tests found matching your search criteria."
   },
+  "testRunner": {
+    "questionsLabel": "Questions",
+    "durationLabel": "Duration",
+    "minutes": "minutes",
+    "startTest": "Start Test",
+    "startButton": "Start Test"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

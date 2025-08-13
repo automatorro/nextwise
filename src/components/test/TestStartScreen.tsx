@@ -46,11 +46,11 @@ const TestStartScreen: React.FC<TestStartScreenProps> = ({
             </div>
             <div>
               <p className="text-sm text-gray-500">{t('testRunner.durationLabel')}</p>
-              <p className="font-semibold">{testType.estimated_duration} {t('tests.minutes')}</p>
+              <p className="font-semibold">{testType.estimated_duration} {t('testRunner.minutes')}</p>
             </div>
           </div>
           <Button onClick={onStartTest} className="w-full">
-            {t('testRunner.startButton')}
+            {t('testRunner.startTest')}
           </Button>
         </CardContent>
       </Card>

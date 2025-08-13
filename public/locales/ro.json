@@ -310,6 +310,13 @@
     "startTest": "Începe testul",
     "noTestsFound": "Nu s-au găsit teste care să corespundă criteriilor de căutare."
   },
+  "testRunner": {
+    "questionsLabel": "Întrebări",
+    "durationLabel": "Durată",
+    "minutes": "minute",
+    "startTest": "Începe Testul",
+    "startButton": "Începe Testul"
+  },
   "common": {
     "loading": "Se încarcă...",
     "error": "Eroare",
