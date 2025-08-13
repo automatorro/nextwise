@@ -1,6 +1,6 @@
 
-import React from 'react';
-import { Navigate, useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Navigate, useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -25,10 +25,20 @@ import ProgressTracking from '@/components/premium/ProgressTracking';
 const CareerPaths = () => {
   const { planId } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { subscription } = useSubscription();
   const { careerPlans } = useCareerPlans();
   const { t } = useLanguage();
   const isMobile = useIsMobile();
+  
+  // State for active tab, synchronized with URL
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'my-plans');
+  
+  // Sync activeTab with URL changes
+  useEffect(() => {
+    const tab = searchParams.get('tab') || 'my-plans';
+    setActiveTab(tab);
+  }, [searchParams]);
 
   // If we have a planId in the route, show the details page
   if (planId) {
@@ -103,11 +113,10 @@ const CareerPaths = () => {
           </div>
 
           <Tabs 
-            defaultValue={new URLSearchParams(window.location.search).get('tab') || "my-plans"} 
+            value={activeTab}
             onValueChange={(value) => {
-              const url = new URL(window.location.href);
-              url.searchParams.set('tab', value);
-              window.history.pushState({}, '', url.toString());
+              setActiveTab(value);
+              navigate(`/career-paths?tab=${value}`, { replace: true });
             }}
             className="space-y-6"
           >
