@@ -438,17 +438,17 @@
     }
   },
   "globalProgress": {
-    "title": "Your Progress",
-    "overallProgress": "Overall Progress",
+    "title": "Your Journey Progress",
+    "overallProgress": "Overall Development Progress",
     "milestones": {
-      "completeAssessment": "Complete Assessment",
-      "createCareerPlan": "Create Career Plan",
-      "trackDevelopment": "Track Development"
+      "completeAssessment": "Complete Your First Psychological Assessment",
+      "createCareerPlan": "Create Your Personalized Career Plan",
+      "trackDevelopment": "Track and Achieve Your Development Goals"
     },
     "stats": {
-      "tests": "Tests",
-      "plans": "Plans",
-      "avgProgress": "Avg Progress"
+      "tests": "Completed Tests",
+      "plans": "Active Plans",
+      "avgProgress": "Average Plan Progress"
     }
   },
   "careerPlan": {

@@ -17,6 +17,7 @@ import HomeNavigation from '@/components/home/HomeNavigation';
 import Footer from '@/components/home/Footer';
 import TestCategoriesPreview from '@/components/dashboard/TestCategoriesPreview';
 import OnboardingTutorial from '@/components/career/OnboardingTutorial';
+import GlobalProgressTracker from '@/components/career/GlobalProgressTracker';
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -80,6 +81,11 @@ const Dashboard = () => {
               <p className="text-gray-600 mt-2">
                 {t('dashboard.welcomeSubtext')}
               </p>
+            </div>
+
+            {/* Global Progress Tracker */}
+            <div className="mb-8">
+              <GlobalProgressTracker />
             </div>
 
             {/* Onboarding Tutorial for New Users */}

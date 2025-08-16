@@ -438,17 +438,17 @@
     }
   },
   "globalProgress": {
-    "title": "Progresul Tău",
-    "overallProgress": "Progres General",
+    "title": "Progresul Călătoriei Tale",
+    "overallProgress": "Progresul General de Dezvoltare",
     "milestones": {
-      "completeAssessment": "Completează Evaluarea",
-      "createCareerPlan": "Creează Plan de Carieră",
-      "trackDevelopment": "Urmărește Dezvoltarea"
+      "completeAssessment": "Completează Prima Ta Evaluare Psihologică",
+      "createCareerPlan": "Creează-ți Planul de Carieră Personalizat",
+      "trackDevelopment": "Urmărește și Atinge Obiectivele de Dezvoltare"
     },
     "stats": {
-      "tests": "Teste",
-      "plans": "Planuri",
-      "avgProgress": "Progres Mediu"
+      "tests": "Teste Completate",
+      "plans": "Planuri Active",
+      "avgProgress": "Progresul Mediu al Planurilor"
     }
   },
   "careerPlan": {
