@@ -74,7 +74,18 @@ const PricingSection = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {subscriptionPlans.map((plan, index) => (
-            <Card key={index} className={`relative ${plan.highlight ? 'border-2 border-blue-500 shadow-xl scale-105' : ''}`}>
+            <Card 
+              key={index} 
+              className={`relative transition-all duration-500 ease-in-out animate-fade-in hover:scale-110 hover:-translate-y-4 hover:shadow-2xl ${
+                plan.highlight 
+                  ? 'border-2 border-blue-500 shadow-xl scale-105 animate-pulse hover:shadow-blue-300/50' 
+                  : 'hover:shadow-gray-300/50'
+              }`}
+              style={{ 
+                animationDelay: `${index * 0.2}s`,
+                animationFillMode: 'both'
+              }}
+            >
               {plan.highlight && (
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                   <Badge className="bg-blue-500 text-white">

@@ -54,7 +54,14 @@ const CareerJourneySection = () => {
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
           {steps.map((step) => (
-            <div key={step.id} className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-shadow">
+            <div 
+              key={step.id} 
+              className="bg-white rounded-xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 ease-in-out animate-slide-in-right hover:scale-105 hover:-translate-y-3 hover:shadow-indigo-200/30"
+              style={{ 
+                animationDelay: `${(step.id - 1) * 0.15}s`,
+                animationFillMode: 'both'
+              }}
+            >
               <div className="flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4 mx-auto">
                 {step.icon}
               </div>
@@ -73,7 +80,13 @@ const CareerJourneySection = () => {
           ))}
         </div>
 
-        <div className="bg-white rounded-2xl p-8 shadow-lg">
+        <div 
+          className="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out animate-fade-in hover:scale-102"
+          style={{ 
+            animationDelay: '0.6s',
+            animationFillMode: 'both'
+          }}
+        >
           <h3 className="text-2xl font-bold text-gray-900 text-center mb-8">
             {t('careerJourney.benefits.title')}
           </h3>

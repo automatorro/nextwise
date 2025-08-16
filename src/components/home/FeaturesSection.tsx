@@ -57,7 +57,14 @@ const FeaturesSection = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {validFeatures.map((feature, index) => (
-            <Card key={index} className="border-0 shadow-lg hover:shadow-xl transition-shadow">
+            <Card 
+              key={index} 
+              className="border-0 shadow-lg hover:shadow-xl transition-all duration-500 ease-in-out animate-fade-in hover:scale-105 hover:-translate-y-2"
+              style={{ 
+                animationDelay: `${index * 0.1}s`,
+                animationFillMode: 'both'
+              }}
+            >
               <CardHeader>
                 <div className="w-12 h-12 bg-gradient-to-r from-blue-100 to-indigo-100 rounded-lg flex items-center justify-center mb-4">
                   <feature.icon className="w-6 h-6 text-blue-600" />

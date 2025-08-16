@@ -63,7 +63,14 @@ const TestCategoriesSection = () => {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {testCategories.map((category, index) => (
-            <Card key={index} className="text-center hover:shadow-lg transition-shadow">
+            <Card 
+              key={index} 
+              className="text-center hover:shadow-xl transition-all duration-300 ease-in-out animate-scale-in hover:scale-110 hover:-translate-y-1 hover:shadow-blue-200/50"
+              style={{ 
+                animationDelay: `${index * 0.1}s`,
+                animationFillMode: 'both'
+              }}
+            >
               <CardContent className="p-6">
                 <div className="text-4xl mb-3">{category.icon}</div>
                 <h3 className="font-semibold text-gray-900 mb-2">{category.name}</h3>
