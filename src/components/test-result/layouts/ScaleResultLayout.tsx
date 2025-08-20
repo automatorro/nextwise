@@ -3,13 +3,17 @@ import React from 'react';
 import { StandardizedScore } from '@/types/tests';
 import OverallScoreCard from '../OverallScoreCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { AiAnalysisCard } from '../AiAnalysisCard';
+import { ScoringExplanation } from '../ScoringExplanation';
+import { TestExplanations } from '../../tests/TestExplanations';
 
 interface ScaleResultLayoutProps {
   score: StandardizedScore;
   testName?: string;
+  resultId?: string;
 }
 
-export const ScaleResultLayout: React.FC<ScaleResultLayoutProps> = ({ score, testName }) => {
+export const ScaleResultLayout: React.FC<ScaleResultLayoutProps> = ({ score, testName, resultId }) => {
   return (
     <div className="space-y-6">
       <OverallScoreCard
@@ -31,6 +35,25 @@ export const ScaleResultLayout: React.FC<ScaleResultLayoutProps> = ({ score, tes
           </CardContent>
         </Card>
       )}
+
+      {/* Test Explanations */}
+      {testName && (
+        <TestExplanations testName={testName} score={score} />
+      )}
+
+      {/* AI Analysis Card */}
+      <AiAnalysisCard 
+        score={score} 
+        testName={testName} 
+        resultId={resultId} 
+      />
+
+      {/* Scoring Explanation */}
+      <ScoringExplanation 
+        testName={testName || ''} 
+        overallScore={score.overall}
+        scoreType={score.type}
+      />
     </div>
   );
 };

@@ -154,17 +154,31 @@ export const getTestScoringExplanation = (testName: string): TestExplanation => 
   }
   
    if (normalizedTestName.includes('sjt') || normalizedTestName.includes('situational judgment') || normalizedTestName.includes('orientare') || normalizedTestName.includes('cariera')) {
-    return {
-      description: 'Testul de Judecată Situațională (SJT) evaluează modul în care reacționezi în diverse situații profesionale, oferind insight-uri despre stilul tău de lucru și valorile profesionale.',
-      scoreRanges: [
-        { range: '0-25%', label: 'Scăzut', variant: 'outline' },
-        { range: '26-50%', label: 'Moderat', variant: 'secondary' },
-        { range: '51-75%', label: 'Bun', variant: 'default' },
-        { range: '76-100%', label: 'Excelent', variant: 'default' }
-      ],
-      whatItMeans: 'Rezultatele tale indică profilul tău dominant și secundar, oferind o perspectivă asupra preferințelor tale în carieră.'
-    };
-  }
+     return {
+       description: 'Testul de Judecată Situațională (SJT) evaluează modul în care reacționezi în diverse situații profesionale, oferind insight-uri despre stilul tău de lucru și valorile profesionale.',
+       scoreRanges: [
+         { range: '0-25%', label: 'Scăzut', variant: 'outline' },
+         { range: '26-50%', label: 'Moderat', variant: 'secondary' },
+         { range: '51-75%', label: 'Bun', variant: 'default' },
+         { range: '76-100%', label: 'Excelent', variant: 'default' }
+       ],
+       whatItMeans: 'Rezultatele tale indică profilul tău dominant și secundar, oferind o perspectivă asupra preferințelor tale în carieră.'
+     };
+   }
+
+   // Support for clinical tests like GAD-7, PHQ-9
+   if (normalizedTestName.includes('gad') || normalizedTestName.includes('anxietate')) {
+     return {
+       description: 'GAD-7 (Generalized Anxiety Disorder 7-item) este un instrument standardizat pentru evaluarea anxietății generalizate, recunoscut internațional în domeniul clinic.',
+       scoreRanges: [
+         { range: '0-4', label: 'Anxietate minimă', variant: 'default' },
+         { range: '5-9', label: 'Anxietate ușoară', variant: 'secondary' },
+         { range: '10-14', label: 'Anxietate moderată', variant: 'outline' },
+         { range: '15-21', label: 'Anxietate severă', variant: 'destructive' }
+       ],
+       whatItMeans: 'Scorul tău indică nivelul de anxietate pe care l-ai experimentat în ultimele două săptămâni. Rezultatele te pot ajuta să înțelegi mai bine starea ta emoțională și să iei decizii informate despre next steps.'
+     };
+   }
   
   if (normalizedTestName.includes('percep') && normalizedTestName.includes('senzor')) {
     return {
@@ -223,6 +237,7 @@ export const getDimensionExplanation = (testName: string, dimensionKey: string):
     };
     return `Dimensiunea ${labels[dimensionKey] || dimensionKey} măsoară interesele tale vocaționale specifice.`;
   }
+
   
   if (normalizedTestName.includes('belbin')) {
     const labels: { [key: string]: string } = {

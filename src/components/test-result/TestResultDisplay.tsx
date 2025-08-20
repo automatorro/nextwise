@@ -8,9 +8,10 @@ import TestResultNextSteps from './TestResultNextSteps';
 interface TestResultDisplayProps {
   score: StandardizedScore | null;
   testName?: string;
+  resultId?: string;
 }
 
-export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, testName }) => {
+export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, testName, resultId }) => {
   if (!score) {
     return <div className="text-center p-8"><p className="text-muted-foreground">Se încarcă rezultatele...</p></div>;
   }
@@ -24,7 +25,7 @@ export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, tes
         return <ProfileResultLayout score={score} testName={testName} />;
 
       case 'scale':
-        return <ScaleResultLayout score={score} testName={testName} />;
+        return <ScaleResultLayout score={score} testName={testName} resultId={resultId} />;
 
       default:
         return (

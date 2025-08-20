@@ -43,6 +43,7 @@ export default function TestResult() {
       <TestResultDisplay
         score={calculatedScore}
         testName={result?.test_types?.name}
+        resultId={resultId}
       />
     </div>
   );
