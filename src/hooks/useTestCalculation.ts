@@ -5,6 +5,7 @@ import { StandardizedScore } from '@/types/tests';
 import { calculateCattellScore } from '@/utils/testCalculations/cattellCalculation'; 
 // Aici adăugăm noua noastră funcție de calcul
 import { calculateDiscScore } from '@/utils/testCalculations/discCalculation';
+import { calculateGADScore } from '@/utils/testCalculations/gadCalculation';
 
 export const useTestCalculation = (
   testName: string | undefined,
@@ -22,6 +23,10 @@ export const useTestCalculation = (
       // === AICI ACTIVĂM TESTUL DISC ===
       case 'Test DISC - Stiluri de Comportament':
         return calculateDiscScore(answers);
+
+      // === AICI ACTIVĂM TESTUL GAD-7 ===
+      case 'Evaluare Anxietate GAD-7':
+        return calculateGADScore(answers);
 
       default:
         console.warn(`Nu există logică de calcul în noul sistem pentru: ${testName}.`);
