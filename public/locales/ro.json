@@ -501,7 +501,22 @@
       "enneagram": "Dezvăluie modele de motivare și zone de creștere pentru dezvoltarea carierei",
       "general": "Oferă perspective valoroase pentru călătoria ta de dezvoltare în carieră",
       "completed": "Completat",
-      "aiCombination": "AI-ul va combina perspectivele din toate cele {{count}} teste completate"
+      "new": "Nou",
+      "aiCombination": "AI-ul va combina perspectivele din toate cele {{count}} teste completate",
+      "showAll": "Vezi toate rezultatele",
+      "showLess": "Vezi mai puține",
+      "hidden": "ascunse",
+      "deleteTitle": "Șterge Rezultat Test",
+      "deleteDescription": "Ești sigur că vrei să ștergi acest rezultat de test? Această acțiune nu poate fi anulată, dar nu va afecta planurile de carieră generate anterior.",
+      "deleteSuccess": "Test șters",
+      "deleteSuccessDesc": "Rezultatul testului a fost șters cu succes",
+      "deleteError": "Nu s-a putut șterge rezultatul testului. Te rugăm să încerci din nou.",
+      "cleanOld": "Curăță rezultate vechi",
+      "bulkDeleteTitle": "Curăță Rezultate Vechi de Teste",
+      "bulkDeleteDescription": "Aceasta va păstra cele mai recente 10 teste și va elimina toate cele mai vechi. Ajută la eliminarea dezordinii din profil păstrând rezultatele recente.",
+      "bulkDeleteSuccess": "Teste vechi curățate",
+      "bulkDeleteSuccessDesc": "S-au eliminat cu succes {{count}} rezultate vechi de teste",
+      "bulkDeleteError": "Nu s-au putut curăța rezultatele vechi de teste. Te rugăm să încerci din nou."
     }
   },
   "common": {

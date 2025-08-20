@@ -501,7 +501,22 @@
       "enneagram": "Reveals motivation patterns and growth areas for career development",
       "general": "Provides valuable insights for your career development journey",
       "completed": "Completed",
-      "aiCombination": "AI will combine insights from all {{count}} completed tests"
+      "new": "New",
+      "aiCombination": "AI will combine insights from all {{count}} completed tests",
+      "showAll": "Show all results",
+      "showLess": "Show less",
+      "hidden": "hidden",
+      "deleteTitle": "Delete Test Result",
+      "deleteDescription": "Are you sure you want to delete this test result? This action cannot be undone, but it won't affect previously generated career plans.",
+      "deleteSuccess": "Test deleted",
+      "deleteSuccessDesc": "Test result has been successfully deleted",
+      "deleteError": "Failed to delete test result. Please try again.",
+      "cleanOld": "Clean old results",
+      "bulkDeleteTitle": "Clean Old Test Results",
+      "bulkDeleteDescription": "This will keep your 10 most recent tests and remove all older ones. This helps declutter your profile while preserving recent results.",
+      "bulkDeleteSuccess": "Old tests cleaned",
+      "bulkDeleteSuccessDesc": "Successfully removed {{count}} old test results",
+      "bulkDeleteError": "Failed to clean old test results. Please try again."
     }
   },
   "common": {

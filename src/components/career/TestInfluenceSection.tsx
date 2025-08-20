@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLanguage } from '@/hooks/useLanguage';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { useTestResultsManager } from '@/hooks/useTestResultsManager';
 import { 
   Brain, 
   Users, 
@@ -9,7 +12,11 @@ import {
   BarChart3, 
   CheckCircle,
   Info,
-  Sparkles
+  Sparkles,
+  ChevronDown,
+  ChevronUp,
+  X,
+  Trash2
 } from 'lucide-react';
 
 interface TestInfluenceSectionProps {
@@ -18,6 +25,25 @@ interface TestInfluenceSectionProps {
 
 const TestInfluenceSection: React.FC<TestInfluenceSectionProps> = ({ testResults }) => {
   const { t } = useLanguage();
+  const { deleteTestResult, bulkDeleteOldResults, isDeleting } = useTestResultsManager();
+  const [showAll, setShowAll] = useState(false);
+  
+  const INITIAL_DISPLAY_COUNT = 6;
+  
+  // Sort results by completion date (newest first) and check for recent tests
+  const sortedResults = testResults.sort((a, b) => 
+    new Date(b.completed_at).getTime() - new Date(a.completed_at).getTime()
+  );
+  
+  const displayedResults = showAll ? sortedResults : sortedResults.slice(0, INITIAL_DISPLAY_COUNT);
+  const hiddenCount = Math.max(0, sortedResults.length - INITIAL_DISPLAY_COUNT);
+  
+  const isRecentTest = (completedAt: string) => {
+    const testDate = new Date(completedAt);
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    return testDate > sevenDaysAgo;
+  };
 
   const getTestIcon = (testName: string) => {
     const name = testName?.toLowerCase() || '';
@@ -75,14 +101,21 @@ const TestInfluenceSection: React.FC<TestInfluenceSectionProps> = ({ testResults
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {testResults.map((result, index) => {
+          {displayedResults.map((result, index) => {
             const testName = result?.test_types?.name || result?.testName || 'Unknown Test';
             const IconComponent = getTestIcon(testName);
             const colorClasses = getTestColor(testName);
             const influence = getTestInfluence(testName);
             
             return (
-              <div key={index} className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm">
+              <div 
+                key={index} 
+                className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-all duration-300 ease-in-out animate-fade-in relative group"
+                style={{ 
+                  animationDelay: `${index * 0.1}s`,
+                  animationFillMode: 'both'
+                }}
+              >
                 <div className="flex items-start space-x-3">
                   <div className={`p-2 rounded-lg ${colorClasses}`}>
                     <IconComponent className="w-4 h-4" />
@@ -93,26 +126,128 @@ const TestInfluenceSection: React.FC<TestInfluenceSectionProps> = ({ testResults
                         {testName}
                       </h4>
                       <CheckCircle className="w-4 h-4 text-green-600 flex-shrink-0" />
+                      {isRecentTest(result.completed_at) && (
+                        <Badge className="bg-blue-100 text-blue-800 text-xs">
+                          {t('careerPlan.testInfluence.new')}
+                        </Badge>
+                      )}
                     </div>
                     <p className="text-sm text-gray-600 leading-relaxed">
                       {influence}
                     </p>
-                    <Badge variant="outline" className="mt-2 text-xs">
-                      {t('careerPlan.testInfluence.completed')}
-                    </Badge>
+                    <div className="flex items-center justify-between mt-2">
+                      <Badge variant="outline" className="text-xs">
+                        {t('careerPlan.testInfluence.completed')}
+                      </Badge>
+                      <span className="text-xs text-gray-400">
+                        {new Date(result.completed_at).toLocaleDateString()}
+                      </span>
+                    </div>
                   </div>
+                  
+                  {/* Delete button */}
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600"
+                        disabled={isDeleting}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>{t('careerPlan.testInfluence.deleteTitle')}</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          {t('careerPlan.testInfluence.deleteDescription')}
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={() => deleteTestResult(result.id)}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          {t('common.delete')}
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               </div>
             );
           })}
         </div>
         
+        {/* Show/Hide All Button */}
+        {hiddenCount > 0 && (
+          <div className="flex justify-center pt-4">
+            <Button
+              variant="outline"
+              onClick={() => setShowAll(!showAll)}
+              className="flex items-center space-x-2 animate-fade-in hover:scale-105 transition-transform duration-200"
+            >
+              {showAll ? (
+                <>
+                  <ChevronUp className="w-4 h-4" />
+                  <span>{t('careerPlan.testInfluence.showLess')}</span>
+                </>
+              ) : (
+                <>
+                  <ChevronDown className="w-4 h-4" />
+                  <span>
+                    {t('careerPlan.testInfluence.showAll')} ({hiddenCount} {t('careerPlan.testInfluence.hidden')})
+                  </span>
+                </>
+              )}
+            </Button>
+          </div>
+        )}
+        
         <div className="pt-4 border-t border-gray-200">
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
-            <Brain className="w-4 h-4" />
-            <span>
-              {t('careerPlan.testInfluence.aiCombination').replace('{{count}}', testResults.length.toString())}
-            </span>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2 text-sm text-gray-600">
+              <Brain className="w-4 h-4" />
+              <span>
+                {t('careerPlan.testInfluence.aiCombination').replace('{{count}}', testResults.length.toString())}
+              </span>
+            </div>
+            
+            {/* Bulk delete option for users with many tests */}
+            {testResults.length > 20 && (
+              <AlertDialog>
+                <AlertDialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="text-gray-500 hover:text-red-600 transition-colors duration-200"
+                    disabled={isDeleting}
+                  >
+                    <Trash2 className="w-4 h-4 mr-1" />
+                    {t('careerPlan.testInfluence.cleanOld')}
+                  </Button>
+                </AlertDialogTrigger>
+                <AlertDialogContent>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>{t('careerPlan.testInfluence.bulkDeleteTitle')}</AlertDialogTitle>
+                    <AlertDialogDescription>
+                      {t('careerPlan.testInfluence.bulkDeleteDescription')}
+                    </AlertDialogDescription>
+                  </AlertDialogHeader>
+                  <AlertDialogFooter>
+                    <AlertDialogCancel>{t('common.cancel')}</AlertDialogCancel>
+                    <AlertDialogAction 
+                      onClick={() => bulkDeleteOldResults(10)}
+                      className="bg-red-600 hover:bg-red-700"
+                    >
+                      {t('careerPlan.testInfluence.cleanOld')}
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
+                </AlertDialogContent>
+              </AlertDialog>
+            )}
           </div>
         </div>
       </CardContent>
