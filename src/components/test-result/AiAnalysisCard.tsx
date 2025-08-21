@@ -18,10 +18,25 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
   const { toast } = useToast();
 
   const handleAnalyze = async () => {
-    if (!score?.dimensions || !testName) {
+    if (!score || !testName) {
       toast({
         title: "Eroare",
         description: "Datele testului sunt incomplete pentru a genera o analiză.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validare specifică pentru tipul de test
+    const hasValidData = score.type === 'dimensional' ? score.dimensions?.length > 0 :
+                        score.type === 'scale' ? (score.raw_score !== undefined || score.scale_level || score.overall !== undefined) :
+                        score.type === 'profile' ? score.dominant_profile :
+                        false;
+
+    if (!hasValidData) {
+      toast({
+        title: "Eroare", 
+        description: "Datele testului sunt incomplete pentru tipul de test specificat.",
         variant: "destructive",
       });
       return;
@@ -31,11 +46,11 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
     setAnalysis(null);
 
     try {
-      // === AICI ESTE MODIFICAREA ===
-      // Trimitem doar informațiile esențiale, nu tot obiectul.
+      // Construim payload-ul în funcție de tipul testului
       const payload = {
         testName: testName,
-        dimensions: score.dimensions, 
+        testType: score.type,
+        ...score // Trimitem toate datele scorului pentru flexibilitate
       };
 
       const { data, error } = await supabase.functions.invoke('analyze-test-result', {
