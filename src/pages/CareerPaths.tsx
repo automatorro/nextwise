@@ -21,6 +21,7 @@ import AIPrograms14Days from '@/components/premium/AIPrograms14Days';
 import AIProgressSheets from '@/components/premium/AIProgressSheets';
 import AISimulations from '@/components/premium/AISimulations';
 import ProgressTracking from '@/components/premium/ProgressTracking';
+import PersonalNotes from '@/components/career/PersonalNotes';
 
 const CareerPaths = () => {
   const { planId } = useParams();
@@ -133,9 +134,12 @@ const CareerPaths = () => {
                   <TabsTrigger value="ai-mentoring" className="whitespace-nowrap">
                     {t('careerPaths.tabs.mentoring')}
                   </TabsTrigger>
-                  <TabsTrigger value="cv-analyzer" className="whitespace-nowrap">
-                    {t('careerPaths.tabs.cvAnalyzer')}
-                  </TabsTrigger>
+                   <TabsTrigger value="cv-analyzer" className="whitespace-nowrap">
+                     {t('careerPaths.tabs.cvAnalyzer')}
+                   </TabsTrigger>
+                   <TabsTrigger value="personal-notes" className="whitespace-nowrap">
+                     Note personale
+                   </TabsTrigger>
                   {features.hasAI && (
                     <>
                       <TabsTrigger value="ai-programs" className="whitespace-nowrap">
@@ -155,12 +159,13 @@ const CareerPaths = () => {
                 </TabsList>
               </div>
             ) : (
-              // Desktop layout: grid
-              <TabsList className={`grid w-full ${features.hasAI ? 'grid-cols-8' : 'grid-cols-4'}`}>
-                <TabsTrigger value="my-plans">{t('careerPaths.tabs.dashboard')}</TabsTrigger>
-                <TabsTrigger value="create-plan">{t('careerPaths.tabs.create')}</TabsTrigger>
-                <TabsTrigger value="ai-mentoring">{t('careerPaths.tabs.mentoring')}</TabsTrigger>
-                <TabsTrigger value="cv-analyzer">{t('careerPaths.tabs.cvAnalyzer')}</TabsTrigger>
+               // Desktop layout: grid
+               <TabsList className={`grid w-full ${features.hasAI ? 'grid-cols-9' : 'grid-cols-5'}`}>
+                 <TabsTrigger value="my-plans">{t('careerPaths.tabs.dashboard')}</TabsTrigger>
+                 <TabsTrigger value="create-plan">{t('careerPaths.tabs.create')}</TabsTrigger>
+                 <TabsTrigger value="ai-mentoring">{t('careerPaths.tabs.mentoring')}</TabsTrigger>
+                 <TabsTrigger value="cv-analyzer">{t('careerPaths.tabs.cvAnalyzer')}</TabsTrigger>
+                 <TabsTrigger value="personal-notes">Note personale</TabsTrigger>
                 {features.hasAI && (
                   <>
                     <TabsTrigger value="ai-programs">{t('careerPaths.tabs.programs')}</TabsTrigger>
@@ -187,9 +192,13 @@ const CareerPaths = () => {
               <AIMentoringWithLimits />
             </TabsContent>
 
-            <TabsContent value="cv-analyzer" className="space-y-6">
-              <CVAnalyzerPage />
-            </TabsContent>
+             <TabsContent value="cv-analyzer" className="space-y-6">
+               <CVAnalyzerPage />
+             </TabsContent>
+
+             <TabsContent value="personal-notes" className="space-y-6">
+               <PersonalNotes />
+             </TabsContent>
 
             {features.hasAI && (
               <>

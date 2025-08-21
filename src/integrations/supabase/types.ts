@@ -104,6 +104,45 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_recommendations: {
+        Row: {
+          action_items: Json | null
+          created_at: string
+          expires_at: string | null
+          id: string
+          is_applied: boolean | null
+          priority: number | null
+          recommendation_text: string
+          source_id: string | null
+          source_type: string
+          user_id: string
+        }
+        Insert: {
+          action_items?: Json | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_applied?: boolean | null
+          priority?: number | null
+          recommendation_text: string
+          source_id?: string | null
+          source_type: string
+          user_id: string
+        }
+        Update: {
+          action_items?: Json | null
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          is_applied?: boolean | null
+          priority?: number | null
+          recommendation_text?: string
+          source_id?: string | null
+          source_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       ai_simulations: {
         Row: {
           ai_feedback: string | null
@@ -243,6 +282,7 @@ export type Database = {
       }
       career_paths: {
         Row: {
+          ai_insights: Json | null
           created_at: string | null
           description: string | null
           generated_by_ai: boolean | null
@@ -254,6 +294,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          ai_insights?: Json | null
           created_at?: string | null
           description?: string | null
           generated_by_ai?: boolean | null
@@ -265,6 +306,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          ai_insights?: Json | null
           created_at?: string | null
           description?: string | null
           generated_by_ai?: boolean | null
@@ -691,6 +733,45 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      user_notes: {
+        Row: {
+          content: string
+          created_at: string
+          id: string
+          note_type: string
+          tags: Json | null
+          test_result_id: string | null
+          test_type: string | null
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          id?: string
+          note_type?: string
+          tags?: Json | null
+          test_result_id?: string | null
+          test_type?: string | null
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          id?: string
+          note_type?: string
+          tags?: Json | null
+          test_result_id?: string | null
+          test_type?: string | null
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
       }
       user_progress_tracking: {
         Row: {

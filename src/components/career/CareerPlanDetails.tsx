@@ -20,7 +20,10 @@ import { useCareerMilestones } from '@/hooks/useCareerMilestones';
 import MilestoneTracker from './MilestoneTracker';
 import EditCareerPlanModal from './EditCareerPlanModal';
 import ShareCareerPlanModal from './ShareCareerPlanModal';
+import AIInsightsSection from './AIInsightsSection';
 import { format } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/components/ui/use-toast';
 
 const CareerPlanDetails = () => {
   const { planId } = useParams<{ planId: string }>();
@@ -30,6 +33,7 @@ const CareerPlanDetails = () => {
   
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const { toast } = useToast();
 
   const plan = careerPlans.find(p => p.id === planId);
 
@@ -169,6 +173,36 @@ const CareerPlanDetails = () => {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* AI Insights */}
+      {(plan as any).ai_insights && Array.isArray((plan as any).ai_insights) && (plan as any).ai_insights.length > 0 && (
+        <AIInsightsSection 
+          insights={(plan as any).ai_insights} 
+          onRemoveInsight={async (insightId) => {
+            const currentInsights = Array.isArray((plan as any).ai_insights) ? (plan as any).ai_insights : [];
+            const updatedInsights = currentInsights.filter((insight: any) => insight.id !== insightId);
+            
+            const { error } = await supabase
+              .from('career_paths')
+              .update({ ai_insights: updatedInsights })
+              .eq('id', planId);
+            
+            if (error) {
+              toast({
+                title: "Eroare",
+                description: "Nu am putut șterge insight-ul.",
+                variant: "destructive",
+              });
+            } else {
+              toast({
+                title: "Succes",
+                description: "Insight-ul a fost șters cu succes.",
+              });
+              window.location.reload();
+            }
+          }}
+        />
       )}
 
       {/* Milestone Tracker */}

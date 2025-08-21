@@ -4,7 +4,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
-import { Loader2, Copy, Save } from 'lucide-react';
+import { Loader2, Copy, Save, StickyNote, Lightbulb } from 'lucide-react';
+import SaveToCareerPlanModal from '@/components/career/SaveToCareerPlanModal';
+import { useUserNotes } from '@/hooks/useUserNotes';
+import { useAIRecommendations } from '@/hooks/useAIRecommendations';
 
 interface AiAnalysisCardProps {
   score: StandardizedScore | null;
@@ -15,7 +18,10 @@ interface AiAnalysisCardProps {
 export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName, resultId }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [analysis, setAnalysis] = useState<string | null>(null);
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const { toast } = useToast();
+  const { createNote } = useUserNotes();
+  const { generateRecommendations } = useAIRecommendations();
 
   const handleAnalyze = async () => {
     if (!score || !testName) {
@@ -61,6 +67,16 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
       
       setAnalysis(data.analysis);
 
+      // Auto-generate recommendations based on the analysis
+      if (data.analysis) {
+        generateRecommendations.mutate({
+          analysisText: data.analysis,
+          sourceType: 'ai_analysis',
+          sourceId: resultId,
+          testType: testName
+        });
+      }
+
     } catch (error) {
       console.error("Eroare la analiza AI:", error);
       toast({
@@ -74,20 +90,56 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
   };
 
   const handleCopyToClipboard = () => {
-    if (analysis) {
-      navigator.clipboard.writeText(analysis);
+    if (analysis && testName) {
+      const formattedText = `📊 ANALIZĂ AI - ${testName.toUpperCase()}
+📅 Data: ${new Date().toLocaleDateString('ro-RO')}
+
+${analysis}
+
+---
+💡 Această analiză poate fi folosită pentru:
+• Crearea unui plan de carieră personalizat
+• Înțelegerea profilului tău profesional
+• Identificarea punctelor forte și a ariilor de dezvoltare
+• Luarea de decizii informate în carieră
+
+Salvează această analiză în "Notele mele personale" din aplicație pentru referințe ulterioare.`;
+
+      navigator.clipboard.writeText(formattedText);
       toast({
-        title: "Succes",
-        description: "Analiza a fost copiată în clipboard.",
+        title: "Succes - Analiză copiată!",
+        description: (
+          <div className="space-y-2">
+            <p>Analiza a fost copiată cu format îmbunătățit.</p>
+            <div className="text-xs space-y-1">
+              <p>💡 Poți să o folosești pentru:</p>
+              <p>• Salvare în documentele tale personale</p>
+              <p>• Discuții cu mentori sau consilieri</p>
+              <p>• Planificarea dezvoltării profesionale</p>
+            </div>
+          </div>
+        ),
+      });
+    }
+  };
+
+  const handleSaveToPersonalNotes = () => {
+    if (analysis && testName) {
+      const noteTitle = `Analiză ${testName} - ${new Date().toLocaleDateString('ro-RO')}`;
+      
+      createNote.mutate({
+        title: noteTitle,
+        content: analysis,
+        note_type: 'ai_analysis',
+        test_type: testName,
+        test_result_id: resultId,
+        tags: ['analiză-ai', testName.toLowerCase()]
       });
     }
   };
   
   const handleSaveToPlan = () => {
-     toast({
-        title: "Funcționalitate în dezvoltare",
-        description: "Opțiunea de a salva analiza direct în planul de carieră va fi disponibilă în curând.",
-      });
+    setIsSaveModalOpen(true);
   }
 
   return (
@@ -108,12 +160,32 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
         {analysis && (
           <div className="p-4 border rounded-md bg-secondary/50 space-y-4">
             <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: analysis }} />
-            <div className="flex items-center space-x-2 pt-4">
-               <Button variant="outline" size="sm" onClick={handleCopyToClipboard}><Copy className="mr-2 h-4 w-4" /> Copiază</Button>
-               <Button variant="outline" size="sm" onClick={handleSaveToPlan}><Save className="mr-2 h-4 w-4" /> Salvează în Plan</Button>
+            <div className="flex flex-wrap items-center gap-2 pt-4">
+               <Button variant="outline" size="sm" onClick={handleCopyToClipboard}>
+                 <Copy className="mr-2 h-4 w-4" /> Copiază
+               </Button>
+               <Button variant="outline" size="sm" onClick={handleSaveToPersonalNotes}>
+                 <StickyNote className="mr-2 h-4 w-4" /> Salvează în Note
+               </Button>
+               <Button variant="outline" size="sm" onClick={handleSaveToPlan}>
+                 <Save className="mr-2 h-4 w-4" /> Salvează în Plan
+               </Button>
+               {generateRecommendations.isSuccess && (
+                 <Button variant="outline" size="sm" disabled>
+                   <Lightbulb className="mr-2 h-4 w-4" /> Recomandări generate
+                 </Button>
+               )}
             </div>
           </div>
         )}
+
+        <SaveToCareerPlanModal
+          isOpen={isSaveModalOpen}
+          onClose={() => setIsSaveModalOpen(false)}
+          analysisText={analysis || ''}
+          testName={testName}
+          testType={score?.type}
+        />
       </CardContent>
     </Card>
   );
