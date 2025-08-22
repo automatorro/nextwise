@@ -45,22 +45,27 @@ const HomeNavigation = () => {
             <NavigationLogo />
             
             <div className="flex items-center space-x-4">
-              {user ? (
-                <>
-                  <NavigationLinks />
-                  <LanguageSelector />
-                  <UserMenu />
-                  <MobileMenu 
-                    isMenuOpen={isMenuOpen} 
-                    setIsMenuOpen={setIsMenuOpen} 
-                  />
-                </>
-              ) : (
-                <>
-                  <LanguageSelector />
-                  <GuestActions />
-                </>
-              )}
+              {/* Desktop navigation - hidden on mobile */}
+              <div className="hidden md:flex items-center space-x-4">
+                {user ? (
+                  <>
+                    <NavigationLinks />
+                    <LanguageSelector />
+                    <UserMenu />
+                  </>
+                ) : (
+                  <>
+                    <LanguageSelector />
+                    <GuestActions />
+                  </>
+                )}
+              </div>
+              
+              {/* Mobile menu - always show on mobile */}
+              <MobileMenu 
+                isMenuOpen={isMenuOpen} 
+                setIsMenuOpen={setIsMenuOpen} 
+              />
             </div>
           </div>
         </div>
