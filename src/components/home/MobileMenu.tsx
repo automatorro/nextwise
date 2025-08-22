@@ -37,8 +37,9 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
   const toggleMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('Menu toggle clicked');
+    console.log('Menu toggle clicked - current state:', isMenuOpen);
     setIsMenuOpen(!isMenuOpen);
+    console.log('Menu toggle - new state will be:', !isMenuOpen);
   };
 
   return (
@@ -57,67 +58,75 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
       </button>
 
       {isMenuOpen && (
-        <div className="fixed inset-0 top-16 z-50 md:hidden">
+        <div className="fixed inset-0 top-0 z-[150] md:hidden">
           {/* Overlay */}
           <div 
             className="fixed inset-0 bg-black/20 backdrop-blur-sm"
-            onClick={() => setIsMenuOpen(false)}
+            onClick={(e) => {
+              console.log('Overlay clicked - closing menu');
+              setIsMenuOpen(false);
+            }}
           />
           
           {/* Menu Content */}
-          <div className="relative bg-white shadow-xl border-t border-gray-200 animate-slide-in-right">
+          <div className="absolute top-16 left-0 right-0 bg-white shadow-xl border-t border-gray-200 animate-slide-in-right min-h-[calc(100vh-4rem)]">
             <div className="px-4 pt-4 pb-6 space-y-1">
               <button
                 onClick={handleNavigation('/dashboard')}
-                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation"
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation active:bg-gray-100"
                 style={{ 
                   WebkitTapHighlightColor: 'transparent',
                   touchAction: 'manipulation',
-                  userSelect: 'none'
+                  userSelect: 'none',
+                  minHeight: '48px'
                 }}
               >
                 {t('header.dashboard')}
               </button>
               <button
                 onClick={handleNavigation('/tests')}
-                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation"
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation active:bg-gray-100"
                 style={{ 
                   WebkitTapHighlightColor: 'transparent',
                   touchAction: 'manipulation',
-                  userSelect: 'none'
+                  userSelect: 'none',
+                  minHeight: '48px'
                 }}
               >
                 {t('header.tests')}
               </button>
               <button
                 onClick={handleNavigation('/career-paths')}
-                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation"
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation active:bg-gray-100"
                 style={{ 
                   WebkitTapHighlightColor: 'transparent',
                   touchAction: 'manipulation',
-                  userSelect: 'none'
+                  userSelect: 'none',
+                  minHeight: '48px'
                 }}
               >
                 {t('header.career')}
               </button>
               <button
                 onClick={handleNavigation('/my-profile')}
-                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation"
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation active:bg-gray-100"
                 style={{ 
                   WebkitTapHighlightColor: 'transparent',
                   touchAction: 'manipulation',
-                  userSelect: 'none'
+                  userSelect: 'none',
+                  minHeight: '48px'
                 }}
               >
                 {t('header.profile')}
               </button>
               <button
                 onClick={handleNavigation('/subscription')}
-                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation"
+                className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation active:bg-gray-100"
                 style={{ 
                   WebkitTapHighlightColor: 'transparent',
                   touchAction: 'manipulation',
-                  userSelect: 'none'
+                  userSelect: 'none',
+                  minHeight: '48px'
                 }}
               >
                 {t('header.subscriptionSettings')}
@@ -125,11 +134,12 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
               {isAdmin && (
                 <button
                   onClick={handleNavigation('/admin')}
-                  className="text-red-600 hover:text-red-800 hover:bg-red-50 block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation"
+                  className="text-red-600 hover:text-red-800 hover:bg-red-50 block w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation active:bg-red-100"
                   style={{ 
                     WebkitTapHighlightColor: 'transparent',
                     touchAction: 'manipulation',
-                    userSelect: 'none'
+                    userSelect: 'none',
+                    minHeight: '48px'
                   }}
                 >
                   {t('header.adminPanel')}
@@ -140,11 +150,12 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
               
               <button
                 onClick={handleSignOut}
-                className="text-red-600 hover:text-red-800 hover:bg-red-50 block w-full text-left px-4 py-3 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation"
+                className="text-red-600 hover:text-red-800 hover:bg-red-50 block w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-colors duration-200 touch-manipulation active:bg-red-100"
                 style={{ 
                   WebkitTapHighlightColor: 'transparent',
                   touchAction: 'manipulation',
-                  userSelect: 'none'
+                  userSelect: 'none',
+                  minHeight: '48px'
                 }}
               >
                 {t('header.logout')}
