@@ -58,7 +58,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
       </button>
 
       {isMenuOpen && (
-        <div className="fixed inset-0 top-0 z-[150] md:hidden">
+        <div className="fixed inset-0 top-16 z-[150] md:hidden">
           {/* Overlay */}
           <div 
             className="fixed inset-0 bg-black/20 backdrop-blur-sm"
@@ -69,7 +69,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
           />
           
           {/* Menu Content */}
-          <div className="absolute top-16 left-0 right-0 bg-white shadow-xl border-t border-gray-200 animate-slide-in-right min-h-[calc(100vh-4rem)]">
+          <div className="relative bg-white shadow-xl border-t border-gray-200 animate-slide-in-right">
             <div className="px-4 pt-4 pb-6 space-y-1">
               <button
                 onClick={handleNavigation('/dashboard')}
