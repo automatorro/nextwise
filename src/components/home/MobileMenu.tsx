@@ -182,45 +182,8 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
       </button>
 
       {isMenuOpen && (
-        <div 
-          data-menu="mobile-menu"
-          className="fixed inset-0 z-[60] md:hidden"
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            zIndex: 60,
-            willChange: 'transform, opacity'
-          }}
-        >
-          {/* Overlay */}
-          <div 
-            className="absolute inset-0 bg-black/50 transition-opacity duration-200"
-            onClick={() => setIsMenuOpen(false)}
-            style={{ 
-              WebkitTapHighlightColor: 'transparent',
-              touchAction: 'manipulation',
-              opacity: 1
-            }}
-          />
-          
-          {/* Menu Content */}
-          <div 
-            data-menu="mobile-menu-content"
-            className="absolute top-24 left-4 right-4 bg-white shadow-2xl border border-gray-200 rounded-xl max-h-[calc(100vh-8rem)] overflow-y-auto transition-all duration-200"
-            style={{
-              WebkitOverflowScrolling: 'touch',
-              position: 'absolute',
-              zIndex: 61,
-              opacity: 1,
-              transform: 'scale(1)',
-              transformOrigin: 'top center'
-            }}
-          >
-            {renderMenuContent()}
-          </div>
+        <div className="md:hidden fixed inset-x-0 top-16 z-50 bg-white border-b border-gray-200 shadow-lg">
+          {renderMenuContent()}
         </div>
       )}
     </>
