@@ -37,49 +37,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
   const toggleMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log('Menu toggle clicked - current state:', isMenuOpen);
-    const newState = !isMenuOpen;
-    setIsMenuOpen(newState);
-    console.log('Menu toggle - new state set to:', newState);
-    
-    // Advanced debugging
-    setTimeout(() => {
-      const menuElement = document.querySelector('[data-menu="mobile-menu"]');
-      const menuContent = document.querySelector('[data-menu="mobile-menu-content"]');
-      const headerElement = document.querySelector('nav');
-      
-      console.log('=== MENU DEBUG ===');
-      console.log('Menu element found:', !!menuElement);
-      console.log('Menu content found:', !!menuContent);
-      console.log('Header z-index:', headerElement ? window.getComputedStyle(headerElement).zIndex : 'not found');
-      
-      if (menuElement) {
-        const styles = window.getComputedStyle(menuElement);
-        console.log('Menu styles:', {
-          display: styles.display,
-          position: styles.position,
-          zIndex: styles.zIndex,
-          top: styles.top,
-          visibility: styles.visibility,
-          opacity: styles.opacity
-        });
-      }
-      
-      if (menuContent) {
-        const contentStyles = window.getComputedStyle(menuContent);
-        console.log('Menu content styles:', {
-          display: contentStyles.display,
-          position: contentStyles.position,
-          zIndex: contentStyles.zIndex,
-          top: contentStyles.top,
-          transform: contentStyles.transform,
-          opacity: contentStyles.opacity
-        });
-      }
-      
-      console.log('Current isMenuOpen state:', newState);
-      console.log('================');
-    }, 100);
+    setIsMenuOpen(!isMenuOpen);
   };
 
   // Mobile menu content based on authentication status
@@ -182,13 +140,8 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
       </button>
 
       {isMenuOpen && (
-        <div 
-          data-menu="mobile-menu"
-          className="md:hidden fixed inset-x-0 top-20 z-[100] bg-white border border-gray-200 shadow-xl mx-4 mt-2 rounded-lg"
-        >
-          <div data-menu="mobile-menu-content">
-            {renderMenuContent()}
-          </div>
+        <div className="md:hidden fixed left-4 right-4 top-20 z-[999] bg-white border border-gray-300 shadow-2xl rounded-xl">
+          {renderMenuContent()}
         </div>
       )}
     </>

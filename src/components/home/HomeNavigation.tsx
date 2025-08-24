@@ -39,7 +39,7 @@ const HomeNavigation = () => {
 
   return (
     <nav className="fixed top-4 left-1/2 z-50 w-[95%] max-w-6xl" style={{ transform: 'translateX(-50%)' }}>
-      <div className="bg-white/80 backdrop-blur-md shadow-lg border border-gray-200/50 rounded-2xl overflow-hidden">
+      <div className="bg-white shadow-lg border border-gray-200 rounded-2xl overflow-hidden">
         <div className="px-6 lg:px-8">
           <div className="flex justify-between h-16">
             <NavigationLogo />
