@@ -19,7 +19,7 @@ export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, tes
   const renderResultLayout = () => {
     switch (score.type) {
       case 'dimensional':
-        return <DimensionalResultLayout score={score} testName={testName} />;
+        return <DimensionalResultLayout score={score} testName={testName} resultId={resultId} />;
       
       case 'profile':
         return <ProfileResultLayout score={score} testName={testName} />;

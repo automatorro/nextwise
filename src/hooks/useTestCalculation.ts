@@ -6,6 +6,7 @@ import { calculateCattellScore } from '@/utils/testCalculations/cattellCalculati
 // Aici adăugăm noua noastră funcție de calcul
 import { calculateDiscScore } from '@/utils/testCalculations/discCalculation';
 import { calculateGADScore } from '@/utils/testCalculations/gadCalculation';
+import { calculateBigFiveScore } from '@/utils/testCalculations/bigFiveCalculation';
 
 export const useTestCalculation = (
   testName: string | undefined,
@@ -27,6 +28,11 @@ export const useTestCalculation = (
       // === AICI ACTIVĂM TESTUL GAD-7 ===
       case 'Evaluare Anxietate GAD-7':
         return calculateGADScore(answers);
+
+      // === AICI ACTIVĂM TESTUL BIG FIVE ===
+      case 'Big Five':
+      case 'Test Big Five':
+        return calculateBigFiveScore(answers);
 
       default:
         console.warn(`Nu există logică de calcul în noul sistem pentru: ${testName}.`);
