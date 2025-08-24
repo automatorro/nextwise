@@ -1,7 +1,6 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { createPortal } from 'react-dom';
 import { useLanguage } from '@/hooks/useLanguage';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useAuth } from '@/contexts/AuthContext';
@@ -142,7 +141,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
         {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </button>
 
-      {isMenuOpen && createPortal(
+      {isMenuOpen && (
         <div className="fixed inset-0 z-[200] md:hidden">
           {/* Overlay */}
           <div 
@@ -156,15 +155,14 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
           
           {/* Menu Content */}
           <div 
-            className="fixed top-20 left-4 right-4 bg-white shadow-2xl border border-gray-200 rounded-xl animate-scale-in max-h-[calc(100vh-6rem)] overflow-y-auto"
+            className="fixed top-20 left-4 right-4 bg-white shadow-2xl border border-gray-200 rounded-xl max-h-[calc(100vh-6rem)] overflow-y-auto"
             style={{
               WebkitOverflowScrolling: 'touch'
             }}
           >
             {renderMenuContent()}
           </div>
-        </div>,
-        document.body
+        </div>
       )}
     </>
   );
