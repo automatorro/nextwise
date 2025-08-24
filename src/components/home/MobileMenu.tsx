@@ -42,11 +42,43 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
     setIsMenuOpen(newState);
     console.log('Menu toggle - new state set to:', newState);
     
-    // Debug menu rendering
+    // Advanced debugging
     setTimeout(() => {
       const menuElement = document.querySelector('[data-menu="mobile-menu"]');
-      console.log('Menu element found after state change:', !!menuElement);
+      const menuContent = document.querySelector('[data-menu="mobile-menu-content"]');
+      const headerElement = document.querySelector('nav');
+      
+      console.log('=== MENU DEBUG ===');
+      console.log('Menu element found:', !!menuElement);
+      console.log('Menu content found:', !!menuContent);
+      console.log('Header z-index:', headerElement ? window.getComputedStyle(headerElement).zIndex : 'not found');
+      
+      if (menuElement) {
+        const styles = window.getComputedStyle(menuElement);
+        console.log('Menu styles:', {
+          display: styles.display,
+          position: styles.position,
+          zIndex: styles.zIndex,
+          top: styles.top,
+          visibility: styles.visibility,
+          opacity: styles.opacity
+        });
+      }
+      
+      if (menuContent) {
+        const contentStyles = window.getComputedStyle(menuContent);
+        console.log('Menu content styles:', {
+          display: contentStyles.display,
+          position: contentStyles.position,
+          zIndex: contentStyles.zIndex,
+          top: contentStyles.top,
+          transform: contentStyles.transform,
+          opacity: contentStyles.opacity
+        });
+      }
+      
       console.log('Current isMenuOpen state:', newState);
+      console.log('================');
     }, 100);
   };
 
@@ -152,19 +184,20 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
       {isMenuOpen && (
         <div 
           data-menu="mobile-menu"
-          className="fixed inset-0 z-[9999] md:hidden"
+          className="fixed inset-0 z-[60] md:hidden"
           style={{
             position: 'fixed',
             top: 0,
             left: 0,
             right: 0,
             bottom: 0,
-            zIndex: 9999
+            zIndex: 60,
+            willChange: 'transform, opacity'
           }}
         >
           {/* Overlay */}
           <div 
-            className="absolute inset-0 bg-black bg-opacity-50"
+            className="absolute inset-0 bg-black/50 animate-fade-in"
             onClick={() => setIsMenuOpen(false)}
             style={{ 
               WebkitTapHighlightColor: 'transparent',
@@ -174,11 +207,14 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
           
           {/* Menu Content */}
           <div 
-            className="absolute top-20 left-4 right-4 bg-white shadow-2xl border border-gray-200 rounded-xl max-h-[calc(100vh-6rem)] overflow-y-auto animate-scale-in"
+            data-menu="mobile-menu-content"
+            className="absolute top-24 left-4 right-4 bg-white shadow-2xl border border-gray-200 rounded-xl max-h-[calc(100vh-8rem)] overflow-y-auto animate-scale-in"
             style={{
               WebkitOverflowScrolling: 'touch',
               position: 'absolute',
-              zIndex: 10000
+              zIndex: 61,
+              willChange: 'transform, opacity',
+              transform: 'translateZ(0)' // Force hardware acceleration
             }}
           >
             {renderMenuContent()}
