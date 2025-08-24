@@ -182,7 +182,7 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
       </button>
 
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-x-0 top-16 z-50 bg-white border-b border-gray-200 shadow-lg">
+        <div className="md:hidden fixed inset-x-0 top-20 z-[51] bg-white border-b border-gray-200 shadow-lg transition-all duration-200">
           {renderMenuContent()}
         </div>
       )}
