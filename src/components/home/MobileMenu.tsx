@@ -38,8 +38,16 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
     e.preventDefault();
     e.stopPropagation();
     console.log('Menu toggle clicked - current state:', isMenuOpen);
-    setIsMenuOpen(!isMenuOpen);
-    console.log('Menu toggle - new state will be:', !isMenuOpen);
+    const newState = !isMenuOpen;
+    setIsMenuOpen(newState);
+    console.log('Menu toggle - new state set to:', newState);
+    
+    // Debug menu rendering
+    setTimeout(() => {
+      const menuElement = document.querySelector('[data-menu="mobile-menu"]');
+      console.log('Menu element found after state change:', !!menuElement);
+      console.log('Current isMenuOpen state:', newState);
+    }, 100);
   };
 
   // Mobile menu content based on authentication status
@@ -142,10 +150,21 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
       </button>
 
       {isMenuOpen && (
-        <div className="fixed inset-0 z-[200] md:hidden">
+        <div 
+          data-menu="mobile-menu"
+          className="fixed inset-0 z-[9999] md:hidden"
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: 9999
+          }}
+        >
           {/* Overlay */}
           <div 
-            className="fixed inset-0 bg-black/30"
+            className="absolute inset-0 bg-black bg-opacity-50"
             onClick={() => setIsMenuOpen(false)}
             style={{ 
               WebkitTapHighlightColor: 'transparent',
@@ -155,9 +174,11 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
           
           {/* Menu Content */}
           <div 
-            className="fixed top-20 left-4 right-4 bg-white shadow-2xl border border-gray-200 rounded-xl max-h-[calc(100vh-6rem)] overflow-y-auto"
+            className="absolute top-20 left-4 right-4 bg-white shadow-2xl border border-gray-200 rounded-xl max-h-[calc(100vh-6rem)] overflow-y-auto animate-scale-in"
             style={{
-              WebkitOverflowScrolling: 'touch'
+              WebkitOverflowScrolling: 'touch',
+              position: 'absolute',
+              zIndex: 10000
             }}
           >
             {renderMenuContent()}
