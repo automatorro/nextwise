@@ -197,24 +197,26 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
         >
           {/* Overlay */}
           <div 
-            className="absolute inset-0 bg-black/50 animate-fade-in"
+            className="absolute inset-0 bg-black/50 transition-opacity duration-200"
             onClick={() => setIsMenuOpen(false)}
             style={{ 
               WebkitTapHighlightColor: 'transparent',
-              touchAction: 'manipulation'
+              touchAction: 'manipulation',
+              opacity: 1
             }}
           />
           
           {/* Menu Content */}
           <div 
             data-menu="mobile-menu-content"
-            className="absolute top-24 left-4 right-4 bg-white shadow-2xl border border-gray-200 rounded-xl max-h-[calc(100vh-8rem)] overflow-y-auto animate-scale-in"
+            className="absolute top-24 left-4 right-4 bg-white shadow-2xl border border-gray-200 rounded-xl max-h-[calc(100vh-8rem)] overflow-y-auto transition-all duration-200"
             style={{
               WebkitOverflowScrolling: 'touch',
               position: 'absolute',
               zIndex: 61,
-              willChange: 'transform, opacity',
-              transform: 'translateZ(0)' // Force hardware acceleration
+              opacity: 1,
+              transform: 'scale(1)',
+              transformOrigin: 'top center'
             }}
           >
             {renderMenuContent()}
