@@ -236,6 +236,12 @@ function getBigFiveProgressPath(score: StandardizedScore): ProgressPath {
     };
   }
 
+  // Declare all dimension variables at the top
+  const conscientiousness = score.dimensions.find(d => d.id === 'conscientiousness');
+  const extraversion = score.dimensions.find(d => d.id === 'extraversion');
+  const openness = score.dimensions.find(d => d.id === 'openness');
+  const neuroticism = score.dimensions.find(d => d.id === 'neuroticism');
+
   // Milestone 1: Analiza inițială
   milestones.push({
     timeframe: 'Săptămâna 1-2',
@@ -264,16 +270,14 @@ function getBigFiveProgressPath(score: StandardizedScore): ProgressPath {
   }
 
   // Milestones specifice pentru dimensiuni cheie
-  const conscientiousness = score.dimensions.find(d => d.id === 'conscientiousness');
   if (conscientiousness && conscientiousness.score <= 4) {
     milestones.push({
       timeframe: 'Luna 2-3',
       goal: 'Construiește sisteme simple de organizare',
-      description: 'Implementează 1-2 sisteme simple de organizare care să te ajute fără să te restricționeze.'
+      description: 'Implementează 1-2 sisteme simple de organizare care să te restricționeze.'
     });
   }
 
-  const extraversion = score.dimensions.find(d => d.id === 'extraversion');
   if (extraversion && extraversion.score >= 7) {
     milestones.push({
       timeframe: 'Luna 3',
@@ -288,7 +292,6 @@ function getBigFiveProgressPath(score: StandardizedScore): ProgressPath {
     });
   }
 
-  const openness = score.dimensions.find(d => d.id === 'openness');
   if (openness && openness.score >= 7) {
     milestones.push({
       timeframe: 'Luna 4',
@@ -313,7 +316,6 @@ function getBigFiveProgressPath(score: StandardizedScore): ProgressPath {
     trackingMethods.push('Folosește aplicații simple de tracking pentru a construi obiceiuri');
   }
   
-  const neuroticism = score.dimensions.find(d => d.id === 'neuroticism');
   if (neuroticism && neuroticism.score >= 6) {
     trackingMethods.push('Monitorizează starea emoțională zilnică pentru a identifica tiparele');
   }
