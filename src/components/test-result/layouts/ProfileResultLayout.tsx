@@ -13,6 +13,7 @@ import { LifeImpactExplanation } from '../LifeImpactExplanation';
 import { ProgressPathCard } from '../ProgressPathCard';
 import DetailedInterpretations from '../DetailedInterpretations';
 import { DiscRadarChart } from '../../charts/DiscRadarChart';
+import { getEnneagramTypeDescription } from '@/utils/testCalculations/enneagramCalculation';
 
 interface ProfileResultLayoutProps {
   score: StandardizedScore;
@@ -28,7 +29,7 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
   const { t } = useLanguage();
   const dominantProfileId = score.dominant_profile;
   
-  // Get the translated profile information for DISC tests
+  // Get the translated profile information for DISC and Enneagram tests
   const getProfileInfo = () => {
     if (testName?.includes('DISC') && dominantProfileId) {
       const profileKey = dominantProfileId;
@@ -37,17 +38,32 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
         description: t(`tests.disc.explanation.profiles.${profileKey}.description`)
       };
     }
+    
+    if (testName?.toLowerCase().includes('enneagram') && dominantProfileId) {
+      const typeNumber = dominantProfileId.replace('type', '');
+      const language = t('common.language') === 'English' ? 'en' : 'ro';
+      return {
+        name: `Type ${typeNumber}`,
+        description: getEnneagramTypeDescription(dominantProfileId, language as 'ro' | 'en')
+      };
+    }
+    
     // Fallback to old system for other tests
     return dominantProfileId ? score.profile_details?.[dominantProfileId] : null;
   };
   
   const profileInfo = getProfileInfo();
 
-  // Get the translated interpretation for DISC tests
+  // Get the translated interpretation for DISC and Enneagram tests
   const getInterpretation = () => {
     if (testName?.includes('DISC') && dominantProfileId && profileInfo?.name) {
       return t('tests.disc.explanation.interpretation.dominant').replace('{{profile}}', profileInfo.name);
     }
+    
+    if (testName?.toLowerCase().includes('enneagram') && dominantProfileId && profileInfo?.name) {
+      return `Tipul tău dominant Enneagram este ${profileInfo.name}. ${profileInfo.description}`;
+    }
+    
     // For other profile tests, return the interpretation as-is
     return score.interpretation ?? t('testResult.interpretation.notAvailable');
   };
@@ -79,6 +95,8 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
             <CardTitle>
               {testName?.includes('DISC') 
                 ? t('tests.disc.explanation.profileTitle').replace('{{profile}}', profileInfo.name)
+                : testName?.toLowerCase().includes('enneagram')
+                ? `Tipul tău Enneagram: ${profileInfo.name}`
                 : `Profilul tău Principal: ${profileInfo.name}`
               }
             </CardTitle>

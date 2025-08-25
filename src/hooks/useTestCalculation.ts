@@ -7,6 +7,7 @@ import { calculateCattellScore } from '@/utils/testCalculations/cattellCalculati
 import { calculateDiscScore } from '@/utils/testCalculations/discCalculation';
 import { calculateGADScore } from '@/utils/testCalculations/gadCalculation';
 import { calculateBigFiveScore } from '@/utils/testCalculations/bigFiveCalculation';
+import { calculateEnneagramScore, getEnneagramDominantType } from '@/utils/testCalculations/enneagramCalculation';
 
 export const useTestCalculation = (
   testName: string | undefined,
@@ -32,6 +33,27 @@ export const useTestCalculation = (
       // === AICI ACTIVĂM TESTUL BIG FIVE ===
       case 'Big Five Personality Test':
         return calculateBigFiveScore(answers);
+
+      // === AICI ACTIVĂM TESTUL ENNEAGRAM ===
+      case 'Test Enneagram':
+      case 'Enneagram Test':
+      case 'Enneagram Personality Test':
+        const enneagramScores = calculateEnneagramScore(answers);
+        const dominantType = getEnneagramDominantType(enneagramScores);
+        return {
+          type: 'profile',
+          dominant_profile: dominantType,
+          dimensions: Object.entries(enneagramScores).map(([key, value]) => ({
+            id: key,
+            name: key.replace('type', 'Type '),
+            score: value,
+            percentage: Math.round((value / Math.max(...Object.values(enneagramScores))) * 100)
+          })),
+          interpretation: `Tipul tău dominant Enneagram este ${dominantType.replace('type', 'Type ')}`,
+          overall: Math.max(...Object.values(enneagramScores)),
+          raw_score: Math.max(...Object.values(enneagramScores)),
+          max_score: Math.max(...Object.values(enneagramScores))
+        };
 
       default:
         console.warn(`Nu există logică de calcul în noul sistem pentru: ${testName}.`);
