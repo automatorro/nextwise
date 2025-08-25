@@ -659,6 +659,19 @@
       "observeStrengths": "Observă și notează momentele când îți folosești punctele forte",
       "useTrackingApps": "Folosește aplicații simple de tracking pentru a construi obiceiuri",
       "retestRecommendation": "Re-testează după 8-12 luni pentru a vedea evoluția personalității tale și eficacitatea strategiilor implementate."
+    },
+    "personalizedResults": {
+      "title": "Profil Personal",
+      "personalizedInterpretation": "Interpretarea personalizată:",
+      "contextualFactors": "Factori de context:",
+      "context": "Context:",
+      "bullet": "•",
+      "factors": {
+        "development": "Personalitatea se dezvoltă de-a lungul timpului prin experiențe",
+        "situational": "Fiecare dimensiune influențează diferit comportamentul în diverse situații",
+        "unique": "Combinația ta unică de trăsături determină stilul tău personal"
+      },
+      "normalityContext": "Toate scorurile Big Five sunt normale. Diversitatea personalităților umane este ceea ce face societatea funcțională și creativă."
     }
   },
   "testResult": {

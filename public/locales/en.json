@@ -659,6 +659,19 @@
       "observeStrengths": "Observe and note moments when you use your strengths",
       "useTrackingApps": "Use simple tracking apps to build habits",
       "retestRecommendation": "Re-test after 8-12 months to see your personality evolution and strategy effectiveness."
+    },
+    "personalizedResults": {
+      "title": "Personal Profile",
+      "personalizedInterpretation": "Personalized interpretation:",
+      "contextualFactors": "Contextual factors:",
+      "context": "Context:",
+      "bullet": "•",
+      "factors": {
+        "development": "Personality develops over time through experiences",
+        "situational": "Each dimension influences behavior differently in various situations", 
+        "unique": "Your unique combination of traits determines your personal style"
+      },
+      "normalityContext": "All Big Five scores are normal. The diversity of human personalities is what makes society functional and creative."
     }
   },
   "testResult": {
