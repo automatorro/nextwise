@@ -672,6 +672,13 @@
         "unique": "Your unique combination of traits determines your personal style"
       },
       "normalityContext": "All Big Five scores are normal. The diversity of human personalities is what makes society functional and creative."
+    },
+    "aiAnalysis": {
+      "title": "Detailed AI Analysis",
+      "description": "Get an in-depth interpretation of your results, personalized recommendations and how they apply to your career.",
+      "analyzeButton": "Analyze with AI",
+      "generating": "Generating...",
+      "saveToCareerPlan": "Save to Career Plan"
     }
   },
   "testResult": {

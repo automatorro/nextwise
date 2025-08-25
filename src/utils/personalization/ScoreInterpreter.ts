@@ -10,7 +10,8 @@ export interface PersonalizedInterpretation {
 
 export function getPersonalizedInterpretation(
   testName: string, 
-  score: StandardizedScore
+  score: StandardizedScore,
+  language: string = 'ro'
 ): PersonalizedInterpretation | null {
   const testKey = testName.toLowerCase();
   
@@ -23,7 +24,7 @@ export function getPersonalizedInterpretation(
   }
   
   if (testKey.includes('big five') || testKey.includes('personality')) {
-    return getBigFivePersonalizedInterpretation(score);
+    return getBigFivePersonalizedInterpretation(score, language);
   }
   
   if (testKey.includes('cattell') || testKey.includes('16pf')) {
@@ -122,11 +123,48 @@ function getPHQPersonalizedInterpretation(score: StandardizedScore): Personalize
   }
 }
 
-function getBigFivePersonalizedInterpretation(score: StandardizedScore): PersonalizedInterpretation {
+function getBigFivePersonalizedInterpretation(score: StandardizedScore, language: string = 'ro'): PersonalizedInterpretation {
+  // Import the translations (this is a simplified approach)
+  const translations: any = {
+    ro: {
+      personalizedResults: {
+        title: "Profil Personal",
+        factors: {
+          development: "Personalitatea se dezvoltă de-a lungul timpului prin experiențe",
+          situational: "Fiecare dimensiune influențează diferit comportamentul în diverse situații",
+          unique: "Combinația ta unică de trăsături determină stilul tău personal"
+        },
+        normalityContext: "Toate scorurile Big Five sunt normale. Diversitatea personalităților umane este ceea ce face societatea funcțională și creativă."
+      }
+    },
+    en: {
+      personalizedResults: {
+        title: "Personal Profile",
+        factors: {
+          development: "Personality develops over time through experiences",
+          situational: "Each dimension influences behavior differently in various situations",
+          unique: "Your unique combination of traits determines your personal style"
+        },
+        normalityContext: "All Big Five scores are normal. The diversity of human personalities is what makes society functional and creative."
+      }
+    }
+  };
+
+  const t = (key: string) => {
+    const keys = key.split('.');
+    let current = translations[language] || translations.ro;
+    for (const k of keys) {
+      current = current?.[k];
+    }
+    return current || key;
+  };
+
   if (!score.dimensions) {
     return {
-      personalizedMessage: "Profilul tău Big Five este unic și reflectă o combinație distinctă de trăsături de personalitate.",
-      severityLabel: "Profil Unic",
+      personalizedMessage: language === 'en' 
+        ? "Your Big Five profile is unique and reflects a distinct combination of personality traits."
+        : "Profilul tău Big Five este unic și reflectă o combinație distinctă de trăsături de personalitate.",
+      severityLabel: language === 'en' ? "Unique Profile" : "Profil Unic",
       severityVariant: "default"
     };
   }
@@ -135,30 +173,36 @@ function getBigFivePersonalizedInterpretation(score: StandardizedScore): Persona
   const strongTraits = score.dimensions.filter(d => d.score >= 7);
   const weakTraits = score.dimensions.filter(d => d.score <= 4);
 
-  let message = "Profilul tău Big Five arată că ";
+  let message = language === 'en' ? "Your Big Five profile shows that " : "Profilul tău Big Five arată că ";
   
   if (strongTraits.length > 0) {
     const traitNames = strongTraits.map(t => t.name.toLowerCase()).join(", ");
-    message += `ai scoruri ridicate la ${traitNames}. `;
+    message += language === 'en' 
+      ? `you have high scores in ${traitNames}. `
+      : `ai scoruri ridicate la ${traitNames}. `;
   }
   
   if (weakTraits.length > 0) {
     const traitNames = weakTraits.map(t => t.name.toLowerCase()).join(", ");
-    message += `În schimb, ai scoruri mai scăzute la ${traitNames}. `;
+    message += language === 'en'
+      ? `On the other hand, you have lower scores in ${traitNames}. `
+      : `În schimb, ai scoruri mai scăzute la ${traitNames}. `;
   }
   
-  message += "Această combinație îți oferă un profil de personalitate distinct cu puncte forte specifice.";
+  message += language === 'en'
+    ? "This combination gives you a distinct personality profile with specific strengths."
+    : "Această combinație îți oferă un profil de personalitate distinct cu puncte forte specifice.";
 
   return {
     personalizedMessage: message,
-    severityLabel: "Profil Personal",
+    severityLabel: t('personalizedResults.title'),
     severityVariant: "default",
     contextualFactors: [
-      "Personalitatea se dezvoltă de-a lungul timpului prin experiențe",
-      "Fiecare dimensiune influențează diferit comportamentul în diverse situații",
-      "Combinația ta unică de trăsături determină stilul tău personal"
+      t('personalizedResults.factors.development'),
+      t('personalizedResults.factors.situational'),
+      t('personalizedResults.factors.unique')
     ],
-    normalityContext: "Toate scorurile Big Five sunt normale. Diversitatea personalităților umane este ceea ce face societatea funcțională și creativă."
+    normalityContext: t('personalizedResults.normalityContext')
   };
 }
 

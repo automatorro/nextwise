@@ -3,11 +3,12 @@ import { StandardizedScore } from '@/types/tests';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useToast } from '@/components/ui/use-toast';
+import { useToast } from '@/hooks/use-toast';
 import { Loader2, Copy, Save, StickyNote, Lightbulb } from 'lucide-react';
 import SaveToCareerPlanModal from '@/components/career/SaveToCareerPlanModal';
 import { useUserNotes } from '@/hooks/useUserNotes';
 import { useAIRecommendations } from '@/hooks/useAIRecommendations';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface AiAnalysisCardProps {
   score: StandardizedScore | null;
@@ -22,6 +23,7 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
   const { toast } = useToast();
   const { createNote } = useUserNotes();
   const { generateRecommendations } = useAIRecommendations();
+  const { t } = useLanguage();
 
   const handleAnalyze = async () => {
     if (!score || !testName) {
@@ -145,15 +147,15 @@ Salvează această analiză în "Notele mele personale" din aplicație pentru re
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Analiză Detaliată cu AI</CardTitle>
+        <CardTitle>{t('aiAnalysis.title')}</CardTitle>
         <p className="text-muted-foreground">
-          Obține o interpretare aprofundată a rezultatelor tale, recomandări personalizate și cum se aplică acestea în cariera ta.
+          {t('aiAnalysis.description')}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
         {!analysis && (
           <Button onClick={handleAnalyze} disabled={isLoading}>
-            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> Se generează...</> : 'Analizează cu AI'}
+            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('aiAnalysis.generating')}</> : t('aiAnalysis.analyzeButton')}
           </Button>
         )}
 

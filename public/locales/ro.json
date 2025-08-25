@@ -672,6 +672,13 @@
         "unique": "Combinația ta unică de trăsături determină stilul tău personal"
       },
       "normalityContext": "Toate scorurile Big Five sunt normale. Diversitatea personalităților umane este ceea ce face societatea funcțională și creativă."
+    },
+    "aiAnalysis": {
+      "title": "Analiză Detaliată cu AI",
+      "description": "Obține o interpretare aprofundată a rezultatelor tale, recomandări personalizate și cum se aplică acestea în cariera ta.",
+      "analyzeButton": "Analizează cu AI",
+      "generating": "Se generează...",
+      "saveToCareerPlan": "Salvează în Planul de Carieră"
     }
   },
   "testResult": {
