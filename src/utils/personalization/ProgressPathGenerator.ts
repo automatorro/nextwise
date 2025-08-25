@@ -1,4 +1,17 @@
 import { StandardizedScore } from '@/types/tests';
+import { translateKey } from '@/utils/translationUtils';
+
+// Get translations function
+const getTranslations = async () => {
+  const language = localStorage.getItem('language') || 'ro';
+  try {
+    const translations = await import(`../../../public/locales/${language}.json`);
+    return translations.default;
+  } catch (error) {
+    const fallback = await import('../../../public/locales/ro.json');
+    return fallback.default;
+  }
+};
 
 export interface ProgressMilestone {
   timeframe: string;
@@ -12,10 +25,10 @@ export interface ProgressPath {
   retestRecommendation?: string;
 }
 
-export function getProgressPath(
+export async function getProgressPath(
   testName: string, 
   score: StandardizedScore
-): ProgressPath | null {
+): Promise<ProgressPath | null> {
   const testKey = testName.toLowerCase();
   
   if (testKey.includes('gad') || testKey.includes('anxietate')) {
@@ -27,7 +40,7 @@ export function getProgressPath(
   }
   
   if (testKey.includes('big five') || testKey.includes('personality')) {
-    return getBigFiveProgressPath(score);
+    return await getBigFiveProgressPath(score);
   }
   
   if (testKey.includes('cattell') || testKey.includes('16pf')) {
@@ -219,7 +232,9 @@ function getPHQProgressPath(score: StandardizedScore): ProgressPath {
   }
 }
 
-function getBigFiveProgressPath(score: StandardizedScore): ProgressPath {
+async function getBigFiveProgressPath(score: StandardizedScore): Promise<ProgressPath> {
+  const translations = await getTranslations();
+  const t = (key: string) => translateKey(translations, key);
   const milestones: ProgressMilestone[] = [];
   const trackingMethods: string[] = [];
   
@@ -228,11 +243,11 @@ function getBigFiveProgressPath(score: StandardizedScore): ProgressPath {
       milestones: [
         {
           timeframe: 'Săptămâna 1-2',
-          goal: 'Analizează rezultatele',
-          description: 'Reflectează asupra fiecărei dimensiuni și cum se manifestă în viața ta zilnică.'
+          goal: t('progressPath.bigFive.understandProfile'),
+          description: t('progressPath.bigFive.understandProfileDesc')
         }
       ],
-      retestRecommendation: 'Re-testează după 6-12 luni pentru a observa dezvoltarea personală.'
+      retestRecommendation: t('progressPath.bigFive.retestRecommendation')
     };
   }
 
@@ -245,8 +260,8 @@ function getBigFiveProgressPath(score: StandardizedScore): ProgressPath {
   // Milestone 1: Analiza inițială
   milestones.push({
     timeframe: 'Săptămâna 1-2',
-    goal: 'Înțelege-ți profilul complet',
-    description: 'Analizează fiecare dimensiune Big Five și identifică cum se manifestă în comportamentul tău zilnic.'
+    goal: t('progressPath.bigFive.understandProfile'),
+    description: t('progressPath.bigFive.understandProfileDesc')
   });
 
   // Milestones personalizate bazate pe scoruri
@@ -256,16 +271,16 @@ function getBigFiveProgressPath(score: StandardizedScore): ProgressPath {
   if (strongDimensions.length > 0) {
     milestones.push({
       timeframe: 'Săptămâna 3-4',
-      goal: 'Valorifică punctele forte',
-      description: `Concentrează-te pe cum poți folosi mai eficient următoarele puncte forte: ${strongDimensions.map(d => d.name).join(', ')}.`
+      goal: t('progressPath.bigFive.valorizeStrengths'),
+      description: t('progressPath.bigFive.valorizeStrengthsDesc').replace('{{strengths}}', strongDimensions.map(d => d.name).join(', '))
     });
   }
 
   if (weakDimensions.length > 0) {
     milestones.push({
       timeframe: 'Luna 2',
-      goal: 'Dezvoltă zonele de echilibru',
-      description: `Explorează strategii pentru a aduce mai mult echilibru la: ${weakDimensions.map(d => d.name).join(', ')}.`
+      goal: t('progressPath.bigFive.developBalance'),
+      description: t('progressPath.bigFive.developBalanceDesc').replace('{{weaknesses}}', weakDimensions.map(d => d.name).join(', '))
     });
   }
 
@@ -273,44 +288,44 @@ function getBigFiveProgressPath(score: StandardizedScore): ProgressPath {
   if (conscientiousness && conscientiousness.score <= 4) {
     milestones.push({
       timeframe: 'Luna 2-3',
-      goal: 'Construiește sisteme simple de organizare',
-      description: 'Implementează 1-2 sisteme simple de organizare care să te restricționeze.'
+      goal: t('progressPath.bigFive.buildSimpleOrganization'),
+      description: t('progressPath.bigFive.buildSimpleOrganizationDesc')
     });
   }
 
   if (extraversion && extraversion.score >= 7) {
     milestones.push({
       timeframe: 'Luna 3',
-      goal: 'Extinde-ți rețeaua socială',
-      description: 'Participă la evenimente noi și construiește conexiuni în domenii de interes.'
+      goal: t('progressPath.bigFive.expandSocialNetwork'),
+      description: t('progressPath.bigFive.expandSocialNetworkDesc')
     });
   } else if (extraversion && extraversion.score <= 4) {
     milestones.push({
       timeframe: 'Luna 3',
-      goal: 'Dezvoltă relații profunde',
-      description: 'Investește timp de calitate în 2-3 relații importante pentru tine.'
+      goal: t('progressPath.bigFive.developDeepRelationships'),
+      description: t('progressPath.bigFive.developDeepRelationshipsDesc')
     });
   }
 
   if (openness && openness.score >= 7) {
     milestones.push({
       timeframe: 'Luna 4',
-      goal: 'Explorează teritorii noi',
-      description: 'Încearcă 2-3 activități sau hobby-uri complet noi pentru tine.'
+      goal: t('progressPath.bigFive.exploreNewTerritories'),
+      description: t('progressPath.bigFive.exploreNewTerritoriesDesc')
     });
   }
 
   // Plan pe termen lung
   milestones.push({
     timeframe: 'Luna 6',
-    goal: 'Evaluează progresul',
-    description: 'Analizează cum au evoluat comportamentele și atitudinile tale în ultimele luni.'
+    goal: t('progressPath.bigFive.evaluateProgress'),
+    description: t('progressPath.bigFive.evaluateProgressDesc')
   });
 
   // Metode de urmărire personalizate
-  trackingMethods.push('Ține un jurnal săptămânal de reflecție asupra personalității');
-  trackingMethods.push('Solicită feedback lunar de la 2-3 persoane apropiate');
-  trackingMethods.push('Observă și notează momentele când îți folosești punctele forte');
+  trackingMethods.push(t('progressPath.bigFive.weeklyReflectionJournal'));
+  trackingMethods.push(t('progressPath.bigFive.monthlyFeedback'));
+  trackingMethods.push(t('progressPath.bigFive.observeStrengths'));
   
   if (conscientiousness && conscientiousness.score <= 4) {
     trackingMethods.push('Folosește aplicații simple de tracking pentru a construi obiceiuri');
@@ -323,7 +338,7 @@ function getBigFiveProgressPath(score: StandardizedScore): ProgressPath {
   return {
     milestones,
     trackingMethods,
-    retestRecommendation: 'Re-testează după 8-12 luni pentru a vedea evoluția personalității tale și eficacitatea strategiilor implementate.'
+    retestRecommendation: t('progressPath.bigFive.retestRecommendation')
   };
 }
 

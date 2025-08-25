@@ -573,6 +573,114 @@
       "other": "Other person"
     }
   },
+  "personalizedResults": {
+    "title": "What it means for you",
+    "personalizedInterpretation": "Personalized interpretation:",
+    "contextualFactors": "Contextual factors:",
+    "context": "Context:",
+    "bullet": "•"
+  },
+  "recommendations": {
+    "specific": "Specific recommendations based on your result",
+    "wellbeing": "Maintaining well-being",
+    "prevention": "Prevention",
+    "selfHelp": "Self-help techniques",
+    "professional": "Professional intervention",
+    "immediate": "Immediate action",
+    "lifestyle": "Lifestyle changes",
+    "creativity": "Creativity & Innovation",
+    "comfort": "Comfort & Stability",
+    "productivity": "Productivity",
+    "flexibility": "Flexibility",
+    "socialization": "Socialization",
+    "introspection": "Introspection",
+    "selfAwareness": "Self-awareness",
+    "personalAnalysis": "Personality analysis",
+    "bigFive": {
+      "channelCreativity": "Channel your creativity",
+      "channelCreativityDesc": "Your high openness score means you flourish in creative and diverse environments.",
+      "valorizeStability": "Leverage your preference for stability",
+      "valorizeStabilityDesc": "Your preference for routine and structure can be an advantage in many contexts.",
+      "valorizeStabilityActions": ["Create productive routines", "Specialize in one field", "Build organized systems"],
+      "valorizeProductivity": "Leverage your discipline",
+      "valorizeProductivityDesc": "Your organization and discipline are major assets in career and personal life.",
+      "valorizeProductivityActions": ["Accept leadership roles", "Manage complex projects", "Create productivity systems"],
+      "developFlexibility": "Develop light structures",
+      "developFlexibilityDesc": "Your flexible style can benefit from simple structures that don't limit you.",
+      "developFlexibilityActions": ["Use visual reminders", "Create short routines", "Work in organized teams"],
+      "energizeThroughInteraction": "Energize through interactions",
+      "energizeThroughInteractionDesc": "Your social energy is a valuable resource for personal and professional development.",
+      "energizeThroughInteractionActions": ["Participate in networking events", "Join interest groups", "Consider roles involving presentations"],
+      "valorizeDeepReflection": "Value deep reflection",
+      "valorizeDeepReflectionDesc": "Your introverted tendency allows for deep analysis and independent thinking.",
+      "valorizeDeepReflectionActions": ["Create quiet workspaces", "Develop deep 1-on-1 relationships", "Use alone time for planning"],
+      "developSelfAwareness": "Develop your self-awareness",
+      "developSelfAwarenessDesc": "Use Big Five results to better understand your motivations and behaviors.",
+      "developSelfAwarenessActions": ["Keep a reflection journal", "Observe how you react in various situations", "Discuss results with close people"]
+    }
+  },
+  "lifeImpact": {
+    "title": "Impact on your daily life",
+    "subtitle": "How this result can manifest in different aspects of life",
+    "overallImpact": "Overall impact:",
+    "bigFive": {
+      "career": "Career & Profession",
+      "relationships": "Interpersonal Relationships", 
+      "stress": "Stress Management",
+      "learning": "Development & Learning",
+      "overallImpact": "Your Big Five profile offers a comprehensive perspective on how your personality influences all aspects of life, from career to relationships and personal development."
+    }
+  },
+  "progressPath": {
+    "title": "Your progress plan",
+    "subtitle": "Concrete steps for improvement and monitoring",
+    "howToTrack": "How to track progress",
+    "retestRecommendation": "Retest recommendation",
+    "setReminder": "Set Reminder",
+    "bigFive": {
+      "understandProfile": "Understand your complete profile",
+      "understandProfileDesc": "Analyze each Big Five dimension and identify how it manifests in your daily behavior.",
+      "valorizeStrengths": "Leverage your strengths",
+      "valorizeStrengthsDesc": "Focus on how you can use your strengths more effectively: {{strengths}}.",
+      "developBalance": "Develop balance areas", 
+      "developBalanceDesc": "Explore strategies to bring more balance to: {{weaknesses}}.",
+      "buildSimpleOrganization": "Build simple organization systems",
+      "buildSimpleOrganizationDesc": "Implement 1-2 simple organization systems that don't restrict you.",
+      "expandSocialNetwork": "Expand your social network",
+      "expandSocialNetworkDesc": "Participate in new events and build connections in areas of interest.",
+      "developDeepRelationships": "Develop deep relationships",
+      "developDeepRelationshipsDesc": "Invest quality time in 2-3 relationships that are important to you.",
+      "exploreNewTerritories": "Explore new territories",
+      "exploreNewTerritoriesDesc": "Try 2-3 activities or hobbies that are completely new to you.",
+      "evaluateProgress": "Evaluate progress",
+      "evaluateProgressDesc": "Analyze how your behaviors and attitudes have evolved in recent months.",
+      "weeklyReflectionJournal": "Keep a weekly personality reflection journal",
+      "monthlyFeedback": "Request monthly feedback from 2-3 close people",
+      "observeStrengths": "Observe and note moments when you use your strengths",
+      "retestRecommendation": "Re-test after 8-12 months to see your personality evolution and strategy effectiveness."
+    }
+  },
+  "testResult": {
+    "nextSteps": {
+      "title": "What's Next?",
+      "description": "Continue your journey with these recommended next steps",
+      "createCareerPlan": "Create Your Career Plan",
+      "careerPlanDescription": "Let AI help you create a personalized career plan based on your unique profile",
+      "careerPlanDescriptionRelevant": "Your test results will help AI create a more accurate career plan tailored to your personality",
+      "personalityInsight": "Great choice!",
+      "aiWillUse": "Our AI will use your {{testName}} results to personalize your career recommendations",
+      "startCareerPlanning": "Start Career Planning",
+      "exploreMoreTests": "Take More Assessments",
+      "moreTestsDescription": "Get a complete picture of your abilities and personality",
+      "discoverMoreTests": "Discover More Tests",
+      "categories": {
+        "personality": "Personality",
+        "cognitive": "Cognitive", 
+        "emotional": "Emotional",
+        "leadership": "Leadership"
+      }
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

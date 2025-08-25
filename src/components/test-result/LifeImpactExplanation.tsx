@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { StandardizedScore } from '@/types/tests';
-import { getLifeImpactExplanation } from '@/utils/personalization/LifeImpactAnalyzer';
+import { getLifeImpactExplanation, LifeImpactData } from '@/utils/personalization/LifeImpactAnalyzer';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface LifeImpactExplanationProps {
   score: StandardizedScore;
@@ -13,7 +14,16 @@ export const LifeImpactExplanation: React.FC<LifeImpactExplanationProps> = ({
   score, 
   testName 
 }) => {
-  const impactData = getLifeImpactExplanation(testName || '', score);
+  const { t } = useLanguage();
+  const [impactData, setImpactData] = useState<LifeImpactData | null>(null);
+
+  useEffect(() => {
+    const loadImpactData = async () => {
+      const data = await getLifeImpactExplanation(testName || '', score);
+      setImpactData(data);
+    };
+    loadImpactData();
+  }, [testName, score]);
 
   if (!impactData) {
     return null;
@@ -22,9 +32,9 @@ export const LifeImpactExplanation: React.FC<LifeImpactExplanationProps> = ({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Impactul în viața ta zilnică</CardTitle>
+        <CardTitle>{t('lifeImpact.title')}</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Cum se poate manifesta acest rezultat în diferite aspecte ale vieții
+          {t('lifeImpact.subtitle')}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">

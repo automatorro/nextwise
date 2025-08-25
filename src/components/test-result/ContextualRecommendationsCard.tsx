@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, AlertTriangle, Info } from 'lucide-react';
 import { StandardizedScore } from '@/types/tests';
-import { getContextualRecommendations } from '@/utils/personalization/RecommendationEngine';
+import { getContextualRecommendations, ContextualRecommendation } from '@/utils/personalization/RecommendationEngine';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface ContextualRecommendationsCardProps {
   score: StandardizedScore;
@@ -14,11 +15,16 @@ export const ContextualRecommendationsCard: React.FC<ContextualRecommendationsCa
   score, 
   testName 
 }) => {
-  const recommendations = getContextualRecommendations(testName || '', score);
+  const { t } = useLanguage();
+  const [recommendations, setRecommendations] = useState<ContextualRecommendation[] | null>(null);
 
-  if (!recommendations) {
-    return null;
-  }
+  useEffect(() => {
+    const loadRecommendations = async () => {
+      const recs = await getContextualRecommendations(testName || '', score);
+      setRecommendations(recs);
+    };
+    loadRecommendations();
+  }, [testName, score]);
 
   const getIconForType = (type: string) => {
     switch (type) {
@@ -42,12 +48,16 @@ export const ContextualRecommendationsCard: React.FC<ContextualRecommendationsCa
     }
   };
 
+  if (!recommendations) {
+    return null;
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Următorii pași recomandați</CardTitle>
+        <CardTitle>{t('testResult.nextSteps.title')}</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Recomandări specifice bazate pe rezultatul tău
+          {t('recommendations.specific')}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">

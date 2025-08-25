@@ -1,4 +1,17 @@
 import { StandardizedScore } from '@/types/tests';
+import { translateKey } from '@/utils/translationUtils';
+
+// Get translations function
+const getTranslations = async () => {
+  const language = localStorage.getItem('language') || 'ro';
+  try {
+    const translations = await import(`../../../public/locales/${language}.json`);
+    return translations.default;
+  } catch (error) {
+    const fallback = await import('../../../public/locales/ro.json');
+    return fallback.default;
+  }
+};
 
 export interface ContextualRecommendation {
   type: 'self-help' | 'professional' | 'immediate' | 'lifestyle';
@@ -8,10 +21,10 @@ export interface ContextualRecommendation {
   actionItems?: string[];
 }
 
-export function getContextualRecommendations(
+export async function getContextualRecommendations(
   testName: string, 
   score: StandardizedScore
-): ContextualRecommendation[] | null {
+): Promise<ContextualRecommendation[] | null> {
   const testKey = testName.toLowerCase();
   
   if (testKey.includes('gad') || testKey.includes('anxietate')) {
@@ -23,7 +36,7 @@ export function getContextualRecommendations(
   }
   
   if (testKey.includes('big five') || testKey.includes('personality')) {
-    return getBigFiveRecommendations(score);
+    return await getBigFiveRecommendations(score);
   }
   
   if (testKey.includes('cattell') || testKey.includes('16pf')) {
@@ -190,15 +203,17 @@ function getPHQRecommendations(score: StandardizedScore): ContextualRecommendati
   return recommendations;
 }
 
-function getBigFiveRecommendations(score: StandardizedScore): ContextualRecommendation[] {
+async function getBigFiveRecommendations(score: StandardizedScore): Promise<ContextualRecommendation[]> {
+  const translations = await getTranslations();
+  const t = (key: string) => translateKey(translations, key);
   const recommendations: ContextualRecommendation[] = [];
   
   if (!score.dimensions) {
     return [{
       type: "self-help",
-      category: "Dezvoltare Personală",
-      title: "Explorează-ți profilul de personalitate",
-      description: "Folosește aceste informații pentru a-ți înțelege mai bine punctele forte și zonele de dezvoltare."
+      category: t('recommendations.selfAwareness'),
+      title: t('recommendations.bigFive.developSelfAwareness'),
+      description: t('recommendations.bigFive.developSelfAwarenessDesc')
     }];
   }
 
@@ -208,18 +223,26 @@ function getBigFiveRecommendations(score: StandardizedScore): ContextualRecommen
       if (dimension.score >= 7) {
         recommendations.push({
           type: "lifestyle",
-          category: "Creativitate & Inovare",
-          title: "Canalizează creativitatea ta",
-          description: "Scorul tău ridicat la deschidere înseamnă că înflorești în medii creative și diverse.",
-          actionItems: ["Explorează hobby-uri artistice", "Caută experiențe noi", "Participă la evenimente culturale"]
+          category: t('recommendations.creativity'),
+          title: t('recommendations.bigFive.channelCreativity'),
+          description: t('recommendations.bigFive.channelCreativityDesc'),
+          actionItems: [
+            t('recommendations.bigFive.channelCreativityActions.0') || "Explorează hobby-uri artistice",
+            t('recommendations.bigFive.channelCreativityActions.1') || "Caută experiențe noi", 
+            t('recommendations.bigFive.channelCreativityActions.2') || "Participă la evenimente culturale"
+          ]
         });
       } else {
         recommendations.push({
           type: "self-help",
-          category: "Confort & Stabilitate",
-          title: "Valorifică preferința pentru stabilitate",
-          description: "Preferința ta pentru rutină și structură poate fi un avantaj în multe contexte.",
-          actionItems: ["Creează rutine productive", "Specializează-te într-un domeniu", "Construiește sisteme organizate"]
+          category: t('recommendations.comfort'),
+          title: t('recommendations.bigFive.valorizeStability'),
+          description: t('recommendations.bigFive.valorizeStabilityDesc'),
+          actionItems: t('recommendations.bigFive.valorizeStabilityActions') || [
+            "Creează rutine productive", 
+            "Specializează-te într-un domeniu", 
+            "Construiește sisteme organizate"
+          ]
         });
       }
     }
@@ -228,18 +251,26 @@ function getBigFiveRecommendations(score: StandardizedScore): ContextualRecommen
       if (dimension.score >= 7) {
         recommendations.push({
           type: "professional",
-          category: "Productivitate",
-          title: "Valorifică disciplina ta",
-          description: "Organizarea și disciplina ta sunt atuuri majore în carieră și viața personală.",
-          actionItems: ["Acceptă roluri de leadership", "Gestionează proiecte complexe", "Creează sisteme de productivitate"]
+          category: t('recommendations.productivity'),
+          title: t('recommendations.bigFive.valorizeProductivity'),
+          description: t('recommendations.bigFive.valorizeProductivityDesc'),
+          actionItems: t('recommendations.bigFive.valorizeProductivityActions') || [
+            "Acceptă roluri de leadership", 
+            "Gestionează proiecte complexe", 
+            "Creează sisteme de productivitate"
+          ]
         });
       } else {
         recommendations.push({
           type: "lifestyle",
-          category: "Flexibilitate",
-          title: "Dezvoltă structuri ușoare",
-          description: "Stilul tău flexibil poate beneficia de structuri simple care nu te limitează.",
-          actionItems: ["Folosește reminder-uri vizuale", "Creează rutine scurte", "Lucrează în echipe organizate"]
+          category: t('recommendations.flexibility'),
+          title: t('recommendations.bigFive.developFlexibility'),
+          description: t('recommendations.bigFive.developFlexibilityDesc'),
+          actionItems: t('recommendations.bigFive.developFlexibilityActions') || [
+            "Folosește reminder-uri vizuale", 
+            "Creează rutine scurte", 
+            "Lucrează în echipe organizate"
+          ]
         });
       }
     }
@@ -248,18 +279,26 @@ function getBigFiveRecommendations(score: StandardizedScore): ContextualRecommen
       if (dimension.score >= 7) {
         recommendations.push({
           type: "lifestyle",
-          category: "Socializare",
-          title: "Energizează-te prin interacțiuni",
-          description: "Energia ta socială este o resursă valoroasă pentru dezvoltarea personală și profesională.",
-          actionItems: ["Participă la evenimente de networking", "Alătură-te grupurilor de interes", "Consideră roluri care implică prezentări"]
+          category: t('recommendations.socialization'),
+          title: t('recommendations.bigFive.energizeThroughInteraction'),
+          description: t('recommendations.bigFive.energizeThroughInteractionDesc'),
+          actionItems: t('recommendations.bigFive.energizeThroughInteractionActions') || [
+            "Participă la evenimente de networking", 
+            "Alătură-te grupurilor de interes", 
+            "Consideră roluri care implică prezentări"
+          ]
         });
       } else {
         recommendations.push({
           type: "self-help",
-          category: "Introspecție",
-          title: "Valorifică reflecția profundă",
-          description: "Tendința ta introvertă îți permite analize profunde și gândire independentă.",
-          actionItems: ["Creează spații de lucru liniștite", "Dezvoltă relații 1-la-1 profunde", "Folosește timpul singur pentru planificare"]
+          category: t('recommendations.introspection'),
+          title: t('recommendations.bigFive.valorizeDeepReflection'),
+          description: t('recommendations.bigFive.valorizeDeepReflectionDesc'),
+          actionItems: t('recommendations.bigFive.valorizeDeepReflectionActions') || [
+            "Creează spații de lucru liniștite", 
+            "Dezvoltă relații 1-la-1 profunde", 
+            "Folosește timpul singur pentru planificare"
+          ]
         });
       }
     }
@@ -268,10 +307,14 @@ function getBigFiveRecommendations(score: StandardizedScore): ContextualRecommen
   // Recomandare generală pentru Big Five
   recommendations.push({
     type: "self-help",
-    category: "Autocunoaștere",
-    title: "Dezvoltă-ți autocunoașterea",
-    description: "Folosește rezultatele Big Five pentru a-ți înțelege mai bine motivațiile și comportamentele.",
-    actionItems: ["Ține un jurnal de reflecție", "Observă cum reacționezi în situații diverse", "Discută rezultatele cu persoane apropiate"]
+    category: t('recommendations.selfAwareness'),
+    title: t('recommendations.bigFive.developSelfAwareness'),
+    description: t('recommendations.bigFive.developSelfAwarenessDesc'),
+    actionItems: t('recommendations.bigFive.developSelfAwarenessActions') || [
+      "Ține un jurnal de reflecție", 
+      "Observă cum reacționezi în situații diverse", 
+      "Discută rezultatele cu persoane apropiate"
+    ]
   });
 
   return recommendations;

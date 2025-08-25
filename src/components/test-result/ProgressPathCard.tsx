@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar, Target, TrendingUp } from 'lucide-react';
 import { StandardizedScore } from '@/types/tests';
-import { getProgressPath } from '@/utils/personalization/ProgressPathGenerator';
+import { getProgressPath, ProgressPath } from '@/utils/personalization/ProgressPathGenerator';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface ProgressPathCardProps {
   score: StandardizedScore;
@@ -15,7 +16,16 @@ export const ProgressPathCard: React.FC<ProgressPathCardProps> = ({
   score, 
   testName 
 }) => {
-  const progressPath = getProgressPath(testName || '', score);
+  const { t } = useLanguage();
+  const [progressPath, setProgressPath] = useState<ProgressPath | null>(null);
+
+  useEffect(() => {
+    const loadProgressPath = async () => {
+      const path = await getProgressPath(testName || '', score);
+      setProgressPath(path);
+    };
+    loadProgressPath();
+  }, [testName, score]);
 
   if (!progressPath) {
     return null;
@@ -26,10 +36,10 @@ export const ProgressPathCard: React.FC<ProgressPathCardProps> = ({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Target className="h-5 w-5" />
-          Planul tău de progres
+          {t('progressPath.title')}
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Pași concreți pentru îmbunătățire și monitorizare
+          {t('progressPath.subtitle')}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">

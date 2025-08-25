@@ -1,4 +1,17 @@
 import { StandardizedScore } from '@/types/tests';
+import { translateKey } from '@/utils/translationUtils';
+
+// Get translations function
+const getTranslations = async () => {
+  const language = localStorage.getItem('language') || 'ro';
+  try {
+    const translations = await import(`../../../public/locales/${language}.json`);
+    return translations.default;
+  } catch (error) {
+    const fallback = await import('../../../public/locales/ro.json');
+    return fallback.default;
+  }
+};
 
 export interface LifeAreaImpact {
   name: string;
@@ -11,10 +24,10 @@ export interface LifeImpactData {
   overallImpact?: string;
 }
 
-export function getLifeImpactExplanation(
+export async function getLifeImpactExplanation(
   testName: string, 
   score: StandardizedScore
-): LifeImpactData | null {
+): Promise<LifeImpactData | null> {
   const testKey = testName.toLowerCase();
   
   if (testKey.includes('gad') || testKey.includes('anxietate')) {
@@ -26,7 +39,7 @@ export function getLifeImpactExplanation(
   }
   
   if (testKey.includes('big five') || testKey.includes('personality')) {
-    return getBigFiveLifeImpact(score);
+    return await getBigFiveLifeImpact(score);
   }
   
   if (testKey.includes('cattell') || testKey.includes('16pf')) {
@@ -236,14 +249,16 @@ function getPHQLifeImpact(score: StandardizedScore): LifeImpactData {
   }
 }
 
-function getBigFiveLifeImpact(score: StandardizedScore): LifeImpactData {
+async function getBigFiveLifeImpact(score: StandardizedScore): Promise<LifeImpactData> {
+  const translations = await getTranslations();
+  const t = (key: string) => translateKey(translations, key);
   const areas: LifeAreaImpact[] = [];
   
   if (!score.dimensions) {
     return {
       areas: [
         {
-          name: 'Carieră & Profesie',
+          name: t('lifeImpact.bigFive.career'),
           impact: 'Trăsăturile tale de personalitate influențează stilul de lucru și preferințele profesionale.',
           examples: ['Alegerea tipului de rol potrivit', 'Stilul de colaborare în echipă']
         }
@@ -277,7 +292,7 @@ function getBigFiveLifeImpact(score: StandardizedScore): LifeImpactData {
   }
 
   areas.push({
-    name: 'Carieră & Profesie',
+    name: t('lifeImpact.bigFive.career'),
     impact: careerImpact,
     examples: careerExamples
   });
@@ -301,7 +316,7 @@ function getBigFiveLifeImpact(score: StandardizedScore): LifeImpactData {
   }
 
   areas.push({
-    name: 'Relații Interpersonale',
+    name: t('lifeImpact.bigFive.relationships'),
     impact: relationshipImpact,
     examples: relationshipExamples
   });
@@ -319,7 +334,7 @@ function getBigFiveLifeImpact(score: StandardizedScore): LifeImpactData {
   }
 
   areas.push({
-    name: 'Gestionarea Stresului',
+    name: t('lifeImpact.bigFive.stress'),
     impact: stressImpact,
     examples: stressExamples
   });
@@ -337,14 +352,14 @@ function getBigFiveLifeImpact(score: StandardizedScore): LifeImpactData {
   }
 
   areas.push({
-    name: 'Dezvoltare & Învățare',
+    name: t('lifeImpact.bigFive.learning'),
     impact: learningImpact,
     examples: learningExamples
   });
 
   return {
     areas,
-    overallImpact: 'Profilul tău Big Five oferă o perspectivă cuprinzătoare asupra modului în care personalitatea ta influențează toate aspectele vieții, de la carieră la relații și dezvoltare personală.'
+    overallImpact: t('lifeImpact.bigFive.overallImpact')
   };
 }
 
