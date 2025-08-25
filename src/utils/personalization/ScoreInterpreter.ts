@@ -1,0 +1,141 @@
+import { StandardizedScore } from '@/types/tests';
+
+export interface PersonalizedInterpretation {
+  personalizedMessage: string;
+  severityLabel: string;
+  severityVariant: 'default' | 'secondary' | 'outline' | 'destructive';
+  contextualFactors?: string[];
+  normalityContext?: string;
+}
+
+export function getPersonalizedInterpretation(
+  testName: string, 
+  score: StandardizedScore
+): PersonalizedInterpretation | null {
+  const testKey = testName.toLowerCase();
+  
+  if (testKey.includes('gad') || testKey.includes('anxietate')) {
+    return getGADPersonalizedInterpretation(score);
+  }
+  
+  if (testKey.includes('phq') || testKey.includes('depresie')) {
+    return getPHQPersonalizedInterpretation(score);
+  }
+  
+  if (testKey.includes('big five') || testKey.includes('personality')) {
+    return getBigFivePersonalizedInterpretation(score);
+  }
+  
+  if (testKey.includes('cattell') || testKey.includes('16pf')) {
+    return getCattellPersonalizedInterpretation(score);
+  }
+  
+  return null;
+}
+
+function getGADPersonalizedInterpretation(score: StandardizedScore): PersonalizedInterpretation {
+  const rawScore = score.raw_score || 0;
+  const percentage = score.overall || 0;
+  
+  if (rawScore <= 4) {
+    return {
+      personalizedMessage: `Scorul tău de ${rawScore} puncte indică un nivel minimal de anxietate. Aceasta este o stare normală și sănătoasă. Ocazional, toți experimentăm îngrijorări ușoare, dar acestea nu interferează semnificativ cu activitățile zilnice.`,
+      severityLabel: 'Normal',
+      severityVariant: 'default',
+      contextualFactors: [
+        'Îngrijorările ocazionale sunt parte din experiența umană normală',
+        'Stresul ușor poate fi chiar benefic în anumite situații',
+        'Capacitatea de a gestiona anxietatea pare să fie bună'
+      ],
+      normalityContext: 'Majoritatea adulților sănătoși au scoruri în acest interval (0-4 puncte).'
+    };
+  } else if (rawScore <= 9) {
+    return {
+      personalizedMessage: `Cu un scor de ${rawScore} puncte, experimentezi un nivel ușor de anxietate. Aceasta poate fi legată de stresul cotidian sau de provocări specifice din viața ta. Deși nu este îngrijorător, este util să fii conștient de factorii care îți declanșează anxietatea.`,
+      severityLabel: 'Ușoară',
+      severityVariant: 'secondary',
+      contextualFactors: [
+        'Poate fi legată de schimbări recente în viață sau stress suplimentar',
+        'Simptomele pot varia în funcție de circumstanțe',
+        'Tehnicile simple de management pot fi foarte eficiente'
+      ],
+      normalityContext: 'Aproximativ 20-30% din populație experimentează nivele similare de anxietate.'
+    };
+  } else if (rawScore <= 14) {
+    return {
+      personalizedMessage: `Scorul tău de ${rawScore} puncte sugerează un nivel moderat de anxietate care poate începe să interfereze cu unele aspecte ale vieții tale. Este important să acorzi atenție acestor simptome și să consideri strategii mai active de management.`,
+      severityLabel: 'Moderată',
+      severityVariant: 'outline',
+      contextualFactors: [
+        'Anxietatea poate afecta concentrarea, somnul sau relațiile',
+        'Simptomele fizice (tensiune musculară, oboseală) pot fi prezente',
+        'Poate exista o tendință de evitare a anumitor situații'
+      ],
+      normalityContext: 'Acest nivel necesită atenție și strategii active de management.'
+    };
+  } else {
+    return {
+      personalizedMessage: `Cu un scor de ${rawScore} puncte, experimentezi un nivel sever de anxietate care probabil interferează semnificativ cu viața ta zilnică. Este foarte important să cauți sprijin profesional pentru a dezvolta strategii eficiente de management.`,
+      severityLabel: 'Severă',
+      severityVariant: 'destructive',
+      contextualFactors: [
+        'Anxietatea poate afecta major funcționarea zilnică',
+        'Simptomele fizice și emoționale pot fi intense',
+        'Poate exista o limitare semnificativă a activităților normale'
+      ],
+      normalityContext: 'Acest nivel de anxietate beneficiază semnificativ de intervenție profesională.'
+    };
+  }
+}
+
+function getPHQPersonalizedInterpretation(score: StandardizedScore): PersonalizedInterpretation {
+  const rawScore = score.raw_score || 0;
+  
+  if (rawScore <= 4) {
+    return {
+      personalizedMessage: `Scorul tău indică o stare emoțională pozitivă, fără simptome semnificative de depresie. Această stare reflectă o funcționare psihică sănătoasă și capacitatea de a face față provocărilor vieții.`,
+      severityLabel: 'Minimal',
+      severityVariant: 'default',
+      normalityContext: 'Majoritatea persoanelor sănătoase au scoruri în acest interval.'
+    };
+  } else if (rawScore <= 9) {
+    return {
+      personalizedMessage: `Experimentezi simptome ușoare care pot include perioade de tristețe sau scăderea energiei. Acestea pot fi reacții normale la stress sau schimbări în viață.`,
+      severityLabel: 'Ușor',
+      severityVariant: 'secondary',
+      normalityContext: 'Simptomele ușoare sunt comune și pot fi temporare.'
+    };
+  } else if (rawScore <= 14) {
+    return {
+      personalizedMessage: `Scorul tău sugerează simptome moderate de depresie care pot afecta funcționarea zilnică. Este recomandat să acorzi atenție acestor simptome.`,
+      severityLabel: 'Moderat',
+      severityVariant: 'outline',
+      normalityContext: 'Acest nivel poate beneficia de intervenție profesională.'
+    };
+  } else {
+    return {
+      personalizedMessage: `Experimentezi simptome severe care necesită atenție profesională imediată pentru a dezvolta un plan de tratament adecvat.`,
+      severityLabel: 'Sever',
+      severityVariant: 'destructive',
+      normalityContext: 'Intervenția profesională este esențială la acest nivel.'
+    };
+  }
+}
+
+function getBigFivePersonalizedInterpretation(score: StandardizedScore): PersonalizedInterpretation {
+  return {
+    personalizedMessage: 'Profilul tău de personalitate oferă o perspectivă asupra caracteristicilor tale psihologice principale. Fiecare dimensiune reprezintă un aspect diferit al personalității tale.',
+    severityLabel: 'Profil Personal',
+    severityVariant: 'default',
+    normalityContext: 'Personalitatea este unică pentru fiecare individ - nu există scoruri "corecte" sau "greșite".'
+  };
+}
+
+function getCattellPersonalizedInterpretation(score: StandardizedScore): PersonalizedInterpretation {
+  return {
+    personalizedMessage: 'Profilul tău Cattell 16PF oferă o analiză detaliată a factorilor de personalitate care influențează comportamentul și preferințele tale.',
+    severityLabel: 'Profil Complet',
+    severityVariant: 'default',
+    normalityContext: 'Fiecare factor de personalitate contribuie la unicitatea ta ca individ.'
+  };
+}

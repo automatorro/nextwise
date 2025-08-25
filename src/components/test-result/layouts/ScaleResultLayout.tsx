@@ -6,6 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AiAnalysisCard } from '../AiAnalysisCard';
 import { ScoringExplanation } from '../ScoringExplanation';
 import { TestExplanations } from '../../tests/TestExplanations';
+import { PersonalizedResultsCard } from '../PersonalizedResultsCard';
+import { ContextualRecommendationsCard } from '../ContextualRecommendationsCard';
+import { LifeImpactExplanation } from '../LifeImpactExplanation';
+import { ProgressPathCard } from '../ProgressPathCard';
 
 interface ScaleResultLayoutProps {
   score: StandardizedScore;
@@ -23,6 +27,7 @@ export const ScaleResultLayout: React.FC<ScaleResultLayoutProps> = ({ score, tes
           max_score: score.max_score || 0,
           interpretation: score.interpretation || ''
         }}
+        testName={testName}
       />
 
       {score.scale_level && (
@@ -36,10 +41,17 @@ export const ScaleResultLayout: React.FC<ScaleResultLayoutProps> = ({ score, tes
         </Card>
       )}
 
-      {/* Test Explanations */}
-      {testName && (
-        <TestExplanations testName={testName} score={score} />
-      )}
+      {/* Personalized Interpretation */}
+      <PersonalizedResultsCard score={score} testName={testName} />
+
+      {/* Life Impact Explanation */}
+      <LifeImpactExplanation score={score} testName={testName} />
+
+      {/* Contextual Recommendations */}
+      <ContextualRecommendationsCard score={score} testName={testName} />
+
+      {/* Progress Path */}
+      <ProgressPathCard score={score} testName={testName} />
 
       {/* AI Analysis Card */}
       <AiAnalysisCard 
