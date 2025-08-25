@@ -2,7 +2,6 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { getDimensionLabel } from '@/utils/testLabels';
-import { translateInterpretation } from '@/utils/testResultTranslations';
 import { useLanguage } from '@/hooks/useLanguage';
 
 interface DetailedInterpretationsProps {
@@ -13,7 +12,7 @@ interface DetailedInterpretationsProps {
 }
 
 const DetailedInterpretations = ({ interpretations, testName = 'Big Five Personalitate' }: DetailedInterpretationsProps) => {
-  const { language } = useLanguage();
+  const { t } = useLanguage();
   
   // Defensive checks - don't render if no meaningful interpretations
   if (!interpretations || typeof interpretations !== 'object') {
@@ -31,14 +30,15 @@ const DetailedInterpretations = ({ interpretations, testName = 'Big Five Persona
     return null;
   }
   
-  const labels = {
-    title: language === 'en' ? 'Detailed Interpretations' : 'Interpretări Detaliate'
+  const getTranslation = (key: string, fallback: string) => {
+    const translation = t(key);
+    return translation === key ? fallback : translation;
   };
 
   return (
     <Card className="mb-8">
       <CardHeader>
-        <CardTitle>{labels.title}</CardTitle>
+        <CardTitle>{getTranslation('testResult.detailedInterpretations.title', 'Interpretări Detaliate')}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
@@ -48,7 +48,7 @@ const DetailedInterpretations = ({ interpretations, testName = 'Big Five Persona
                 {getDimensionLabel(testName, dimension)}
               </h3>
               <p className="text-gray-700 leading-relaxed">
-                {translateInterpretation(interpretation, language)}
+                {interpretation}
               </p>
             </div>
           ))}
