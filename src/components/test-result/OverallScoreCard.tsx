@@ -27,6 +27,7 @@ export const OverallScoreCard: React.FC<OverallScoreCardProps> = ({ score, testN
         <div>
           <h3 className="text-lg font-semibold">{t('testResult.overallScore.totalScore')}</h3>
           <p className="text-4xl font-bold text-primary">{overallPercentage}%</p>
+          <p className="text-sm text-muted-foreground mb-4">{t('testResult.overallScore.description')}</p>
           <p className="text-sm text-muted-foreground">{interpretation}</p>
         </div>
         <div>

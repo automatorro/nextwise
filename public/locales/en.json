@@ -657,6 +657,7 @@
       "weeklyReflectionJournal": "Keep a weekly personality reflection journal",
       "monthlyFeedback": "Request monthly feedback from 2-3 close people",
       "observeStrengths": "Observe and note moments when you use your strengths",
+      "useTrackingApps": "Use simple tracking apps to build habits",
       "retestRecommendation": "Re-test after 8-12 months to see your personality evolution and strategy effectiveness."
     }
   },
@@ -692,8 +693,10 @@
     "scoring": {
       "title": "How the score is calculated",
       "description": "Explanation of the evaluation system for this test",
+      "testDescription": "The Big Five test evaluates five main dimensions of personality: Openness, Conscientiousness, Extraversion, Agreeableness and Neuroticism.",
       "interpretation": "Score interpretation:",
       "whatMeans": "What your results mean:",
+      "resultMeaning": "Your results indicate your general Big Five profile and your strengths in various dimensions of personality.",
       "ranges": {
         "low": "Low",
         "moderate": "Moderate", 
@@ -704,9 +707,49 @@
     "overallScore": {
       "title": "Test Result: {{testName}}",
       "totalScore": "Total Score",
+      "description": "Your Big Five results offer a comprehensive perspective on your personality across five fundamental dimensions.",
       "pointsObtained": "Points Obtained:",
       "maxPoints": "Maximum Points:",
       "whatMeansTitle": "What it means for you"
+    },
+    "bigFive": {
+      "explanationsTitle": "Detailed Dimension Explanations",
+      "explanationsSubtitle": "Understand what each dimension means and how you position yourself",
+      "scoreLabel": "Score:",
+      "chartTitle": "Big Five Career Profile",
+      "yourScore": "Your Score",
+      "dimensions": {
+        "openness": {
+          "title": "Openness",
+          "description": "Measures creativity, curiosity, and openness to new experiences",
+          "high": "Creative, imaginative, curious about new ideas and experiences",
+          "low": "Prefer routine and traditions, being more conservative in approaches"
+        },
+        "conscientiousness": {
+          "title": "Conscientiousness", 
+          "description": "Measures organization, discipline, and goal orientation",
+          "high": "Very organized, disciplined and goal-oriented",
+          "low": "More flexible and spontaneous, but sometimes less organized"
+        },
+        "extraversion": {
+          "title": "Extraversion",
+          "description": "Measures sociability, assertiveness, and energy",
+          "high": "Sociable, assertive, energetic in social interactions",
+          "low": "Prefer solitary activities and are more reserved socially"
+        },
+        "agreeableness": {
+          "title": "Agreeableness",
+          "description": "Measures cooperation, empathy, and trust",
+          "high": "Cooperative, empathetic and like to help others",
+          "low": "More competitive and direct in interpersonal relationships"
+        },
+        "neuroticism": {
+          "title": "Neuroticism",
+          "description": "Measures emotional stability and stress management",
+          "high": "More sensitive to stress and emotional fluctuations",
+          "low": "Emotionally stable, calm and manage stress well"
+        }
+      }
     }
   },
   "common": {

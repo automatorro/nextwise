@@ -657,6 +657,7 @@
       "weeklyReflectionJournal": "Ține un jurnal săptămânal de reflecție asupra personalității",
       "monthlyFeedback": "Solicită feedback lunar de la 2-3 persoane apropiate",
       "observeStrengths": "Observă și notează momentele când îți folosești punctele forte",
+      "useTrackingApps": "Folosește aplicații simple de tracking pentru a construi obiceiuri",
       "retestRecommendation": "Re-testează după 8-12 luni pentru a vedea evoluția personalității tale și eficacitatea strategiilor implementate."
     }
   },
@@ -692,8 +693,10 @@
     "scoring": {
       "title": "Cum se calculează scorul",
       "description": "Explicația sistemului de evaluare pentru acest test",
+      "testDescription": "Testul Big Five evaluează cinci dimensiuni principale ale personalității: Deschidere, Conștiinciozitate, Extraversiune, Agreabilitate și Nevrotism.",
       "interpretation": "Interpretarea scorurilor:",
       "whatMeans": "Ce înseamnă rezultatele tale:",
+      "resultMeaning": "Rezultatele tale indică profilul tău general Big Five și punctele tale forte în diverse dimensiuni ale personalității.",
       "ranges": {
         "low": "Scăzut",
         "moderate": "Moderat",
@@ -704,9 +707,49 @@
     "overallScore": {
       "title": "Rezultatul Testului: {{testName}}",
       "totalScore": "Scorul Total",
+      "description": "Rezultatele tale Big Five oferă o perspectivă cuprinzătoare asupra personalității tale în cinci dimensiuni fundamentale.",
       "pointsObtained": "Puncte Obținute:",
       "maxPoints": "Puncte Maxime:",
       "whatMeansTitle": "Ce înseamnă pentru tine"
+    },
+    "bigFive": {
+      "explanationsTitle": "Explicații Detaliate ale Dimensiunilor",
+      "explanationsSubtitle": "Înțelege ce înseamnă fiecare dimensiune și cum te poziționezi",
+      "scoreLabel": "Scor:",
+      "chartTitle": "Big Five Career Profile",
+      "yourScore": "Your Score",
+      "dimensions": {
+        "openness": {
+          "title": "Openness",
+          "description": "Măsoară creativitatea, curiozitatea și deschiderea către experiențe noi",
+          "high": "Creativ, imaginativ, curios cu privire la idei și experiențe noi",
+          "low": "Preferați rutina și tradițiile, fiind mai conservator în abordări"
+        },
+        "conscientiousness": {
+          "title": "Conscientiousness", 
+          "description": "Măsoară organizarea, disciplina și orientarea către obiective",
+          "high": "Foarte organizat, disciplinat și orientat spre obiective",
+          "low": "Sunteți mai flexibil și spontan, dar uneori mai puțin organizat"
+        },
+        "extraversion": {
+          "title": "Extraversion",
+          "description": "Măsoară sociabilitatea, asertivitatea și energia",
+          "high": "Sociabil, asertiv, energic în interacțiunile sociale",
+          "low": "Preferați activitățile solitudinale și sunteți mai rezervat în social"
+        },
+        "agreeableness": {
+          "title": "Agreeableness",
+          "description": "Măsoară cooperarea, empatia și încrederea",
+          "high": "Cooperant, empatic și vă place să ajutați pe alții",
+          "low": "Sunteți mai competitiv și direct în relațiile interpersonale"
+        },
+        "neuroticism": {
+          "title": "Neuroticism",
+          "description": "Măsoară stabilitatea emoțională și gestionarea stresului",
+          "high": "Mai sensibil la stres și fluctuații emotionale",
+          "low": "Sunteți stabil emoțional, calm și gestionați bine stresul"
+        }
+      }
     }
   },
   "common": {

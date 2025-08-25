@@ -68,9 +68,12 @@ const BigFiveExplanations = ({ dimensions }: BigFiveExplanationsProps) => {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">
+      <h3 className="text-lg font-semibold text-gray-900 mb-2">
         {t('bigFive.explanationsTitle')}
       </h3>
+      <p className="text-sm text-gray-600 mb-4">
+        {t('bigFive.explanationsSubtitle')}
+      </p>
       
       {Object.entries(dimensions).map(([key, score]) => {
         const info = getDimensionInfo(key, score);
@@ -89,7 +92,7 @@ const BigFiveExplanations = ({ dimensions }: BigFiveExplanationsProps) => {
                   <Badge variant={interpretation.variant}>
                     {interpretation.level}
                   </Badge>
-                  <span className="text-sm font-semibold">{score}%</span>
+                  <span className="text-sm font-semibold">{t('bigFive.scoreLabel')} {score} / 10</span>
                 </div>
               </CardTitle>
             </CardHeader>
