@@ -679,6 +679,34 @@
         "emotional": "Emotional",
         "leadership": "Leadership"
       }
+    },
+    "interpretation": {
+      "high": "High",
+      "moderate": "Moderate",
+      "low": "Low",
+      "highScore": "High Score",
+      "lowScore": "Low Score",
+      "notAvailable": "Interpretation not available"
+    },
+    "incomplete": "Incomplete Test",
+    "scoring": {
+      "title": "How the score is calculated",
+      "description": "Explanation of the evaluation system for this test",
+      "interpretation": "Score interpretation:",
+      "whatMeans": "What your results mean:",
+      "ranges": {
+        "low": "Low",
+        "moderate": "Moderate", 
+        "good": "Good",
+        "excellent": "Excellent"
+      }
+    },
+    "overallScore": {
+      "title": "Test Result: {{testName}}",
+      "totalScore": "Total Score",
+      "pointsObtained": "Points Obtained:",
+      "maxPoints": "Maximum Points:",
+      "whatMeansTitle": "What it means for you"
     }
   },
   "common": {

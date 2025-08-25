@@ -679,6 +679,34 @@
         "emotional": "Emoțional",
         "leadership": "Leadership"
       }
+    },
+    "interpretation": {
+      "high": "Ridicat",
+      "moderate": "Moderat",
+      "low": "Scăzut",
+      "highScore": "Scor Ridicat",
+      "lowScore": "Scor Scăzut",
+      "notAvailable": "Interpretarea nu este disponibilă"
+    },
+    "incomplete": "Test Incomplet",
+    "scoring": {
+      "title": "Cum se calculează scorul",
+      "description": "Explicația sistemului de evaluare pentru acest test",
+      "interpretation": "Interpretarea scorurilor:",
+      "whatMeans": "Ce înseamnă rezultatele tale:",
+      "ranges": {
+        "low": "Scăzut",
+        "moderate": "Moderat",
+        "good": "Bun", 
+        "excellent": "Excelent"
+      }
+    },
+    "overallScore": {
+      "title": "Rezultatul Testului: {{testName}}",
+      "totalScore": "Scorul Total",
+      "pointsObtained": "Puncte Obținute:",
+      "maxPoints": "Puncte Maxime:",
+      "whatMeansTitle": "Ce înseamnă pentru tine"
     }
   },
   "common": {
