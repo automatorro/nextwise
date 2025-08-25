@@ -311,6 +311,15 @@
       "description": "Accesează resurse curate și sfaturi acționabile de la experți în dezvoltarea carierei"
     }
   },
+  "gamification": {
+    "streak": {
+      "title": "Progres Continuu",
+      "days": "zile",
+      "activeDays": "Zile Active",
+      "stepsCompleted": "Pași Completați",
+      "milestonesReached": "Obiective Atinse"
+    }
+  },
   "tests": {
     "title": "Teste Psihometrice",
     "subtitle": "Descoperă-ți potențialul cu suita noastră cuprinzătoare de teste",

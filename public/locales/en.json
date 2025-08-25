@@ -311,6 +311,15 @@
       "description": "Access curated resources and actionable advice from career development experts"
     }
   },
+  "gamification": {
+    "streak": {
+      "title": "Progress Streak",
+      "days": "days",
+      "activeDays": "Active Days",
+      "stepsCompleted": "Steps Completed",
+      "milestonesReached": "Milestones Reached"
+    }
+  },
   "tests": {
     "title": "Psychometric Tests",
     "subtitle": "Discover your potential with our comprehensive test suite",
