@@ -15,15 +15,11 @@ export const getTestScoringExplanation = (testName: string): TestExplanation => 
   const normalizedTestName = testName.toLowerCase();
 
   if (normalizedTestName.includes('disc')) {
+    const discExplanation: DISCExplanation = getDISCExplanation('ro');
     return {
-      description: "DISC assessment measures behavioral styles in four main areas: Dominance (D), Influence (I), Steadiness (S), and Conscientiousness (C).",
-      scoreRanges: [
-        { range: "75-100%", label: "Very High", variant: "default" },
-        { range: "50-74%", label: "High", variant: "secondary" },
-        { range: "25-49%", label: "Moderate", variant: "outline" },
-        { range: "0-24%", label: "Low", variant: "outline" }
-      ],
-      whatItMeans: "Your results show which behavioral style is most dominant in your personality, helping you understand your natural tendencies in communication, decision-making, and interaction with others."
+      description: discExplanation.description,
+      scoreRanges: discExplanation.scoreRanges,
+      whatItMeans: discExplanation.whatItMeans
     };
   }
   

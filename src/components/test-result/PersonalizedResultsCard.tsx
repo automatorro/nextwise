@@ -15,28 +15,7 @@ export const PersonalizedResultsCard: React.FC<PersonalizedResultsCardProps> = (
   testName 
 }) => {
   const { t } = useLanguage();
-  
-  // Handle DISC-specific personalized results
-  const getPersonalizedData = () => {
-    if (testName?.includes('DISC') && score.dominant_profile) {
-      const profile = score.dominant_profile;
-      return {
-        personalizedMessage: t(`tests.disc.explanation.personalized.personalizedMessage.${profile}`),
-        contextualFactors: (() => {
-          const factors = t(`tests.disc.explanation.personalized.contextualFactors.${profile}`);
-          return Array.isArray(factors) ? factors : [];
-        })(),
-        normalityContext: t(`tests.disc.explanation.personalized.normalityContext.${profile}`),
-        severityLabel: t(`tests.disc.explanation.profiles.${profile}.name`),
-        severityVariant: 'default' as const
-      };
-    }
-    
-    // Fallback to existing system for other tests
-    return getPersonalizedInterpretation(testName || '', score);
-  };
-
-  const personalizedData = getPersonalizedData();
+  const personalizedData = getPersonalizedInterpretation(testName || '', score);
 
   if (!personalizedData) {
     return null;

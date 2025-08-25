@@ -26,19 +26,8 @@ export const ScoringExplanation = ({ testName }: ScoringExplanationProps) => {
       </CardHeader>
       <CardContent className="space-y-4">
         <p className="text-sm text-muted-foreground">
-          {testName.toLowerCase().includes('disc') 
-            ? t('tests.disc.explanation.scoring.description')
-            : testName.toLowerCase().includes('big') 
-              ? t('testResult.scoring.testDescription') 
-              : explanation.description
-          }
+          {testName.toLowerCase().includes('big') ? t('testResult.scoring.testDescription') : explanation.description}
         </p>
-        
-        {testName.toLowerCase().includes('disc') && (
-          <p className="text-sm text-muted-foreground">
-            {t('tests.disc.explanation.scoring.explanation')}
-          </p>
-        )}
 
         {explanation.scoreRanges && (
           <div className="space-y-2">
@@ -53,21 +42,11 @@ export const ScoringExplanation = ({ testName }: ScoringExplanationProps) => {
           </div>
         )}
 
-        {(explanation.whatItMeans || testName.toLowerCase().includes('big') || testName.toLowerCase().includes('disc')) && (
+        {(explanation.whatItMeans || testName.toLowerCase().includes('big')) && (
           <div className="p-3 bg-muted rounded-md">
-            <p className="text-sm font-medium">
-              {testName.toLowerCase().includes('disc') 
-                ? t('tests.disc.explanation.scoring.whatItMeans')
-                : t('testResult.scoring.whatMeans')
-              }
-            </p>
+            <p className="text-sm font-medium">{t('testResult.scoring.whatMeans')}</p>
             <p className="text-sm text-muted-foreground mt-1">
-              {testName.toLowerCase().includes('disc') 
-                ? explanation.whatItMeans
-                : testName.toLowerCase().includes('big') 
-                  ? t('testResult.scoring.resultMeaning') 
-                  : explanation.whatItMeans
-              }
+              {testName.toLowerCase().includes('big') ? t('testResult.scoring.resultMeaning') : explanation.whatItMeans}
             </p>
           </div>
         )}
