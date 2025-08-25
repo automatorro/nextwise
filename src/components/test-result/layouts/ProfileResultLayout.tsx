@@ -108,7 +108,10 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
       )}
 
       {/* Scoring Explanation */}
-      <ScoringExplanation testName={testName || ''} />
+      <ScoringExplanation 
+        testName={testName || ''} 
+        dimensions={score.dimensions?.reduce((acc, dim) => ({ ...acc, [dim.id]: dim.score }), {})}
+      />
 
       {/* Contextual Recommendations */}
       <ContextualRecommendationsCard score={score} testName={testName} />

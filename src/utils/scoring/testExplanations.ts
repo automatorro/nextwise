@@ -16,13 +16,13 @@ export const getTestScoringExplanation = (testName: string): TestExplanation => 
 
   if (normalizedTestName.includes('disc')) {
     return {
-      description: "DISC is a behavioral assessment that identifies your preferred work style and communication preferences based on four primary dimensions: Dominance, Influence, Steadiness, and Conscientiousness.",
+      description: "DISC este o evaluare comportamentală care identifică stilul tău preferat de lucru și preferințele de comunicare pe baza a patru dimensiuni principale: Dominanță (D), Influență (I), Stabilitate (S) și Conformitate (C). Fiecare dimensiune reflectă un stil comportamental distinct care influențează modul în care abordezi lucrul, luarea deciziilor și interacțiunea cu alții.",
       scoreRanges: [
-        { range: "70-100%", label: "Strong preference", variant: "default" },
-        { range: "40-69%", label: "Moderate preference", variant: "secondary" }, 
-        { range: "0-39%", label: "Minimal preference", variant: "outline" }
+        { range: "70-100%", label: "Preferință puternică - stil dominant", variant: "default" },
+        { range: "40-69%", label: "Preferință moderată - stil adaptat", variant: "secondary" }, 
+        { range: "0-39%", label: "Preferință minimă - stil flexibil", variant: "outline" }
       ],
-      whatItMeans: "Your DISC profile shows the relative strength of each behavioral style. Higher scores indicate stronger behavioral tendencies and preferences in that dimension, which influence how you approach work, communication, and decision-making."
+      whatItMeans: "Profilul tău DISC arată forța relativă a fiecărui stil comportamental și oferă insight-uri despre modul în care preferi să lucrezi, să comunici și să iei decizii. Scorurile mai mari indică tendințe comportamentale mai puternice în acea dimensiune, care influențează eficiența ta în diverse contexte profesionale și personale. Nu există un profil 'perfect' - fiecare combinație are avantajele sale unice și poate fi eficientă în diferite situații și roluri."
     };
   }
   
