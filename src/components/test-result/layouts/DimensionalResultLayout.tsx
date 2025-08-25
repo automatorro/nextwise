@@ -4,7 +4,11 @@ import OverallScoreCard from '../OverallScoreCard';
 import { DimensionsAnalysis } from '../DimensionsAnalysis';
 import { TestExplanations } from '../../tests/TestExplanations';
 import { ScoringExplanation } from '../ScoringExplanation';
-import { AiAnalysisCard } from '../AiAnalysisCard'; // <-- IMPORT NOU
+import { AiAnalysisCard } from '../AiAnalysisCard';
+import { PersonalizedResultsCard } from '../PersonalizedResultsCard';
+import { ContextualRecommendationsCard } from '../ContextualRecommendationsCard';
+import { LifeImpactExplanation } from '../LifeImpactExplanation';
+import { ProgressPathCard } from '../ProgressPathCard';
 
 interface DimensionalResultLayoutProps {
   score: StandardizedScore;
@@ -31,7 +35,14 @@ export const DimensionalResultLayout: React.FC<DimensionalResultLayoutProps> = (
         testName={testName}
       />
       
-      {/* CARDUL DE ANALIZĂ AI A FOST ADĂUGAT AICI */}
+      <PersonalizedResultsCard score={score} testName={testName} />
+      
+      <ContextualRecommendationsCard score={score} testName={testName} />
+      
+      <LifeImpactExplanation score={score} testName={testName} />
+      
+      <ProgressPathCard score={score} testName={testName} />
+      
       <AiAnalysisCard score={score} testName={testName} resultId={resultId} />
       
       <ScoringExplanation testName={testName} />

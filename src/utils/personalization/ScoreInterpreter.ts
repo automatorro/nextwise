@@ -123,11 +123,42 @@ function getPHQPersonalizedInterpretation(score: StandardizedScore): Personalize
 }
 
 function getBigFivePersonalizedInterpretation(score: StandardizedScore): PersonalizedInterpretation {
+  if (!score.dimensions) {
+    return {
+      personalizedMessage: "Profilul tău Big Five este unic și reflectă o combinație distinctă de trăsături de personalitate.",
+      severityLabel: "Profil Unic",
+      severityVariant: "default"
+    };
+  }
+
+  // Identificăm dimensiunile dominante (scoruri >= 7)
+  const strongTraits = score.dimensions.filter(d => d.score >= 7);
+  const weakTraits = score.dimensions.filter(d => d.score <= 4);
+
+  let message = "Profilul tău Big Five arată că ";
+  
+  if (strongTraits.length > 0) {
+    const traitNames = strongTraits.map(t => t.name.toLowerCase()).join(", ");
+    message += `ai scoruri ridicate la ${traitNames}. `;
+  }
+  
+  if (weakTraits.length > 0) {
+    const traitNames = weakTraits.map(t => t.name.toLowerCase()).join(", ");
+    message += `În schimb, ai scoruri mai scăzute la ${traitNames}. `;
+  }
+  
+  message += "Această combinație îți oferă un profil de personalitate distinct cu puncte forte specifice.";
+
   return {
-    personalizedMessage: 'Profilul tău de personalitate oferă o perspectivă asupra caracteristicilor tale psihologice principale. Fiecare dimensiune reprezintă un aspect diferit al personalității tale.',
-    severityLabel: 'Profil Personal',
-    severityVariant: 'default',
-    normalityContext: 'Personalitatea este unică pentru fiecare individ - nu există scoruri "corecte" sau "greșite".'
+    personalizedMessage: message,
+    severityLabel: "Profil Personal",
+    severityVariant: "default",
+    contextualFactors: [
+      "Personalitatea se dezvoltă de-a lungul timpului prin experiențe",
+      "Fiecare dimensiune influențează diferit comportamentul în diverse situații",
+      "Combinația ta unică de trăsături determină stilul tău personal"
+    ],
+    normalityContext: "Toate scorurile Big Five sunt normale. Diversitatea personalităților umane este ceea ce face societatea funcțională și creativă."
   };
 }
 

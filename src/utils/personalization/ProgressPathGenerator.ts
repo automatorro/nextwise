@@ -220,30 +220,108 @@ function getPHQProgressPath(score: StandardizedScore): ProgressPath {
 }
 
 function getBigFiveProgressPath(score: StandardizedScore): ProgressPath {
+  const milestones: ProgressMilestone[] = [];
+  const trackingMethods: string[] = [];
+  
+  if (!score.dimensions) {
+    return {
+      milestones: [
+        {
+          timeframe: 'Săptămâna 1-2',
+          goal: 'Analizează rezultatele',
+          description: 'Reflectează asupra fiecărei dimensiuni și cum se manifestă în viața ta zilnică.'
+        }
+      ],
+      retestRecommendation: 'Re-testează după 6-12 luni pentru a observa dezvoltarea personală.'
+    };
+  }
+
+  // Milestone 1: Analiza inițială
+  milestones.push({
+    timeframe: 'Săptămâna 1-2',
+    goal: 'Înțelege-ți profilul complet',
+    description: 'Analizează fiecare dimensiune Big Five și identifică cum se manifestă în comportamentul tău zilnic.'
+  });
+
+  // Milestones personalizate bazate pe scoruri
+  const strongDimensions = score.dimensions.filter(d => d.score >= 7);
+  const weakDimensions = score.dimensions.filter(d => d.score <= 4);
+
+  if (strongDimensions.length > 0) {
+    milestones.push({
+      timeframe: 'Săptămâna 3-4',
+      goal: 'Valorifică punctele forte',
+      description: `Concentrează-te pe cum poți folosi mai eficient următoarele puncte forte: ${strongDimensions.map(d => d.name).join(', ')}.`
+    });
+  }
+
+  if (weakDimensions.length > 0) {
+    milestones.push({
+      timeframe: 'Luna 2',
+      goal: 'Dezvoltă zonele de echilibru',
+      description: `Explorează strategii pentru a aduce mai mult echilibru la: ${weakDimensions.map(d => d.name).join(', ')}.`
+    });
+  }
+
+  // Milestones specifice pentru dimensiuni cheie
+  const conscientiousness = score.dimensions.find(d => d.id === 'conscientiousness');
+  if (conscientiousness && conscientiousness.score <= 4) {
+    milestones.push({
+      timeframe: 'Luna 2-3',
+      goal: 'Construiește sisteme simple de organizare',
+      description: 'Implementează 1-2 sisteme simple de organizare care să te ajute fără să te restricționeze.'
+    });
+  }
+
+  const extraversion = score.dimensions.find(d => d.id === 'extraversion');
+  if (extraversion && extraversion.score >= 7) {
+    milestones.push({
+      timeframe: 'Luna 3',
+      goal: 'Extinde-ți rețeaua socială',
+      description: 'Participă la evenimente noi și construiește conexiuni în domenii de interes.'
+    });
+  } else if (extraversion && extraversion.score <= 4) {
+    milestones.push({
+      timeframe: 'Luna 3',
+      goal: 'Dezvoltă relații profunde',
+      description: 'Investește timp de calitate în 2-3 relații importante pentru tine.'
+    });
+  }
+
+  const openness = score.dimensions.find(d => d.id === 'openness');
+  if (openness && openness.score >= 7) {
+    milestones.push({
+      timeframe: 'Luna 4',
+      goal: 'Explorează teritorii noi',
+      description: 'Încearcă 2-3 activități sau hobby-uri complet noi pentru tine.'
+    });
+  }
+
+  // Plan pe termen lung
+  milestones.push({
+    timeframe: 'Luna 6',
+    goal: 'Evaluează progresul',
+    description: 'Analizează cum au evoluat comportamentele și atitudinile tale în ultimele luni.'
+  });
+
+  // Metode de urmărire personalizate
+  trackingMethods.push('Ține un jurnal săptămânal de reflecție asupra personalității');
+  trackingMethods.push('Solicită feedback lunar de la 2-3 persoane apropiate');
+  trackingMethods.push('Observă și notează momentele când îți folosești punctele forte');
+  
+  if (conscientiousness && conscientiousness.score <= 4) {
+    trackingMethods.push('Folosește aplicații simple de tracking pentru a construi obiceiuri');
+  }
+  
+  const neuroticism = score.dimensions.find(d => d.id === 'neuroticism');
+  if (neuroticism && neuroticism.score >= 6) {
+    trackingMethods.push('Monitorizează starea emoțională zilnică pentru a identifica tiparele');
+  }
+
   return {
-    milestones: [
-      {
-        timeframe: '1-2 săptămâni',
-        goal: 'Reflexie și analiză',
-        description: 'Studiază și reflectează asupra profilului de personalitate'
-      },
-      {
-        timeframe: '1-3 luni',
-        goal: 'Aplicarea practică',
-        description: 'Implementează strategii bazate pe cunoașterea personalității în carieră și relații'
-      },
-      {
-        timeframe: '6-12 luni',
-        goal: 'Dezvoltare continuă',
-        description: 'Dezvoltă zonele identificate pentru creștere personală'
-      }
-    ],
-    trackingMethods: [
-      'Jurnal de dezvoltare personală cu observații despre comportament',
-      'Feedback de la colegi și prieteni despre schimbări',
-      'Auto-evaluarea progresului în zonele țintă'
-    ],
-    retestRecommendation: 'Re-testare recomandată după 2-3 ani, sau în urma unor schimbări majore de viață.'
+    milestones,
+    trackingMethods,
+    retestRecommendation: 'Re-testează după 8-12 luni pentru a vedea evoluția personalității tale și eficacitatea strategiilor implementate.'
   };
 }
 

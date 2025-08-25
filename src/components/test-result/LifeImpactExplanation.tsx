@@ -29,10 +29,10 @@ export const LifeImpactExplanation: React.FC<LifeImpactExplanationProps> = ({
       </CardHeader>
       <CardContent className="space-y-4">
         {impactData.areas.map((area, index) => (
-          <div key={area.area}>
+          <div key={area.name}>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-2 items-start">
               <div className="md:col-span-1">
-                <h4 className="font-semibold text-sm capitalize">{area.area}</h4>
+                <h4 className="font-semibold text-sm capitalize">{area.name}</h4>
               </div>
               <div className="md:col-span-3">
                 <p className="text-sm text-muted-foreground">{area.impact}</p>

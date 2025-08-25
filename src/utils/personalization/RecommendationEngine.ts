@@ -191,18 +191,90 @@ function getPHQRecommendations(score: StandardizedScore): ContextualRecommendati
 }
 
 function getBigFiveRecommendations(score: StandardizedScore): ContextualRecommendation[] {
-  return [{
-    type: 'self-help',
-    category: 'Dezvoltare personală',
-    title: 'Explorează profilul de personalitate',
-    description: 'Folosește aceste informații pentru dezvoltare personală și profesională.',
-    actionItems: [
-      'Identifică punctele forte și zonele de dezvoltare',
-      'Adaptează strategiile de comunicare la personalitatea ta',
-      'Explorează cariere potrivite profilului tău',
-      'Dezvoltă conștientizarea asupra stilului tău relațional'
-    ]
-  }];
+  const recommendations: ContextualRecommendation[] = [];
+  
+  if (!score.dimensions) {
+    return [{
+      type: "self-help",
+      category: "Dezvoltare Personală",
+      title: "Explorează-ți profilul de personalitate",
+      description: "Folosește aceste informații pentru a-ți înțelege mai bine punctele forte și zonele de dezvoltare."
+    }];
+  }
+
+  // Recomandări bazate pe dimensiuni specifice
+  score.dimensions.forEach(dimension => {
+    if (dimension.id === 'openness') {
+      if (dimension.score >= 7) {
+        recommendations.push({
+          type: "lifestyle",
+          category: "Creativitate & Inovare",
+          title: "Canalizează creativitatea ta",
+          description: "Scorul tău ridicat la deschidere înseamnă că înflorești în medii creative și diverse.",
+          actionItems: ["Explorează hobby-uri artistice", "Caută experiențe noi", "Participă la evenimente culturale"]
+        });
+      } else {
+        recommendations.push({
+          type: "self-help",
+          category: "Confort & Stabilitate",
+          title: "Valorifică preferința pentru stabilitate",
+          description: "Preferința ta pentru rutină și structură poate fi un avantaj în multe contexte.",
+          actionItems: ["Creează rutine productive", "Specializează-te într-un domeniu", "Construiește sisteme organizate"]
+        });
+      }
+    }
+    
+    if (dimension.id === 'conscientiousness') {
+      if (dimension.score >= 7) {
+        recommendations.push({
+          type: "professional",
+          category: "Productivitate",
+          title: "Valorifică disciplina ta",
+          description: "Organizarea și disciplina ta sunt atuuri majore în carieră și viața personală.",
+          actionItems: ["Acceptă roluri de leadership", "Gestionează proiecte complexe", "Creează sisteme de productivitate"]
+        });
+      } else {
+        recommendations.push({
+          type: "lifestyle",
+          category: "Flexibilitate",
+          title: "Dezvoltă structuri ușoare",
+          description: "Stilul tău flexibil poate beneficia de structuri simple care nu te limitează.",
+          actionItems: ["Folosește reminder-uri vizuale", "Creează rutine scurte", "Lucrează în echipe organizate"]
+        });
+      }
+    }
+
+    if (dimension.id === 'extraversion') {
+      if (dimension.score >= 7) {
+        recommendations.push({
+          type: "lifestyle",
+          category: "Socializare",
+          title: "Energizează-te prin interacțiuni",
+          description: "Energia ta socială este o resursă valoroasă pentru dezvoltarea personală și profesională.",
+          actionItems: ["Participă la evenimente de networking", "Alătură-te grupurilor de interes", "Consideră roluri care implică prezentări"]
+        });
+      } else {
+        recommendations.push({
+          type: "self-help",
+          category: "Introspecție",
+          title: "Valorifică reflecția profundă",
+          description: "Tendința ta introvertă îți permite analize profunde și gândire independentă.",
+          actionItems: ["Creează spații de lucru liniștite", "Dezvoltă relații 1-la-1 profunde", "Folosește timpul singur pentru planificare"]
+        });
+      }
+    }
+  });
+
+  // Recomandare generală pentru Big Five
+  recommendations.push({
+    type: "self-help",
+    category: "Autocunoaștere",
+    title: "Dezvoltă-ți autocunoașterea",
+    description: "Folosește rezultatele Big Five pentru a-ți înțelege mai bine motivațiile și comportamentele.",
+    actionItems: ["Ține un jurnal de reflecție", "Observă cum reacționezi în situații diverse", "Discută rezultatele cu persoane apropiate"]
+  });
+
+  return recommendations;
 }
 
 function getCattellRecommendations(score: StandardizedScore): ContextualRecommendation[] {
