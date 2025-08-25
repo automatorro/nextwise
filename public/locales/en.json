@@ -729,6 +729,13 @@
       "saveToCareerPlan": "Save to Career Plan"
     }
   },
+  "aiAnalysis": {
+    "title": "AI Analysis & Insights",
+    "description": "Get detailed AI-powered analysis of your test results with personalized recommendations for your career development.",
+    "analyzeButton": "Generate AI Analysis",
+    "generating": "Generating analysis...",
+    "saveToCareerPlan": "Save to Career Plan"
+  },
   "testResult": {
     "nextSteps": {
       "title": "What's Next?",

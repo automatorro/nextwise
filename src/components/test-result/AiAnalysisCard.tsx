@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { StandardizedScore } from '@/types/tests';
 import { supabase } from '@/integrations/supabase/client';
@@ -24,6 +25,12 @@ export const AiAnalysisCard: React.FC<AiAnalysisCardProps> = ({ score, testName,
   const { createNote } = useUserNotes();
   const { generateRecommendations } = useAIRecommendations();
   const { t } = useLanguage();
+
+  // Funcție de fallback pentru traduceri
+  const getTranslation = (key: string, fallback: string) => {
+    const translation = t(key);
+    return translation === key ? fallback : translation;
+  };
 
   const handleAnalyze = async () => {
     if (!score || !testName) {
@@ -147,15 +154,24 @@ Salvează această analiză în "Notele mele personale" din aplicație pentru re
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('aiAnalysis.title')}</CardTitle>
+        <CardTitle>
+          {getTranslation('aiAnalysis.title', 'AI Analysis & Insights')}
+        </CardTitle>
         <p className="text-muted-foreground">
-          {t('aiAnalysis.description')}
+          {getTranslation('aiAnalysis.description', 'Get detailed AI-powered analysis of your test results with personalized recommendations for your career development.')}
         </p>
       </CardHeader>
       <CardContent className="space-y-4">
         {!analysis && (
           <Button onClick={handleAnalyze} disabled={isLoading}>
-            {isLoading ? <><Loader2 className="mr-2 h-4 w-4 animate-spin" /> {t('aiAnalysis.generating')}</> : t('aiAnalysis.analyzeButton')}
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                {getTranslation('aiAnalysis.generating', 'Generating analysis...')}
+              </>
+            ) : (
+              getTranslation('aiAnalysis.analyzeButton', 'Generate AI Analysis')
+            )}
           </Button>
         )}
 
