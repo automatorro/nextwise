@@ -519,6 +519,60 @@
       "bulkDeleteError": "Failed to clean old test results. Please try again."
     }
   },
+  "bigFive": {
+    "dimensions": {
+      "openness": {
+        "name": "Openness to Experience",
+        "title": "Openness",
+        "description": "You are open to new experiences, creative and adventurous.",
+        "high": "Creative, curious, and open to new ideas and experiences.",
+        "low": "Prefers familiar routines and traditional approaches."
+      },
+      "conscientiousness": {
+        "name": "Conscientiousness", 
+        "title": "Conscientiousness",
+        "description": "You are more flexible and spontaneous, but sometimes less organized.",
+        "high": "Organized, disciplined, responsible and goal-oriented.",
+        "low": "More flexible and spontaneous, but sometimes less organized."
+      },
+      "extraversion": {
+        "name": "Extraversion",
+        "title": "Extraversion", 
+        "description": "You are energetic, sociable and like to be the center of attention.",
+        "high": "Sociable, energetic, optimistic and seeks social stimulation.",
+        "low": "More reserved, prefers quieter environments and smaller groups."
+      },
+      "agreeableness": {
+        "name": "Agreeableness",
+        "title": "Agreeableness",
+        "description": "You are cooperative, empathetic and like to help others.",
+        "high": "Cooperative, trusting, empathetic and people-oriented.",
+        "low": "More skeptical, competitive and focuses on personal interests."
+      },
+      "neuroticism": {
+        "name": "Neuroticism",
+        "title": "Neuroticism", 
+        "description": "You are emotionally stable, calm and handle stress well.",
+        "high": "More prone to anxiety, stress and emotional instability.",
+        "low": "Emotionally stable, calm and handles stress well."
+      }
+    },
+    "chartTitle": "Big Five Career Profile",
+    "explanationsTitle": "Detailed Dimension Explanations",
+    "explanationsSubtitle": "Understand what each dimension means and how you score",
+    "yourScore": "Your Score"
+  },
+  "testResult": {
+    "interpretation": {
+      "high": "High",
+      "moderate": "Moderate", 
+      "low": "Low",
+      "highScore": "High score",
+      "lowScore": "Low score",
+      "you": "You",
+      "other": "Other person"
+    }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

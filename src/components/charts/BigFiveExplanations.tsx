@@ -3,6 +3,7 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Brain, Users, Lightbulb, Heart, Zap } from 'lucide-react';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface BigFiveExplanationsProps {
   dimensions: {
@@ -15,42 +16,44 @@ interface BigFiveExplanationsProps {
 }
 
 const BigFiveExplanations = ({ dimensions }: BigFiveExplanationsProps) => {
+  const { t } = useLanguage();
+  
   const getDimensionInfo = (dimension: string, score: number) => {
     const dimensionData = {
       openness: {
-        title: 'Deschidere către Experiență',
+        title: t('bigFive.dimensions.openness.title'),
         icon: Lightbulb,
-        description: 'Măsoară curiozitatea, creativitatea și deschiderea către idei noi',
-        highTrait: 'Creativ, curios, aventuros',
-        lowTrait: 'Practic, convențional, pragmatic'
+        description: t('bigFive.dimensions.openness.description'),
+        highTrait: t('bigFive.dimensions.openness.high'),
+        lowTrait: t('bigFive.dimensions.openness.low')
       },
       conscientiousness: {
-        title: 'Conștiinciozitate',
+        title: t('bigFive.dimensions.conscientiousness.title'),
         icon: Brain,
-        description: 'Reflectă organizarea, disciplina și responsabilitatea',
-        highTrait: 'Organizat, disciplinat, responsabil',
-        lowTrait: 'Spontan, flexibil, relaxat'
+        description: t('bigFive.dimensions.conscientiousness.description'),
+        highTrait: t('bigFive.dimensions.conscientiousness.high'),
+        lowTrait: t('bigFive.dimensions.conscientiousness.low')
       },
       extraversion: {
-        title: 'Extraversiune',
+        title: t('bigFive.dimensions.extraversion.title'),
         icon: Users,
-        description: 'Indică nivelul de sociabilitate și energie în interacțiunile sociale',
-        highTrait: 'Sociabil, energic, vorbăreț',
-        lowTrait: 'Rezervat, introspectiv, liniștit'
+        description: t('bigFive.dimensions.extraversion.description'),
+        highTrait: t('bigFive.dimensions.extraversion.high'),
+        lowTrait: t('bigFive.dimensions.extraversion.low')
       },
       agreeableness: {
-        title: 'Amabilitate',
+        title: t('bigFive.dimensions.agreeableness.title'),
         icon: Heart,
-        description: 'Măsoară empatia, cooperarea și încrederea în alții',
-        highTrait: 'Empatic, cooperant, de încredere',
-        lowTrait: 'Analitic, independent, direct'
+        description: t('bigFive.dimensions.agreeableness.description'),
+        highTrait: t('bigFive.dimensions.agreeableness.high'),
+        lowTrait: t('bigFive.dimensions.agreeableness.low')
       },
       neuroticism: {
-        title: 'Nevrotism',
+        title: t('bigFive.dimensions.neuroticism.title'),
         icon: Zap,
-        description: 'Reflectă stabilitatea emoțională și gestionarea stresului',
-        highTrait: 'Sensibil, reactiv, emoțional',
-        lowTrait: 'Calm, stabil, rezistent la stres'
+        description: t('bigFive.dimensions.neuroticism.description'),
+        highTrait: t('bigFive.dimensions.neuroticism.high'),
+        lowTrait: t('bigFive.dimensions.neuroticism.low')
       }
     };
 
@@ -58,15 +61,15 @@ const BigFiveExplanations = ({ dimensions }: BigFiveExplanationsProps) => {
   };
 
   const getScoreInterpretation = (score: number) => {
-    if (score >= 70) return { level: 'Ridicat', variant: 'default' as const };
-    if (score >= 30) return { level: 'Moderat', variant: 'secondary' as const };
-    return { level: 'Scăzut', variant: 'outline' as const };
+    if (score >= 70) return { level: t('testResult.interpretation.high'), variant: 'default' as const };
+    if (score >= 30) return { level: t('testResult.interpretation.moderate'), variant: 'secondary' as const };
+    return { level: t('testResult.interpretation.low'), variant: 'outline' as const };
   };
 
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-gray-900 mb-4">
-        Explicații pentru Dimensiunile Big Five
+        {t('bigFive.explanationsTitle')}
       </h3>
       
       {Object.entries(dimensions).map(([key, score]) => {
@@ -94,11 +97,11 @@ const BigFiveExplanations = ({ dimensions }: BigFiveExplanationsProps) => {
               <p className="text-sm text-gray-600 mb-2">{info.description}</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
                 <div>
-                  <span className="font-medium text-green-700">Scor ridicat: </span>
+                  <span className="font-medium text-green-700">{t('testResult.interpretation.highScore')}: </span>
                   <span className="text-gray-600">{info.highTrait}</span>
                 </div>
                 <div>
-                  <span className="font-medium text-blue-700">Scor scăzut: </span>
+                  <span className="font-medium text-blue-700">{t('testResult.interpretation.lowScore')}: </span>
                   <span className="text-gray-600">{info.lowTrait}</span>
                 </div>
               </div>

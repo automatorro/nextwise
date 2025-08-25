@@ -519,6 +519,60 @@
       "bulkDeleteError": "Nu s-au putut curăța rezultatele vechi de teste. Te rugăm să încerci din nou."
     }
   },
+  "bigFive": {
+    "dimensions": {
+      "openness": {
+        "name": "Deschiderea către Experiență",
+        "title": "Deschiderea",
+        "description": "Sunteți deschis la experiențe noi, creativ și aventuros.",
+        "high": "Creativ, curios și deschis la idei și experiențe noi.",
+        "low": "Preferă rutinele familiare și abordările tradiționale."
+      },
+      "conscientiousness": {
+        "name": "Conștiinciozitatea", 
+        "title": "Conștiinciozitatea",
+        "description": "Sunteți mai flexibil și spontan, dar uneori mai puțin organizat.",
+        "high": "Organizat, disciplinat, responsabil și orientat către obiective.",
+        "low": "Mai flexibil și spontan, dar uneori mai puțin organizat."
+      },
+      "extraversion": {
+        "name": "Extraversiunea",
+        "title": "Extraversiunea", 
+        "description": "Sunteți energic, sociabil și vă place să fiți în centrul atenției.",
+        "high": "Sociabil, energic, optimist și caută stimularea socială.",
+        "low": "Mai rezervat, preferă medii mai liniștite și grupuri mai mici."
+      },
+      "agreeableness": {
+        "name": "Agreabilitatea",
+        "title": "Agreabilitatea",
+        "description": "Sunteți cooperant, empatic și vă place să ajutați pe alții.",
+        "high": "Cooperant, încrezător, empatic și orientat către oameni.",
+        "low": "Mai sceptic, competitiv și se concentrează pe interesele personale."
+      },
+      "neuroticism": {
+        "name": "Neurotismul",
+        "title": "Neurotismul", 
+        "description": "Sunteți stabil emoțional, calm și gestionați bine stresul.",
+        "high": "Mai predispus la anxietate, stres și instabilitate emotională.",
+        "low": "Stabil emoțional, calm și gestionează bine stresul."
+      }
+    },
+    "chartTitle": "Profilul de Carieră Big Five",
+    "explanationsTitle": "Explicații Detaliate ale Dimensiunilor",
+    "explanationsSubtitle": "Înțelege ce înseamnă fiecare dimensiune și cum te poziționezi",
+    "yourScore": "Scorul Tău"
+  },
+  "testResult": {
+    "interpretation": {
+      "high": "Ridicat",
+      "moderate": "Moderat", 
+      "low": "Scăzut",
+      "highScore": "Scor ridicat",
+      "lowScore": "Scor scăzut",
+      "you": "Tu",
+      "other": "Altă persoană"
+    }
+  },
   "common": {
     "loading": "Se încarcă...",
     "error": "Eroare",
