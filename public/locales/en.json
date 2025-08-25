@@ -1,777 +1,694 @@
-
 {
-  "header": {
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "welcome": "Welcome",
     "dashboard": "Dashboard",
-    "tests": "Tests", 
-    "career": "Career",
     "profile": "Profile",
-    "admin": "Admin",
+    "settings": "Settings",
     "logout": "Logout",
-    "subscriptionSettings": "Subscription Settings",
-    "adminPanel": "Admin Panel",
     "login": "Login",
-    "startFree": "Start for free"
-  },
-  "home": {
-    "heroTitle": "Discover Your Potential and Grow Your Career",
-    "heroSubtitle": "The AI platform that helps you understand your personality, identify your strengths, and build your ideal career path through advanced psychological assessments.",
-    "startFreeAssessment": "Start Free Assessment",
-    "featuresTitle": "Discover Our Features",
-    "featuresSubtitle": "AI-powered tools to accelerate your career.",
-    "categoriesTitle": "Test Categories",
-    "categoriesSubtitle": "Explore different types of assessments available",
-    "pricingTitle": "Choose Your Plan",
-    "pricingSubtitle": "Select the perfect plan for your career development journey",
-    "ctaFinalTitle": "Ready to Transform Your Career?",
-    "ctaFinalSubtitle": "Join thousands of professionals who have already discovered their potential",
-    "ctaFinalButton": "Start Your Journey",
-    "features": {
-      "psychologicalEvaluations": "Psychological Evaluations",
-      "psychologicalEvaluationsDesc": "Understand your personality and cognitive skills.",
-      "personalizedCareerPlans": "Personalized Career Plans", 
-      "personalizedCareerPlansDesc": "Get a clear roadmap based on your unique profile.",
-      "advancedAnalytics": "Advanced Analytics",
-      "advancedAnalyticsDesc": "Track your progress with detailed insights.",
-      "aiMentoring": "AI Mentoring",
-      "aiMentoringDesc": "Receive continuous guidance from your AI mentor."
-    },
-    "footerText": "The AI platform that helps you understand your personality, identify your strengths, and build your ideal career path through advanced psychological assessments.",
-    "footerCopyright": "© 2024 NextWise. All rights reserved."
-  },
-  "careerJourney": {
-    "title": "Your Career Journey in 4 Steps",
-    "subtitle": "Discover how our AI-powered platform guides you through every stage of your professional development",
-    "step1": {
-      "title": "Complete Assessment",
-      "description": "Take comprehensive psychological tests to understand your personality, strengths, and preferences"
-    },
-    "step2": {
-      "title": "Get AI Analysis",
-      "description": "Receive detailed insights and personalized recommendations based on your test results"
-    },
-    "step3": {
-      "title": "Build Your Plan",
-      "description": "Create a customized career development plan with clear milestones and actionable steps"
-    },
-    "step4": {
-      "title": "Achieve Success",
-      "description": "Follow your personalized roadmap and track your progress toward your career goals"
-    },
-    "benefits": {
-      "title": "Why Choose NextWise?",
-      "benefit1": "Scientifically validated psychological assessments",
-      "benefit2": "AI-powered personalized career recommendations",
-      "benefit3": "Step-by-step guidance and progress tracking",
-      "benefit4": "Continuous support and mentoring throughout your journey"
-    }
-  },
-  "plans": {
-    "mostPopular": "Most Popular",
-    "basic": {
-      "name": "Basic",
-      "price": "$19/month",
-      "description": "Perfect for getting started",
-      "features": [
-        "4 psychological tests per month",
-        "Basic learning plan",
-        "Basic results",
-        "Email support"
-      ],
-      "button": "Choose Basic"
-    },
-    "professional": {
-      "name": "Professional",
-      "price": "$49/month",
-      "description": "Most popular choice",
-      "features": [
-        "7 psychological tests per month",
-        "Extended learning and development plan",
-        "Detailed AI analysis",
-        "Personalized recommendations",
-        "Priority support"
-      ],
-      "button": "Choose Professional"
-    },
-    "premium": {
-      "name": "Premium",
-      "price": "$89/month",
-      "description": "Everything you need",
-      "features": [
-        "Unlimited access",
-        "All available tests",
-        "Advanced career plans",
-        "Personalized consulting",
-        "1-on-1 video sessions",
-        "24/7 support"
-      ],
-      "button": "Choose Premium"
-    }
-  },
-  "dashboard": {
-    "welcome": "Welcome,",
-    "welcomeSubtext": "Start your personal and professional development journey with our AI tests.",
-    "stats": {
-      "testsCompleted": "Tests Completed",
-      "careerPlans": "Career Plans",
-      "timeSaved": "Time Saved",
-      "careerProgress": "Career Progress"
-    },
-    "actions": {
-      "startFirstTest": "Take the first step towards self-discovery",
-      "startFirstTestDesc": "Complete a test to receive personalized recommendations.",
-      "exploreTests": "Explore Tests",
-      "planCareer": "Create a personalized career plan",
-      "planCareerDesc": "Set your goals and track your progress step by step.",
-      "startCareerPlan": "Start Plan"
-    },
-    "testCategories": "Test Categories",
-    "exploreCategories": "Explore different types of assessments available",
-    "seeAllTests": "See All Tests",
-    "categories": {
-      "emotionalIntelligence": "Emotional Intelligence",
-      "personality": "Personality",
-      "leadership": "Leadership",
-      "technicalSkills": "Technical Skills",
-      "wellness": "Wellness",
-      "cognitive": "Cognitive",
-      "digital": "Digital",
-      "sensory": "Sensory",
-      "testLabel": "test",
-      "testsLabel": "tests"
-    }
-  },
-  "careerPlan": {
-    "limitReachedTitle": "Plan Limit Reached",
-    "limitReachedDescription": "You have reached your plan creation limit.",
-    "upgradeForUnlimited": "Upgrade to create unlimited plans.",
-    "assessmentRequiredTitle": "Assessment Required",
-    "assessmentRequiredDescription": "Complete at least one test to generate a personalized career plan.",
-    "errorTitle": "Error",
-    "errorDescription": "There was an error creating your career plan. Please try again.",
-    "milestonesIncluded": "Milestones Included",
-    "weeks": "weeks",
-    "skills": "skills",
-    "requiredSkills": "Required Skills",
-    "createCustomTitle": "Create Custom Plan",
-    "createCustomDescription": "Generate a personalized career plan with AI based on your test results and goals.",
-    "targetRole": "Target Role",
-    "targetRolePlaceholder": "e.g., UX Designer, Product Manager",
-    "currentRole": "Current Role",
-    "currentRolePlaceholder": "e.g., Junior Developer, Student",
-    "timeframe": "Timeframe",
-    "timeframePlaceholder": "e.g., 12 months, 2 years",
-    "objectiveDescription": "Objective Description",
-    "objectiveDescriptionPlaceholder": "Describe your career goals and aspirations...",
-    "generatingPlan": "Generating Plan...",
-    "generateWithAI": "Generate with AI",
-    "availableTemplates": "Available Templates",
-    "popularTemplates": "Choose from our popular career development templates",
-    "loadingTemplates": "Loading templates...",
-    "months": "months",
-    "difficulty": {
-      "beginner": "Beginner",
-      "intermediate": "Intermediate",
-      "advanced": "Advanced"
-    },
-    "more": "more",
-    "preview": "Preview",
-    "creatingPlan": "Creating Plan...",
-    "useTemplate": "Use Template"
-  },
-  "careerPaths": {
-    "title": "Your Personalized Career Plans",
-    "subtitle": "AI creates career plans based on your test results, giving you a clear path to your professional goals.",
-    "tabs": {
-      "dashboard": "Dashboard",
-      "create": "New Plan",
-      "mentoring": "AI Mentoring",
-      "cvAnalyzer": "CV Analysis",
-      "programs": "14-Day AI Programs",
-      "progressSheets": "AI Progress Sheets",
-      "simulations": "AI Simulations",
-      "progressAnalysis": "Progress Analytics"
-    },
-    "dashboard": {
-      "title": "Career Dashboard",
-      "subtitle": "Monitor your progress and plan your next steps.",
-      "createPlan": "Create New Plan",
-      "progress": "Progress",
-      "created": "Created",
-      "viewDetails": "View Details",
-      "noPlans": "You don't have any career plans yet",
-      "createFirst": "Create your first personalized plan to achieve your professional goals"
-    },
-    "messages": {
-      "planCreated": "Career plan created successfully!",
-      "planUpdated": "Career plan updated successfully!",
-      "planDeleted": "Career plan deleted successfully!",
-      "createError": "Could not create career plan.",
-      "updateError": "Could not update career plan.",
-      "deleteError": "Could not delete career plan."
-    },
-    "simulations": {
-      "title": "AI Simulations",
-      "subtitle": "Practice professional scenarios with AI",
-      "jobInterview": "Job Interview",
-      "jobInterviewDesc": "Practice for a job interview in a safe environment",
-      "salaryNegotiation": "Salary Negotiation",
-      "salaryNegotiationDesc": "Develop your negotiation skills",
-      "teamConflict": "Team Conflict",
-      "teamConflictDesc": "Learn to manage team conflicts",
-      "managementPromotion": "Management Promotion",
-      "managementPromotionDesc": "Prepare for a management promotion",
-      "activeSimulation": "Active simulation in progress",
-      "type": "Type",
-      "messages": "Messages",
-      "responses": "Responses",
-      "continueSimulation": "Continue Simulation",
-      "roles": "Roles",
-      "startSimulation": "Start Simulation",
-      "recentSimulations": "Recent Simulations",
-      "completed": "Completed",
-      "inProgress": "In Progress",
-      "difficulty": {
-        "easy": "Easy",
-        "medium": "Medium",
-        "hard": "Hard"
-      },
-      "roles": {
-        "recruiter": "Recruiter",
-        "manager": "Manager",
-        "teamMember": "Team Member",
-        "hrManager": "HR Manager",
-        "teamLead": "Team Lead",
-        "client": "Client",
-        "stakeholder": "Stakeholder",
-        "seniorManager": "Senior Manager"
-      }
-    }
-  },
-  "aiSimulations": {
-    "availableTitle": "Available Simulations",
-    "previousTitle": "Previous Simulations",
-    "starting": "Starting...",
-    "startButton": "Start Simulation",
+    "register": "Register",
+    "home": "Home",
+    "about": "About",
+    "contact": "Contact",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "clear": "Clear",
+    "apply": "Apply",
+    "reset": "Reset",
+    "submit": "Submit",
+    "upload": "Upload",
+    "download": "Download",
+    "share": "Share",
+    "copy": "Copy",
+    "paste": "Paste",
+    "cut": "Cut",
+    "undo": "Undo",
+    "redo": "Redo",
+    "select": "Select",
+    "selectAll": "Select All",
+    "deselect": "Deselect",
+    "required": "Required",
+    "optional": "Optional",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "phone": "Phone",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "date": "Date",
+    "time": "Time",
+    "description": "Description",
+    "category": "Category",
+    "tag": "Tag",
+    "tags": "Tags",
+    "status": "Status",
+    "priority": "Priority",
+    "type": "Type",
+    "value": "Value",
     "score": "Score",
-    "viewDetails": "View Details",
-    "messages": {
-      "startError": "Failed to start simulation"
-    },
-    "jobInterview": {
-      "title": "Job Interview",
-      "description": "Practice for a job interview in a safe environment"
-    },
-    "presentationSkills": {
-      "title": "Presentation Skills",
-      "description": "Improve your presentation and communication skills"
-    },
-    "negotiationSkills": {
-      "title": "Negotiation Skills",
-      "description": "Develop your negotiation and persuasion abilities"
-    },
-    "duration": {
-      "minutes": "minutes"
-    },
-    "difficulty": {
-      "easy": "Easy",
-      "medium": "Medium",
-      "hard": "Hard"
-    }
+    "result": "Result",
+    "results": "Results",
+    "total": "Total",
+    "count": "Count",
+    "percentage": "Percentage",
+    "average": "Average",
+    "minimum": "Minimum",
+    "maximum": "Maximum",
+    "range": "Range",
+    "limit": "Limit",
+    "page": "Page",
+    "pages": "Pages",
+    "item": "Item",
+    "items": "Items",
+    "list": "List",
+    "view": "View",
+    "views": "Views",
+    "details": "Details",
+    "summary": "Summary",
+    "overview": "Overview",
+    "report": "Report",
+    "reports": "Reports",
+    "export": "Export",
+    "import": "Import",
+    "data": "Data",
+    "file": "File",
+    "files": "Files",
+    "folder": "Folder",
+    "folders": "Folders",
+    "image": "Image",
+    "images": "Images",
+    "video": "Video",
+    "videos": "Videos",
+    "audio": "Audio",
+    "document": "Document",
+    "documents": "Documents",
+    "link": "Link",
+    "links": "Links",
+    "url": "URL",
+    "website": "Website",
+    "page": "Page",
+    "pages": "Pages",
+    "article": "Article",
+    "articles": "Articles",
+    "news": "News",
+    "blog": "Blog",
+    "post": "Post",
+    "posts": "Posts",
+    "comment": "Comment",
+    "comments": "Comments",
+    "message": "Message",
+    "messages": "Messages",
+    "notification": "Notification",
+    "notifications": "Notifications",
+    "alert": "Alert",
+    "alerts": "Alerts",
+    "warning": "Warning",
+    "warnings": "Warnings",
+    "info": "Info",
+    "help": "Help",
+    "support": "Support",
+    "faq": "FAQ",
+    "tutorial": "Tutorial",
+    "guide": "Guide",
+    "documentation": "Documentation",
+    "manual": "Manual",
+    "instructions": "Instructions",
+    "terms": "Terms",
+    "privacy": "Privacy",
+    "policy": "Policy",
+    "license": "License",
+    "copyright": "Copyright",
+    "version": "Version",
+    "update": "Update",
+    "upgrade": "Upgrade",
+    "new": "New",
+    "old": "Old",
+    "recent": "Recent",
+    "latest": "Latest",
+    "popular": "Popular",
+    "featured": "Featured",
+    "recommended": "Recommended",
+    "trending": "Trending",
+    "top": "Top",
+    "best": "Best",
+    "favorite": "Favorite",
+    "bookmark": "Bookmark",
+    "like": "Like",
+    "dislike": "Dislike",
+    "love": "Love",
+    "hate": "Hate",
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "subscribe": "Subscribe",
+    "unsubscribe": "Unsubscribe",
+    "join": "Join",
+    "leave": "Leave",
+    "invite": "Invite",
+    "accept": "Accept",
+    "decline": "Decline",
+    "approve": "Approve",
+    "reject": "Reject",
+    "pending": "Pending",
+    "active": "Active",
+    "inactive": "Inactive",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "public": "Public",
+    "private": "Private",
+    "visible": "Visible",
+    "hidden": "Hidden",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "online": "Online",
+    "offline": "Offline",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "synced": "Synced",
+    "unsynced": "Unsynced",
+    "saved": "Saved",
+    "unsaved": "Unsaved",
+    "published": "Published",
+    "unpublished": "Unpublished",
+    "draft": "Draft",
+    "live": "Live",
+    "preview": "Preview",
+    "test": "Test",
+    "production": "Production",
+    "development": "Development",
+    "staging": "Staging",
+    "local": "Local",
+    "remote": "Remote",
+    "global": "Global",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "tomorrow": "Tomorrow",
+    "week": "Week",
+    "month": "Month",
+    "year": "Year",
+    "hour": "Hour",
+    "minute": "Minute",
+    "second": "Second",
+    "AM": "AM",
+    "PM": "PM",
+    "morning": "Morning",
+    "afternoon": "Afternoon",
+    "evening": "Evening",
+    "night": "Night",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday",
+    "sunday": "Sunday",
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
   },
-  "cvOptimization": {
-    "title": "CV Optimization",
-    "description": "Analyze your CV against a job description to improve your chances. Get detailed feedback and optimization suggestions.",
-    "startAnalysis": "Start Analysis",
-    "optimizeCV": "Optimize CV for this Job",
-    "generateCoverLetter": "Generate Cover Letter",
-    "optimizingCV": "Optimizing CV...",
-    "generatingCoverLetter": "Generating cover letter...",
-    "optimizedCV": "Optimized CV",
-    "coverLetter": "Cover Letter",
-    "copyToClipboard": "Copy to Clipboard",
-    "copiedToClipboard": "Copied to clipboard!",
-    "optimizationFailed": "CV optimization failed",
-    "coverLetterFailed": "Cover letter generation failed"
-  },
-  "profile": {
-    "title": "My Profile",
-    "welcome": "Welcome,",
-    "welcomeMessage": "Here you can see a summary of your activity and personal information.",
-    "administrator": "Administrator",
-    "admin": {
-      "notice": "This is an administrator account with access to all features."
-    },
-    "personalInfo": {
-      "title": "Profile Information",
-      "name": "Name",
-      "email": "Email",
-      "role": "Role",
-      "memberSince": "Member Since"
-    },
-    "quickActions": {
-      "title": "Quick Actions",
-      "tryNewTest": "Try New Test",
-      "goToDashboard": "Go to Dashboard",
-      "viewSubscription": "View Subscription"
-    },
-    "recentTests": {
-      "title": "Recent Test Results",
-      "noTests": "No tests completed yet",
-      "takeFirst": "Take your first test to see results here",
-      "completedOn": "Completed on"
-    }
+  "navigation": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "tests": "Tests",
+    "careers": "Career Paths",
+    "profile": "My Profile",
+    "subscription": "Subscription",
+    "admin": "Admin Panel",
+    "toggleMenu": "Toggle menu",
+    "skipToContent": "Skip to main content"
   },
   "auth": {
-    "backToMain": "Back to main page",
-    "welcome": "Welcome",
-    "signInMessage": "Sign in to your account or create a new one",
-    "title": "Sign in to your account",
-    "subtitle": "Enter your email below to log in",
     "signIn": "Sign In",
     "signUp": "Sign Up",
+    "signOut": "Sign Out",
+    "signInWithGoogle": "Sign in with Google",
+    "signInWithGitHub": "Sign in with GitHub",
     "email": "Email",
-    "emailLabel": "Email",
     "password": "Password",
-    "fullName": "Full Name",
-    "enterEmail": "Enter your email",
-    "enterPassword": "Enter password",
-    "enterFullName": "Enter your full name",
-    "signingIn": "Signing in...",
-    "creatingAccount": "Creating account...",
-    "createAccount": "Create Account",
-    "signInButton": "Sign In with Email",
-    "googleSignIn": "Continue with Google",
+    "confirmPassword": "Confirm Password",
+    "forgotPassword": "Forgot Password?",
+    "rememberMe": "Remember me",
     "alreadyHaveAccount": "Already have an account?",
     "dontHaveAccount": "Don't have an account?",
-    "forgotPassword": "Forgot password?",
-    "passwordTooShort": "Password must be at least 6 characters",
-    "invalidEmail": "Please enter a valid email",
-    "nameRequired": "Full name is required"
+    "createAccount": "Create Account",
+    "backToSignIn": "Back to Sign In",
+    "resetPassword": "Reset Password",
+    "sendResetLink": "Send Reset Link",
+    "checkEmail": "Check your email for reset instructions",
+    "passwordUpdated": "Password updated successfully",
+    "welcomeBack": "Welcome back!",
+    "getStarted": "Get started with NextWise",
+    "loading": "Loading...",
+    "signingIn": "Signing in...",
+    "signingUp": "Creating account...",
+    "signingOut": "Signing out...",
+    "invalidCredentials": "Invalid email or password",
+    "weakPassword": "Password should be at least 6 characters",
+    "emailInUse": "Email is already in use",
+    "userNotFound": "User not found",
+    "networkError": "Network error. Please try again.",
+    "unexpectedError": "An unexpected error occurred",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "emailInvalid": "Please enter a valid email",
+    "passwordMismatch": "Passwords do not match",
+    "termsAcceptance": "By signing up, you agree to our Terms of Service and Privacy Policy",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service"
+  },
+  "hero": {
+    "title": "Discover Your Career Path with AI-Powered Insights",
+    "subtitle": "Take comprehensive psychometric tests and receive personalized career guidance powered by artificial intelligence",
+    "cta": "Start Your Journey",
+    "secondaryCta": "Learn More",
+    "feature1": "Psychometric Testing",
+    "feature2": "AI Career Guidance",
+    "feature3": "Personalized Recommendations"
+  },
+  "features": {
+    "title": "Everything You Need to Build Your Career",
+    "subtitle": "Our comprehensive platform combines scientific testing with AI-powered insights",
+    "psychometricTesting": {
+      "title": "Scientific Psychometric Testing",
+      "description": "Access validated tests including Big Five personality, cognitive abilities, and emotional intelligence assessments"
+    },
+    "aiInsights": {
+      "title": "AI-Powered Career Insights",
+      "description": "Get personalized career recommendations based on your test results and market trends"
+    },
+    "progressTracking": {
+      "title": "Progress Tracking",
+      "description": "Monitor your development journey with detailed analytics and milestone tracking"
+    },
+    "expertGuidance": {
+      "title": "Expert Guidance",
+      "description": "Access curated resources and actionable advice from career development experts"
+    }
   },
   "tests": {
-    "title": "Psychological Tests",
-    "subtitle": "Discover your personality and skills with our scientifically validated tests",
-    "searchPlaceholder": "Search tests...",
-    "allCategories": "All",
-    "duration": "minutes",
+    "title": "Psychometric Tests",
+    "subtitle": "Discover your potential with our comprehensive test suite",
+    "takeTest": "Take Test",
+    "viewResults": "View Results",
+    "retakeTest": "Retake Test",
+    "testCompleted": "Test Completed",
+    "testInProgress": "Test in Progress",
+    "estimatedTime": "Estimated time:",
     "questions": "questions",
-    "startTest": "Start test",
-    "noTestsFound": "No tests found matching your search criteria.",
     "categories": {
       "personality": "Personality Tests",
-      "cognitive": "Cognitive Tests",
+      "cognitive": "Cognitive Abilities",
       "emotional": "Emotional Intelligence",
-      "leadership": "Leadership & Team"
+      "career": "Career Orientation"
     },
-    "timeEstimate": "Time: {{minutes}} minutes",
-    "questionsCount": "{{count}} questions",
-    "takeTest": "Take Test",
-    "exploreCategory": "Explore Category",
-    "noDescription": "Test description will be available soon.",
-    "viewResult": "View Result",
-    "retakeTest": "Retake Test",
-    "continue": "Continue",
-    "noTests": "No tests available in this category yet.",
-    "backToTests": "Back to Tests",
-    "testsList": "Available Tests",
+    "bigFive": {
+      "name": "Big Five Personality",
+      "description": "Comprehensive personality assessment across five major dimensions",
+      "time": "15-20 minutes",
+      "questions": "50 questions"
+    },
+    "cattell": {
+      "name": "Cattell 16PF",
+      "description": "Detailed personality analysis using Cattell's 16 personality factors",
+      "time": "25-30 minutes",
+      "questions": "185 questions"
+    },
+    "cognitiveAbilities": {
+      "name": "Cognitive Abilities",
+      "description": "Assess your reasoning, memory, and problem-solving skills",
+      "time": "20-25 minutes",
+      "questions": "40 questions"
+    },
+    "emotionalIntelligence": {
+      "name": "Emotional Intelligence",
+      "description": "Evaluate your ability to understand and manage emotions",
+      "time": "15-20 minutes",
+      "questions": "60 questions"
+    },
     "disc": {
-      "name": "DISC Assessment",
+      "name": "DISC Behavioral Styles",
+      "description": "Understand your behavioral style and communication preferences",
+      "time": "10-15 minutes",
+      "questions": "28 questions",
       "explanation": {
-        "title": "DISC Behavioral Styles Assessment",
-        "description": "DISC is a behavioral assessment tool that helps identify your natural behavioral style and communication preferences in four main dimensions.",
-        "whatItMeans": "This assessment reveals your dominant behavioral style and how you typically interact with others in different situations.",
+        "title": "Understanding Your DISC Profile",
+        "description": "The DISC assessment measures your behavioral styles across four main dimensions, helping you understand how you naturally communicate, make decisions, and interact with others.",
+        "whatItMeans": "What your DISC results mean",
+        "profileTitle": "Your Main Profile: {{profile}}",
+        "interpretation": {
+          "general": "DISC assessment measures behavioral styles in four main areas: Dominance, Influence, Steadiness, and Conscientiousness.",
+          "dominant": "Your dominant profile is {{profile}}. This indicates a strong tendency to act and think according to this behavioral style."
+        },
+        "scoring": {
+          "title": "How DISC Scoring Works",
+          "description": "DISC assessment measures the strength of each behavioral style based on your responses.",
+          "explanation": "Each response contributes to one of the four DISC styles. Your dominant style is the one with the highest score.",
+          "whatItMeans": "What your score means",
+          "percentageExplanation": "Your percentage shows how strongly you identify with the {{profile}} style compared to other styles."
+        },
+        "personalized": {
+          "contextualFactors": {
+            "D": [
+              "You likely prefer direct communication and quick decision-making",
+              "You may be comfortable taking risks and facing challenges",
+              "Results and efficiency are probably important to you",
+              "You might prefer leadership roles and taking control of situations"
+            ],
+            "I": [
+              "You likely enjoy social interactions and building relationships", 
+              "You may be naturally optimistic and enthusiastic",
+              "Collaboration and team environments probably energize you",
+              "You might excel at persuading and influencing others"
+            ],
+            "S": [
+              "You likely value stability and consistent environments",
+              "You may prefer cooperation over competition",
+              "Helping others and being supportive probably comes naturally",
+              "You might excel in situations requiring patience and reliability"
+            ],
+            "C": [
+              "You likely prefer systematic and organized approaches",
+              "Quality and accuracy are probably very important to you",
+              "You may excel at analysis and attention to detail",
+              "Structured environments and clear procedures likely suit you well"
+            ]
+          },
+          "normalityContext": {
+            "D": "Dominance-oriented individuals represent about 15-20% of the population. This style is common among leaders and entrepreneurs.",
+            "I": "Influence-oriented individuals represent about 25-30% of the population. This style is common in sales and communication roles.",
+            "S": "Steadiness-oriented individuals represent about 30-35% of the population. This style is common in supportive and helping professions.",
+            "C": "Conscientiousness-oriented individuals represent about 20-25% of the population. This style is common in analytical and technical roles."
+          },
+          "personalizedMessage": {
+            "D": "Your Dominance style means you're naturally driven to achieve results and take charge. You likely thrive in competitive environments and enjoy solving challenging problems quickly.",
+            "I": "Your Influence style means you're naturally people-oriented and enthusiastic. You likely excel at building relationships and motivating others through your positive energy.",
+            "S": "Your Steadiness style means you're naturally supportive and reliable. You likely create harmony in teams and provide consistent, dependable performance.",
+            "C": "Your Conscientiousness style means you're naturally detail-oriented and systematic. You likely excel at ensuring quality and accuracy in everything you do."
+          }
+        },
+        "detailedInterpretations": {
+          "D": "As a Dominance-oriented person, you are naturally assertive, goal-focused, and results-driven. You prefer to take control of situations and make quick decisions. You're competitive by nature and comfortable with challenges and risks. In work environments, you likely gravitate toward leadership roles and enjoy setting the pace for others.",
+          "I": "As an Influence-oriented person, you are naturally outgoing, optimistic, and people-focused. You enjoy social interaction and are skilled at building relationships. You're enthusiastic and persuasive, often inspiring others with your positive energy. You thrive in collaborative environments and enjoy variety in your work.",
+          "S": "As a Steadiness-oriented person, you are naturally patient, reliable, and supportive. You prefer stable, predictable environments and work well as part of a team. You're a good listener and helper, often putting others' needs before your own. You value harmony and prefer to avoid conflict when possible.",
+          "C": "As a Conscientiousness-oriented person, you are naturally analytical, systematic, and quality-focused. You prefer structure and clear procedures. You're detail-oriented and thorough in your approach to tasks. You value accuracy and take time to ensure things are done correctly."
+        },
         "profiles": {
           "D": {
             "name": "Dominance (D)",
             "description": "You are a direct, decisive, and results-oriented person. You prefer to take control of situations and make quick decisions. You are competitive, goal-focused, and comfortable with challenges and risks."
           },
           "I": {
-            "name": "Influence (I)", 
-            "description": "You are a sociable, optimistic, and enthusiastic person. You excel at motivating others and building relationships. You are creative, expressive, and prefer collaborative environments where you can interact with people."
+            "name": "Influence (I)",
+            "description": "You are enthusiastic, optimistic, and people-oriented. You enjoy social interaction and are skilled at persuading and inspiring others. You thrive in collaborative environments and prefer variety in your work."
           },
           "S": {
             "name": "Steadiness (S)",
-            "description": "You are a calm, patient, and loyal person. You value stability and consistency in both work and relationships. You are a good listener, supportive teammate, and prefer predictable environments."
+            "description": "You are patient, reliable, and supportive. You prefer stable environments and work well as part of a team. You value cooperation over competition and are naturally helpful to others."
           },
           "C": {
             "name": "Conscientiousness (C)",
-            "description": "You are a precise, analytical, and organized person. You pay attention to details and prefer structured approaches. You value accuracy, quality standards, and systematic processes."
+            "description": "You are analytical, systematic, and quality-focused. You prefer structure and clear procedures. You are detail-oriented and take time to ensure accuracy in everything you do."
           }
-        },
-        "interpretation": {
-          "dominant": "Your main profile is {{profile}}. This indicates a strong tendency to act and think in the manner described above.",
-          "general": "Your DISC profile reveals your natural behavioral preferences and communication style."
-        },
-        "profileTitle": "Your Main Profile: {{profile}}"
+        }
       }
     }
   },
   "testRunner": {
-    "questionsLabel": "Questions",
-    "durationLabel": "Duration",
-    "minutes": "minutes",
-    "startTest": "Start Test",
-    "startButton": "Start Test",
-    "questionProgress": "Question {{current}} of {{total}}",
-    "back": "Back",
+    "question": "Question",
+    "of": "of",
     "next": "Next",
-    "finishTest": "Finish Test",
-    "submitting": "Submitting...",
-    "submitError": "Submission Error",
-    "submitErrorDescription": "Could not save results. Please try again.",
-    "loadError": "Test could not be loaded or has no questions.",
-    "exitTest": "Exit Test",
-    "timeUp": "Time's Up!",
-    "timeUpDescription": "Test time has expired. Submitting your answers automatically."
-  },
-  "gamification": {
-    "achievements": {
-      "title": "Achievements",
-      "firstPlan": {
-        "title": "First Steps",
-        "description": "Created your first career plan"
-      },
-      "threePlans": {
-        "title": "Planner",
-        "description": "Created 3 career plans"
-      },
-      "firstCompletion": {
-        "title": "Achiever",
-        "description": "Completed your first career plan"
-      },
-      "aiCollaborator": {
-        "title": "AI Collaborator",
-        "description": "Used AI to generate a career plan"
-      },
-      "highAchiever": {
-        "title": "High Achiever",
-        "description": "Maintained 75% average progress"
-      },
-      "careerMaster": {
-        "title": "Career Master",
-        "description": "Created 5+ plans and completed 2+"
-      }
+    "previous": "Previous",
+    "submit": "Submit",
+    "timeRemaining": "Time remaining:",
+    "progress": "Progress:",
+    "selectAnswer": "Please select an answer",
+    "confirmSubmit": "Are you sure you want to submit your answers?",
+    "testCompleted": "Test completed successfully!",
+    "redirecting": "Redirecting to results...",
+    "testStarted": "Test started",
+    "testPaused": "Test paused",
+    "testResumed": "Test resumed",
+    "testSubmitted": "Test submitted",
+    "saving": "Saving...",
+    "saved": "Saved",
+    "autoSave": "Auto-saving progress...",
+    "connectionLost": "Connection lost. Your progress is saved locally.",
+    "connectionRestored": "Connection restored. Syncing progress...",
+    "instructions": {
+      "title": "Test Instructions",
+      "read": "Please read these instructions carefully before starting",
+      "time": "You have unlimited time to complete this test",
+      "honest": "Answer honestly - there are no right or wrong answers",
+      "technical": "Ensure you have a stable internet connection",
+      "environment": "Find a quiet environment free from distractions",
+      "understand": "I understand and agree to these instructions",
+      "start": "Start Test"
     },
-    "streak": {
-      "title": "Progress Streak",
-      "days": "days",
-      "activeDays": "Active Days",
-      "stepsCompleted": "Steps Completed",
-      "milestonesReached": "Milestones Reached",
-      "messages": {
-        "onFire": "You're on fire! Keep up the amazing streak!",
-        "goodStreak": "Great streak! You're building momentum!"
-      }
+    "exit": {
+      "title": "Exit Test",
+      "message": "Are you sure you want to exit the test? Your progress will be saved.",
+      "confirm": "Yes, Exit",
+      "cancel": "Continue Test"
     }
+  },
+  "dashboard": {
+    "welcome": "Welcome back",
+    "testsCompleted": "Tests Completed",
+    "careerPlans": "Career Plans",
+    "aiInsights": "AI Insights",
+    "recentActivity": "Recent Activity",
+    "quickActions": "Quick Actions",
+    "takeNewTest": "Take New Test",
+    "viewCareerPlan": "View Career Plan",
+    "updateProfile": "Update Profile",
+    "scheduleMentoring": "Schedule Mentoring",
+    "noTests": "No tests completed yet",
+    "noTestsDescription": "Start with a personality test to get personalized insights",
+    "testProgress": "Test Progress",
+    "nextSteps": "Recommended Next Steps",
+    "achievements": "Achievements",
+    "streak": "Day Streak",
+    "totalScore": "Total Score",
+    "improvementArea": "Area for Improvement"
+  },
+  "profile": {
+    "title": "My Profile",
+    "personalInfo": "Personal Information",
+    "testResults": "Test Results",
+    "careerGoals": "Career Goals",
+    "preferences": "Preferences",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "email": "Email",
+    "phone": "Phone",
+    "dateOfBirth": "Date of Birth",
+    "location": "Location",
+    "occupation": "Current Occupation",
+    "experience": "Years of Experience",
+    "education": "Education Level",
+    "interests": "Interests",
+    "saveChanges": "Save Changes",
+    "changePassword": "Change Password",
+    "deleteAccount": "Delete Account",
+    "confirmDelete": "Are you sure you want to delete your account?",
+    "accountDeleted": "Account deleted successfully",
+    "profileUpdated": "Profile updated successfully",
+    "uploadPhoto": "Upload Photo",
+    "removePhoto": "Remove Photo",
+    "photoUpdated": "Photo updated successfully",
+    "language": "Preferred Language",
+    "notifications": "Notification Preferences",
+    "privacy": "Privacy Settings",
+    "security": "Security"
+  },
+  "careers": {
+    "title": "Career Paths",
+    "subtitle": "Explore career opportunities based on your profile",
+    "recommended": "Recommended for You",
+    "explore": "Explore All Careers",
+    "filter": "Filter",
+    "search": "Search careers...",
+    "industry": "Industry",
+    "experienceLevel": "Experience Level",
+    "salaryRange": "Salary Range",
+    "location": "Location",
+    "workStyle": "Work Style",
+    "match": "Match",
+    "salary": "Salary",
+    "growth": "Growth Potential",
+    "demand": "Market Demand",
+    "skills": "Required Skills",
+    "education": "Education Requirements",
+    "outlook": "Job Outlook",
+    "description": "Description",
+    "responsibilities": "Key Responsibilities",
+    "qualifications": "Qualifications",
+    "companies": "Top Companies",
+    "similarCareers": "Similar Careers",
+    "careerPath": "Career Path",
+    "nextSteps": "Next Steps",
+    "resources": "Resources",
+    "saveCareer": "Save Career",
+    "unsaveCareer": "Unsave Career",
+    "shareCareer": "Share Career",
+    "viewDetails": "View Details",
+    "applyNow": "Apply Now",
+    "learnMore": "Learn More",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "entryLevel": "Entry Level",
+    "midLevel": "Mid Level",
+    "seniorLevel": "Senior Level",
+    "remote": "Remote",
+    "hybrid": "Hybrid",
+    "onSite": "On-site"
+  },
+  "subscription": {
+    "title": "Choose Your Plan",
+    "subtitle": "Unlock advanced features and personalized insights",
+    "free": "Free",
+    "premium": "Premium",
+    "enterprise": "Enterprise",
+    "monthly": "Monthly",
+    "annually": "Annually",
+    "currentPlan": "Current Plan",
+    "upgrade": "Upgrade",
+    "downgrade": "Downgrade",
+    "cancel": "Cancel Subscription",
+    "billing": "Billing",
+    "paymentMethod": "Payment Method",
+    "invoices": "Invoices",
+    "usage": "Usage",
+    "features": "Features",
+    "support": "Support",
+    "faq": "Frequently Asked Questions",
+    "contact": "Contact Sales",
+    "trialDays": "days free trial",
+    "mostPopular": "Most Popular",
+    "bestValue": "Best Value",
+    "savings": "Save {{percentage}}%",
+    "perMonth": "per month",
+    "perYear": "per year",
+    "billedAnnually": "billed annually",
+    "billedMonthly": "billed monthly",
+    "includedFeatures": "Everything in Free, plus:",
+    "unlimitedTests": "Unlimited psychometric tests",
+    "aiInsights": "Advanced AI insights",
+    "careerPlanning": "Personalized career planning",
+    "mentoring": "1-on-1 mentoring sessions",
+    "prioritySupport": "Priority support",
+    "advancedAnalytics": "Advanced analytics",
+    "customReports": "Custom reports",
+    "teamManagement": "Team management",
+    "apiAccess": "API access",
+    "ssoIntegration": "SSO integration"
+  },
+  "admin": {
+    "title": "Admin Panel",
+    "users": "Users",
+    "tests": "Tests",
+    "analytics": "Analytics",
+    "settings": "Settings",
+    "reports": "Reports",
+    "userManagement": "User Management",
+    "testManagement": "Test Management",
+    "systemHealth": "System Health",
+    "totalUsers": "Total Users",
+    "activeUsers": "Active Users",
+    "testsCompleted": "Tests Completed",
+    "revenue": "Revenue",
+    "userGrowth": "User Growth",
+    "testCompletion": "Test Completion Rate",
+    "averageScore": "Average Score",
+    "popularTests": "Popular Tests",
+    "recentUsers": "Recent Users",
+    "systemStatus": "System Status",
+    "serverHealth": "Server Health",
+    "databaseStatus": "Database Status",
+    "apiStatus": "API Status",
+    "backupStatus": "Backup Status",
+    "addUser": "Add User",
+    "editUser": "Edit User",
+    "deleteUser": "Delete User",
+    "viewUser": "View User",
+    "userDetails": "User Details",
+    "lastLogin": "Last Login",
+    "registrationDate": "Registration Date",
+    "subscription": "Subscription",
+    "testResults": "Test Results",
+    "accountStatus": "Account Status",
+    "permissions": "Permissions",
+    "activity": "Activity",
+    "logs": "Logs"
+  },
+  "errors": {
+    "notFound": "Page not found",
+    "unauthorized": "Unauthorized access",
+    "forbidden": "Access forbidden",
+    "serverError": "Internal server error",
+    "networkError": "Network connection error",
+    "validationError": "Validation error",
+    "unknownError": "An unknown error occurred",
+    "tryAgain": "Please try again",
+    "goHome": "Go to Home",
+    "contact": "Contact Support",
+    "refresh": "Refresh Page"
+  },
+  "validations": {
+    "required": "This field is required",
+    "email": "Please enter a valid email address",
+    "password": "Password must be at least 6 characters",
+    "passwordMatch": "Passwords must match",
+    "phone": "Please enter a valid phone number",
+    "date": "Please enter a valid date",
+    "url": "Please enter a valid URL",
+    "number": "Please enter a valid number",
+    "min": "Minimum {{min}} characters required",
+    "max": "Maximum {{max}} characters allowed",
+    "range": "Must be between {{min}} and {{max}}",
+    "pattern": "Invalid format"
+  },
+  "loading": {
+    "default": "Loading...",
+    "tests": "Loading tests...",
+    "results": "Loading results...",
+    "profile": "Loading profile...",
+    "careers": "Loading careers...",
+    "saving": "Saving...",
+    "uploading": "Uploading...",
+    "processing": "Processing...",
+    "analyzing": "Analyzing...",
+    "generating": "Generating insights..."
   },
   "testResult": {
-    "nextSteps": {
-      "title": "What's Next?",
-      "description": "Continue your journey with these recommended next steps",
-      "createCareerPlan": "Create Your Career Plan",
-      "careerPlanDescription": "Build a personalized roadmap to achieve your professional goals",
-      "careerPlanDescriptionRelevant": "Your test results will help AI create a more accurate career plan tailored to your personality",
-      "personalityInsight": "Great choice!",
-      "aiWillUse": "Our AI will use your {{testName}} results to personalize your career recommendations",
-      "startCareerPlanning": "Start Career Planning",
-      "exploreMoreTests": "Take More Assessments",
-      "moreTestsDescription": "Get a complete picture of your abilities and personality",
-      "discoverMoreTests": "Discover More Tests"
-    },
-    "categories": {
-      "personality": "Personality",
-      "cognitive": "Cognitive",
-      "emotional": "Emotional",
-      "leadership": "Leadership"
-    }
-  },
-  "globalProgress": {
-    "title": "Your Journey Progress",
-    "overallProgress": "Overall Development Progress",
-    "milestones": {
-      "completeAssessment": "Complete Your First Psychological Assessment",
-      "createCareerPlan": "Create Your Personalized Career Plan",
-      "trackDevelopment": "Track and Achieve Your Development Goals"
-    },
-    "stats": {
-      "tests": "Completed Tests",
-      "plans": "Active Plans",
-      "avgProgress": "Average Plan Progress"
-    }
-  },
-  "careerPlan": {
-    "limitReachedTitle": "Plan Limit Reached",
-    "limitReachedDescription": "You have reached your plan creation limit.",
-    "upgradeForUnlimited": "Upgrade to create unlimited plans.",
-    "assessmentRequiredTitle": "Assessment Required",
-    "assessmentRequiredDescription": "Complete at least one test to generate a personalized career plan.",
-    "errorTitle": "Error",
-    "errorDescription": "There was an error creating your career plan. Please try again.",
-    "milestonesIncluded": "Milestones Included",
-    "weeks": "weeks",
-    "skills": "skills",
-    "requiredSkills": "Required Skills",
-    "createCustomTitle": "Create Custom Plan",
-    "createCustomDescription": "Generate a personalized career plan with AI based on your test results and goals.",
-    "targetRole": "Target Role",
-    "targetRolePlaceholder": "e.g., UX Designer, Product Manager",
-    "currentRole": "Current Role",
-    "currentRolePlaceholder": "e.g., Junior Developer, Student",
-    "timeframe": "Timeframe",
-    "timeframePlaceholder": "e.g., 12 months, 2 years",
-    "objectiveDescription": "Objective Description",
-    "objectiveDescriptionPlaceholder": "Describe your career goals and aspirations...",
-    "generatingPlan": "Generating Plan...",
-    "generateWithAI": "Generate with AI",
-    "availableTemplates": "Available Templates",
-    "popularTemplates": "Choose from our popular career development templates",
-    "loadingTemplates": "Loading templates...",
-    "months": "months",
-    "difficulty": {
-      "beginner": "Beginner",
-      "intermediate": "Intermediate",
-      "advanced": "Advanced"
-    },
-    "more": "more",
-    "preview": "Preview",
-    "creatingPlan": "Creating Plan...",
-    "useTemplate": "Use Template",
-    "testInfluence": {
-      "title": "Your Test Results Will Guide AI",
-      "description": "The AI will use your completed assessments to create a more personalized career plan",
-      "noTestsTitle": "Complete Tests for Better Results",
-      "noTestsDescription": "Take personality and skills assessments to get AI recommendations tailored specifically to you",
-      "bigFive": "Helps identify roles that match your personality traits and work preferences",
-      "disc": "Guides communication style and team collaboration recommendations",
-      "belbin": "Suggests team roles and leadership opportunities that fit your natural style",
-      "hexaco": "Provides insights into your values and how they align with different career paths",
-      "holland": "Matches your interests with suitable career environments and industries",
-      "enneagram": "Reveals motivation patterns and growth areas for career development",
-      "general": "Provides valuable insights for your career development journey",
-      "completed": "Completed",
-      "new": "New",
-      "aiCombination": "AI will combine insights from all {{count}} completed tests",
-      "showAll": "Show all results",
-      "showLess": "Show less",
-      "hidden": "hidden",
-      "deleteTitle": "Delete Test Result",
-      "deleteDescription": "Are you sure you want to delete this test result? This action cannot be undone, but it won't affect previously generated career plans.",
-      "deleteSuccess": "Test deleted",
-      "deleteSuccessDesc": "Test result has been successfully deleted",
-      "deleteError": "Failed to delete test result. Please try again.",
-      "cleanOld": "Clean old results",
-      "bulkDeleteTitle": "Clean Old Test Results",
-      "bulkDeleteDescription": "This will keep your 10 most recent tests and remove all older ones. This helps declutter your profile while preserving recent results.",
-      "bulkDeleteSuccess": "Old tests cleaned",
-      "bulkDeleteSuccessDesc": "Successfully removed {{count}} old test results",
-      "bulkDeleteError": "Failed to clean old test results. Please try again."
-    }
-  },
-  "bigFive": {
-    "dimensions": {
-      "openness": {
-        "name": "Openness to Experience",
-        "title": "Openness",
-        "description": "You are open to new experiences, creative and adventurous.",
-        "high": "Creative, curious, and open to new ideas and experiences.",
-        "low": "Prefers familiar routines and traditional approaches."
-      },
-      "conscientiousness": {
-        "name": "Conscientiousness", 
-        "title": "Conscientiousness",
-        "description": "You are more flexible and spontaneous, but sometimes less organized.",
-        "high": "Organized, disciplined, responsible and goal-oriented.",
-        "low": "More flexible and spontaneous, but sometimes less organized."
-      },
-      "extraversion": {
-        "name": "Extraversion",
-        "title": "Extraversion", 
-        "description": "You are energetic, sociable and like to be the center of attention.",
-        "high": "Sociable, energetic, optimistic and seeks social stimulation.",
-        "low": "More reserved, prefers quieter environments and smaller groups."
-      },
-      "agreeableness": {
-        "name": "Agreeableness",
-        "title": "Agreeableness",
-        "description": "You are cooperative, empathetic and like to help others.",
-        "high": "Cooperative, trusting, empathetic and people-oriented.",
-        "low": "More skeptical, competitive and focuses on personal interests."
-      },
-      "neuroticism": {
-        "name": "Neuroticism",
-        "title": "Neuroticism", 
-        "description": "You are emotionally stable, calm and handle stress well.",
-        "high": "More prone to anxiety, stress and emotional instability.",
-        "low": "Emotionally stable, calm and handles stress well."
-      }
-    },
-    "chartTitle": "Big Five Career Profile",
-    "explanationsTitle": "Detailed Dimension Explanations",
-    "explanationsSubtitle": "Understand what each dimension means and how you score",
-    "yourScore": "Your Score"
-  },
-  "testResult": {
-    "interpretation": {
-      "high": "High",
-      "moderate": "Moderate", 
-      "low": "Low",
-      "highScore": "High score",
-      "lowScore": "Low score",
-      "you": "You",
-      "other": "Other person"
-    }
-  },
-  "personalizedResults": {
-    "title": "What it means for you",
-    "personalizedInterpretation": "Personalized interpretation:",
-    "contextualFactors": "Contextual factors:",
-    "context": "Context:",
-    "bullet": "•"
-  },
-  "recommendations": {
-    "specific": "Specific recommendations based on your result",
-    "wellbeing": "Maintaining well-being",
-    "prevention": "Prevention",
-    "selfHelp": "Self-help techniques",
-    "professional": "Professional intervention",
-    "immediate": "Immediate action",
-    "lifestyle": "Lifestyle changes",
-    "creativity": "Creativity & Innovation",
-    "comfort": "Comfort & Stability",
-    "productivity": "Productivity",
-    "flexibility": "Flexibility",
-    "socialization": "Socialization",
-    "introspection": "Introspection",
-    "selfAwareness": "Self-awareness",
-    "personalAnalysis": "Personality analysis",
-    "bigFive": {
-      "channelCreativity": "Channel your creativity",
-      "channelCreativityDesc": "Your high openness score means you flourish in creative and diverse environments.",
-      "valorizeStability": "Leverage your preference for stability",
-      "valorizeStabilityDesc": "Your preference for routine and structure can be an advantage in many contexts.",
-      "valorizeStabilityActions": ["Create productive routines", "Specialize in one field", "Build organized systems"],
-      "valorizeProductivity": "Leverage your discipline",
-      "valorizeProductivityDesc": "Your organization and discipline are major assets in career and personal life.",
-      "valorizeProductivityActions": ["Accept leadership roles", "Manage complex projects", "Create productivity systems"],
-      "developFlexibility": "Develop light structures",
-      "developFlexibilityDesc": "Your flexible style can benefit from simple structures that don't limit you.",
-      "developFlexibilityActions": ["Use visual reminders", "Create short routines", "Work in organized teams"],
-      "energizeThroughInteraction": "Energize through interactions",
-      "energizeThroughInteractionDesc": "Your social energy is a valuable resource for personal and professional development.",
-      "energizeThroughInteractionActions": ["Participate in networking events", "Join interest groups", "Consider roles involving presentations"],
-      "valorizeDeepReflection": "Value deep reflection",
-      "valorizeDeepReflectionDesc": "Your introverted tendency allows for deep analysis and independent thinking.",
-      "valorizeDeepReflectionActions": ["Create quiet workspaces", "Develop deep 1-on-1 relationships", "Use alone time for planning"],
-      "developSelfAwareness": "Develop your self-awareness",
-      "developSelfAwarenessDesc": "Use Big Five results to better understand your motivations and behaviors.",
-      "developSelfAwarenessActions": ["Keep a reflection journal", "Observe how you react in various situations", "Discuss results with close people"]
-    }
-  },
-  "lifeImpact": {
-    "title": "Impact on your daily life",
-    "subtitle": "How this result can manifest in different aspects of life",
-    "overallImpact": "Overall impact:",
-    "bigFive": {
-      "career": "Career & Profession",
-      "relationships": "Interpersonal Relationships", 
-      "stress": "Stress Management",
-      "learning": "Development & Learning",
-      "overallImpact": "Your Big Five profile offers a comprehensive perspective on how your personality influences all aspects of life, from career to relationships and personal development."
-    }
-  },
-  "progressPath": {
-    "title": "Your progress plan",
-    "subtitle": "Concrete steps for improvement and monitoring",
-    "howToTrack": "How to track progress",
-    "retestRecommendation": "Retest recommendation",
-    "setReminder": "Set Reminder",
-    "bigFive": {
-      "understandProfile": "Understand your complete profile",
-      "understandProfileDesc": "Analyze each Big Five dimension and identify how it manifests in your daily behavior.",
-      "valorizeStrengths": "Leverage your strengths",
-      "valorizeStrengthsDesc": "Focus on how you can use your strengths more effectively: {{strengths}}.",
-      "developBalance": "Develop balance areas", 
-      "developBalanceDesc": "Explore strategies to bring more balance to: {{weaknesses}}.",
-      "buildSimpleOrganization": "Build simple organization systems",
-      "buildSimpleOrganizationDesc": "Implement 1-2 simple organization systems that don't restrict you.",
-      "expandSocialNetwork": "Expand your social network",
-      "expandSocialNetworkDesc": "Participate in new events and build connections in areas of interest.",
-      "developDeepRelationships": "Develop deep relationships",
-      "developDeepRelationshipsDesc": "Invest quality time in 2-3 relationships that are important to you.",
-      "exploreNewTerritories": "Explore new territories",
-      "exploreNewTerritoriesDesc": "Try 2-3 activities or hobbies that are completely new to you.",
-      "evaluateProgress": "Evaluate progress",
-      "evaluateProgressDesc": "Analyze how your behaviors and attitudes have evolved in recent months.",
-      "weeklyReflectionJournal": "Keep a weekly personality reflection journal",
-      "monthlyFeedback": "Request monthly feedback from 2-3 close people",
-      "observeStrengths": "Observe and note moments when you use your strengths",
-      "useTrackingApps": "Use simple tracking apps to build habits",
-      "retestRecommendation": "Re-test after 8-12 months to see your personality evolution and strategy effectiveness."
-    },
-    "personalizedResults": {
-      "title": "Personal Profile",
-      "personalizedInterpretation": "Personalized interpretation:",
-      "contextualFactors": "Contextual factors:",
-      "context": "Context:",
-      "bullet": "•",
-      "factors": {
-        "development": "Personality develops over time through experiences",
-        "situational": "Each dimension influences behavior differently in various situations", 
-        "unique": "Your unique combination of traits determines your personal style"
-      },
-      "normalityContext": "All Big Five scores are normal. The diversity of human personalities is what makes society functional and creative."
-    },
-    "aiAnalysis": {
-      "title": "Detailed AI Analysis",
-      "description": "Get an in-depth interpretation of your results, personalized recommendations and how they apply to your career.",
-      "analyzeButton": "Analyze with AI",
-      "generating": "Generating...",
-      "saveToCareerPlan": "Save to Career Plan"
-    }
-  },
-  "testResult": {
-    "nextSteps": {
-      "title": "What's Next?",
-      "description": "Continue your journey with these recommended next steps",
-      "createCareerPlan": "Create Your Career Plan",
-      "careerPlanDescription": "Let AI help you create a personalized career plan based on your unique profile",
-      "careerPlanDescriptionRelevant": "Your test results will help AI create a more accurate career plan tailored to your personality",
-      "personalityInsight": "Great choice!",
-      "aiWillUse": "Our AI will use your {{testName}} results to personalize your career recommendations",
-      "startCareerPlanning": "Start Career Planning",
-      "exploreMoreTests": "Take More Assessments",
-      "moreTestsDescription": "Get a complete picture of your abilities and personality",
-      "discoverMoreTests": "Discover More Tests",
-      "categories": {
-        "personality": "Personality",
-        "cognitive": "Cognitive", 
-        "emotional": "Emotional",
-        "leadership": "Leadership"
-      }
-    },
-    "interpretation": {
-      "high": "High",
-      "moderate": "Moderate",
-      "low": "Low",
-      "highScore": "High Score",
-      "lowScore": "Low Score",
-      "notAvailable": "Interpretation not available"
-    },
-    "incomplete": "Incomplete Test",
-    "scoring": {
-      "title": "How the score is calculated",
-      "description": "Explanation of the evaluation system for this test",
-      "testDescription": "The Big Five test evaluates five main dimensions of personality: Openness, Conscientiousness, Extraversion, Agreeableness and Neuroticism.",
-      "interpretation": "Score interpretation:",
-      "whatMeans": "What your results mean:",
-      "resultMeaning": "Your results indicate your general Big Five profile and your strengths in various dimensions of personality.",
-      "ranges": {
-        "low": "Low",
-        "moderate": "Moderate", 
-        "good": "Good",
-        "excellent": "Excellent"
-      }
-    },
+    "title": "Test Results",
     "overallScore": {
       "title": "Test Result: {{testName}}",
       "totalScore": "Total Score",
@@ -818,31 +735,81 @@
         "agreeableness": {
           "title": "Agreeableness",
           "description": "Measures cooperation, empathy, and trust",
-          "high": "Cooperative, empathetic and like to help others",
-          "low": "More competitive and direct in interpersonal relationships"
+          "high": "Cooperative, empathetic, trusting of others",
+          "low": "More skeptical and competitive, prioritizing personal interests"
         },
         "neuroticism": {
           "title": "Neuroticism",
           "description": "Measures emotional stability and stress management",
-          "high": "More sensitive to stress and emotional fluctuations",
-          "low": "Emotionally stable, calm and manage stress well"
+          "high": "More sensitive to stress and may experience emotional fluctuations",
+          "low": "Emotionally stable, calm under pressure"
         }
       }
+    },
+    "scoring": {
+      "title": "Understanding Your Score",
+      "description": "Learn how your test was scored and what the results mean",
+      "testDescription": "Your Big Five results offer a comprehensive perspective on your personality across five fundamental dimensions.",
+      "interpretation": "Score Interpretation",
+      "whatMeans": "What it means",
+      "resultMeaning": "These scores help identify your natural tendencies and preferences, providing insights for personal development and career planning."
+    },
+    "nextSteps": {
+      "title": "What's Next?",
+      "subtitle": "Continue your journey with these recommended next steps",
+      "createCareerPlan": {
+        "title": "Create Your Career Plan",
+        "description": "Your test results will help AI create a more accurate career plan tailored to your personality"
+      },
+      "takeMoreTests": {
+        "title": "Take More Assessments",
+        "description": "Get a complete picture of your abilities and personality"
+      },
+      "aiMentoring": {
+        "title": "AI Career Mentoring",
+        "description": "Get personalized advice and guidance based on your results"
+      },
+      "exploreCareer": {
+        "title": "Explore Career Paths",
+        "description": "Discover careers that match your personality and skills"
+      }
+    },
+    "actions": {
+      "retake": "Retake Test",
+      "share": "Share Results",
+      "download": "Download Report",
+      "saveToProfile": "Save to Profile",
+      "scheduleConsultation": "Schedule Consultation",
+      "exploreMore": "Explore More Tests"
     }
   },
-  "common": {
-    "loading": "Loading...",
-    "error": "Error",
-    "success": "Success",
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "close": "Close",
-    "confirm": "Confirm",
-    "back": "Back",
-    "next": "Next",
-    "previous": "Previous",
-    "submit": "Submit"
+  "personalizedResults": {
+    "title": "Personalized Insights",
+    "personalizedInterpretation": "Personalized Interpretation",
+    "contextualFactors": "Key Insights",
+    "context": "Context:",
+    "bullet": "•"
+  },
+  "aiAnalysis": {
+    "title": "AI Analysis",
+    "generating": "Generating AI insights...",
+    "error": "Unable to generate AI analysis",
+    "retry": "Retry Analysis"
+  },
+  "careerPlan": {
+    "title": "Career Plan",
+    "create": "Create Career Plan",
+    "view": "View Plan",
+    "edit": "Edit Plan",
+    "share": "Share Plan",
+    "goals": "Career Goals",
+    "timeline": "Timeline",
+    "milestones": "Milestones",
+    "skills": "Skills to Develop",
+    "resources": "Resources",
+    "progress": "Progress",
+    "complete": "Mark Complete",
+    "inProgress": "In Progress",
+    "notStarted": "Not Started"
   }
 }

@@ -3,6 +3,10 @@
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
 import OverallScoreCard from '../OverallScoreCard';
+import { PersonalizedResultsCard } from '../PersonalizedResultsCard';
+import { ScoringExplanation } from '../ScoringExplanation';
+import DetailedInterpretations from '../DetailedInterpretations';
+import { AiAnalysisCard } from '../AiAnalysisCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/hooks/useLanguage';
 
@@ -52,6 +56,16 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
     detailed_interpretations: score.detailed_interpretations ?? {},
   };
 
+  // Create detailed interpretations for DISC
+  const getDetailedInterpretations = () => {
+    if (testName?.includes('DISC') && dominantProfileId) {
+      return {
+        [dominantProfileId]: t(`tests.disc.explanation.detailedInterpretations.${dominantProfileId}`)
+      };
+    }
+    return score.detailed_interpretations || {};
+  };
+
   return (
     <div className="space-y-6">
       <OverallScoreCard
@@ -75,7 +89,29 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
         </Card>
       )}
 
-      {/* Aici vom adăuga cardul de Analiză AI pentru acest tip de test */}
+      {/* Personalized Results Card - shows contextual factors and personalized interpretation */}
+      <PersonalizedResultsCard 
+        score={score}
+        testName={testName}
+      />
+
+      {/* Scoring Explanation Card - explains how DISC scoring works */}
+      <ScoringExplanation 
+        testName={testName || ''}
+        overallScore={score.overall}
+      />
+
+      {/* Detailed Interpretations Card - detailed analysis of the profile */}
+      <DetailedInterpretations 
+        interpretations={getDetailedInterpretations()}
+        testName={testName}
+      />
+
+      {/* AI Analysis Card - AI-powered insights and recommendations */}
+      <AiAnalysisCard 
+        score={score}
+        testName={testName}
+      />
     </div>
   );
 };
