@@ -464,27 +464,6 @@
       }
     }
   },
-  "testResult": {
-    "nextSteps": {
-      "title": "What's Next?",
-      "description": "Continue your journey with these recommended next steps",
-      "createCareerPlan": "Create Your Career Plan",
-      "careerPlanDescription": "Build a personalized roadmap to achieve your professional goals",
-      "careerPlanDescriptionRelevant": "Your test results will help AI create a more accurate career plan tailored to your personality",
-      "personalityInsight": "Great choice!",
-      "aiWillUse": "Our AI will use your {{testName}} results to personalize your career recommendations",
-      "startCareerPlanning": "Start Career Planning",
-      "exploreMoreTests": "Take More Assessments",
-      "moreTestsDescription": "Get a complete picture of your abilities and personality",
-      "discoverMoreTests": "Discover More Tests"
-    },
-    "categories": {
-      "personality": "Personality",
-      "cognitive": "Cognitive",
-      "emotional": "Emotional",
-      "leadership": "Leadership"
-    }
-  },
   "globalProgress": {
     "title": "Your Journey Progress",
     "overallProgress": "Overall Development Progress",
@@ -737,6 +716,9 @@
     "saveToCareerPlan": "Save to Career Plan"
   },
   "testResult": {
+    "detailedInterpretations": {
+      "title": "Detailed Interpretations"
+    },
     "nextSteps": {
       "title": "What's Next?",
       "description": "Continue your journey with these recommended next steps",
