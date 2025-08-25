@@ -46,6 +46,10 @@ export async function getLifeImpactExplanation(
     return getCattellLifeImpact(score);
   }
   
+  if (testKey.includes('enneagram')) {
+    return getEnneagramLifeImpact(score);
+  }
+  
   return null;
 }
 
@@ -383,5 +387,200 @@ function getCattellLifeImpact(score: StandardizedScore): LifeImpactData {
       }
     ],
     overallImpact: 'Profilul Cattell oferă o perspectivă detaliată asupra modului în care personalitatea ta se manifestă în toate aspectele vieții.'
+  };
+}
+
+function getEnneagramLifeImpact(score: StandardizedScore): LifeImpactData {
+  const dominantType = score.dominant_profile;
+  const areas: LifeAreaImpact[] = [];
+  
+  if (!dominantType) {
+    return {
+      areas: [
+        {
+          name: 'Autocunoaștere',
+          impact: 'Tipul tău Enneagram influențează fundamental modul în care percepi și interacționezi cu lumea.',
+          examples: ['Motivațiile subconștiente', 'Tiparele de răspuns la stres', 'Modurile de relaționare cu alții']
+        }
+      ],
+      overallImpact: 'Enneagram-ul oferă o hartă profundă a personalității interne și a motivațiilor comportamentale.'
+    };
+  }
+  
+  // Impact specific bazat pe tipul Enneagram
+  const typeImpacts: Record<string, LifeAreaImpact[]> = {
+    'type1': [
+      {
+        name: 'Muncă și performanță',
+        impact: 'Perfecționismul tău îți influențează standardele și abordarea față de muncă.',
+        examples: ['Standarde înalte pentru sine și alții', 'Atenție extremă la detalii', 'Dificultate în a finaliza proiecte care nu sunt "perfecte"', 'Frustare cu incompetența altora']
+      },
+      {
+        name: 'Relații interpersonale',
+        impact: 'Tendința de a corecta și îmbunătăți poate afecta relațiile.',
+        examples: ['Critica constructivă care poate fi percepută ca critică', 'Dificultate în a accepta diferențele', 'Aprecierea pentru ordine și predictibilitate în relații']
+      },
+      {
+        name: 'Stres și relaxare',
+        impact: 'Vocea critică interioară poate crea tensiune constantă.',
+        examples: ['Dificultate în a te relaxa complet', 'Autocritică severă', 'Tensiune fizică din cauza tensiunii mentale']
+      }
+    ],
+    'type2': [
+      {
+        name: 'Relații și conexiuni',
+        impact: 'Focusul pe nevoile altora poate submina propriile nevoi.',
+        examples: ['Tendința de a fi disponibil pentru toată lumea', 'Dificultate în a spune "nu"', 'Epuizare din cauza dedicării excesive', 'Relații unde dai mai mult decât primești']
+      },
+      {
+        name: 'Identitate și auto-valoare',
+        impact: 'Valoarea de sine depinde de cât de mult ești necesar altora.',
+        examples: ['Sentiment de gol când nu ajuți pe nimeni', 'Dificultate în a-ți recunoaște propriile realizări', 'Sentiments de resentiment când ajutorul nu este apreciat']
+      },
+      {
+        name: 'Carieră și realizări',
+        impact: 'Tendința de a prioritiza nevoile altora poate afecta dezvoltarea profesională.',
+        examples: ['Alegerea unor carriere de servire', 'Dificultate în autopromotion', 'Subminia propriilor obiective pentru a ajuta colegii']
+      }
+    ],
+    'type3': [
+      {
+        name: 'Succesul și imaginea',
+        impact: 'Focusul pe realizări poate masca identitatea autentică.',
+        examples: ['Adaptarea personalității pentru a impresiona', 'Măsurarea valorii de sine prin realizări', 'Evitarea eșecurilor la orice cost', 'Competitivitate constantă']
+      },
+      {
+        name: 'Relații și intimitate',
+        impact: 'Menținerea unei imagini de succes poate limita vulnerabilitatea.',
+        examples: ['Dificultate în a arăta slăbiciuni partenerului', 'Relații superficiale bazate pe impresii', 'Prioritizarea carierei în fața relațiilor']
+      },
+      {
+        name: 'Echilibru și autenticitate',
+        impact: 'Ritmul accelerat poate preveni introspectia și dezvoltarea emoțională.',
+        examples: ['Evitarea momentelor de liniște și reflexie', 'Pierderea contactului cu propriile sentimente', 'Burnout din cauza activității constante']
+      }
+    ],
+    'type4': [
+      {
+        name: 'Starea emoțională',
+        impact: 'Intensitatea emoțională poate crea fluctuații majore în dispoziție.',
+        examples: ['Perioade de tristețe profundă sau extaz', 'Sentimente de alienare și singurătate', 'Nostalgia și idealizarea trecutului sau viitorului', 'Căutarea constantă a ceea ce lipsește']
+      },
+      {
+        name: 'Creativitate și exprimare',
+        impact: 'Nevoia de unicitate influențează alegerile creative și profesionale.',
+        examples: ['Atragerea către arte și exprimare creativă', 'Rezistența la conformare și rutină', 'Căutarea originalității în toate domeniile']
+      },
+      {
+        name: 'Relații și identitate',
+        impact: 'Căutarea identității autentice poate complica relațiile.',
+        examples: ['Teste constante ale loialității prietenilor', 'Atragerea către persoane indisponibile', 'Dificultate în a menține relații stabile']
+      }
+    ],
+    'type5': [
+      {
+        name: 'Energie și resurse',
+        impact: 'Managementul energiei influențează toate aspectele vieții.',
+        examples: ['Nevoia de timp în singurate pentru reîncărcare', 'Protejarea resurselor emoționale și fizice', 'Evitarea situațiilor epuizante energetic', 'Planificarea atentă a interacțiunilor sociale']
+      },
+      {
+        name: 'Cunoaștere și competență',
+        impact: 'Focusul pe competență poate crea presiune pentru expertiză.',
+        examples: ['Dorința de a fi expert înainte de a acționa', 'Evitarea situațiilor unde competența nu este demonstrată', 'Investirea timpului în învățare și cercetare']
+      },
+      {
+        name: 'Relații și intimitate',
+        impact: 'Nevoile de spațiu și autonomie pot afecta apropierea emoțională.',
+        examples: ['Dificultate în exprimarea emoțiilor', 'Preferința pentru comunicare electronică', 'Nevoia de relații care respectă independența']
+      }
+    ],
+    'type6': [
+      {
+        name: 'Siguranță și stabilitate',
+        impact: 'Căutarea securității influențează majoritatea deciziilor de viață.',
+        examples: ['Preferința pentru job-uri stabile și previsibile', 'Construirea unor rețele de suport solide', 'Planificarea meticuloasă pentru scenarii negative', 'Evitarea riscurilor nejustificate']
+      },
+      {
+        name: 'Autoritate și încredere',
+        impact: 'Relația ambivalentă cu autoritatea afectează dinamicile de putere.',
+        examples: ['Respectul pentru autoritatea legitimă dar suspiciunea față de abuz', 'Dificultate în luarea deciziilor importante singur', 'Căutarea validării și consiliului']
+      },
+      {
+        name: 'Anxietate și gândire',
+        impact: 'Mintea vigilentă poate genera anxietate și supraanaliză.',
+        examples: ['Anticiparea constantă a problemelor potențiale', 'Dificultate în calmarea minții', 'Căutarea de asigurări de la alții']
+      }
+    ],
+    'type7': [
+      {
+        name: 'Experiențe și varietate',
+        impact: 'Nevoia de stimulare influențează alegerile și angajamentele.',
+        examples: ['Dificultate în menținerea focusului pe termen lung', 'Atragerea către experiențe noi și diverse', 'Evitarea rutinei și monotoniei', 'Implicarea în multiple proiecte simultan']
+      },
+      {
+        name: 'Emoții și procesare',
+        impact: 'Evitarea emoțiilor negative poate limita procesarea și maturizarea.',
+        examples: ['Tendința de a "sări peste" momentele dificile', 'Optimismul care poate ignora realitățile', 'Dificultate în a sta cu durerea sau pierderea']
+      },
+      {
+        name: 'Angajamente și responsabilități',
+        impact: 'FOMO poate afecta capacitatea de angajament profund.',
+        examples: ['Dificultate în alegerea unei căi și renunțarea la altele', 'Probleme cu finalizarea proiectelor', 'Tendința de a evita responsabilitățile grele']
+      }
+    ],
+    'type8': [
+      {
+        name: 'Putere și control',
+        impact: 'Nevoia de control influențează leadership-ul și relațiile.',
+        examples: ['Tendința naturală către roluri de leadership', 'Dificultate în a accepta control extern', 'Protejarea celor vulnerabili', 'Confruntarea directă cu injustețea']
+      },
+      {
+        name: 'Intensitate și energie',
+        impact: 'Energia puternică poate fi copleșitoare pentru alții.',
+        examples: ['Abordarea intensă în toate domeniile vieții', 'Dificultate în a modula energia pentru situații delicate', 'Atragerea sau respingerea oamenilor prin intensitate']
+      },
+      {
+        name: 'Vulnerabilitate și emoții',
+        impact: 'Evitarea vulnerabilității poate limita intimitatea emoțională.',
+        examples: ['Dificultate în a recunoaște și exprima emoții mai delicate', 'Tendința de a "ataca" când se simte vulnerabil', 'Protejarea prin agresiune sau retragere']
+      }
+    ],
+    'type9': [
+      {
+        name: 'Energie și inițiativă',
+        impact: 'Inerția poate afecta urmărirea obiectivelor și schimbărilor.',
+        examples: ['Dificultate în începerea proiectelor noi', 'Tendința de a amâna deciziile importante', 'Preferința pentru rutina cunoscută', 'Procrastinarea prin distragerea atenției']
+      },
+      {
+        name: 'Relații și pace',
+        impact: 'Evitarea conflictului poate submina nevoile personale.',
+        examples: ['Merge pe calea de cea mai mică rezistență', 'Dificultate în exprimarea dezacordului', 'Suprimarea propriilor nevoi pentru a menține pacea', 'Acumularea resentimentelor neexprimat']
+      },
+      {
+        name: 'Identitate și priorități',
+        impact: 'Focusul pe alții poate umbri propria identitate și dorințe.',
+        examples: ['Dificultate în identificarea propriilor priorități', 'Adoptarea în intereselor și opiniilor altora', 'Simțirea de "invizibilitate" sau de a fi luat de-a gata']
+      }
+    ]
+  };
+  
+  const specificImpacts = typeImpacts[dominantType] || [];
+  areas.push(...specificImpacts);
+  
+  // Adaugă impact general pentru toate tipurile
+  areas.push({
+    name: 'Dezvoltare personală',
+    impact: 'Tipul tău Enneagram oferă o hartă pentru creșterea personală și spirituală.',
+    examples: [
+      'Înțelegerea motivațiilor inconștiente',
+      'Recunoașterea tiparelor autodistructive',
+      'Dezvoltarea compassiunii pentru sine și alții',
+      'Călea către integrare și maturitate emoțională'
+    ]
+  });
+  
+  return {
+    areas,
+    overallImpact: 'Enneagram-ul îți arată nu doar cine ești, ci și cine poți deveni prin lucrarea conștientă cu tipul tău de personalitate și drumul către integrare.'
   };
 }

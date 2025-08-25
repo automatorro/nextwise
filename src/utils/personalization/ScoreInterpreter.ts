@@ -31,6 +31,10 @@ export function getPersonalizedInterpretation(
     return getCattellPersonalizedInterpretation(score);
   }
   
+  if (testKey.includes('enneagram')) {
+    return getEnneagramPersonalizedInterpretation(score, language);
+  }
+  
   return null;
 }
 
@@ -212,5 +216,62 @@ function getCattellPersonalizedInterpretation(score: StandardizedScore): Persona
     severityLabel: 'Profil Complet',
     severityVariant: 'default',
     normalityContext: 'Fiecare factor de personalitate contribuie la unicitatea ta ca individ.'
+  };
+}
+
+function getEnneagramPersonalizedInterpretation(score: StandardizedScore, language: string = 'ro'): PersonalizedInterpretation {
+  const dominantType = score.dominant_profile;
+  
+  if (!dominantType) {
+    return {
+      personalizedMessage: language === 'en' 
+        ? 'Your Enneagram profile reveals your core motivations and fear patterns.'
+        : 'Profilul tău Enneagram dezvăluie motivațiile fundamentale și tiparele de teamă.',
+      severityLabel: language === 'en' ? 'Personality Profile' : 'Profil de Personalitate',
+      severityVariant: 'default'
+    };
+  }
+  
+  const typeNumber = dominantType.replace('type', '');
+  const typeNames = {
+    ro: {
+      'type1': 'Perfectionist', 'type2': 'Ajutător', 'type3': 'Realizator', 
+      'type4': 'Individualist', 'type5': 'Investigator', 'type6': 'Loialist',
+      'type7': 'Entuziast', 'type8': 'Provocator', 'type9': 'Meditor'
+    },
+    en: {
+      'type1': 'Perfectionist', 'type2': 'Helper', 'type3': 'Achiever',
+      'type4': 'Individualist', 'type5': 'Investigator', 'type6': 'Loyalist', 
+      'type7': 'Enthusiast', 'type8': 'Challenger', 'type9': 'Peacemaker'
+    }
+  };
+  
+  const typeName = typeNames[language as 'ro' | 'en'][dominantType] || typeNumber;
+  
+  let personalizedMessage = '';
+  if (language === 'en') {
+    personalizedMessage = `As Type ${typeNumber} (${typeName}), your core personality is driven by specific motivations and behavioral patterns. This Enneagram type reveals how you view the world and respond to challenges.`;
+  } else {
+    personalizedMessage = `Ca Tipul ${typeNumber} (${typeName}), personalitatea ta centrală este ghidată de motivații și tipare comportamentale specifice. Acest tip Enneagram dezvăluie cum percepi lumea și cum răspunzi la provocări.`;
+  }
+  
+  const contextualFactors = language === 'en' ? [
+    'Each Enneagram type has core fears and desires that drive behavior',
+    'Understanding your type helps in personal growth and relationships', 
+    'Types can develop differently based on stress and security levels'
+  ] : [
+    'Fiecare tip Enneagram are temeri și dorințe fundamentale care ghidează comportamentul',
+    'Înțelegerea tipului tău ajută la dezvoltarea personală și relații',
+    'Tipurile se pot dezvolta diferit în funcție de nivelurile de stres și siguranță'
+  ];
+  
+  return {
+    personalizedMessage,
+    severityLabel: language === 'en' ? `Type ${typeNumber} - ${typeName}` : `Tipul ${typeNumber} - ${typeName}`,
+    severityVariant: 'default',
+    contextualFactors,
+    normalityContext: language === 'en' 
+      ? 'All Enneagram types are equally valid and represent different ways of experiencing and navigating the world.'
+      : 'Toate tipurile Enneagram sunt la fel de valide și reprezintă modalități diferite de a experimenta și naviga lumea.'
   };
 }

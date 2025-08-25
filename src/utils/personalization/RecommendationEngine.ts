@@ -43,6 +43,10 @@ export async function getContextualRecommendations(
     return getCattellRecommendations(score);
   }
   
+  if (testKey.includes('enneagram')) {
+    return getEnneagramRecommendations(score);
+  }
+  
   return null;
 }
 
@@ -333,4 +337,271 @@ function getCattellRecommendations(score: StandardizedScore): ContextualRecommen
       'Valorifică punctele forte în relații și carieră'
     ]
   }];
+}
+
+function getEnneagramRecommendations(score: StandardizedScore): ContextualRecommendation[] {
+  const dominantType = score.dominant_profile;
+  const recommendations: ContextualRecommendation[] = [];
+  
+  if (!dominantType) {
+    return [{
+      type: 'self-help',
+      category: 'Dezvoltare personală',
+      title: 'Explorează tipul tău Enneagram',
+      description: 'Înțelege-ți motivațiile profunde și tiparele de comportament.',
+      actionItems: [
+        'Citește despre toate tipurile pentru a-ți confirma tipul',
+        'Observă cum reacționezi în diferite situații',
+        'Identifică tiparele de gândire și comportament'
+      ]
+    }];
+  }
+  
+  // Recomandări specifice pentru fiecare tip
+  const typeRecommendations: Record<string, ContextualRecommendation[]> = {
+    'type1': [
+      {
+        type: 'self-help',
+        category: 'Gestionarea perfecționismului',
+        title: 'Dezvoltă flexibilitatea și auto-compasiunea',
+        description: 'Învață să accepți imperfecțiunile și să îți tempezi criticismul interior.',
+        actionItems: [
+          'Practică mindfulness pentru a observa vocea critică interioară',
+          'Stabilește standarde realiste și realizabile',
+          'Celebrează progresul, nu doar perfecțiunea',
+          'Învață să spui "suficient de bun" pentru anumite sarcini'
+        ]
+      },
+      {
+        type: 'lifestyle',
+        category: 'Echilibru în viață',
+        title: 'Încorporează relaxarea în rutină',
+        description: 'Balansează munca și perfecțiunea cu activități de relaxare.',
+        actionItems: [
+          'Programează timp pentru hobby-uri plăcute',
+          'Practică exerciții de relaxare zilnic',
+          'Acceptă să fii spontan uneori'
+        ]
+      }
+    ],
+    'type2': [
+      {
+        type: 'self-help',
+        category: 'Îngrijirea de sine',
+        title: 'Învață să îți prioritizezi nevoile',
+        description: 'Dezvoltă capacitatea de a-ți recunoaște și satisface propriile nevoi.',
+        actionItems: [
+          'Fă o listă zilnică cu nevoile tale personale',
+          'Practică să spui "nu" când ești copleșit',
+          'Solicită ajutor când ai nevoie',
+          'Dedică timp zilnic pentru auto-îngrijire'
+        ]
+      },
+      {
+        type: 'professional',
+        category: 'Limite sănătoase',
+        title: 'Stabilește limite clare în relații',
+        description: 'Învață să ajuți fără a te epuiza emoțional.',
+        actionItems: [
+          'Comunică deschis despre limitele tale',
+          'Oferă ajutor din generozitate, nu din obligație',
+          'Dezvoltă relații reciproce și echilibrate'
+        ]
+      }
+    ],
+    'type3': [
+      {
+        type: 'professional',
+        category: 'Succes autentic',
+        title: 'Conectează-te cu valorile autentice',
+        description: 'Aliniază realizările cu valorile și identitatea ta autentică.',
+        actionItems: [
+          'Reflectează asupra propriilor valori și pasiuni',
+          'Stabilește obiective bazate pe satisfacție personală, nu doar pe imagine',
+          'Celebrează efortul și procesul, nu doar rezultatele',
+          'Dezvoltă relații profunde dincolo de succes'
+        ]
+      },
+      {
+        type: 'lifestyle',
+        category: 'Echilibru work-life',
+        title: 'Încetinește și conectează-te emoțional',
+        description: 'Balansează realizările cu conexiunea emoțională și relaxarea.',
+        actionItems: [
+          'Programează timp pentru reflexie și procesare emoțională',
+          'Dezvoltă hobby-uri fără obiective de performanță',
+          'Practică vulnerabilitatea în relații apropiate'
+        ]
+      }
+    ],
+    'type4': [
+      {
+        type: 'self-help',
+        category: 'Stabilitate emoțională',
+        title: 'Dezvoltă toleranța pentru emoțiile intense',
+        description: 'Învață să navighezi prin stările emoționale intense fără a fi copleșit.',
+        actionItems: [
+          'Practică tehnici de grounding când emoțiile sunt intense',
+          'Ține un jurnal emoțional pentru a identifica tiparele',
+          'Dezvoltă rutine de auto-calmă care funcționează pentru tine',
+          'Căută sprijin profesional pentru gestionarea depresiei'
+        ]
+      },
+      {
+        type: 'lifestyle',
+        category: 'Exprimare creativă',
+        title: 'Canalează creativitatea constructiv',
+        description: 'Folosește unicitatea ta pentru proiecte creative și semnificative.',
+        actionItems: [
+          'Dedică timp regulat pentru activități creative',
+          'Conectează-te cu comunități de artisti sau creatori',
+          'Găsește modalități de a-ți exprima autenticitatea în muncă'
+        ]
+      }
+    ],
+    'type5': [
+      {
+        type: 'lifestyle',
+        category: 'Echilibru social',
+        title: 'Dezvoltă conexiuni sociale graduale',
+        description: 'Balansează nevoia de solitudine cu conexiuni sociale semnificative.',
+        actionItems: [
+          'Programează interacțiuni sociale scurte și regulate',
+          'Găsește grupuri cu interese comune',
+          'Comunică nevoile tale de spațiu personal partenerilor',
+          'Practică exprimarea emoțiilor în siguranță'
+        ]
+      },
+      {
+        type: 'professional',
+        category: 'Partajarea cunoștințelor',
+        title: 'Transformă cunoștințele în contribuții',
+        description: 'Găsește modalități de a împărtăși expertiza fără a te epuiza energetic.',
+        actionItems: [
+          'Alege proiecte care îți valorifică cunoștințele specifice',
+          'Dezvoltă sisteme pentru a împărtăși informații eficient',
+          'Caută roluri care îți respectă stilul de lucru independent'
+        ]
+      }
+    ],
+    'type6': [
+      {
+        type: 'self-help',
+        category: 'Gestionarea anxietății',
+        title: 'Dezvoltă încrederea în propriile decizii',
+        description: 'Construiește încrederea interioară și reduce dependența de validare externă.',
+        actionItems: [
+          'Practică luarea de decizii mici fără consiliere externă',
+          'Dezvoltă un sistem personal de evaluare a riscurilor',
+          'Creează planuri de siguranță pentru scenariile temute',
+          'Cultiva încrederea prin succese incrementale'
+        ]
+      },
+      {
+        type: 'professional',
+        category: 'Leadership autentic',
+        title: 'Dezvoltă stil de leadership bazat pe loialitate',
+        description: 'Folosește loialitatea și gândirea strategică pentru a conduce echipe.',
+        actionItems: [
+          'Dezvoltă sisteme clare și transparente în echipă',
+          'Construiește relații de încredere cu colegii',
+          'Folosește capacitatea de a anticipa probleme constructiv'
+        ]
+      }
+    ],
+    'type7': [
+      {
+        type: 'lifestyle',
+        category: 'Focus și profunzime',
+        title: 'Dezvoltă capacitatea de a sta cu experiențele',
+        description: 'Învață să explorezi în profunzime în loc să fugi spre următoarea experiență.',
+        actionItems: [
+          'Practică meditația mindfulness pentru a sta cu momentul prezent',
+          'Alege mai puține proiecte dar explorează-le în profunzime',
+          'Dezvoltă toleranța pentru emoțiile negative fără evitare',
+          'Creează rutine care să îți susțină focusul'
+        ]
+      },
+      {
+        type: 'professional',
+        category: 'Finalizarea proiectelor',
+        title: 'Dezvoltă sisteme pentru finalizare',
+        description: 'Creează structuri care să te ajute să duci proiectele la capăt.',
+        actionItems: [
+          'Folosește timere și tehnici de time-boxing',
+          'Cere feedback regular pentru a rămâne angajat',
+          'Găsește parteneri de responsabilitate pentru proiecte mari'
+        ]
+      }
+    ],
+    'type8': [
+      {
+        type: 'self-help',
+        category: 'Vulnerabilitate și control',
+        title: 'Dezvoltă comfort cu vulnerabilitatea',
+        description: 'Învață să îți accepți și vulnerabilitățile, nu doar puterea.',
+        actionItems: [
+          'Practică împărtășirea emoțiilor cu persoane de încredere',
+          'Recunoaște limitele și cere ajutor când e necesar',
+          'Dezvoltă empatie pentru slăbiciunile altora',
+          'Învață să cedezi controlul în situații apropiate'
+        ]
+      },
+      {
+        type: 'professional',
+        category: 'Leadership empatic',
+        title: 'Balansează puterea cu compasiunea',
+        description: 'Folosește energia ta de leadership pentru a proteja și dezvolta echipa.',
+        actionItems: [
+          'Practică ascultarea activă înainte de a lua decizii',
+          'Oferă feedback constructiv, nu doar corectiv',
+          'Dezvoltă membres ale echipei în loc să îi domni'
+        ]
+      }
+    ],
+    'type9': [
+      {
+        type: 'self-help',
+        category: 'Energie și inițiativă',
+        title: 'Dezvoltă energia interioară și inițiativa',
+        description: 'Învață să îți accesezi energia și să acționezi pentru propriile priorități.',
+        actionItems: [
+          'Stabilește rutine mici și realizabile pentru a construi momentum',
+          'Identifică și urmărește propriile priorități, nu doar pe ale altora',
+          'Folosește tehnici de time-management pentru a evita amânarea',
+          'Practică exprimarea opiniilor și nevoilor'
+        ]
+      },
+      {
+        type: 'lifestyle',
+        category: 'Angajament activ',
+        title: 'Participă activ la propria viață',
+        description: 'Evită retragerea automată și angajează-te conștient în activități.',
+        actionItems: [
+          'Alege conștient activitățile în loc să te lași purtat de curent',
+          'Stabilește și urmărește obiective personale importante',
+          'Dezvoltă hobby-uri care îți aduc energie și bucurie'
+        ]
+      }
+    ]
+  };
+  
+  const typeSpecificRecommendations = typeRecommendations[dominantType] || [];
+  recommendations.push(...typeSpecificRecommendations);
+  
+  // Recomandare generală pentru toate tipurile
+  recommendations.push({
+    type: 'self-help',
+    category: 'Dezvoltare Enneagram',
+    title: 'Explorează integrarea și dezintegrarea',
+    description: 'Înțelege cum te comporți în stres (dezintegrare) și în siguranță (integrare).',
+    actionItems: [
+      'Observă cum se schimbă comportamentul tău în situații stresante',
+      'Identifică ce te ajută să îți accesezi calitățile pozitive',
+      'Lucrează cu un coach sau terapeut specializat în Enneagram',
+      'Practică dezvoltarea trăsăturilor tipurilor de integrare'
+    ]
+  });
+  
+  return recommendations;
 }

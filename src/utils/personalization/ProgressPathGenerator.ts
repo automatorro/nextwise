@@ -47,6 +47,10 @@ export async function getProgressPath(
     return getCattellProgressPath(score);
   }
   
+  if (testKey.includes('enneagram')) {
+    return getEnneagramProgressPath(score);
+  }
+  
   return null;
 }
 
@@ -367,5 +371,202 @@ function getCattellProgressPath(score: StandardizedScore): ProgressPath {
       'Măsoară progresul prin indicatori comportamentali concreți'
     ],
     retestRecommendation: 'Re-testare recomandată după 18-24 luni pentru evaluarea schimbărilor în profilul de personalitate.'
+  };
+}
+
+function getEnneagramProgressPath(score: StandardizedScore): ProgressPath {
+  const dominantType = score.dominant_profile;
+  const milestones: ProgressMilestone[] = [];
+  const trackingMethods: string[] = [];
+  
+  if (!dominantType) {
+    return {
+      milestones: [
+        {
+          timeframe: 'Săptămâna 1-2',
+          goal: 'Confirmarea tipului',
+          description: 'Studiază toate tipurile pentru a-ți confirma tipul dominant'
+        },
+        {
+          timeframe: 'Luna 1',
+          goal: 'Înțelegerea de bază',
+          description: 'Învață despre motivațiile, temerile și dorințele tipului tău'
+        }
+      ],
+      trackingMethods: [
+        'Observă tiparele de comportament în situații diverse',
+        'Notează reacțiile emoționale la stress și confort'
+      ],
+      retestRecommendation: 'Re-testare după înțelegerea aprofundată a sistemului Enneagram (3-6 luni).'
+    };
+  }
+  
+  // Milestones generale pentru toate tipurile
+  milestones.push({
+    timeframe: 'Săptămâna 1-2',
+    goal: 'Autocunoaștere profundă',
+    description: `Studiază în detaliu caracteristicile Tipului ${dominantType.replace('type', '')} și observă cum se manifestă în viața ta`
+  });
+  
+  milestones.push({
+    timeframe: 'Săptămâna 3-4',
+    goal: 'Identificarea tiparelor',
+    description: 'Recunoaște tiparele automate de gândire, sentiment și comportament specifice tipului tău'
+  });
+  
+  milestones.push({
+    timeframe: 'Luna 2',
+    goal: 'Înțelegerea dinamicilor',
+    description: 'Învață despre căile de integrare (creștere) și dezintegrare (stres) ale tipului tău'
+  });
+  
+  milestones.push({
+    timeframe: 'Luna 3-4',
+    goal: 'Dezvoltarea conștientizării',
+    description: 'Practică observarea și întreruperea tiparelor automate, dezvoltând răspunsuri mai conștiente'
+  });
+  
+  milestones.push({
+    timeframe: 'Luna 6',
+    goal: 'Integrarea trăsăturilor pozitive',
+    description: 'Lucrează activ la dezvoltarea calităților tipului tău de integrare'
+  });
+  
+  milestones.push({
+    timeframe: 'An 1',
+    goal: 'Transformarea profundă',
+    description: 'Demonstrează schimbări consistente în modul în care răspunzi la provocări și relații'
+  });
+  
+  // Metode de tracking
+  trackingMethods.push('Ține un jurnal zilnic de observare a tiparelor de personalitate');
+  trackingMethods.push('Notează momentele de integrare și dezintegrare');
+  trackingMethods.push('Solicită feedback de la persoane apropiiate despre schimbările observate');
+  trackingMethods.push('Practică exerciții specifice tipului pentru dezvoltarea conștientizării');
+  trackingMethods.push('Măsoară progresul în relații și gestionarea stresului');
+  
+  // Milestones specifice pe tip
+  const typeSpecificMilestones: Record<string, ProgressMilestone[]> = {
+    'type1': [
+      {
+        timeframe: 'Luna 2',
+        goal: 'Relaxarea standardelor',
+        description: 'Practică acceptarea imperfecțiunii în situații mai puțin importante'
+      },
+      {
+        timeframe: 'Luna 4',
+        goal: 'Dezvoltarea spontaneității',
+        description: 'Încorporează activități spontane și jucăușe în rutina zilnică'
+      }
+    ],
+    'type2': [
+      {
+        timeframe: 'Luna 2',
+        goal: 'Recunoașterea nevoilor proprii',
+        description: 'Dedică timp zilnic pentru identificarea și exprimarea nevoilor personale'
+      },
+      {
+        timeframe: 'Luna 4',
+        goal: 'Stabilirea limitelor',
+        description: 'Practică spunerea "nu" și stabilirea limitelor sănătoase'
+      }
+    ],
+    'type3': [
+      {
+        timeframe: 'Luna 2',
+        goal: 'Încetinirea ritmului',
+        description: 'Programează timp pentru reflexie și procesare emoțională fără obiective'
+      },
+      {
+        timeframe: 'Luna 4',
+        goal: 'Conectarea cu valorile autentice',
+        description: 'Identifică și urmează obiective bazate pe valori personale, nu pe imagine'
+      }
+    ],
+    'type4': [
+      {
+        timeframe: 'Luna 2',
+        goal: 'Stabilizarea dispoziției',
+        description: 'Dezvoltă rutine care să îți susțină echilibrul emoțional'
+      },
+      {
+        timeframe: 'Luna 4',
+        goal: 'Focusul pe prezent',
+        description: 'Practică aprecierea și angajarea cu ceea ce ai în prezent'
+      }
+    ],
+    'type5': [
+      {
+        timeframe: 'Luna 2',
+        goal: 'Creșterea angajamentului social',
+        description: 'Programează și respectă interacțiuni sociale regulate'
+      },
+      {
+        timeframe: 'Luna 4',
+        goal: 'Exprimarea cunoștințelor',
+        description: 'Găsește modalități de a împărtăși expertiza cu alții'
+      }
+    ],
+    'type6': [
+      {
+        timeframe: 'Luna 2',
+        goal: 'Construirea încrederii interioare',
+        description: 'Practică luarea de decizii mici fără consiliere externă'
+      },
+      {
+        timeframe: 'Luna 4',
+        goal: 'Gestionarea anxietății',
+        description: 'Dezvoltă un sistem personal pentru calmarea gândurilor anxioase'
+      }
+    ],
+    'type7': [
+      {
+        timeframe: 'Luna 2',
+        goal: 'Dezvoltarea focusului',
+        description: 'Alege mai puține proiecte și explorează-le în profunzime'
+      },
+      {
+        timeframe: 'Luna 4',
+        goal: 'Toleranța pentru discomfort',
+        description: 'Practică statul cu emoțiile dificile fără evitare'
+      }
+    ],
+    'type8': [
+      {
+        timeframe: 'Luna 2',
+        goal: 'Dezvoltarea vulnerabilității',
+        description: 'Practică exprimarea emoțiilor delicate cu persoane de încredere'
+      },
+      {
+        timeframe: 'Luna 4',
+        goal: 'Leadership empatic',
+        description: 'Dezvoltă stiluri de leadership care împuternicesc în loc să controleze'
+      }
+    ],
+    'type9': [
+      {
+        timeframe: 'Luna 2',
+        goal: 'Activarea energiei',
+        description: 'Stabilește și urmează micii pași către obiectivele personale'
+      },
+      {
+        timeframe: 'Luna 4',
+        goal: 'Exprimarea opiniilor',
+        description: 'Practică exprimarea dezacordului și a preferințelor personale'
+      }
+    ]
+  };
+  
+  const specificMilestones = typeSpecificMilestones[dominantType] || [];
+  
+  // Inserez milestone-urile specifice în poziții relevante
+  specificMilestones.forEach((milestone, index) => {
+    milestones.splice(2 + index, 0, milestone);
+  });
+  
+  return {
+    milestones,
+    trackingMethods,
+    retestRecommendation: 'Re-testare recomandată după 12-18 luni de lucru activ cu tipul, pentru a observa schimbările în dezvoltarea personalității.'
   };
 }
