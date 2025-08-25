@@ -40,6 +40,22 @@ export function calculateDiscScore(answers: DiscAnswers): StandardizedScore {
   const totalAnswers = Object.keys(answers).length;
   const overallPercentage = totalAnswers > 0 ? Math.round((maxCount / totalAnswers) * 100) : 0;
 
+  // Calculate percentages for all dimensions
+  const dimensionPercentages = {
+    D: totalAnswers > 0 ? Math.round((counts.D / totalAnswers) * 100) : 0,
+    I: totalAnswers > 0 ? Math.round((counts.I / totalAnswers) * 100) : 0,
+    S: totalAnswers > 0 ? Math.round((counts.S / totalAnswers) * 100) : 0,
+    C: totalAnswers > 0 ? Math.round((counts.C / totalAnswers) * 100) : 0,
+  };
+
+  // Create detailed interpretations for each dimension
+  const detailedInterpretations = {
+    D: `tests.disc.explanation.personalizedInterpretations.D.workStyle`,
+    I: `tests.disc.explanation.personalizedInterpretations.I.workStyle`,
+    S: `tests.disc.explanation.personalizedInterpretations.S.workStyle`,
+    C: `tests.disc.explanation.personalizedInterpretations.C.workStyle`,
+  };
+
   return {
     type: 'profile',
     dominant_profile: dominantProfile,
@@ -47,6 +63,12 @@ export function calculateDiscScore(answers: DiscAnswers): StandardizedScore {
     overall: overallPercentage,
     interpretation: 'tests.disc.explanation.interpretation.dominant',
     raw_score: maxCount,
-    max_score: totalAnswers
+    max_score: totalAnswers,
+    dimensions: Object.entries(dimensionPercentages).map(([id, score]) => ({ 
+      id, 
+      name: id, 
+      score 
+    })),
+    detailed_interpretations: detailedInterpretations
   };
 }

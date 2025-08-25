@@ -830,6 +830,80 @@
       }
     }
   },
+  "tests": {
+    "disc": {
+      "explanation": {
+        "title": "DISC Assessment - Behavioral Styles",
+        "description": "DISC is a behavioral assessment that identifies your preferred work style and communication preferences based on four primary dimensions.",
+        "whatItMeans": "Understanding Your DISC Profile",
+        "profileTitle": "Your {{profile}} Profile",
+        "interpretation": {
+          "general": "The DISC assessment identifies your dominant behavioral style based on four key dimensions: Dominance, Influence, Steadiness, and Conscientiousness.",
+          "dominant": "Your dominant style is {{profile}}, which represents your preferred approach to tasks and interactions."
+        },
+        "profiles": {
+          "D": {
+            "name": "Dominance",
+            "description": "Direct, results-oriented, firm, strong-willed, and forceful. You enjoy challenges and taking action to achieve results."
+          },
+          "I": {
+            "name": "Influence", 
+            "description": "Outgoing, enthusiastic, optimistic, high-spirited, and lively. You enjoy interacting with people and influencing outcomes through communication."
+          },
+          "S": {
+            "name": "Steadiness",
+            "description": "Even-tempered, accommodating, patient, humble, and tactful. You prefer stable environments and collaborative teamwork."
+          },
+          "C": {
+            "name": "Conscientiousness",
+            "description": "Private, analytical, logical, critical, and systematic. You focus on accuracy, expertise, and quality in your work."
+          }
+        },
+        "scoring": {
+          "title": "Understanding Your DISC Scores",
+          "description": "Your DISC results show the relative strength of each behavioral style.",
+          "ranges": {
+            "high": "Strong preference (70-100%)",
+            "moderate": "Moderate preference (40-69%)",
+            "low": "Minimal preference (0-39%)"
+          },
+          "whatItMeans": "Higher scores indicate stronger behavioral tendencies in that dimension."
+        },
+        "contextualFactors": {
+          "workStyle": "Work Style Preferences",
+          "communication": "Communication Approach", 
+          "decisionMaking": "Decision Making Style",
+          "stressResponse": "Response to Pressure"
+        },
+        "personalizedInterpretations": {
+          "D": {
+            "workStyle": "You thrive in challenging, fast-paced environments where you can take charge and drive results.",
+            "communication": "You prefer direct, concise communication and appreciate when others get straight to the point.",
+            "decisionMaking": "You make decisions quickly and confidently, often willing to take calculated risks.",
+            "stressResponse": "Under pressure, you become more assertive and may take control of situations."
+          },
+          "I": {
+            "workStyle": "You excel in collaborative, people-focused environments with variety and social interaction.",
+            "communication": "You communicate enthusiastically and prefer face-to-face or verbal interactions.",
+            "decisionMaking": "You consider the people impact of decisions and seek input from others.",
+            "stressResponse": "Under pressure, you may become more talkative and seek support from others."
+          },
+          "S": {
+            "workStyle": "You prefer stable, predictable environments with clear processes and team collaboration.",
+            "communication": "You communicate thoughtfully and prefer one-on-one or small group discussions.",
+            "decisionMaking": "You take time to consider all options and prefer consensus-building approaches.",
+            "stressResponse": "Under pressure, you may become more withdrawn and seek stability."
+          },
+          "C": {
+            "workStyle": "You excel in structured environments that value accuracy, analysis, and systematic approaches.",
+            "communication": "You prefer written communication and detailed, fact-based discussions.",
+            "decisionMaking": "You gather extensive data and analyze thoroughly before making decisions.",
+            "stressResponse": "Under pressure, you may become more critical and focus on potential problems."
+          }
+        }
+      }
+    }
+  }
   "common": {
     "loading": "Loading...",
     "error": "Error",

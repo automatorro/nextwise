@@ -22,7 +22,7 @@ export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, tes
         return <DimensionalResultLayout score={score} testName={testName} resultId={resultId} />;
       
       case 'profile':
-        return <ProfileResultLayout score={score} testName={testName} />;
+        return <ProfileResultLayout score={score} testName={testName} resultId={resultId} />;
 
       case 'scale':
         return <ScaleResultLayout score={score} testName={testName} resultId={resultId} />;

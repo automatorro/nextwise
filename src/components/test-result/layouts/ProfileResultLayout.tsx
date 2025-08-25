@@ -5,17 +5,26 @@ import { StandardizedScore } from '@/types/tests';
 import OverallScoreCard from '../OverallScoreCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useLanguage } from '@/hooks/useLanguage';
+import { PersonalizedResultsCard } from '../PersonalizedResultsCard';
+import { ScoringExplanation } from '../ScoringExplanation';
+import { AiAnalysisCard } from '../AiAnalysisCard';
+import { ContextualRecommendationsCard } from '../ContextualRecommendationsCard';
+import { LifeImpactExplanation } from '../LifeImpactExplanation';
+import { ProgressPathCard } from '../ProgressPathCard';
+import DetailedInterpretations from '../DetailedInterpretations';
+import { DiscRadarChart } from '../../charts/DiscRadarChart';
 
 interface ProfileResultLayoutProps {
   score: StandardizedScore;
   testName?: string;
+  resultId?: string;
 }
 
 /**
  * Acesta este layout-ul specializat pentru teste "de profil"
  * (ex: DISC, Enneagram), care identifică un tip dominant.
  */
-export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score, testName }) => {
+export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score, testName, resultId }) => {
   const { t } = useLanguage();
   const dominantProfileId = score.dominant_profile;
   
@@ -59,6 +68,11 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
         testName={testName}
       />
 
+      {/* DISC Radar Chart */}
+      {testName?.includes('DISC') && score.dimensions && (
+        <DiscRadarChart dimensions={score.dimensions} testName={testName} />
+      )}
+
       {profileInfo && (
         <Card>
           <CardHeader>
@@ -75,7 +89,35 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
         </Card>
       )}
 
-      {/* Aici vom adăuga cardul de Analiză AI pentru acest tip de test */}
+      {/* Personalized Results Card */}
+      <PersonalizedResultsCard score={score} testName={testName} />
+
+      {/* AI Analysis Card */}
+      <AiAnalysisCard 
+        testName={testName}
+        resultId={resultId}
+        score={score}
+      />
+
+      {/* Detailed Interpretations */}
+      {score.detailed_interpretations && Object.keys(score.detailed_interpretations).length > 0 && (
+        <DetailedInterpretations 
+          interpretations={score.detailed_interpretations}
+          testName={testName}
+        />
+      )}
+
+      {/* Scoring Explanation */}
+      <ScoringExplanation testName={testName || ''} />
+
+      {/* Contextual Recommendations */}
+      <ContextualRecommendationsCard score={score} testName={testName} />
+
+      {/* Life Impact Explanation */}
+      <LifeImpactExplanation score={score} testName={testName} />
+
+      {/* Progress Path Card */}
+      <ProgressPathCard score={score} testName={testName} />
     </div>
   );
 };

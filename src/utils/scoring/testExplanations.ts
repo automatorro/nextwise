@@ -15,11 +15,14 @@ export const getTestScoringExplanation = (testName: string): TestExplanation => 
   const normalizedTestName = testName.toLowerCase();
 
   if (normalizedTestName.includes('disc')) {
-    const discExplanation: DISCExplanation = getDISCExplanation('ro');
     return {
-      description: discExplanation.description,
-      scoreRanges: discExplanation.scoreRanges,
-      whatItMeans: discExplanation.whatItMeans
+      description: "DISC is a behavioral assessment that identifies your preferred work style and communication preferences based on four primary dimensions: Dominance, Influence, Steadiness, and Conscientiousness.",
+      scoreRanges: [
+        { range: "70-100%", label: "Strong preference", variant: "default" },
+        { range: "40-69%", label: "Moderate preference", variant: "secondary" }, 
+        { range: "0-39%", label: "Minimal preference", variant: "outline" }
+      ],
+      whatItMeans: "Your DISC profile shows the relative strength of each behavioral style. Higher scores indicate stronger behavioral tendencies and preferences in that dimension, which influence how you approach work, communication, and decision-making."
     };
   }
   
