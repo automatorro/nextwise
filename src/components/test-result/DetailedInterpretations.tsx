@@ -35,6 +35,21 @@ const DetailedInterpretations = ({ interpretations, testName = 'Big Five Persona
     return translation === key ? fallback : translation;
   };
 
+  // Function to detect if a string is a translation key
+  const isTranslationKey = (str: string): boolean => {
+    return str.includes('.') && str.split('.').length >= 2 && !str.startsWith(str.charAt(0).toUpperCase());
+  };
+
+  // Function to translate interpretation text
+  const translateInterpretation = (interpretation: string): string => {
+    if (isTranslationKey(interpretation)) {
+      const translated = t(interpretation);
+      // If translation is not found (returns the key itself), try fallback
+      return translated !== interpretation ? translated : 'Interpretare indisponibilă';
+    }
+    return interpretation;
+  };
+
   return (
     <Card className="mb-8">
       <CardHeader>
@@ -48,7 +63,7 @@ const DetailedInterpretations = ({ interpretations, testName = 'Big Five Persona
                 {getDimensionLabel(testName, dimension)}
               </h3>
               <p className="text-gray-700 leading-relaxed">
-                {interpretation}
+                {translateInterpretation(interpretation)}
               </p>
             </div>
           ))}
