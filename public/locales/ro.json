@@ -356,7 +356,55 @@
     "duration": "minute",
     "questions": "întrebări",
     "startTest": "Începe testul",
-    "noTestsFound": "Nu s-au găsit teste care să corespundă criteriilor de căutare."
+    "noTestsFound": "Nu s-au găsit teste care să corespundă criteriilor de căutare.",
+    "categories": {
+      "personality": "Teste de Personalitate",
+      "cognitive": "Teste Cognitive",
+      "emotional": "Inteligență Emoțională",
+      "leadership": "Leadership și Echipă"
+    },
+    "timeEstimate": "Timp: {{minutes}} minute",
+    "questionsCount": "{{count}} întrebări",
+    "takeTest": "Susține Testul",
+    "exploreCategory": "Explorează Categoria",
+    "noDescription": "Descrierea testului va fi disponibilă în curând.",
+    "viewResult": "Vezi Rezultatul",
+    "retakeTest": "Refă Testul",
+    "continue": "Continuă",
+    "noTests": "Nu sunt teste disponibile în această categorie încă.",
+    "backToTests": "Înapoi la Teste",
+    "testsList": "Teste Disponibile",
+    "disc": {
+      "name": "Evaluare DISC",
+      "explanation": {
+        "title": "Evaluarea Stilurilor Comportamentale DISC",
+        "description": "DISC este un instrument de evaluare comportamentală care ajută la identificarea stilului tău natural de comportament și preferințelor de comunicare în patru dimensiuni principale.",
+        "whatItMeans": "Această evaluare îți dezvăluie stilul tău comportamental dominant și modul în care interacționezi de obicei cu alții în diferite situații.",
+        "profiles": {
+          "D": {
+            "name": "Dominanță (D)",
+            "description": "Sunteți o persoană directă, hotărâtă și orientată spre rezultate. Preferați să preluați controlul situațiilor și să luați decizii rapide. Sunteți competitiv, focalizat pe obiective și confortabil cu provocările și riscurile."
+          },
+          "I": {
+            "name": "Influență (I)",
+            "description": "Sunteți o persoană sociabilă, optimistă și entuziastă. Excelați la motivarea altora și construirea relațiilor. Sunteți creativ, expresiv și preferați mediile colaborative unde puteți interacționa cu oamenii."
+          },
+          "S": {
+            "name": "Stabilitate (S)",
+            "description": "Sunteți o persoană calmă, răbdătoare și loială. Apreciați stabilitatea și consistența atât în muncă, cât și în relații. Sunteți un bun ascultător, coechipier suportiv și preferați mediile previzibile."
+          },
+          "C": {
+            "name": "Conștiinciozitate (C)",
+            "description": "Sunteți o persoană precisă, analitică și organizată. Acordați atenție detaliilor și preferați abordările structurate. Apreciați acuratețea, standardele de calitate și procesele sistematice."
+          }
+        },
+        "interpretation": {
+          "dominant": "Profilul tău principal este {{profile}}. Acest lucru indică o tendință puternică spre a acționa și a gândi în modul descris mai sus.",
+          "general": "Profilul tău DISC îți dezvăluie preferințele tale naturale comportamentale și stilul de comunicare."
+        },
+        "profileTitle": "Profilul tău Principal: {{profile}}"
+      }
+    }
   },
   "testRunner": {
     "questionsLabel": "Întrebări",

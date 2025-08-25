@@ -356,7 +356,55 @@
     "duration": "minutes",
     "questions": "questions",
     "startTest": "Start test",
-    "noTestsFound": "No tests found matching your search criteria."
+    "noTestsFound": "No tests found matching your search criteria.",
+    "categories": {
+      "personality": "Personality Tests",
+      "cognitive": "Cognitive Tests",
+      "emotional": "Emotional Intelligence",
+      "leadership": "Leadership & Team"
+    },
+    "timeEstimate": "Time: {{minutes}} minutes",
+    "questionsCount": "{{count}} questions",
+    "takeTest": "Take Test",
+    "exploreCategory": "Explore Category",
+    "noDescription": "Test description will be available soon.",
+    "viewResult": "View Result",
+    "retakeTest": "Retake Test",
+    "continue": "Continue",
+    "noTests": "No tests available in this category yet.",
+    "backToTests": "Back to Tests",
+    "testsList": "Available Tests",
+    "disc": {
+      "name": "DISC Assessment",
+      "explanation": {
+        "title": "DISC Behavioral Styles Assessment",
+        "description": "DISC is a behavioral assessment tool that helps identify your natural behavioral style and communication preferences in four main dimensions.",
+        "whatItMeans": "This assessment reveals your dominant behavioral style and how you typically interact with others in different situations.",
+        "profiles": {
+          "D": {
+            "name": "Dominance (D)",
+            "description": "You are a direct, decisive, and results-oriented person. You prefer to take control of situations and make quick decisions. You are competitive, goal-focused, and comfortable with challenges and risks."
+          },
+          "I": {
+            "name": "Influence (I)", 
+            "description": "You are a sociable, optimistic, and enthusiastic person. You excel at motivating others and building relationships. You are creative, expressive, and prefer collaborative environments where you can interact with people."
+          },
+          "S": {
+            "name": "Steadiness (S)",
+            "description": "You are a calm, patient, and loyal person. You value stability and consistency in both work and relationships. You are a good listener, supportive teammate, and prefer predictable environments."
+          },
+          "C": {
+            "name": "Conscientiousness (C)",
+            "description": "You are a precise, analytical, and organized person. You pay attention to details and prefer structured approaches. You value accuracy, quality standards, and systematic processes."
+          }
+        },
+        "interpretation": {
+          "dominant": "Your main profile is {{profile}}. This indicates a strong tendency to act and think in the manner described above.",
+          "general": "Your DISC profile reveals your natural behavioral preferences and communication style."
+        },
+        "profileTitle": "Your Main Profile: {{profile}}"
+      }
+    }
   },
   "testRunner": {
     "questionsLabel": "Questions",

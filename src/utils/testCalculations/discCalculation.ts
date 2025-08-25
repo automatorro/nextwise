@@ -10,12 +10,13 @@ const answerMap: { [key: number]: 'D' | 'I' | 'S' | 'C' } = {
   1: 'D', 2: 'I', 3: 'S', 4: 'C',
 };
 
-const profileDetails = {
-  D: { name: "Dominanță (D)", description: "Sunteți o persoană directă, hotărâtă și orientată spre rezultate..." },
-  I: { name: "Influență (I)", description: "Sunteți o persoană sociabilă, optimistă și entuziastă..." },
-  S: { name: "Stabilitate (S)", description: "Sunteți o persoană calmă, răbdătoare și loială..." },
-  C: { name: "Conștiinciozitate (C)", description: "Sunteți o persoană precisă, analitică și organizată..." }
-};
+// Temporarily store profile details - will be replaced by dynamic translations
+const getProfileDetails = () => ({
+  D: { name: "tests.disc.explanation.profiles.D.name", description: "tests.disc.explanation.profiles.D.description" },
+  I: { name: "tests.disc.explanation.profiles.I.name", description: "tests.disc.explanation.profiles.I.description" },
+  S: { name: "tests.disc.explanation.profiles.S.name", description: "tests.disc.explanation.profiles.S.description" },
+  C: { name: "tests.disc.explanation.profiles.C.name", description: "tests.disc.explanation.profiles.C.description" }
+});
 
 export function calculateDiscScore(answers: DiscAnswers): StandardizedScore {
   const counts = { D: 0, I: 0, S: 0, C: 0 };
@@ -42,9 +43,9 @@ export function calculateDiscScore(answers: DiscAnswers): StandardizedScore {
   return {
     type: 'profile',
     dominant_profile: dominantProfile,
-    profile_details: profileDetails,
+    profile_details: getProfileDetails(),
     overall: overallPercentage,
-    interpretation: `Profilul tău principal este ${profileDetails[dominantProfile].name}. Acest lucru indică o tendință puternică spre a acționa și a gândi în modul descris mai jos.`,
+    interpretation: `tests.disc.explanation.interpretation.dominant`,
     raw_score: maxCount,
     max_score: totalAnswers
   };
