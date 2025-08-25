@@ -36,10 +36,11 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
 
   // Get the translated interpretation for DISC tests
   const getInterpretation = () => {
-    if (testName?.includes('DISC') && dominantProfileId) {
-      return t('tests.disc.explanation.interpretation.dominant').replace('{{profile}}', profileInfo?.name || dominantProfileId);
+    if (testName?.includes('DISC') && dominantProfileId && profileInfo?.name) {
+      return t('tests.disc.explanation.interpretation.dominant').replace('{{profile}}', profileInfo.name);
     }
-    return score.interpretation ?? '';
+    // For other profile tests, return the interpretation as-is
+    return score.interpretation ?? t('testResult.interpretation.notAvailable');
   };
 
   const cardScoreData = {

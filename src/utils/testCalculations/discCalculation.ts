@@ -45,7 +45,7 @@ export function calculateDiscScore(answers: DiscAnswers): StandardizedScore {
     dominant_profile: dominantProfile,
     profile_details: getProfileDetails(),
     overall: overallPercentage,
-    interpretation: `tests.disc.explanation.interpretation.dominant`,
+    interpretation: 'tests.disc.explanation.interpretation.dominant',
     raw_score: maxCount,
     max_score: totalAnswers
   };

@@ -775,10 +775,20 @@
     "overallScore": {
       "title": "Test Result: {{testName}}",
       "totalScore": "Total Score",
-      "description": "Your Big Five results offer a comprehensive perspective on your personality across five fundamental dimensions.",
+      "description": "Your test results provide valuable insights into your personality and behavior patterns.",
       "pointsObtained": "Points Obtained:",
       "maxPoints": "Maximum Points:",
       "whatMeansTitle": "What it means for you"
+    },
+    "interpretation": {
+      "notAvailable": "Interpretation not available"
+    },
+    "incomplete": "Test",
+    "categories": {
+      "personality": "Personality Tests",
+      "cognitive": "Cognitive Tests", 
+      "emotional": "Emotional Intelligence",
+      "leadership": "Leadership Skills"
     },
     "bigFive": {
       "explanationsTitle": "Detailed Dimension Explanations",
