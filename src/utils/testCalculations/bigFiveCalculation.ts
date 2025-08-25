@@ -1,109 +1,113 @@
 
 import { StandardizedScore } from '@/types/tests';
 
-export const calculateBigFiveScore = (answers: Record<string, number>, questions: any[] = []): StandardizedScore => {
-  const scores = {
-    openness: 0,
-    conscientiousness: 0,
-    extraversion: 0,
-    agreeableness: 0,
-    neuroticism: 0
-  };
-  
-  const questionCounts = {
-    openness: 0,
-    conscientiousness: 0,
-    extraversion: 0,
-    agreeableness: 0,
-    neuroticism: 0
-  };
-  
-  // Calculul bazat pe scoring_weights din întrebări
-  Object.entries(answers).forEach(([questionId, answer]) => {
-    const question = questions.find(q => q.id === questionId);
-    if (question && question.scoring_weights) {
-      const weights = question.scoring_weights as Record<string, number[]>;
-      
-      // Adăugăm scorurile pentru fiecare dimensiune
-      Object.entries(weights).forEach(([dimension, dimensionWeights]) => {
-        if (dimension in scores && answer < dimensionWeights.length) {
-          scores[dimension as keyof typeof scores] += dimensionWeights[answer];
-          questionCounts[dimension as keyof typeof questionCounts]++;
-        }
-      });
-    }
-  });
-  
-  // Normalizarea la procente
-  const normalizedScores = Object.fromEntries(
-    Object.entries(scores).map(([dimension, score]) => [
-      dimension,
-      questionCounts[dimension as keyof typeof questionCounts] > 0 
-        ? Math.round((score / (questionCounts[dimension as keyof typeof questionCounts] * 4)) * 100)
-        : 0
-    ])
-  ) as typeof scores;
-  
-  const overall = Math.round(Object.values(normalizedScores).reduce((sum, score) => sum + score, 0) / 5);
-  
-  // Transformăm dimensiunile în formatul StandardizedScore (pe scara 1-10)
-  const dimensions = [
-    { id: 'openness', name: 'Deschidere către experiență', score: Math.max(1, Math.min(10, Math.round(normalizedScores.openness / 10))) },
-    { id: 'conscientiousness', name: 'Conștiinciozitate', score: Math.max(1, Math.min(10, Math.round(normalizedScores.conscientiousness / 10))) },
-    { id: 'extraversion', name: 'Extraversiune', score: Math.max(1, Math.min(10, Math.round(normalizedScores.extraversion / 10))) },
-    { id: 'agreeableness', name: 'Amabilitate', score: Math.max(1, Math.min(10, Math.round(normalizedScores.agreeableness / 10))) },
-    { id: 'neuroticism', name: 'Nevrotism', score: Math.max(1, Math.min(10, Math.round(normalizedScores.neuroticism / 10))) }
-  ];
+interface BigFiveAnswers {
+  [key: string]: number;
+}
 
-  // Interpretări detaliate pentru fiecare dimensiune
-  const detailed_interpretations = {
-    openness: getOpennessInterpretation(normalizedScores.openness),
-    conscientiousness: getConscientiousnessInterpretation(normalizedScores.conscientiousness),
-    extraversion: getExtraversionInterpretation(normalizedScores.extraversion),
-    agreeableness: getAgreeablenessInterpretation(normalizedScores.agreeableness),
-    neuroticism: getNeuroticismInterpretation(normalizedScores.neuroticism)
-  };
+interface Dimensions {
+  [key: string]: number;
+}
 
-  const interpretation = `Profilul tău Big Five arată o personalitate echilibrată cu puncte forte în ${
-    Object.entries(normalizedScores).sort(([,a], [,b]) => b - a)[0][0]
-  }.`;
-  
-  return {
-    type: 'dimensional',
-    overall,
-    dimensions,
-    detailed_interpretations,
-    interpretation
-  };
+const interpretationMap = {
+  openness: { 
+    low: "Preferați rutina și tradițiile, fiind mai conservator în abordări.", 
+    high: "Sunteți deschis la experiențe noi, creativ și aventuros." 
+  },
+  conscientiousness: { 
+    low: "Sunteți mai flexibil și spontan, dar uneori mai puțin organizat.", 
+    high: "Sunteți foarte organizat, disciplinat și orientat spre obiective." 
+  },
+  extraversion: { 
+    low: "Preferați activitățile solitudinale și sunteți mai rezervat în social.", 
+    high: "Sunteți energic, sociabil și vă place să fiți în centrul atenției." 
+  },
+  agreeableness: { 
+    low: "Sunteți mai competitiv și direct în relațiile interpersonale.", 
+    high: "Sunteți cooperant, empatic și vă place să ajutați pe alții." 
+  },
+  neuroticism: { 
+    low: "Sunteți stabil emoțional, calm și gestionați bine stresul.", 
+    high: "Sunteți mai sensibil la stres și experimentați emoții negative mai intens." 
+  }
 };
 
-// Funcții de interpretare pentru fiecare dimensiune
-function getOpennessInterpretation(score: number): string {
-  if (score >= 70) return "Ești foarte deschis(ă) către experiențe noi, creativitate și idei inovatoare. Îți place să explorezi concepte abstracte și să experimentezi.";
-  if (score >= 40) return "Ai un echilibru bun între deschiderea către nou și preferința pentru familiar. Ești receptiv(ă) la idei noi, dar îți păstrezi și tradițiile.";
-  return "Preferi stabilitatea și rutina. Ești mai conservator(oare) în abordări și îți place să te bazezi pe metode dovedite.";
+const dimensionKeys = Object.keys(interpretationMap) as string[];
+
+// Maparea întrebărilor la dimensiuni (40 de întrebări total, 8 per dimensiune)
+const questionDimensionMap: { [key: number]: string } = {
+  // Openness (1-8)
+  1: 'openness', 2: 'openness', 3: 'openness', 4: 'openness', 
+  5: 'openness', 6: 'openness', 7: 'openness', 8: 'openness',
+  // Conscientiousness (9-16)
+  9: 'conscientiousness', 10: 'conscientiousness', 11: 'conscientiousness', 12: 'conscientiousness',
+  13: 'conscientiousness', 14: 'conscientiousness', 15: 'conscientiousness', 16: 'conscientiousness',
+  // Extraversion (17-24)
+  17: 'extraversion', 18: 'extraversion', 19: 'extraversion', 20: 'extraversion',
+  21: 'extraversion', 22: 'extraversion', 23: 'extraversion', 24: 'extraversion',
+  // Agreeableness (25-32)
+  25: 'agreeableness', 26: 'agreeableness', 27: 'agreeableness', 28: 'agreeableness',
+  29: 'agreeableness', 30: 'agreeableness', 31: 'agreeableness', 32: 'agreeableness',
+  // Neuroticism (33-40)
+  33: 'neuroticism', 34: 'neuroticism', 35: 'neuroticism', 36: 'neuroticism',
+  37: 'neuroticism', 38: 'neuroticism', 39: 'neuroticism', 40: 'neuroticism'
+};
+
+// Întrebările cu scor inversat (1-based positions)
+const reverseScored = [4, 5, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 37, 40];
+
+export function calculateBigFiveScore(answers: BigFiveAnswers): StandardizedScore {
+  const rawScores: Dimensions = dimensionKeys.reduce((acc, key) => ({ ...acc, [key]: 0 }), {});
+  const MAX_SCORE_PER_DIMENSION = 40; // 8 întrebări × 5 puncte max per întrebare
+
+  // Convertim răspunsurile din format UUID la poziții numerice
+  const answerEntries = Object.entries(answers);
+  
+  answerEntries.forEach(([questionId, answerValue], index) => {
+    const questionNumber = index + 1; // poziția 1-based
+    
+    if (questionDimensionMap[questionNumber] && answerValue >= 1 && answerValue <= 5) {
+      const dimension = questionDimensionMap[questionNumber];
+      
+      // Aplicăm reverse scoring dacă este necesar
+      const adjustedScore = reverseScored.includes(questionNumber) ? (6 - answerValue) : answerValue;
+      rawScores[dimension] += adjustedScore;
+    }
+  });
+
+  const dimensions: { id: string; name: string; score: number }[] = [];
+  const detailed_interpretations: { [key: string]: string } = {};
+  let totalRawScore = 0;
+
+  for (const dimension of dimensionKeys) {
+    const score = rawScores[dimension] || 0;
+    // Normalizare la scara 1-10 (8-40 puncte raw -> 1-10)
+    const normalized = Math.max(1, Math.min(10, Math.round(((score - 8) / 32) * 9) + 1));
+    
+    dimensions.push({ 
+      id: dimension, 
+      name: dimension.charAt(0).toUpperCase() + dimension.slice(1).replace('_', ' '), 
+      score: normalized 
+    });
+    
+    detailed_interpretations[dimension] = normalized <= 5 
+      ? interpretationMap[dimension as keyof typeof interpretationMap].low 
+      : interpretationMap[dimension as keyof typeof interpretationMap].high;
+    
+    totalRawScore += score;
+  }
+
+  const MAX_TOTAL_SCORE = dimensionKeys.length * MAX_SCORE_PER_DIMENSION;
+  const overallPercentage = Math.round((totalRawScore / MAX_TOTAL_SCORE) * 100);
+
+  return {
+    type: 'dimensional',
+    overall: overallPercentage,
+    raw_score: totalRawScore,
+    max_score: MAX_TOTAL_SCORE,
+    interpretation: "Rezultatele tale Big Five oferă o perspectivă cuprinzătoare asupra personalității tale în cinci dimensiuni fundamentale.",
+    dimensions,
+    detailed_interpretations,
+  };
 }
 
-function getConscientiousnessInterpretation(score: number): string {
-  if (score >= 70) return "Ești foarte organizat(ă), disciplinat(ă) și responsabil(ă). Îți planifici activitățile cu grijă și urmărești obiectivele cu perseverență.";
-  if (score >= 40) return "Ai un nivel moderat de organizare și disciplină. Îți îndeplinești responsabilitățile, dar uneori poți fi mai flexibil(ă) cu regulile.";
-  return "Preferi spontaneitatea și flexibilitatea. Uneori îți poate fi dificil să urmezi rutine stricte sau să te concentrezi pe detalii.";
-}
-
-function getExtraversionInterpretation(score: number): string {
-  if (score >= 70) return "Ești o persoană foarte sociabilă și energică. Îți place să fii în centrul atenției și să interacționezi cu multe persoane.";
-  if (score >= 40) return "Ai un echilibru între momente sociale și timp petrecut singur(ă). Te simți confortabil(ă) în diverse situații sociale.";
-  return "Preferi activitățile liniștite și grupurile mici. Îți reîncarcă bateriile timpul petrecut singur(ă) sau cu apropiați.";
-}
-
-function getAgreeablenessInterpretation(score: number): string {
-  if (score >= 70) return "Ești foarte empatic(ă) și cooperant(ă). Îți place să ajuți pe alții și să menții armonia în relații.";
-  if (score >= 40) return "Ai un echilibru între compasiune și asertivitate. Ești dispus(ă) să cooperezi, dar îți exprimi și propriile opinii.";
-  return "Ești direct(ă) și competitiv(ă). Îți exprimi părerea fără să te îngrijorezi prea mult de reacțiile altora.";
-}
-
-function getNeuroticismInterpretation(score: number): string {
-  if (score >= 70) return "Poți fi mai sensibil(ă) la stres și ai tendința să experimentezi emoții intense. Este important să dezvolți strategii de gestionare a stresului.";
-  if (score >= 40) return "Ai un nivel moderat de stabilitate emotională. Gestionezi de obicei bine stresul, dar poți avea momente de tensiune.";
-  return "Ești foarte calm(ă) și stabil(ă) emoțional. Rămâi relaxat(ă) chiar și în situații stresante.";
-}

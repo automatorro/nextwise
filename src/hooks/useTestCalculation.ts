@@ -30,8 +30,7 @@ export const useTestCalculation = (
         return calculateGADScore(answers);
 
       // === AICI ACTIVĂM TESTUL BIG FIVE ===
-      case 'Big Five':
-      case 'Test Big Five':
+      case 'Big Five Personality Test':
         return calculateBigFiveScore(answers);
 
       default:
