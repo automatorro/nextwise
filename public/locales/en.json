@@ -903,7 +903,7 @@
         }
       }
     }
-  }
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",
