@@ -1,5 +1,3 @@
-import { supabase } from '@/integrations/supabase/client';
-import { StandardizedScore } from '@/types/tests';
 
 export interface BelbinScore {
   overall: number;
@@ -19,7 +17,7 @@ export interface BelbinScore {
   interpretation: string;
 }
 
-export const calculateBelbinScore = (answers: Record<string, number>): StandardizedScore => {
+export const calculateBelbinScore = (answers: Record<string, number>): BelbinScore => {
   const roleScores = {
     plant: 0,
     resource_investigator: 0,
@@ -86,25 +84,11 @@ export const calculateBelbinScore = (answers: Record<string, number>): Standardi
     specialist: 'Specialist (Specialistul)'
   };
   
-  // Convert to dimensions array format for StandardizedScore
-  const dimensions = Object.entries(normalizedScores).map(([key, score]) => ({
-    id: key,
-    name: roleNames[key as keyof typeof roleNames],
-    score: Math.round(score * 18 / 100), // Convert back to 0-18 scale for display
-    percentage: score
-  }));
-
-  // Return in StandardizedScore format for role-based tests
   return {
-    type: 'role',
-    overall: Math.round(overall),
-    raw_score: Math.round(overall),
-    max_score: 18,
-    interpretation: `Rolurile tale principale sunt: ${primary_roles.map(role => roleNames[role as keyof typeof roleNames]).join(', ')}`,
-    dimensions,
-    roles: {
-      primary: primary_roles.map(role => roleNames[role as keyof typeof roleNames]),
-      secondary: secondary_roles.map(role => roleNames[role as keyof typeof roleNames])
-    }
+    overall,
+    dimensions: normalizedScores,
+    primary_roles,
+    secondary_roles,
+    interpretation: `Rolurile tale principale sunt: ${primary_roles.map(role => roleNames[role as keyof typeof roleNames]).join(', ')}`
   };
 };

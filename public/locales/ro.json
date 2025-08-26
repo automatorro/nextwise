@@ -387,15 +387,6 @@
         }
       }
     },
-    "belbin": {
-      "title": "Test Belbin - Roluri în Echipă",
-      "description": "Descoperă-ți rolurile naturale într-o echipă și cum poți contribui cel mai eficient la succesul grupului.",
-      "teamRoles": "Rolurile Tale în Echipă",
-      "primaryRoles": "Roluri Primare",
-      "secondaryRoles": "Roluri Secundare",
-      "roleDistribution": "Distribuția Rolurilor",
-      "allRoleScores": "Toate Scorurile pe Roluri"
-    },
     "noTestsFound": "Nu s-au găsit teste care să corespundă criteriilor de căutare.",
     "categories": {
       "personality": "Teste de Personalitate",
