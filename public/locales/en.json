@@ -740,12 +740,19 @@
     }
   },
   "aiAnalysis": {
-    "title": "AI Analysis & Insights",
+    "title": "AI Analysis & Insights", 
     "description": "Get detailed AI-powered analysis of your test results with personalized recommendations for your career development.",
     "analyzeButton": "Generate AI Analysis",
     "generating": "Generating analysis...",
-    "saveToCareerPlan": "Save to Career Plan"
+    "saveToCareerPlan": "Save to Career Plan",
+    "copyToClipboard": "Copy to Clipboard",
+    "saveToNotes": "Save to Notes",
+    "analysisComplete": "Analysis complete!",
+    "copiedToClipboard": "Analysis copied to clipboard!",
+    "savedToNotes": "Analysis saved to notes!",
+    "savedToPlan": "Analysis saved to career plan!"
   },
+  "aiAnalysis": {
   "testResult": {
     "detailedInterpretations": {
       "title": "Detailed Interpretations"

@@ -760,6 +760,13 @@
       "saveToCareerPlan": "Salvează în Planul de Carieră"
     }
   },
+  "aiAnalysis": {
+    "title": "AI Analysis & Insights",
+    "description": "Obține o analiză detaliată bazată pe AI a rezultatelor testelor tale cu recomandări personalizate pentru dezvoltarea ta în carieră.",
+    "analyzeButton": "Generează Analiză AI",
+    "generating": "Se generează analiza...",
+    "saveToCareerPlan": "Salvează în Planul de Carieră"
+  },
   "testResult": {
     "detailedInterpretations": {
       "title": "Interpretări Detaliate"
