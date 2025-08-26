@@ -14,6 +14,7 @@ import { calculateHollandScore } from '@/utils/testCalculations/hollandCalculati
 import { calculateWatsonGlaserScore } from '@/utils/testCalculations/watsonGlaserCalculation';
 import { calculateDigitalCompetenciesScore } from '@/utils/testCalculations/digitalCompetenciesCalculation';
 import { calculateSensoryPerceptionScore } from '@/utils/testCalculations/sensoryPerceptionCalculation';
+import { calculateBeckDepressionScore } from '@/utils/beckDepressionInventoryCalculator';
 
 export const useTestCalculation = (
   testName: string | undefined,
@@ -99,6 +100,13 @@ export const useTestCalculation = (
       case 'Sensory Perception Test':
       case 'Test Percepție Senzorială':
         return calculateSensoryPerceptionScore(answers);
+
+      // === TESTUL BECK DEPRESSION INVENTORY ===
+      case 'Beck Depression Inventory':
+      case 'Inventarul de Depresie Beck':
+      case 'BDI-II':
+      case 'Beck Depression Inventory (BDI-II)':
+        return calculateBeckDepressionScore(answers);
 
       default:
         console.warn(`Nu există logică de calcul în noul sistem pentru: ${testName}.`);

@@ -1,17 +1,8 @@
 
-import { getScoreInterpretation } from './testScoring';
-
-export interface BeckDepressionScore {
-  overall: number;
-  raw_score: number;
-  max_score: number;
-  dimensions: { [key: string]: number };
-  interpretation: string;
-  severity_level: string;
-}
+import { StandardizedScore } from '@/types/tests';
 
 // Beck Depression Inventory scoring function
-export function calculateBeckDepressionScore(answers: { [key: string]: number }): BeckDepressionScore {
+export function calculateBeckDepressionScore(answers: { [key: string]: number }): StandardizedScore {
   console.log('Calculating Beck Depression Inventory score for answers:', answers);
   
   let totalScore = 0;
@@ -93,11 +84,16 @@ export function calculateBeckDepressionScore(answers: { [key: string]: number })
   });
   
   return {
+    type: 'scale',
     overall: overallPercentage,
     raw_score: totalScore,
     max_score: maxPossibleScore,
-    dimensions: dimensionPercentages,
+    scale_level: severityLevel,
     interpretation,
-    severity_level: severityLevel
+    dimensions: Object.entries(dimensionPercentages).map(([key, value]) => ({
+      id: key.toLowerCase(),
+      name: key,
+      score: value
+    }))
   };
 }
