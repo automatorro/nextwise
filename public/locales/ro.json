@@ -349,13 +349,44 @@
     "nameRequired": "Numele complet este obligatoriu"
   },
   "tests": {
-    "title": "Teste Psihologice",
+    "title": "Teste Psihologice", 
     "subtitle": "Descoperă-ți personalitatea și competențele cu testele noastre validate științific",
     "searchPlaceholder": "Caută teste...",
     "allCategories": "Toate",
     "duration": "minute",
     "questions": "întrebări",
-    "startTest": "Începe testul",
+    "startTest": "Începe Testul",
+    "noTestsFound": "Nu s-au găsit teste care să corespundă criteriilor tale",
+    "disc": {
+      "explanation": {
+        "title": "Evaluarea DISC - Stiluri de Comportament",
+        "description": "DISC este o evaluare comportamentală care identifică stilul tău preferat de lucru și preferințele de comunicare bazate pe patru dimensiuni principale.",
+        "whatItMeans": "Înțelegerea Profilului Tău DISC",
+        "profileTitle": "Profilul Tău {{profile}}",
+        "interpretation": {
+          "general": "Evaluarea DISC identifică stilul tău comportamental dominant bazat pe patru dimensiuni cheie: Dominanță, Influență, Stabilitate și Conștiinciozitate.",
+          "dominant": "Stilul tău dominant este {{profile}}, care reprezintă abordarea ta preferată față de sarcini și interacțiuni."
+        },
+        "profiles": {
+          "D": {
+            "name": "Dominanță",
+            "description": "Direct, orientat spre rezultate, ferm, puternic și hotărât. Îți plac provocările și să acționezi pentru a obține rezultate."
+          },
+          "I": {
+            "name": "Influență", 
+            "description": "Deschis, entuziast, optimist, vioi și energic. Îți place să interacționezi cu oamenii și să influențezi rezultatele prin comunicare."
+          },
+          "S": {
+            "name": "Stabilitate",
+            "description": "Echilibrat, acomodant, răbdător, modest și tactful. Preferi medii stabile și munca în echipă colaborativă."
+          },
+          "C": {
+            "name": "Conștiinciozitate",
+            "description": "Privat, analitic, logic, critic și sistematic. Te concentrezi pe acuratețe, expertiză și calitate în munca ta."
+          }
+        }
+      }
+    },
     "noTestsFound": "Nu s-au găsit teste care să corespundă criteriilor de căutare.",
     "categories": {
       "personality": "Teste de Personalitate",
@@ -829,80 +860,6 @@
           "description": "Măsoară stabilitatea emoțională și gestionarea stresului",
           "high": "Mai sensibil la stres și fluctuații emotionale",
           "low": "Sunteți stabil emoțional, calm și gestionați bine stresul"
-        }
-      }
-    }
-  },
-  "tests": {
-    "disc": {
-      "explanation": {
-        "title": "Evaluarea DISC - Stiluri de Comportament",
-        "description": "DISC este o evaluare comportamentală care identifică stilul tău preferat de lucru și preferințele de comunicare bazate pe patru dimensiuni principale.",
-        "whatItMeans": "Înțelegerea Profilului Tău DISC",
-        "profileTitle": "Profilul Tău {{profile}}",
-        "interpretation": {
-          "general": "Evaluarea DISC identifică stilul tău comportamental dominant bazat pe patru dimensiuni cheie: Dominanță, Influență, Stabilitate și Conștiinciozitate.",
-          "dominant": "Stilul tău dominant este {{profile}}, care reprezintă abordarea ta preferată față de sarcini și interacțiuni."
-        },
-        "profiles": {
-          "D": {
-            "name": "Dominanță",
-            "description": "Direct, orientat spre rezultate, ferm, puternic și hotărât. Îți plac provocările și să acționezi pentru a obține rezultate."
-          },
-          "I": {
-            "name": "Influență", 
-            "description": "Deschis, entuziast, optimist, vioi și energic. Îți place să interacționezi cu oamenii și să influențezi rezultatele prin comunicare."
-          },
-          "S": {
-            "name": "Stabilitate",
-            "description": "Echilibrat, acomodant, răbdător, modest și tactful. Preferi medii stabile și munca în echipă colaborativă."
-          },
-          "C": {
-            "name": "Conștiinciozitate",
-            "description": "Privat, analitic, logic, critic și sistematic. Te concentrezi pe acuratețe, expertiză și calitate în munca ta."
-          }
-        },
-        "scoring": {
-          "title": "Înțelegerea Scorurilor Tău DISC",
-          "description": "Rezultatele tale DISC arată puterea relativă a fiecărui stil comportamental.",
-          "ranges": {
-            "high": "Preferință puternică (70-100%)",
-            "moderate": "Preferință moderată (40-69%)",
-            "low": "Preferință minimă (0-39%)"
-          },
-          "whatItMeans": "Scorurile mai mari indică tendințe comportamentale mai puternice în acea dimensiune."
-        },
-        "contextualFactors": {
-          "workStyle": "Preferințe de Stil de Lucru",
-          "communication": "Abordarea Comunicării", 
-          "decisionMaking": "Stilul de Luare a Deciziilor",
-          "stressResponse": "Răspunsul la Presiune"
-        },
-        "personalizedInterpretations": {
-          "D": {
-            "workStyle": "Înflorești în medii provocatoare, rapide, unde poți să preiei controlul și să conduci spre rezultate.",
-            "communication": "Preferi comunicarea directă, concisă și apreciezi când alții sunt clari și la obiect.",
-            "decisionMaking": "Iei decizii rapid și cu încredere, adesea dispus să îți asumi riscuri calculate.",
-            "stressResponse": "Sub presiune, devii mai asertiv și poți prelua controlul situațiilor."
-          },
-          "I": {
-            "workStyle": "Excelezi în medii colaborative, centrate pe oameni, cu varietate și interacțiune socială.",
-            "communication": "Comunici cu entuziasm și preferi interacțiunile față în față sau verbale.",
-            "decisionMaking": "Iei în considerare impactul deciziilor asupra oamenilor și cauți contribuția altora.",
-            "stressResponse": "Sub presiune, poți deveni mai vorbăreț și să cauți sprijin de la alții."
-          },
-          "S": {
-            "workStyle": "Preferi medii stabile, previzibile cu procese clare și colaborare în echipă.",
-            "communication": "Comunici atent și preferi discuțiile unu-la-unu sau în grupuri mici.",
-            "decisionMaking": "Îți iei timp să consideri toate opțiunile și preferi abordări bazate pe consens.",
-            "stressResponse": "Sub presiune, poți deveni mai retras și să cauți stabilitate."
-          },
-          "C": {
-            "workStyle": "Excelezi în medii structurate care valorifică acuratețea, analiza și abordările sistematice.",
-            "communication": "Preferi comunicarea scrisă și discuțiile detaliate, bazate pe fapte.",
-            "decisionMaking": "Colectezi date extinse și analizezi temeinic înainte de a lua decizii.",
-            "stressResponse": "Sub presiune, poți deveni mai critic și să te concentrezi pe problemele potențiale."
-          }
         }
       }
     }
