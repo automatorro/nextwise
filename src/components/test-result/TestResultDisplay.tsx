@@ -3,6 +3,7 @@ import { StandardizedScore } from '@/types/tests';
 import { DimensionalResultLayout } from './layouts/DimensionalResultLayout';
 import { ProfileResultLayout } from './layouts/ProfileResultLayout';
 import { ScaleResultLayout } from './layouts/ScaleResultLayout';
+import { RoleResultLayout } from './layouts/RoleResultLayout';
 import TestResultNextSteps from './TestResultNextSteps';
 
 interface TestResultDisplayProps {
@@ -26,6 +27,9 @@ export const TestResultDisplay: React.FC<TestResultDisplayProps> = ({ score, tes
 
       case 'scale':
         return <ScaleResultLayout score={score} testName={testName} resultId={resultId} />;
+
+      case 'role':
+        return <RoleResultLayout score={score} testName={testName} />;
 
       default:
         return (

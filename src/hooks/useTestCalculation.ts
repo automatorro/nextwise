@@ -8,6 +8,7 @@ import { calculateDiscScore } from '@/utils/testCalculations/discCalculation';
 import { calculateGADScore } from '@/utils/testCalculations/gadCalculation';
 import { calculateBigFiveScore } from '@/utils/testCalculations/bigFiveCalculation';
 import { calculateEnneagramScore, getEnneagramDominantType } from '@/utils/testCalculations/enneagramCalculation';
+import { calculateBelbinScore } from '@/utils/testCalculations/belbinCalculation';
 
 export const useTestCalculation = (
   testName: string | undefined,
@@ -55,6 +56,13 @@ export const useTestCalculation = (
           raw_score: Math.max(...Object.values(enneagramScores)),
           max_score: Math.max(...Object.values(enneagramScores))
         };
+
+      // === AICI ACTIVĂM TESTUL BELBIN ===
+      case 'Roluri în Echipă Belbin':
+      case 'Belbin Team Roles':
+      case 'Test Belbin':
+      case 'Belbin':
+        return calculateBelbinScore(answers);
 
       default:
         console.warn(`Nu există logică de calcul în noul sistem pentru: ${testName}.`);

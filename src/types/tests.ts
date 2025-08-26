@@ -22,6 +22,7 @@ export interface StandardizedScore {
     id: string;      // e.g., 'warmth'
     name: string;    // e.g., 'Warmth'
     score: number;   // e.g., 8 (out of 10)
+    percentage?: number; // e.g., 85 (percentage value for progress bars)
   }[];
   detailed_interpretations?: {
     [key: string]: string; // e.g., { warmth: 'Sunteți o persoană caldă...' }
