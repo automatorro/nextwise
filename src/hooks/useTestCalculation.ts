@@ -35,6 +35,7 @@ export const useTestCalculation = (
         return calculateBigFiveScore(answers);
 
       // === AICI ACTIVĂM TESTUL ENNEAGRAM ===
+      case 'Enneagram':
       case 'Test Enneagram':
       case 'Enneagram Test':
       case 'Enneagram Personality Test':
