@@ -35,7 +35,7 @@ export async function getProgressPath(
     return getGADProgressPath(score);
   }
   
-  if (testKey.includes('phq') || testKey.includes('depresie')) {
+  if (testKey.includes('phq') || testKey.includes('depresie') || testKey.includes('beck') || testKey.includes('bdi')) {
     return getPHQProgressPath(score);
   }
   

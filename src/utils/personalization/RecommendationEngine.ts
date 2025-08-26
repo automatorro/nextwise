@@ -31,7 +31,7 @@ export async function getContextualRecommendations(
     return getGADRecommendations(score);
   }
   
-  if (testKey.includes('phq') || testKey.includes('depresie')) {
+  if (testKey.includes('phq') || testKey.includes('depresie') || testKey.includes('beck') || testKey.includes('bdi')) {
     return getPHQRecommendations(score);
   }
   

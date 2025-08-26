@@ -19,7 +19,7 @@ export function getPersonalizedInterpretation(
     return getGADPersonalizedInterpretation(score);
   }
   
-  if (testKey.includes('phq') || testKey.includes('depresie')) {
+  if (testKey.includes('phq') || testKey.includes('depresie') || testKey.includes('beck') || testKey.includes('bdi')) {
     return getPHQPersonalizedInterpretation(score);
   }
   
