@@ -22,6 +22,8 @@ import SimulationInterface from "./components/premium/SimulationInterface";
 import SharedPlanPage from "./components/career/SharedPlanPage";
 import HomeNavigation from "./components/home/HomeNavigation";
 import Footer from "./components/home/Footer";
+import { SecurityMonitor } from "./components/security/SecurityMonitor";
+import { SecurityAuditLogger } from "./components/security/SecurityAuditLogger";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +44,8 @@ function App() {
       <TooltipProvider>
         <LanguageProvider>
           <AuthProvider>
+            <SecurityMonitor />
+            <SecurityAuditLogger />
             <Toaster />
             <Sonner />
             <BrowserRouter>

@@ -16,6 +16,7 @@ import { PageLoader } from '@/components/layout/PageLoader';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { useLanguage } from '@/hooks/useLanguage';
+import { useSecureTestQuestions } from '@/hooks/useSecureTestQuestions';
 
 export default function TestRunner() {
   const { testId } = useParams<{ testId: string }>();
@@ -86,7 +87,9 @@ export default function TestRunner() {
     }
   };
   
-  const questions = testData?.test_questions || [];
+  // Use secure hook to filter out sensitive data like scoring weights for non-admin users
+  const rawQuestions = testData?.test_questions || [];
+  const questions = useSecureTestQuestions(rawQuestions);
   const totalQuestions = questions.length;
 
   const goToNextQuestion = () => {
