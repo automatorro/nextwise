@@ -952,6 +952,10 @@ export type Database = {
         Args: { _user_id: string }
         Returns: boolean
       }
+      can_view_full_profile: {
+        Args: { profile_user_id: string }
+        Returns: boolean
+      }
       get_user_test_limit: {
         Args: { _user_id: string }
         Returns: number
