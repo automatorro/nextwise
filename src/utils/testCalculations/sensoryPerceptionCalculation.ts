@@ -12,7 +12,9 @@ export interface SensoryPerceptionScore {
   professional_applications: string[];
 }
 
-export const calculateSensoryPerceptionScore = (answers: Record<string, number>): SensoryPerceptionScore => {
+import { StandardizedScore } from '@/types/tests';
+
+export const calculateSensoryPerceptionScore = (answers: Record<string, number>): StandardizedScore => {
   console.log('Calculating Sensory Perception score for answers:', answers);
   
   const scores = {
@@ -89,11 +91,17 @@ export const calculateSensoryPerceptionScore = (answers: Record<string, number>)
   });
   
   return {
+    type: 'dimensional',
     overall,
-    dimensions: normalizedScores,
+    dimensions: Object.entries(normalizedScores).map(([key, value]) => ({
+      id: key,
+      name: getDimensionName(key),
+      score: value
+    })),
     interpretation,
-    dominant_ability: getDimensionName(dominantAbility),
-    professional_applications: professionalApplications
+    dominant_profile: getDimensionName(dominantAbility),
+    raw_score: Object.values(scores).reduce((sum, score) => sum + score, 0),
+    max_score: 32 * 5 // 32 questions × 5 points max
   };
 };
 

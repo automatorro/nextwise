@@ -13,7 +13,9 @@ export interface HollandScore {
   interpretation: string;
 }
 
-export const calculateHollandScore = (answers: Record<string, number>): HollandScore => {
+import { StandardizedScore } from '@/types/tests';
+
+export const calculateHollandScore = (answers: Record<string, number>): StandardizedScore => {
   const scores = {
     realistic: 0,
     investigative: 0,
@@ -70,9 +72,16 @@ export const calculateHollandScore = (answers: Record<string, number>): HollandS
   const overall = Math.round(Object.values(normalizedScores).reduce((sum, score) => sum + score, 0) / 6);
   
   return {
+    type: 'profile',
     overall,
-    dimensions: normalizedScores,
-    dominant_code: dominantType.toUpperCase(),
-    interpretation: typeNames[dominantType as keyof typeof typeNames]
+    dominant_profile: dominantType.toUpperCase(),
+    dimensions: Object.entries(normalizedScores).map(([key, value]) => ({
+      id: key,
+      name: key,
+      score: value
+    })),
+    interpretation: typeNames[dominantType as keyof typeof typeNames],
+    raw_score: Object.values(scores).reduce((sum, score) => sum + score, 0),
+    max_score: 60 * 5 // 60 questions × 5 points max
   };
 };

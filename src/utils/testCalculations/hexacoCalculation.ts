@@ -12,7 +12,9 @@ export interface HexacoScore {
   interpretation: string;
 }
 
-export const calculateHexacoScore = (answers: Record<string, number>): HexacoScore => {
+import { StandardizedScore } from '@/types/tests';
+
+export const calculateHexacoScore = (answers: Record<string, number>): StandardizedScore => {
   const scores = {
     honesty_humility: 0,
     emotionality: 0,
@@ -59,8 +61,15 @@ export const calculateHexacoScore = (answers: Record<string, number>): HexacoSco
   }.`;
   
   return {
+    type: 'dimensional',
     overall,
-    dimensions: normalizedScores,
-    interpretation
+    dimensions: Object.entries(normalizedScores).map(([key, value]) => ({
+      id: key,
+      name: key,
+      score: value
+    })),
+    interpretation,
+    raw_score: Object.values(scores).reduce((sum, score) => sum + score, 0),
+    max_score: 60 * 5 // 60 questions × 5 points max
   };
 };

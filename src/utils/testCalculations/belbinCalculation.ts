@@ -1,4 +1,6 @@
 
+import { StandardizedScore } from '@/types/tests';
+
 export interface BelbinScore {
   overall: number;
   dimensions: {
@@ -17,7 +19,7 @@ export interface BelbinScore {
   interpretation: string;
 }
 
-export const calculateBelbinScore = (answers: Record<string, number>): BelbinScore => {
+export const calculateBelbinScore = (answers: Record<string, number>): StandardizedScore => {
   const roleScores = {
     plant: 0,
     resource_investigator: 0,
@@ -85,10 +87,19 @@ export const calculateBelbinScore = (answers: Record<string, number>): BelbinSco
   };
   
   return {
+    type: 'role',
     overall,
-    dimensions: normalizedScores,
-    primary_roles,
-    secondary_roles,
-    interpretation: `Rolurile tale principale sunt: ${primary_roles.map(role => roleNames[role as keyof typeof roleNames]).join(', ')}`
+    roles: {
+      primary: primary_roles,
+      secondary: secondary_roles
+    },
+    dimensions: Object.entries(normalizedScores).map(([key, value]) => ({
+      id: key,
+      name: roleNames[key as keyof typeof roleNames] || key,
+      score: value
+    })),
+    interpretation: `Rolurile tale principale sunt: ${primary_roles.map(role => roleNames[role as keyof typeof roleNames]).join(', ')}`,
+    raw_score: Object.values(roleScores).reduce((sum, score) => sum + score, 0),
+    max_score: 36 * 4 // 36 questions × 4 points max
   };
 };

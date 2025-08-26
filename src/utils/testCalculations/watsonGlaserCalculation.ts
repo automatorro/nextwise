@@ -18,7 +18,9 @@ export interface WatsonGlaserScore {
   performance_level: string;
 }
 
-export const calculateWatsonGlaserScore = (answers: Record<string, number>): WatsonGlaserScore => {
+import { StandardizedScore } from '@/types/tests';
+
+export const calculateWatsonGlaserScore = (answers: Record<string, number>): StandardizedScore => {
   console.log('Watson-Glaser calculation - received answers:', answers);
   
   const scores = {
@@ -156,9 +158,16 @@ export const calculateWatsonGlaserScore = (answers: Record<string, number>): Wat
   });
   
   return {
+    type: 'dimensional',
     overall,
-    dimensions: normalizedScores,
-    interpretations,
-    performance_level
+    dimensions: Object.entries(normalizedScores).map(([key, value]) => ({
+      id: key,
+      name: key,
+      score: value
+    })),
+    detailed_interpretations: interpretations,
+    interpretation: performance_level,
+    raw_score: Object.values(scores).reduce((sum, score) => sum + score, 0),
+    max_score: 40 // 40 questions total
   };
 };

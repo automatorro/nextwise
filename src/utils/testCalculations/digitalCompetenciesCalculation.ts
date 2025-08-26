@@ -1,5 +1,7 @@
 
-export const calculateDigitalCompetenciesScore = (answers: Record<string, number>) => {
+import { StandardizedScore } from '@/types/tests';
+
+export const calculateDigitalCompetenciesScore = (answers: Record<string, number>): StandardizedScore => {
   console.log('Calculând scorul pentru Competențe Digitale & Analitice:', answers);
   
   // Definim întrebările pentru fiecare dimensiune
@@ -77,10 +79,17 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
   });
   
   return {
+    type: 'dimensional',
     overall,
-    dimensions: dimensionScores,
+    dimensions: Object.entries(dimensionScores).map(([key, value]) => ({
+      id: key,
+      name: key,
+      score: value
+    })),
+    detailed_interpretations: interpretations,
     interpretation,
-    interpretations
+    raw_score: Object.values(answers).reduce((sum, score) => sum + score, 0),
+    max_score: 35 * 5 // 35 questions × 5 points max
   };
 };
 

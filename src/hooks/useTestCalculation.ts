@@ -8,6 +8,12 @@ import { calculateDiscScore } from '@/utils/testCalculations/discCalculation';
 import { calculateGADScore } from '@/utils/testCalculations/gadCalculation';
 import { calculateBigFiveScore } from '@/utils/testCalculations/bigFiveCalculation';
 import { calculateEnneagramScore, getEnneagramDominantType } from '@/utils/testCalculations/enneagramCalculation';
+import { calculateBelbinScore } from '@/utils/testCalculations/belbinCalculation';
+import { calculateHexacoScore } from '@/utils/testCalculations/hexacoCalculation';
+import { calculateHollandScore } from '@/utils/testCalculations/hollandCalculation';
+import { calculateWatsonGlaserScore } from '@/utils/testCalculations/watsonGlaserCalculation';
+import { calculateDigitalCompetenciesScore } from '@/utils/testCalculations/digitalCompetenciesCalculation';
+import { calculateSensoryPerceptionScore } from '@/utils/testCalculations/sensoryPerceptionCalculation';
 
 export const useTestCalculation = (
   testName: string | undefined,
@@ -55,6 +61,44 @@ export const useTestCalculation = (
           raw_score: Math.max(...Object.values(enneagramScores)),
           max_score: Math.max(...Object.values(enneagramScores))
         };
+
+      // === TESTUL BELBIN ===
+      case 'Roluri în Echipă Belbin':
+      case 'Belbin Team Roles':
+      case 'Test Belbin':
+        return calculateBelbinScore(answers);
+
+      // === TESTUL HEXACO ===
+      case 'HEXACO Personality Test':
+      case 'Test HEXACO':
+      case 'HEXACO':
+        return calculateHexacoScore(answers);
+
+      // === TESTUL HOLLAND RIASEC ===
+      case 'Holland RIASEC Test':
+      case 'Test Holland RIASEC':
+      case 'RIASEC':
+      case 'Holland Career Test':
+        return calculateHollandScore(answers);
+
+      // === TESTUL WATSON-GLASER ===
+      case 'Watson-Glaser Critical Thinking':
+      case 'Test Watson-Glaser':
+      case 'Watson Glaser':
+      case 'Critical Thinking Test':
+        return calculateWatsonGlaserScore(answers);
+
+      // === TESTUL COMPETENȚE DIGITALE ===
+      case 'Competențe Digitale & Analitice':
+      case 'Digital Competencies Test':
+      case 'Test Competențe Digitale':
+        return calculateDigitalCompetenciesScore(answers);
+
+      // === TESTUL PERCEPȚIE SENZORIALĂ ===
+      case 'Percepție Senzorială':
+      case 'Sensory Perception Test':
+      case 'Test Percepție Senzorială':
+        return calculateSensoryPerceptionScore(answers);
 
       default:
         console.warn(`Nu există logică de calcul în noul sistem pentru: ${testName}.`);
