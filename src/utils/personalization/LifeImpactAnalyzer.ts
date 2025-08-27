@@ -50,6 +50,10 @@ export async function getLifeImpactExplanation(
     return getEnneagramLifeImpact(score);
   }
   
+  if (testKey.includes('digital') || testKey.includes('competente')) {
+    return getDigitalCompetenciesLifeImpact(score);
+  }
+  
   return null;
 }
 
@@ -582,5 +586,56 @@ function getEnneagramLifeImpact(score: StandardizedScore): LifeImpactData {
   return {
     areas,
     overallImpact: 'Enneagram-ul îți arată nu doar cine ești, ci și cine poți deveni prin lucrarea conștientă cu tipul tău de personalitate și drumul către integrare.'
+  };
+}
+
+function getDigitalCompetenciesLifeImpact(score: StandardizedScore): LifeImpactData {
+  const overallScore = score.overall || 0;
+  const dimensions = score.dimensions || {};
+  
+  const impactAreas: LifeAreaImpact[] = [
+    {
+      name: "Cariera și Oportunități Profesionale",
+      impact: overallScore >= 70 
+        ? "Competențele tale digitale te poziționează excelent pentru oportunitățile din economia digitală și îți sporesc șansele de avansare în carieră."
+        : "Dezvoltarea competențelor digitale îți va deschide noi oportunități profesionale și va îmbunătăți perspectivele de carieră în lumea modernă.",
+      examples: overallScore >= 70 
+        ? ["Abilitatea de a lucra eficient în medii digitale", "Competitivitate sporită pe piața muncii", "Acces la joburi remote și flexibile"]
+        : ["Necesitatea de dezvoltare pentru roluri moderne", "Limitări în accesul la oportunități digitale", "Riscul de a rămâne în urmă în carieră"]
+    },
+    {
+      name: "Eficiența și Productivitatea Zilnică",
+      impact: overallScore >= 70
+        ? "Îți gestionezi eficient taskurile digitale și economisești timp prin automatizare și optimizare."
+        : "Dezvoltarea acestor competențe te va ajuta să îți organizezi mai bine viața și să economisești timp prin folosirea eficientă a tehnologiei.",
+      examples: overallScore >= 70
+        ? ["Gestionarea eficientă a informațiilor", "Automatizarea taskurilor repetitive", "Comunicare rapidă și eficientă"]
+        : ["Pierderea de timp prin metode ineficiente", "Dificultăți în organizarea digitală", "Stress generat de tehnologie"]
+    },
+    {
+      name: "Siguranța și Confidențialitatea Online",
+      impact: (dimensions['siguranta_digitala'] && typeof dimensions['siguranta_digitala'] === 'number' && dimensions['siguranta_digitala'] >= 70)
+        ? "Îți protejezi eficient datele personale și financiare în mediul online, evitând riscurile de securitate."
+        : "Este important să îți dezvolți cunoștințele de securitate digitală pentru a te proteja împotriva amenințărilor online.",
+      examples: (dimensions['siguranta_digitala'] && typeof dimensions['siguranta_digitala'] === 'number' && dimensions['siguranta_digitala'] >= 70)
+        ? ["Protecție împotriva fraudelor online", "Gestionarea sigură a parolelor", "Conștientizarea riscurilor digitale"]
+        : ["Vulnerabilitate la atacuri cibernetice", "Risc de compromitere a datelor", "Posibile probleme financiare"]
+    },
+    {
+      name: "Comunicarea și Relațiile Sociale",
+      impact: (dimensions['comunicare_digitala'] && typeof dimensions['comunicare_digitala'] === 'number' && dimensions['comunicare_digitala'] >= 70)
+        ? "Comunici eficient în mediul digital și îți construiești relații profesionale și personale valoroase online."
+        : "Îmbunătățirea competențelor de comunicare digitală te va ajuta să te conectezi mai bine cu ceilalți și să îți extindezi rețeaua socială.",
+      examples: (dimensions['comunicare_digitala'] && typeof dimensions['comunicare_digitala'] === 'number' && dimensions['comunicare_digitala'] >= 70)
+        ? ["Networking eficient online", "Comunicare profesională clară", "Menținerea relațiilor la distanță"]
+        : ["Dificultăți în comunicarea online", "Oportunități ratate de networking", "Izolare în mediul digital"]
+    }
+  ];
+
+  return {
+    areas: impactAreas,
+    overallImpact: overallScore >= 70 
+      ? "Competențele tale digitale îți oferă o bază solidă pentru a naviga cu succes în lumea modernă și te ajută să profiti de oportunitățile erei digitale."
+      : "Dezvoltarea competențelor digitale va avea un impact semnificativ asupra tuturor aspectelor vieții tale, de la carieră la relații și siguranța personală."
   };
 }

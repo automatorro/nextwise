@@ -570,3 +570,88 @@ function getEnneagramProgressPath(score: StandardizedScore): ProgressPath {
     retestRecommendation: 'Re-testare recomandată după 12-18 luni de lucru activ cu tipul, pentru a observa schimbările în dezvoltarea personalității.'
   };
 }
+
+function getDigitalCompetenciesProgressPath(score: StandardizedScore): ProgressPath {
+  const overallScore = score.overall || 0;
+  const dimensions = score.dimensions || {};
+  
+  const baseMilestones: ProgressMilestone[] = [
+    {
+      timeframe: "Săptămâna 1-2",
+      goal: "Evaluarea și planificarea",
+      description: "Identifică zonele cheie de dezvoltare și stabilește obiective concrete pentru fiecare competență digitală."
+    }
+  ];
+
+  // Etapa 2-4: Dezvoltare pe baza punctelor slabe
+  const developmentMilestones: ProgressMilestone[] = [];
+  
+  Object.entries(dimensions).forEach(([dimension, score]) => {
+    if (typeof score === 'number' && score < 60) {
+      switch (dimension) {
+        case 'alfabetizare_digitala':
+          developmentMilestones.push({
+            timeframe: "Săptămâna 3-4",
+            goal: "Alfabetizare digitală de bază",
+            description: "Îmbunătățește abilitățile de căutare, evaluare și folosire a informațiilor digitale."
+          });
+          break;
+        case 'siguranta_digitala':
+          developmentMilestones.push({
+            timeframe: "Săptămâna 5-6",
+            goal: "Securitate digitală",
+            description: "Învață principiile de securitate online și implementează practici sigure de navigare."
+          });
+          break;
+        case 'comunicare_digitala':
+          developmentMilestones.push({
+            timeframe: "Săptămâna 7-8",
+            goal: "Comunicare digitală eficientă",
+            description: "Dezvoltă abilitățile de comunicare profesională în mediul digital."
+          });
+          break;
+        case 'creare_continut':
+          developmentMilestones.push({
+            timeframe: "Săptămâna 9-10",
+            goal: "Crearea de conținut digital",
+            description: "Învață să creezi și să editezi conținut digital pentru diverse platforme."
+          });
+          break;
+        case 'rezolvare_probleme':
+          developmentMilestones.push({
+            timeframe: "Săptămâna 11-12",
+            goal: "Rezolvarea problemelor digitale",
+            description: "Dezvoltă abilitățile de troubleshooting și găsirea de soluții pentru probleme tehnice."
+          });
+          break;
+      }
+    }
+  });
+
+  // Etapa finală
+  const finalMilestones: ProgressMilestone[] = [
+    {
+      timeframe: "Luna 4",
+      goal: "Integrarea și aplicarea",
+      description: "Aplică toate competențele învățate în contexte reale și dezvoltă rutine digitale eficiente."
+    },
+    {
+      timeframe: "Luna 5-6",
+      goal: "Optimizarea și automatizarea",
+      description: "Optimizează procesele digitale și automatizează taskurile repetitive pentru eficiență maximă."
+    }
+  ];
+
+  const allMilestones = [...baseMilestones, ...developmentMilestones, ...finalMilestones];
+
+  return {
+    milestones: allMilestones,
+    trackingMethods: [
+      "Auto-evaluare săptămânală a progresului pe fiecare dimensiune",
+      "Teste practice cu instrumente și platforme noi",
+      "Feedback de la colegi privind eficiența digitală",
+      "Urmărirea timpului economisit prin optimizări"
+    ],
+    retestRecommendation: "Retestează-te după 3-4 luni pentru a evalua progresul în dezvoltarea competențelor digitale și pentru a identifica noi zone de îmbunătățire."
+  };
+}

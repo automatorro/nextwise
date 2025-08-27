@@ -47,6 +47,10 @@ export async function getContextualRecommendations(
     return getEnneagramRecommendations(score);
   }
   
+  if (testKey.includes('digital') || testKey.includes('competente')) {
+    return getDigitalCompetenciesRecommendations(score);
+  }
+  
   return null;
 }
 
@@ -205,6 +209,140 @@ function getPHQRecommendations(score: StandardizedScore): ContextualRecommendati
   }
   
   return recommendations;
+}
+
+function getDigitalCompetenciesRecommendationsInternal(score: StandardizedScore): string[] {
+  const recommendations: string[] = [];
+  const dimensions = score.dimensions || {};
+  
+  // Recomandări generale bazate pe scorul overall
+  const overallScore = score.overall || 0;
+  
+  if (overallScore < 60) {
+    recommendations.push("Începe cu cursuri online de alfabetizare digitală pentru a-ți consolida fundamentele");
+    recommendations.push("Practică zilnic folosirea instrumentelor digitale de bază");
+  }
+  
+  // Recomandări specifice pe dimensiuni
+  Object.entries(dimensions).forEach(([dimension, dimensionScore]) => {
+    if (typeof dimensionScore === 'number' && dimensionScore < 60) {
+      switch (dimension) {
+        case 'alfabetizare_digitala':
+          recommendations.push("Îmbunătățește-ți abilitățile de navigare și căutare pe internet");
+          recommendations.push("Învață să evaluezi credibilitatea surselor online");
+          break;
+        case 'comunicare_digitala':
+          recommendations.push("Practică comunicarea profesională prin email și platforme de colaborare");
+          recommendations.push("Dezvoltă-ți abilitățile de networking online");
+          break;
+        case 'creare_continut':
+          recommendations.push("Învață să folosești instrumente de editare foto și video");
+          recommendations.push("Dezvoltă-ți abilitățile de scriere pentru mediul digital");
+          break;
+        case 'siguranta_digitala':
+          recommendations.push("Studiază principiile de securitate cibernetică");
+          recommendations.push("Implementează practici sigure de gestionare a parolelor");
+          break;
+        case 'rezolvare_probleme':
+          recommendations.push("Dezvoltă-ți abilitățile de troubleshooting pentru probleme tehnice");
+          recommendations.push("Învață să folosești resurse online pentru rezolvarea problemelor");
+          break;
+      }
+    }
+  });
+  
+  // Recomandări pentru niveluri avansate
+  if (overallScore >= 80) {
+    recommendations.push("Consideră să devii mentor pentru alții în domeniul competențelor digitale");
+    recommendations.push("Explorează tehnologii emergente în domeniul tău de interes");
+  }
+  
+  return recommendations.slice(0, 5); // Limitează la 5 recomandări
+}
+
+function getDigitalCompetenciesRecommendations(score: StandardizedScore): ContextualRecommendation[] {
+  const recommendations: ContextualRecommendation[] = [];
+  const dimensions = score.dimensions || {};
+  const overallScore = score.overall || 0;
+  
+  if (overallScore >= 80) {
+    recommendations.push({
+      type: 'professional',
+      category: 'Dezvoltare avansată',
+      title: 'Become a Digital Leader',
+      description: 'Competențele tale digitale excelente te poziționează să devii un lider în transformarea digitală.',
+      actionItems: [
+        'Consideră roluri de Digital Transformation Officer',
+        'Dezvoltă-ți abilitățile de mentoring în competențe digitale',
+        'Explorează tehnologii emergente (AI, IoT, Blockchain)',
+        'Participă la conferințe și evenimente de tech leadership'
+      ]
+    });
+  } else if (overallScore >= 60) {
+    recommendations.push({
+      type: 'professional',
+      category: 'Consolidare competențe',
+      title: 'Solidifică fundamentele digitale',
+      description: 'Ai o bază bună, acum este timpul să îți consolidezi și să îți extinzi competențele digitale.',
+      actionItems: [
+        'Certifică-te în domenii specializate (Google, Microsoft, Adobe)',
+        'Participă la cursuri avansate online',
+        'Contribuie la proiecte digitale în echipă',
+        'Dezvoltă-ți portofoliul digital personal'
+      ]
+    });
+  } else {
+    recommendations.push({
+      type: 'self-help',
+      category: 'Dezvoltare de bază',
+      title: 'Construiește fundamentele digitale',
+      description: 'Este important să începi cu competențele digitale de bază pentru a te adapta la lumea modernă.',
+      actionItems: [
+        'Înscrie-te la cursuri de alfabetizare digitală',
+        'Practică zilnic cu instrumente digitale de bază',
+        'Cere ajutorul colegilor sau prietenilor tech-savvy',
+        'Folosește aplicații educaționale pentru învățare'
+      ]
+    });
+  }
+
+  // Recomandări specifice pe dimensiuni
+  Object.entries(dimensions).forEach(([dimension, dimensionScore]) => {
+    if (typeof dimensionScore === 'number' && dimensionScore < 60) {
+      switch (dimension) {
+        case 'alfabetizare_digitala':
+          recommendations.push({
+            type: 'self-help',
+            category: 'Alfabetizare digitală',
+            title: 'Îmbunătățește navigarea și căutarea online',
+            description: 'Dezvoltă-ți abilitățile fundamentale de folosire a internetului și evaluarea informațiilor.',
+            actionItems: [
+              'Învață să folosești operatori de căutare avansați',
+              'Exersează evaluarea credibilității surselor online',
+              'Familiarizează-te cu browserele și extensiile utile',
+              'Practică organizarea și salvarea informațiilor digitale'
+            ]
+          });
+          break;
+        case 'siguranta_digitala':
+          recommendations.push({
+            type: 'immediate',
+            category: 'Securitate digitală',
+            title: 'Protejează-ți identitatea online',
+            description: 'Învață principiile esențiale de securitate cibernetică pentru a-ți proteja datele personale.',
+            actionItems: [
+              'Folosește un manager de parole (LastPass, Bitwarden)',
+              'Activează autentificarea cu doi factori peste tot',
+              'Învață să recunoști tentativele de phishing',
+              'Fă backup-uri regulate la datele importante'
+            ]
+          });
+          break;
+      }
+    }
+  });
+
+  return recommendations.slice(0, 3); // Limitează la 3 recomandări pentru a nu copleși
 }
 
 async function getBigFiveRecommendations(score: StandardizedScore): Promise<ContextualRecommendation[]> {

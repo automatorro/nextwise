@@ -35,6 +35,10 @@ export function getPersonalizedInterpretation(
     return getEnneagramPersonalizedInterpretation(score, language);
   }
   
+  if (testKey.includes('digital') || testKey.includes('competente')) {
+    return getDigitalCompetenciesPersonalizedInterpretation(score, language);
+  }
+  
   return null;
 }
 
@@ -273,5 +277,64 @@ function getEnneagramPersonalizedInterpretation(score: StandardizedScore, langua
     normalityContext: language === 'en' 
       ? 'All Enneagram types are equally valid and represent different ways of experiencing and navigating the world.'
       : 'Toate tipurile Enneagram sunt la fel de valide și reprezintă modalități diferite de a experimenta și naviga lumea.'
+  };
+}
+
+function getDigitalCompetenciesPersonalizedInterpretation(score: StandardizedScore, language: string = 'ro'): PersonalizedInterpretation {
+  const overallScore = score.overall || 0;
+  let personalizedMessage: string;
+  let severityLabel: string;
+  let severityVariant: 'default' | 'secondary' | 'destructive' = 'default';
+
+  if (overallScore >= 86) {
+    personalizedMessage = language === 'en' 
+      ? "Excellent digital competencies! You demonstrate advanced skills across all areas of digital literacy."
+      : "Competențe digitale excelente! Demonstrezi abilități avansate în toate domeniile alfabetizării digitale.";
+    severityLabel = language === 'en' ? 'Expert Level' : 'Nivel Expert';
+    severityVariant = 'default';
+  } else if (overallScore >= 66) {
+    personalizedMessage = language === 'en'
+      ? "Good digital competencies with solid foundation. Some areas may benefit from further development."
+      : "Competențe digitale bune cu o bază solidă. Unele domenii ar putea beneficia de dezvoltare suplimentară.";
+    severityLabel = language === 'en' ? 'Advanced Level' : 'Nivel Avansat';
+    severityVariant = 'secondary';
+  } else if (overallScore >= 41) {
+    personalizedMessage = language === 'en'
+      ? "Functional digital competencies. Focus on developing key areas to improve your digital literacy."
+      : "Competențe digitale funcționale. Concentrează-te pe dezvoltarea domeniilor cheie pentru a-ți îmbunătăți alfabetizarea digitală.";
+    severityLabel = language === 'en' ? 'Intermediate Level' : 'Nivel Intermediar';
+    severityVariant = 'secondary';
+  } else {
+    personalizedMessage = language === 'en'
+      ? "Basic digital competencies that need significant development across multiple areas."
+      : "Competențe digitale de bază care necesită dezvoltare semnificativă în mai multe domenii.";
+    severityLabel = language === 'en' ? 'Beginner Level' : 'Nivel Începător';
+    severityVariant = 'destructive';
+  }
+
+  const contextualFactors = [];
+  if (score.dimensions) {
+    const sortedDimensions = Object.entries(score.dimensions)
+      .filter(([, value]) => typeof value === 'number')
+      .sort(([,a], [,b]) => (Number(b) || 0) - (Number(a) || 0));
+    
+    if (sortedDimensions.length > 0) {
+      const strongest = sortedDimensions[0];
+      contextualFactors.push(`Punctul forte: ${strongest[0]} (${Math.round(Number(strongest[1]) || 0)}%)`);
+    }
+    if (sortedDimensions.length > 1) {
+      const weakest = sortedDimensions[sortedDimensions.length - 1];
+      contextualFactors.push(`Zona de dezvoltare: ${weakest[0]} (${Math.round(Number(weakest[1]) || 0)}%)`);
+    }
+  }
+
+  return {
+    personalizedMessage,
+    severityLabel,
+    severityVariant,
+    contextualFactors,
+    normalityContext: language === 'en'
+      ? 'Digital competencies are essential skills in the modern world that can be developed through practice and learning.'
+      : 'Competențele digitale sunt abilități esențiale în lumea modernă care pot fi dezvoltate prin practică și învățare.'
   };
 }
