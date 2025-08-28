@@ -868,48 +868,7 @@ export type Database = {
       }
     }
     Views: {
-      user_subscription_info: {
-        Row: {
-          created_at: string | null
-          current_period_end: string | null
-          id: string | null
-          is_admin_override: boolean | null
-          status: Database["public"]["Enums"]["subscription_status"] | null
-          subscription_type:
-            | Database["public"]["Enums"]["subscription_type"]
-            | null
-          tests_taken_this_month: number | null
-          updated_at: string | null
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string | null
-          current_period_end?: string | null
-          id?: string | null
-          is_admin_override?: boolean | null
-          status?: Database["public"]["Enums"]["subscription_status"] | null
-          subscription_type?:
-            | Database["public"]["Enums"]["subscription_type"]
-            | null
-          tests_taken_this_month?: number | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string | null
-          current_period_end?: string | null
-          id?: string | null
-          is_admin_override?: boolean | null
-          status?: Database["public"]["Enums"]["subscription_status"] | null
-          subscription_type?:
-            | Database["public"]["Enums"]["subscription_type"]
-            | null
-          tests_taken_this_month?: number | null
-          updated_at?: string | null
-          user_id?: string | null
-        }
-        Relationships: []
-      }
+      [_ in never]: never
     }
     Functions: {
       calculate_career_plan_progress: {
@@ -931,6 +890,19 @@ export type Database = {
           status: Database["public"]["Enums"]["subscription_status"]
           subscription_type: Database["public"]["Enums"]["subscription_type"]
           tests_remaining: number
+        }[]
+      }
+      get_user_subscription_info: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          created_at: string
+          current_period_end: string
+          id: string
+          is_admin_override: boolean
+          status: Database["public"]["Enums"]["subscription_status"]
+          subscription_type: Database["public"]["Enums"]["subscription_type"]
+          tests_taken_this_month: number
+          updated_at: string
         }[]
       }
       get_user_test_limit: {
