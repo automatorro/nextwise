@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { StandardizedScore } from '@/types/tests';
 import OverallScoreCard from '../OverallScoreCard';
@@ -13,7 +14,7 @@ import { ProgressPathCard } from '../ProgressPathCard';
 interface DimensionalResultLayoutProps {
   score: StandardizedScore;
   testName?: string;
-  resultId?: string; // <-- PROPRIETATE NOUĂ
+  resultId?: string;
 }
 
 export const DimensionalResultLayout: React.FC<DimensionalResultLayoutProps> = ({ score, testName, resultId }) => {
@@ -49,7 +50,8 @@ export const DimensionalResultLayout: React.FC<DimensionalResultLayoutProps> = (
       
       {hasDimensions && (
         <DimensionsAnalysis
-          dimensions={score.dimensions} 
+          dimensions={score.dimensions}
+          testName={testName}
         />
       )}
       
