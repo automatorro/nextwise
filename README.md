@@ -42,7 +42,7 @@ Competențe Digitale
 Beck Depression Inventory
 Roluri în echipă Belbin, etc.
 Demo online
-Poți testa platforma la: https://empower-career-now.lovable.app/
+Poți testa platforma la: https://nextwise.lovable.app/
 
 Dezvoltare și contribuții
 Platforma este construită pentru a fi ușor extensibilă: adăugarea unui test nou se face după un ghid documentat și standardizat (vezi implementare_test_nou.md)
