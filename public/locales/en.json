@@ -756,6 +756,62 @@
     "detailedInterpretations": {
       "title": "Detailed Interpretations"
     },
+    "digitalCompetencies": {
+      "chartTitle": "Digital Competencies Profile",
+      "yourScore": "Your Score",
+      "dimensions": {
+        "alfabetizare_digitala": {
+          "title": "Digital Literacy",
+          "description": "The ability to find, evaluate and manage information in the digital environment"
+        },
+        "comunicare_digitala": {
+          "title": "Digital Communication",
+          "description": "The ability to communicate and collaborate effectively in the online environment"
+        },
+        "creare_continut": {
+          "title": "Content Creation",
+          "description": "The competency to create and edit digital content in various formats"
+        },
+        "siguranta_digitala": {
+          "title": "Digital Safety",
+          "description": "The ability to protect devices, content and personal data"
+        },
+        "rezolvare_probleme": {
+          "title": "Problem Solving",
+          "description": "The ability to identify needs and find solutions in the digital environment"
+        }
+      },
+      "interpretations": {
+        "expert": {
+          "alfabetizare_digitala": "You have exceptional skills in managing digital information. You can critically evaluate sources, efficiently organize data, and extract valuable insights from complex information.",
+          "comunicare_digitala": "You excel in digital communication, facilitating effective collaborations and adapting your style for different online contexts and audiences.",
+          "creare_continut": "You are highly competent in creating professional digital content, respecting quality standards and copyright.",
+          "siguranta_digitala": "You have a very advanced understanding of digital security and can implement comprehensive protection measures.",
+          "rezolvare_probleme": "You excel at identifying and implementing innovative digital solutions for complex challenges."
+        },
+        "advanced": {
+          "alfabetizare_digitala": "You have solid skills in managing digital information. You can find and evaluate needed information efficiently.",
+          "comunicare_digitala": "You handle digital communication and online collaboration well, using appropriate tools for different situations.",
+          "creare_continut": "You can create quality digital content, adapting it for different platforms and respecting professional standards.",
+          "siguranta_digitala": "You have a solid understanding of digital security and implement effective protection measures.",
+          "rezolvare_probleme": "You are competent in identifying digital solutions and adapt quickly to new technologies."
+        },
+        "intermediate": {
+          "alfabetizare_digitala": "You have functional skills in managing digital information but can improve your critical evaluation of sources.",
+          "comunicare_digitala": "You handle basic digital communication well but can develop advanced collaboration skills.",
+          "creare_continut": "You can create functional digital content but have potential for improvement in creative and technical aspects.",
+          "siguranta_digitala": "You have basic digital security skills but can develop more advanced protection measures.",
+          "rezolvare_probleme": "You can solve standard digital problems but have potential for development in identifying innovative solutions."
+        },
+        "beginner": {
+          "alfabetizare_digitala": "You need to develop basic skills in managing digital information. Focus on learning search and source evaluation techniques.",
+          "comunicare_digitala": "It's recommended to develop fundamental digital communication skills and familiarize yourself with collaboration platforms.",
+          "creare_continut": "You need to develop basic skills in digital content creation. Start with simple tools and fundamental concepts.",
+          "siguranta_digitala": "It's essential to develop basic digital security skills for protecting data and online identity.",
+          "rezolvare_probleme": "You need to develop fundamental skills in digital problem solving and adapting to new technologies."
+        }
+      }
+    },
     "nextSteps": {
       "title": "What's Next?",
       "description": "Continue your journey with these recommended next steps",

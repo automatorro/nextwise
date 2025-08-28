@@ -36,7 +36,7 @@ export const DimensionsAnalysis: React.FC<DimensionsAnalysisProps> = ({ dimensio
       <CardHeader>
         <CardTitle>
           {isDigitalCompetencies 
-            ? t('digitalCompetencies.chartTitle')
+            ? t('testResult.digitalCompetencies.chartTitle')
             : t('bigFive.chartTitle')}
         </CardTitle> 
       </CardHeader>
@@ -47,7 +47,7 @@ export const DimensionsAnalysis: React.FC<DimensionsAnalysisProps> = ({ dimensio
             <PolarAngleAxis dataKey="subject" />
             <PolarRadiusAxis angle={30} domain={[0, 10]} />
             <Radar 
-              name={isDigitalCompetencies ? t('digitalCompetencies.yourScore') : t('bigFive.yourScore')} 
+              name={isDigitalCompetencies ? t('testResult.digitalCompetencies.yourScore') : t('bigFive.yourScore')} 
               dataKey="score" 
               stroke="#8884d8" 
               fill="#8884d8" 
