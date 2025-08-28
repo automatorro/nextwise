@@ -17,17 +17,28 @@ export const DimensionsAnalysis: React.FC<DimensionsAnalysisProps> = ({ dimensio
     return null; 
   }
 
+  // Determinăm tipul de test bazat pe ID-urile dimensiunilor
+  const isDigitalCompetencies = dimensions.some(dim => 
+    ['alfabetizare_digitala', 'comunicare_digitala', 'creare_continut', 'siguranta_digitala', 'rezolvare_probleme'].includes(dim.id)
+  );
+
   // Transformăm datele din formatul nostru în formatul cerut de librăria de grafice
   const chartData = dimensions.map(dim => ({
-    subject: t(`bigFive.dimensions.${dim.id}.title`) || dim.name.charAt(0).toUpperCase() + dim.name.slice(1),
+    subject: isDigitalCompetencies 
+      ? t(`testResult.digitalCompetencies.dimensions.${dim.id}.title`) 
+      : t(`testResult.bigFive.dimensions.${dim.id}.title`) || dim.name,
     score: dim.score,
-    fullMark: 10, // Scorul este pe o scală de la 1 la 10
+    fullMark: 10, // Scorul este pe scară 0-10
   }));
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t('bigFive.chartTitle')}</CardTitle> 
+        <CardTitle>
+          {isDigitalCompetencies 
+            ? t('digitalCompetencies.chartTitle')
+            : t('bigFive.chartTitle')}
+        </CardTitle> 
       </CardHeader>
       <CardContent>
         <ResponsiveContainer width="100%" height={400}>
@@ -35,7 +46,13 @@ export const DimensionsAnalysis: React.FC<DimensionsAnalysisProps> = ({ dimensio
             <PolarGrid />
             <PolarAngleAxis dataKey="subject" />
             <PolarRadiusAxis angle={30} domain={[0, 10]} />
-            <Radar name={t('bigFive.yourScore')} dataKey="score" stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+            <Radar 
+              name={isDigitalCompetencies ? t('digitalCompetencies.yourScore') : t('bigFive.yourScore')} 
+              dataKey="score" 
+              stroke="#8884d8" 
+              fill="#8884d8" 
+              fillOpacity={0.6} 
+            />
             <Legend />
           </RadarChart>
         </ResponsiveContainer>

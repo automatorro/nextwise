@@ -771,6 +771,32 @@
     "detailedInterpretations": {
       "title": "Interpretări Detaliate"
     },
+    "digitalCompetencies": {
+      "chartTitle": "Profilul Competențelor Digitale",
+      "yourScore": "Scorul Tău",
+      "dimensions": {
+        "alfabetizare_digitala": {
+          "title": "Alfabetizare Digitală",
+          "description": "Capacitatea de a găsi, evalua și gestiona informații în mediul digital"
+        },
+        "comunicare_digitala": {
+          "title": "Comunicare Digitală",
+          "description": "Abilitatea de a comunica și colabora eficient în mediul online"
+        },
+        "creare_continut": {
+          "title": "Creare de Conținut",
+          "description": "Competența de a crea și edita conținut digital în diverse formate"
+        },
+        "siguranta_digitala": {
+          "title": "Siguranță Digitală",
+          "description": "Capacitatea de a proteja dispozitivele, conținutul și datele personale"
+        },
+        "rezolvare_probleme": {
+          "title": "Rezolvare de Probleme",
+          "description": "Abilitatea de a identifica nevoi și de a găsi soluții în mediul digital"
+        }
+      }
+    },
     "nextSteps": {
       "title": "Următorii pași recomandați",
       "description": "Continuă-ți călătoria cu acești pași recomandați",

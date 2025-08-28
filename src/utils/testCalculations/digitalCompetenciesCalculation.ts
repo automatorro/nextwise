@@ -29,21 +29,20 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
       }
     });
     
-    // Calculăm procentajul pentru dimensiune
+    // Calculăm scorul pentru dimensiune (0-10 pentru radar chart)
     if (validAnswers > 0) {
       const rawScore = totalScore;
-      const maxPossible = validAnswers * 5;
-      dimensionScores[dimensionKey] = Math.round((rawScore / maxPossible) * 100);
+      const maxPossible = validAnswers * 5; // 5 puncte maxim per întrebare
+      dimensionScores[dimensionKey] = Math.round((rawScore / maxPossible) * 10); // Convertim la scală 0-10
     } else {
       dimensionScores[dimensionKey] = 0;
     }
   });
   
-  // Calculăm scorul general ca medie a dimensiunilor
-  const dimensionValues = Object.values(dimensionScores);
-  const overall = dimensionValues.length > 0 
-    ? Math.round(dimensionValues.reduce((sum, score) => sum + score, 0) / dimensionValues.length)
-    : 0;
+  // Calculăm procentajul general (0-100%)
+  const total = Object.values(answers).reduce((sum, score) => sum + score, 0);
+  const maxPossible = 35 * 5; // 35 întrebări × 5 puncte maxim
+  const overall = Math.round((total / maxPossible) * 100);
   
   // Determinăm interpretarea generală
   let interpretation = '';
