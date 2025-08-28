@@ -21,11 +21,17 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
     let totalScore = 0;
     let validAnswers = 0;
     
+    console.log(`\nAnalizăm dimensiunea ${dimensionKey}:`);
+    console.log('Întrebări pentru această dimensiune:', questionNumbers);
+    
     questionNumbers.forEach(questionNumber => {
       const answerKey = questionNumber.toString();
       if (answers[answerKey] !== undefined) {
+        console.log(`  Întrebarea ${answerKey}: scor ${answers[answerKey]}`);
         totalScore += answers[answerKey];
         validAnswers++;
+      } else {
+        console.log(`  Întrebarea ${answerKey}: lipsește răspunsul`);
       }
     });
     
@@ -34,9 +40,17 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
       const rawScore = totalScore;
       const maxPossible = questionNumbers.length * 5; // 5 puncte maxim per întrebare
       dimensionScores[dimensionKey] = Math.round((rawScore / maxPossible) * 10); // Convertim la scală 0-10
-      console.log(`Dimensiune ${dimensionKey}:`, { rawScore, maxPossible, score: dimensionScores[dimensionKey] });
+      console.log(`Rezultat ${dimensionKey}:`, { 
+        totalScore, 
+        validAnswers, 
+        rawScore, 
+        maxPossible, 
+        scoreBeforeRounding: (rawScore / maxPossible) * 10,
+        finalScore: dimensionScores[dimensionKey]
+      });
     } else {
       dimensionScores[dimensionKey] = 0;
+      console.log(`${dimensionKey}: Nu sunt răspunsuri valide`);
     }
   });
   
@@ -44,6 +58,14 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
   const total = Object.values(answers).reduce((sum, score) => sum + score, 0);
   const maxPossible = 35 * 5; // 35 întrebări × 5 puncte maxim
   const overall = Math.round((total / maxPossible) * 100);
+  
+  console.log('\nCalcul scor general:', {
+    totalPuncte: total,
+    puncteMaximePosibile: maxPossible,
+    scorBrut: (total / maxPossible) * 100,
+    scorFinal: overall,
+    toateRaspunsurile: Object.entries(answers).map(([k, v]) => `${k}: ${v}`).join(', ')
+  });
   
   // Determinăm interpretarea generală
   let interpretation = '';
