@@ -2,36 +2,56 @@
 import { StandardizedScore } from '@/types/tests';
 
 export const calculateDigitalCompetenciesScore = (answers: Record<string, number>): StandardizedScore => {
-  console.log('Calculând scorul pentru Competențe Digitale & Analitice:', answers);
+  console.log('==========================================');
+  console.log('CALCUL SCOR COMPETENȚE DIGITALE');
+  console.log('==========================================');
+  console.log('Răspunsuri primite:', JSON.stringify(answers, null, 2));
   
-  // Definim întrebările pentru fiecare dimensiune
+  // Simplifică răspunsurile doar la valori
+  const answerValues = Object.values(answers);
+  
+  // Verificăm dacă toate răspunsurile sunt 5
+  const toateRaspunsurile5 = answerValues.every(score => score === 5);
+  console.log('Toate răspunsurile sunt 5?', toateRaspunsurile5);
+  
+  // Verificăm dacă avem toate cele 35 de răspunsuri
+  const numarRaspunsuri = answerValues.length;
+  console.log('Număr total răspunsuri:', numarRaspunsuri);
+  
+  // Obținem lista de ID-uri ale întrebărilor sortate după ordine
+  const sortedQuestionIds = Object.keys(answers).sort((a, b) => {
+    // Presupunem că fiecare răspuns are un index în baza de date
+    // Vom folosi ordinea în care vin răspunsurile pentru a determina dimensiunea
+    return a.localeCompare(b);
+  });
+
+  // Împărțim întrebările în grupuri de câte 7 pentru fiecare dimensiune
   const dimensions = {
-    alfabetizare_digitala: [1, 2, 3, 4, 5, 6, 7],
-    comunicare_digitala: [8, 9, 10, 11, 12, 13, 14],
-    creare_continut: [15, 16, 17, 18, 19, 20, 21],
-    siguranta_digitala: [22, 23, 24, 25, 26, 27, 28],
-    rezolvare_probleme: [29, 30, 31, 32, 33, 34, 35]
+    alfabetizare_digitala: sortedQuestionIds.slice(0, 7),
+    comunicare_digitala: sortedQuestionIds.slice(7, 14),
+    creare_continut: sortedQuestionIds.slice(14, 21),
+    siguranta_digitala: sortedQuestionIds.slice(21, 28),
+    rezolvare_probleme: sortedQuestionIds.slice(28, 35)
   };
   
   const dimensionScores: Record<string, number> = {};
   const maxScorePerDimension = 35; // 7 întrebări × 5 puncte maxim
   
   // Calculăm scorul pentru fiecare dimensiune
-  Object.entries(dimensions).forEach(([dimensionKey, questionNumbers]) => {
+  Object.entries(dimensions).forEach(([dimensionKey, questionIds]) => {
     let totalScore = 0;
     let validAnswers = 0;
     
     console.log(`\nAnalizăm dimensiunea ${dimensionKey}:`);
-    console.log('Întrebări pentru această dimensiune:', questionNumbers);
+    console.log('ID-uri întrebări pentru această dimensiune:', questionIds);
     
-    questionNumbers.forEach(questionNumber => {
-      const answerKey = questionNumber.toString();
-      if (answers[answerKey] !== undefined) {
-        console.log(`  Întrebarea ${answerKey}: scor ${answers[answerKey]}`);
-        totalScore += answers[answerKey];
+    questionIds.forEach(questionId => {
+      if (answers[questionId] !== undefined) {
+        console.log(`  Întrebarea ${questionId}: scor ${answers[questionId]}`);
+        totalScore += answers[questionId];
         validAnswers++;
       } else {
-        console.log(`  Întrebarea ${answerKey}: lipsește răspunsul`);
+        console.log(`  Întrebarea ${questionId}: lipsește răspunsul`);
       }
     });
     
