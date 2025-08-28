@@ -32,8 +32,9 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
     // Calculăm scorul pentru dimensiune (0-10 pentru radar chart)
     if (validAnswers > 0) {
       const rawScore = totalScore;
-      const maxPossible = validAnswers * 5; // 5 puncte maxim per întrebare
+      const maxPossible = questionNumbers.length * 5; // 5 puncte maxim per întrebare
       dimensionScores[dimensionKey] = Math.round((rawScore / maxPossible) * 10); // Convertim la scală 0-10
+      console.log(`Dimensiune ${dimensionKey}:`, { rawScore, maxPossible, score: dimensionScores[dimensionKey] });
     } else {
       dimensionScores[dimensionKey] = 0;
     }
