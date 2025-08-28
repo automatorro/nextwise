@@ -868,7 +868,48 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      user_subscription_info: {
+        Row: {
+          created_at: string | null
+          current_period_end: string | null
+          id: string | null
+          is_admin_override: boolean | null
+          status: Database["public"]["Enums"]["subscription_status"] | null
+          subscription_type:
+            | Database["public"]["Enums"]["subscription_type"]
+            | null
+          tests_taken_this_month: number | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_period_end?: string | null
+          id?: string | null
+          is_admin_override?: boolean | null
+          status?: Database["public"]["Enums"]["subscription_status"] | null
+          subscription_type?:
+            | Database["public"]["Enums"]["subscription_type"]
+            | null
+          tests_taken_this_month?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_period_end?: string | null
+          id?: string | null
+          is_admin_override?: boolean | null
+          status?: Database["public"]["Enums"]["subscription_status"] | null
+          subscription_type?:
+            | Database["public"]["Enums"]["subscription_type"]
+            | null
+          tests_taken_this_month?: number | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       calculate_career_plan_progress: {
@@ -882,6 +923,15 @@ export type Database = {
       can_view_full_profile: {
         Args: { profile_user_id: string }
         Returns: boolean
+      }
+      get_user_subscription_access: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          is_admin: boolean
+          status: Database["public"]["Enums"]["subscription_status"]
+          subscription_type: Database["public"]["Enums"]["subscription_type"]
+          tests_remaining: number
+        }[]
       }
       get_user_test_limit: {
         Args: { _user_id: string }
