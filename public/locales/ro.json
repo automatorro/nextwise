@@ -1,47 +1,889 @@
 
 {
-  "loading": "Se încarcă...",
-  "error": "Eroare",
-  "bigFive": {
-    "chartTitle": "Profilul de Personalitate Big Five",
-    "yourScore": "Scorul Tău",
-    "dimensions": {
-      "openness": {
-        "title": "Deschidere către Experiență"
+  "header": {
+    "dashboard": "Panou",
+    "tests": "Teste", 
+    "career": "Carieră",
+    "profile": "Profil",
+    "admin": "Admin",
+    "logout": "Deconectare",
+    "subscriptionSettings": "Setări Abonament",
+    "adminPanel": "Panou Admin",
+    "login": "Intră în cont",
+    "startFree": "Începe gratuit"
+  },
+  "home": {
+    "heroTitle": "Descoperă-ți Potențialul și Dezvoltă-ți Cariera",
+    "heroSubtitle": "Platforma AI care te ajută să îți înțelegi personalitatea, să îți identifici punctele forte și să îți construiești calea ideală în carieră prin evaluări psihologice avansate.",
+    "startFreeAssessment": "Începe Evaluarea Gratuită",
+    "featuresTitle": "Descoperă Funcționalitățile Noastre",
+    "featuresSubtitle": "Unelte bazate pe inteligență artificială pentru a-ți accelera cariera.",
+    "categoriesTitle": "Categorii de Teste",
+    "categoriesSubtitle": "Explorează diferitele tipuri de evaluări disponibile",
+    "pricingTitle": "Alege Planul Tău",
+    "pricingSubtitle": "Selectează planul perfect pentru călătoria ta de dezvoltare în carieră",
+    "ctaFinalTitle": "Ești Gata să Îți Transformi Cariera?",
+    "ctaFinalSubtitle": "Alătură-te miilor de profesioniști care și-au descoperit deja potențialul",
+    "ctaFinalButton": "Începe Călătoria Ta",
+    "features": {
+      "psychologicalEvaluations": "Evaluări Psihologice",
+      "psychologicalEvaluationsDesc": "Înțelege-ți personalitatea și abilitățile cognitive.",
+      "personalizedCareerPlans": "Planuri de Carieră Personalizate",
+      "personalizedCareerPlansDesc": "Primește o foaie de parcurs clară, bazată pe profilul tău unic.",
+      "advancedAnalytics": "Analiză Avansată",
+      "advancedAnalyticsDesc": "Urmărește-ți progresul cu informații detaliate.",
+      "aiMentoring": "Mentorat AI",
+      "aiMentoringDesc": "Primește ghidare continuă de la mentorul tău AI."
+    },
+    "footerText": "Platforma AI care te ajută să îți înțelegi personalitatea, să îți identifici punctele forte și să îți construiești calea ideală în carieră prin evaluări psihologice avansate.",
+    "footerCopyright": "© 2024 NextWise. Toate drepturile rezervate."
+  },
+  "careerJourney": {
+    "title": "Călătoria Ta în Carieră în 4 Pași",
+    "subtitle": "Descoperă cum platforma noastră bazată pe AI te ghidează prin fiecare etapă a dezvoltării tale profesionale",
+    "step1": {
+      "title": "Completează Evaluarea",
+      "description": "Susține teste psihologice cuprinzătoare pentru a-ți înțelege personalitatea, punctele forte și preferințele"
+    },
+    "step2": {
+      "title": "Primește Analiza AI",
+      "description": "Primești informații detaliate și recomandări personalizate bazate pe rezultatele testelor tale"
+    },
+    "step3": {
+      "title": "Construiește-ți Planul",
+      "description": "Creează un plan personalizat de dezvoltare în carieră cu obiective clare și pași acționabili"
+    },
+    "step4": {
+      "title": "Atinge Succesul",
+      "description": "Urmează foaia ta de parcurs personalizată și urmărește progresul către obiectivele tale de carieră"
+    },
+    "benefits": {
+      "title": "De Ce să Alegi NextWise?",
+      "benefit1": "Evaluări psihologice validate științific",
+      "benefit2": "Recomandări personalizate de carieră bazate pe AI",
+      "benefit3": "Ghidare pas cu pas și urmărirea progresului",
+      "benefit4": "Suport și mentorat continuu pe parcursul călătoriei tale"
+    }
+  },
+  "plans": {
+    "mostPopular": "Cel Mai Popular",
+    "basic": {
+      "name": "Basic",
+      "price": "€19/lună",
+      "description": "Perfect pentru a începe",
+      "features": [
+        "4 teste psihologice pe lună",
+        "Plan de învățare de bază",
+        "Rezultate de bază",
+        "Suport email"
+      ],
+      "button": "Alege Basic"
+    },
+    "professional": {
+      "name": "Professional",
+      "price": "€49/lună",
+      "description": "Cea mai populară alegere",
+      "features": [
+        "7 teste psihologice pe lună",
+        "Plan extins de învățare și dezvoltare",
+        "Analize detaliate AI",
+        "Recomandări personalizate",
+        "Suport prioritar"
+      ],
+      "button": "Alege Professional"
+    },
+    "premium": {
+      "name": "Premium",
+      "price": "€89/lună",
+      "description": "Tot ce ai nevoie",
+      "features": [
+        "Acces complet nelimitat",
+        "Toate testele disponibile",
+        "Planuri de carieră avansate",
+        "Consultanță personalizată",
+        "Sesiuni video 1-la-1",
+        "Suport 24/7"
+      ],
+      "button": "Alege Premium"
+    }
+  },
+  "dashboard": {
+    "welcome": "Bun venit,",
+    "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
+    "stats": {
+      "testsCompleted": "Teste Completate",
+      "careerPlans": "Planuri de Carieră",
+      "timeSaved": "Timp Economisit",
+      "careerProgress": "Progres Carieră"
+    },
+    "actions": {
+      "startFirstTest": "Fă primul pas spre autocunoaștere",
+      "startFirstTestDesc": "Completează un test pentru a primi recomandări personalizate.",
+      "exploreTests": "Explorează Testele",
+      "planCareer": "Creează-ți un plan de carieră personalizat",
+      "planCareerDesc": "Setează-ți obiectivele și urmărește-ți progresul pas cu pas.",
+      "startCareerPlan": "Începe Planul"
+    },
+    "testCategories": "Categorii de Teste",
+    "exploreCategories": "Explorează diferitele tipuri de evaluări disponibile",
+    "seeAllTests": "Vezi Toate Testele",
+    "categories": {
+      "emotionalIntelligence": "Inteligența Emoțională",
+      "personality": "Personalitate",
+      "leadership": "Leadership",
+      "technicalSkills": "Abilități Tehnice",
+      "wellness": "Wellness",
+      "cognitive": "Cognitiv",
+      "digital": "Digital",
+      "sensory": "Senzorial",
+      "testLabel": "test",
+      "testsLabel": "teste"
+    }
+  },
+  "careerPlan": {
+    "limitReachedTitle": "Limita de planuri atinsă",
+    "limitReachedDescription": "Ai atins limita de creare a planurilor.",
+    "upgradeForUnlimited": "Fă upgrade pentru planuri nelimitate.",
+    "assessmentRequiredTitle": "Evaluare necesară",
+    "assessmentRequiredDescription": "Completează cel puțin un test pentru a genera un plan de carieră personalizat.",
+    "errorTitle": "Eroare",
+    "errorDescription": "A apărut o eroare la crearea planului de carieră. Te rugăm să încerci din nou.",
+    "milestonesIncluded": "Obiective incluse",
+    "weeks": "săptămâni",
+    "skills": "abilități",
+    "requiredSkills": "Abilități necesare",
+    "createCustomTitle": "Creează plan personalizat",
+    "createCustomDescription": "Generează un plan de carieră personalizat cu AI bazat pe rezultatele testelor și obiectivele tale.",
+    "targetRole": "Rolul țintă",
+    "targetRolePlaceholder": "ex. UX Designer, Product Manager",
+    "currentRole": "Rolul actual",
+    "currentRolePlaceholder": "ex. Junior Developer, Student",
+    "timeframe": "Perioada",
+    "timeframePlaceholder": "ex. 12 luni, 2 ani",
+    "objectiveDescription": "Descrierea obiectivului",
+    "objectiveDescriptionPlaceholder": "Descrie obiectivele și aspirațiile tale de carieră...",
+    "generatingPlan": "Generez planul...",
+    "generateWithAI": "Generează cu AI",
+    "availableTemplates": "Template-uri disponibile",
+    "popularTemplates": "Alege dintre template-urile noastre populare de dezvoltare de carieră",
+    "loadingTemplates": "Se încarcă template-urile...",
+    "months": "luni",
+    "difficulty": {
+      "beginner": "Începător",
+      "intermediate": "Intermediar",
+      "advanced": "Avansat"
+    },
+    "more": "mai multe",
+    "preview": "Previzualizare",
+    "creatingPlan": "Creez planul...",
+    "useTemplate": "Folosește template-ul"
+  },
+  "careerPaths": {
+    "title": "Planurile tale de carieră personalizate",
+    "subtitle": "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale.",
+    "tabs": {
+      "dashboard": "Dashboard",
+      "create": "Plan Nou",
+      "mentoring": "Mentoring AI",
+      "cvAnalyzer": "Analiza CV",
+      "programs": "Programe AI de 14 Zile",
+      "progressSheets": "Fișe de Progres AI",
+      "simulations": "Simulări AI",
+      "progressAnalysis": "Analiza Progresului"
+    },
+    "dashboard": {
+      "title": "Dashboard Carieră",
+      "subtitle": "Monitorizează progresul și planifică următorii pași.",
+      "createPlan": "Creează Plan Nou",
+      "progress": "Progres",
+      "created": "Creat",
+      "viewDetails": "Vezi Detalii",
+      "noPlans": "Nu ai încă planuri de carieră",
+      "createFirst": "Creează primul tău plan personalizat pentru a-ți atinge obiectivele profesionale"
+    },
+    "messages": {
+      "planCreated": "Planul de carieră a fost creat cu succes!",
+      "planUpdated": "Planul de carieră a fost actualizat cu succes!",
+      "planDeleted": "Planul de carieră a fost șters cu succes!",
+      "createError": "Nu am putut crea planul de carieră.",
+      "updateError": "Nu am putut actualiza planul de carieră.",
+      "deleteError": "Nu am putut șterge planul de carieră."
+    },
+    "simulations": {
+      "title": "Simulări AI",
+      "subtitle": "Exersează scenarii profesionale cu AI",
+      "jobInterview": "Interviu de Angajare",
+      "jobInterviewDesc": "Practică pentru un interviu de angajare într-un mediu sigur",
+      "salaryNegotiation": "Negociere Salariu",
+      "salaryNegotiationDesc": "Dezvoltă-ți abilitățile de negociere",
+      "teamConflict": "Conflict în Echipă",
+      "teamConflictDesc": "Învață să gestionezi conflictele în echipă",
+      "managementPromotion": "Promovare în Management",
+      "managementPromotionDesc": "Pregătește-te pentru o promovare în management",
+      "activeSimulation": "Simulare activă în desfășurare",
+      "type": "Tip",
+      "messages": "Mesaje",
+      "responses": "Răspunsuri",
+      "continueSimulation": "Continuă Simularea",
+      "roles": "Roluri",
+      "startSimulation": "Începe Simularea",
+      "recentSimulations": "Simulări Recente",
+      "completed": "Completată",
+      "inProgress": "În Progres",
+      "difficulty": {
+        "easy": "Ușor",
+        "medium": "Mediu",
+        "hard": "Dificil"
       },
-      "conscientiousness": {
-        "title": "Conștiinciozitate"
-      },
-      "extraversion": {
-        "title": "Extraversiune"
-      },
-      "agreeableness": {
-        "title": "Agreabilitate"
-      },
-      "neuroticism": {
-        "title": "Neuroticism"
+      "roles": {
+        "recruiter": "Recrutor",
+        "manager": "Manager",
+        "teamMember": "Membru Echipă",
+        "hrManager": "Manager HR",
+        "teamLead": "Team Lead",
+        "client": "Client",
+        "stakeholder": "Stakeholder",
+        "seniorManager": "Manager Senior"
       }
     }
   },
-  "digitalCompetencies": {
-    "chartTitle": "Competențe Digitale & Analitice",
-    "yourScore": "Scorul Tău",
-    "dimensions": {
-      "alfabetizare_digitala": {
-        "title": "Alfabetizare Digitală"
-      },
-      "comunicare_digitala": {
-        "title": "Comunicare Digitală"
-      },
-      "creare_continut": {
-        "title": "Creare Conținut"
-      },
-      "siguranta_digitala": {
-        "title": "Siguranță Digitală"
-      },
-      "rezolvare_probleme": {
-        "title": "Rezolvare Probleme"
+  "aiSimulations": {
+    "availableTitle": "Simulări Disponibile",
+    "previousTitle": "Simulări Anterioare",
+    "starting": "Se pornește...",
+    "startButton": "Începe Simularea",
+    "score": "Scor",
+    "viewDetails": "Vezi Detalii",
+    "messages": {
+      "startError": "Nu am putut porni simularea"
+    },
+    "jobInterview": {
+      "title": "Interviu de Angajare",
+      "description": "Practică pentru un interviu de angajare într-un mediu sigur"
+    },
+    "presentationSkills": {
+      "title": "Abilități de Prezentare",
+      "description": "Îmbunătățește-ți abilitățile de prezentare și comunicare"
+    },
+    "negotiationSkills": {
+      "title": "Abilități de Negociere",
+      "description": "Dezvoltă-ți abilitățile de negociere și persuasiune"
+    },
+    "duration": {
+      "minutes": "minute"
+    },
+    "difficulty": {
+      "easy": "Ușor",
+      "medium": "Mediu",
+      "hard": "Dificil"
+    }
+  },
+  "cvOptimization": {
+    "title": "Optimizare CV",
+    "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele.",
+    "startAnalysis": "Începe Analiza",
+    "optimizeCV": "Optimizează CV-ul pentru acest Job",
+    "generateCoverLetter": "Generează Scrisoarea de Intenție",
+    "optimizingCV": "Optimizez CV-ul...",
+    "generatingCoverLetter": "Generez scrisoarea de intenție...",
+    "optimizedCV": "CV Optimizat",
+    "coverLetter": "Scrisoarea de Intenție",
+    "copyToClipboard": "Copiază în Clipboard",
+    "copiedToClipboard": "Copiat în clipboard!",
+    "optimizationFailed": "Optimizarea CV-ului a eșuat",
+    "coverLetterFailed": "Generarea scrisorii de intenție a eșuat"
+  },
+  "profile": {
+    "title": "Profilul Meu",
+    "welcome": "Bun venit,",
+    "welcomeMessage": "Aici poți vedea sumarul activității tale și informațiile personale.",
+    "administrator": "Administrator",
+    "admin": {
+      "notice": "Acesta este un cont de administrator cu acces la toate funcționalitățile."
+    },
+    "personalInfo": {
+      "title": "Informații Profil",
+      "name": "Nume",
+      "email": "Email",
+      "role": "Rol",
+      "memberSince": "Membru din"
+    },
+    "quickActions": {
+      "title": "Acțiuni Rapide",
+      "tryNewTest": "Încearcă un Test Nou",
+      "goToDashboard": "Mergi la Dashboard",
+      "viewSubscription": "Vezi Abonamentul"
+    },
+    "recentTests": {
+      "title": "Rezultate Teste Recente",
+      "noTests": "Încă nu ai completat teste",
+      "takeFirst": "Completează primul test pentru a vedea rezultatele aici",
+      "completedOn": "Completat pe"
+    }
+  },
+  "auth": {
+    "backToMain": "Înapoi la pagina principală",
+    "welcome": "Bun venit",
+    "signInMessage": "Autentifică-te în cont sau creează unul nou",
+    "title": "Autentifică-te în contul tău",
+    "subtitle": "Introdu email-ul tău mai jos pentru a te conecta",
+    "signIn": "Autentificare",
+    "signUp": "Înregistrare",
+    "email": "Email",
+    "emailLabel": "Email",
+    "password": "Parolă",
+    "fullName": "Nume Complet",
+    "enterEmail": "Introdu email-ul",
+    "enterPassword": "Introdu parola",
+    "enterFullName": "Introdu numele complet",
+    "signingIn": "Se autentifică...",
+    "creatingAccount": "Se creează contul...",
+    "createAccount": "Creează Cont",
+    "signInButton": "Autentificare cu Email",
+    "googleSignIn": "Continuă cu Google",
+    "alreadyHaveAccount": "Ai deja un cont?",
+    "dontHaveAccount": "Nu ai un cont?",
+    "forgotPassword": "Ai uitat parola?",
+    "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
+    "invalidEmail": "Te rog să introduci un email valid",
+    "nameRequired": "Numele complet este obligatoriu"
+  },
+  "tests": {
+    "title": "Teste Psihologice", 
+    "subtitle": "Descoperă-ți personalitatea și competențele cu testele noastre validate științific",
+    "searchPlaceholder": "Caută teste...",
+    "allCategories": "Toate",
+    "duration": "minute",
+    "questions": "întrebări",
+    "startTest": "Începe Testul",
+    "noTestsFound": "Nu s-au găsit teste care să corespundă criteriilor tale",
+    "disc": {
+      "explanation": {
+        "title": "Evaluarea DISC - Stiluri de Comportament",
+        "description": "DISC este o evaluare comportamentală care identifică stilul tău preferat de lucru și preferințele de comunicare bazate pe patru dimensiuni principale.",
+        "whatItMeans": "Înțelegerea Profilului Tău DISC",
+        "profileTitle": "Profilul Tău {{profile}}",
+        "interpretation": {
+          "general": "Evaluarea DISC identifică stilul tău comportamental dominant bazat pe patru dimensiuni cheie: Dominanță, Influență, Stabilitate și Conștiinciozitate.",
+          "dominant": "Stilul tău dominant este {{profile}}, care reprezintă abordarea ta preferată față de sarcini și interacțiuni."
+        },
+        "profiles": {
+          "D": {
+            "name": "Dominanță",
+            "description": "Direct, orientat spre rezultate, ferm, puternic și hotărât. Îți plac provocările și să acționezi pentru a obține rezultate."
+          },
+          "I": {
+            "name": "Influență", 
+            "description": "Deschis, entuziast, optimist, vioi și energic. Îți place să interacționezi cu oamenii și să influențezi rezultatele prin comunicare."
+          },
+          "S": {
+            "name": "Stabilitate",
+            "description": "Echilibrat, acomodant, răbdător, modest și tactful. Preferi medii stabile și munca în echipă colaborativă."
+          },
+          "C": {
+            "name": "Conștiinciozitate",
+            "description": "Privat, analitic, logic, critic și sistematic. Te concentrezi pe acuratețe, expertiză și calitate în munca ta."
+          }
+        }
+      }
+    },
+    "noTestsFound": "Nu s-au găsit teste care să corespundă criteriilor de căutare.",
+    "categories": {
+      "personality": "Teste de Personalitate",
+      "cognitive": "Teste Cognitive",
+      "emotional": "Inteligență Emoțională",
+      "leadership": "Leadership și Echipă"
+    },
+    "timeEstimate": "Timp: {{minutes}} minute",
+    "questionsCount": "{{count}} întrebări",
+    "takeTest": "Susține Testul",
+    "exploreCategory": "Explorează Categoria",
+    "noDescription": "Descrierea testului va fi disponibilă în curând.",
+    "viewResult": "Vezi Rezultatul",
+    "retakeTest": "Refă Testul",
+    "continue": "Continuă",
+    "noTests": "Nu sunt teste disponibile în această categorie încă.",
+    "backToTests": "Înapoi la Teste",
+    "testsList": "Teste Disponibile",
+    "disc": {
+      "name": "Evaluare DISC",
+      "explanation": {
+        "title": "Evaluarea Stilurilor Comportamentale DISC",
+        "description": "DISC este un instrument de evaluare comportamentală care ajută la identificarea stilului tău natural de comportament și preferințelor de comunicare în patru dimensiuni principale.",
+        "whatItMeans": "Această evaluare îți dezvăluie stilul tău comportamental dominant și modul în care interacționezi de obicei cu alții în diferite situații.",
+        "profiles": {
+          "D": {
+            "name": "Dominanță (D)",
+            "description": "Sunteți o persoană directă, hotărâtă și orientată spre rezultate. Preferați să preluați controlul situațiilor și să luați decizii rapide. Sunteți competitiv, focalizat pe obiective și confortabil cu provocările și riscurile."
+          },
+          "I": {
+            "name": "Influență (I)",
+            "description": "Sunteți o persoană sociabilă, optimistă și entuziastă. Excelați la motivarea altora și construirea relațiilor. Sunteți creativ, expresiv și preferați mediile colaborative unde puteți interacționa cu oamenii."
+          },
+          "S": {
+            "name": "Stabilitate (S)",
+            "description": "Sunteți o persoană calmă, răbdătoare și loială. Apreciați stabilitatea și consistența atât în muncă, cât și în relații. Sunteți un bun ascultător, coechipier suportiv și preferați mediile previzibile."
+          },
+          "C": {
+            "name": "Conștiinciozitate (C)",
+            "description": "Sunteți o persoană precisă, analitică și organizată. Acordați atenție detaliilor și preferați abordările structurate. Apreciați acuratețea, standardele de calitate și procesele sistematice."
+          }
+        },
+        "interpretation": {
+          "dominant": "Profilul tău principal este {{profile}}. Acest lucru indică o tendință puternică spre a acționa și a gândi în modul descris mai sus.",
+          "general": "Profilul tău DISC îți dezvăluie preferințele tale naturale comportamentale și stilul de comunicare."
+        },
+        "profileTitle": "Profilul tău Principal: {{profile}}"
       }
     }
+  },
+  "testRunner": {
+    "questionsLabel": "Întrebări",
+    "durationLabel": "Durată",
+    "minutes": "minute",
+    "startTest": "Începe Testul",
+    "startButton": "Începe Testul",
+    "questionProgress": "Întrebarea {{current}} din {{total}}",
+    "back": "Înapoi",
+    "next": "Următoarea",
+    "finishTest": "Finalizează Testul",
+    "submitting": "Se trimite...",
+    "submitError": "Eroare la trimitere",
+    "submitErrorDescription": "Nu am putut salva rezultatele. Te rugăm să încerci din nou.",
+    "loadError": "Testul nu a putut fi încărcat sau nu are întrebări.",
+    "exitTest": "Ieși din Test",
+    "timeUp": "Timpul s-a terminat!",
+    "timeUpDescription": "Timpul testului a expirat. Trimitem răspunsurile automat."
+  },
+  "gamification": {
+    "achievements": {
+      "title": "Realizări",
+      "firstPlan": {
+        "title": "Primii Pași",
+        "description": "Ai creat primul plan de carieră"
+      },
+      "threePlans": {
+        "title": "Planificator",
+        "description": "Ai creat 3 planuri de carieră"
+      },
+      "firstCompletion": {
+        "title": "Realizator",
+        "description": "Ai completat primul plan de carieră"
+      },
+      "aiCollaborator": {
+        "title": "Colaborator AI",
+        "description": "Ai folosit AI pentru a genera un plan de carieră"
+      },
+      "highAchiever": {
+        "title": "Performant",
+        "description": "Ai menținut progresul mediu de 75%"
+      },
+      "careerMaster": {
+        "title": "Maestru în Carieră",
+        "description": "Ai creat 5+ planuri și completat 2+"
+      }
+    },
+    "streak": {
+      "title": "Șirul de Progres",
+      "days": "zile",
+      "activeDays": "Zile Active",
+      "stepsCompleted": "Pași Completați",
+      "milestonesReached": "Jaloane Atinse",
+      "messages": {
+        "onFire": "Ești în flăcări! Continuă acest șir uimitor!",
+        "goodStreak": "Șir excelent! Construiești momentum!"
+      }
+    }
+  },
+  "testResult": {
+    "nextSteps": {
+      "title": "Ce urmează?",
+      "description": "Continuă călătoria cu acești pași recomandați",
+      "createCareerPlan": "Creează Planul de Carieră",
+      "careerPlanDescription": "Construiește o foaie de parcurs personalizată pentru a-ți atinge obiectivele profesionale",
+      "careerPlanDescriptionRelevant": "Rezultatele testului tău vor ajuta AI-ul să creeze un plan de carieră mai precis, adaptat personalității tale",
+      "personalityInsight": "Alegere excelentă!",
+      "aiWillUse": "AI-ul nostru va folosi rezultatele de la {{testName}} pentru a personaliza recomandările de carieră",
+      "startCareerPlanning": "Începe Planificarea Carierei",
+      "exploreMoreTests": "Susține Mai Multe Evaluări",
+      "moreTestsDescription": "Obține o imagine completă a abilităților și personalității tale",
+      "discoverMoreTests": "Descoperă Mai Multe Teste"
+    },
+    "categories": {
+      "personality": "Personalitate",
+      "cognitive": "Cognitiv",
+      "emotional": "Emoțional",
+      "leadership": "Leadership"
+    }
+  },
+  "globalProgress": {
+    "title": "Progresul Călătoriei Tale",
+    "overallProgress": "Progresul General de Dezvoltare",
+    "milestones": {
+      "completeAssessment": "Completează Prima Ta Evaluare Psihologică",
+      "createCareerPlan": "Creează-ți Planul de Carieră Personalizat",
+      "trackDevelopment": "Urmărește și Atinge Obiectivele de Dezvoltare"
+    },
+    "stats": {
+      "tests": "Teste Completate",
+      "plans": "Planuri Active",
+      "avgProgress": "Progresul Mediu al Planurilor"
+    }
+  },
+  "careerPlan": {
+    "limitReachedTitle": "Limita de planuri atinsă",
+    "limitReachedDescription": "Ai atins limita de creare a planurilor.",
+    "upgradeForUnlimited": "Fă upgrade pentru planuri nelimitate.",
+    "assessmentRequiredTitle": "Evaluare necesară",
+    "assessmentRequiredDescription": "Completează cel puțin un test pentru a genera un plan de carieră personalizat.",
+    "errorTitle": "Eroare",
+    "errorDescription": "A apărut o eroare la crearea planului de carieră. Te rugăm să încerci din nou.",
+    "milestonesIncluded": "Obiective incluse",
+    "weeks": "săptămâni",
+    "skills": "abilități",
+    "requiredSkills": "Abilități necesare",
+    "createCustomTitle": "Creează plan personalizat",
+    "createCustomDescription": "Generează un plan de carieră personalizat cu AI bazat pe rezultatele testelor și obiectivele tale.",
+    "targetRole": "Rolul țintă",
+    "targetRolePlaceholder": "ex. UX Designer, Product Manager",
+    "currentRole": "Rolul actual",
+    "currentRolePlaceholder": "ex. Junior Developer, Student",
+    "timeframe": "Perioada",
+    "timeframePlaceholder": "ex. 12 luni, 2 ani",
+    "objectiveDescription": "Descrierea obiectivului",
+    "objectiveDescriptionPlaceholder": "Descrie obiectivele și aspirațiile tale de carieră...",
+    "generatingPlan": "Generez planul...",
+    "generateWithAI": "Generează cu AI",
+    "availableTemplates": "Template-uri disponibile",
+    "popularTemplates": "Alege dintre template-urile noastre populare de dezvoltare de carieră",
+    "loadingTemplates": "Se încarcă template-urile...",
+    "months": "luni",
+    "difficulty": {
+      "beginner": "Începător",
+      "intermediate": "Intermediar",
+      "advanced": "Avansat"
+    },
+    "more": "mai multe",
+    "preview": "Previzualizare",
+    "creatingPlan": "Creez planul...",
+    "useTemplate": "Folosește template-ul",
+    "testInfluence": {
+      "title": "Rezultatele Testelor Tale vor Ghida AI-ul",
+      "description": "AI-ul va folosi evaluările completate pentru a crea un plan de carieră mai personalizat",
+      "noTestsTitle": "Completează Teste pentru Rezultate Mai Bune",
+      "noTestsDescription": "Susține evaluări de personalitate și competențe pentru a primi recomandări AI adaptate special pentru tine",
+      "bigFive": "Ajută la identificarea rolurilor care se potrivesc trăsăturilor de personalitate și preferințelor de lucru",
+      "disc": "Ghidează stilul de comunicare și recomandările de colaborare în echipă",
+      "belbin": "Sugerează roluri în echipă și oportunități de leadership care se potrivesc stilului tău natural",
+      "hexaco": "Oferă perspective asupra valorilor tale și modul în care se aliniază cu diferite căi de carieră",
+      "holland": "Potrivește interesele tale cu medii și industrii de carieră potrivite",
+      "enneagram": "Dezvăluie modele de motivare și zone de creștere pentru dezvoltarea carierei",
+      "general": "Oferă perspective valoroase pentru călătoria ta de dezvoltare în carieră",
+      "completed": "Completat",
+      "new": "Nou",
+      "aiCombination": "AI-ul va combina perspectivele din toate cele {{count}} teste completate",
+      "showAll": "Vezi toate rezultatele",
+      "showLess": "Vezi mai puține",
+      "hidden": "ascunse",
+      "deleteTitle": "Șterge Rezultat Test",
+      "deleteDescription": "Ești sigur că vrei să ștergi acest rezultat de test? Această acțiune nu poate fi anulată, dar nu va afecta planurile de carieră generate anterior.",
+      "deleteSuccess": "Test șters",
+      "deleteSuccessDesc": "Rezultatul testului a fost șters cu succes",
+      "deleteError": "Nu s-a putut șterge rezultatul testului. Te rugăm să încerci din nou.",
+      "cleanOld": "Curăță rezultate vechi",
+      "bulkDeleteTitle": "Curăță Rezultate Vechi de Teste",
+      "bulkDeleteDescription": "Aceasta va păstra cele mai recente 10 teste și va elimina toate cele mai vechi. Ajută la eliminarea dezordinii din profil păstrând rezultatele recente.",
+      "bulkDeleteSuccess": "Teste vechi curățate",
+      "bulkDeleteSuccessDesc": "S-au eliminat cu succes {{count}} rezultate vechi de teste",
+      "bulkDeleteError": "Nu s-au putut curăța rezultatele vechi de teste. Te rugăm să încerci din nou."
+    }
+  },
+  "bigFive": {
+    "dimensions": {
+      "openness": {
+        "name": "Deschiderea către Experiență",
+        "title": "Deschiderea",
+        "description": "Sunteți deschis la experiențe noi, creativ și aventuros.",
+        "high": "Creativ, curios și deschis la idei și experiențe noi.",
+        "low": "Preferă rutinele familiare și abordările tradiționale."
+      },
+      "conscientiousness": {
+        "name": "Conștiinciozitatea", 
+        "title": "Conștiinciozitatea",
+        "description": "Sunteți mai flexibil și spontan, dar uneori mai puțin organizat.",
+        "high": "Organizat, disciplinat, responsabil și orientat către obiective.",
+        "low": "Mai flexibil și spontan, dar uneori mai puțin organizat."
+      },
+      "extraversion": {
+        "name": "Extraversiunea",
+        "title": "Extraversiunea", 
+        "description": "Sunteți energic, sociabil și vă place să fiți în centrul atenției.",
+        "high": "Sociabil, energic, optimist și caută stimularea socială.",
+        "low": "Mai rezervat, preferă medii mai liniștite și grupuri mai mici."
+      },
+      "agreeableness": {
+        "name": "Agreabilitatea",
+        "title": "Agreabilitatea",
+        "description": "Sunteți cooperant, empatic și vă place să ajutați pe alții.",
+        "high": "Cooperant, încrezător, empatic și orientat către oameni.",
+        "low": "Mai sceptic, competitiv și se concentrează pe interesele personale."
+      },
+      "neuroticism": {
+        "name": "Neurotismul",
+        "title": "Neurotismul", 
+        "description": "Sunteți stabil emoțional, calm și gestionați bine stresul.",
+        "high": "Mai predispus la anxietate, stres și instabilitate emotională.",
+        "low": "Stabil emoțional, calm și gestionează bine stresul."
+      }
+    },
+    "chartTitle": "Profilul de Carieră Big Five",
+    "explanationsTitle": "Explicații Detaliate ale Dimensiunilor",
+    "explanationsSubtitle": "Înțelege ce înseamnă fiecare dimensiune și cum te poziționezi",
+    "yourScore": "Scorul Tău"
+  },
+  "testResult": {
+    "interpretation": {
+      "high": "Ridicat",
+      "moderate": "Moderat", 
+      "low": "Scăzut",
+      "highScore": "Scor ridicat",
+      "lowScore": "Scor scăzut",
+      "you": "Tu",
+      "other": "Altă persoană"
+    }
+  },
+  "personalizedResults": {
+    "title": "Ce înseamnă pentru tine",
+    "personalizedInterpretation": "Interpretarea personalizată:",
+    "contextualFactors": "Factori de context:",
+    "context": "Context:",
+    "bullet": "•"
+  },
+  "recommendations": {
+    "specific": "Recomandări specifice bazate pe rezultatul tău",
+    "wellbeing": "Menținerea bunăstării",
+    "prevention": "Prevenția",
+    "selfHelp": "Tehnici de auto-ajutor",
+    "professional": "Intervenție profesională",
+    "immediate": "Acțiune imediată",
+    "lifestyle": "Schimbări de stil de viață",
+    "creativity": "Creativitate & Inovare",
+    "comfort": "Confort & Stabilitate",
+    "productivity": "Productivitate",
+    "flexibility": "Flexibilitate",
+    "socialization": "Socializare",
+    "introspection": "Introspecție",
+    "selfAwareness": "Autocunoaștere",
+    "personalAnalysis": "Analiză de personalitate",
+    "bigFive": {
+      "channelCreativity": "Canalizează creativitatea ta",
+      "channelCreativityDesc": "Scorul tău ridicat la deschidere înseamnă că înflorești în medii creative și diverse.",
+      "valorizeStability": "Valorifică preferința pentru stabilitate",
+      "valorizeStabilityDesc": "Preferința ta pentru rutină și structură poate fi un avantaj în multe contexte.",
+      "valorizeStabilityActions": ["Creează rutine productive", "Specializează-te într-un domeniu", "Construiește sisteme organizate"],
+      "valorizeProductivity": "Valorifică disciplina ta",
+      "valorizeProductivityDesc": "Organizarea și disciplina ta sunt atuuri majore în carieră și viața personală.",
+      "valorizeProductivityActions": ["Acceptă roluri de leadership", "Gestionează proiecte complexe", "Creează sisteme de productivitate"],
+      "developFlexibility": "Dezvoltă structuri ușoare",
+      "developFlexibilityDesc": "Stilul tău flexibil poate beneficia de structuri simple care nu te limitează.",
+      "developFlexibilityActions": ["Folosește reminder-uri vizuale", "Creează rutine scurte", "Lucrează în echipe organizate"],
+      "energizeThroughInteraction": "Energizează-te prin interacțiuni",
+      "energizeThroughInteractionDesc": "Energia ta socială este o resursă valoroasă pentru dezvoltarea personală și profesională.",
+      "energizeThroughInteractionActions": ["Participă la evenimente de networking", "Alătură-te grupurilor de interes", "Consideră roluri care implică prezentări"],
+      "valorizeDeepReflection": "Valorifică reflecția profundă",
+      "valorizeDeepReflectionDesc": "Tendința ta introvertă îți permite analize profunde și gândire independentă.",
+      "valorizeDeepReflectionActions": ["Creează spații de lucru liniștite", "Dezvoltă relații 1-la-1 profunde", "Folosește timpul singur pentru planificare"],
+      "developSelfAwareness": "Dezvoltă-ți autocunoașterea",
+      "developSelfAwarenessDesc": "Folosește rezultatele Big Five pentru a-ți înțelege mai bine motivațiile și comportamentele.",
+      "developSelfAwarenessActions": ["Ține un jurnal de reflecție", "Observă cum reacționezi în situații diverse", "Discută rezultatele cu persoane apropiate"]
+    }
+  },
+  "lifeImpact": {
+    "title": "Impactul în viața ta zilnică",
+    "subtitle": "Cum se poate manifesta acest rezultat în diferite aspecte ale vieții",
+    "overallImpact": "Impact general:",
+    "bigFive": {
+      "career": "Carieră & Profesie",
+      "relationships": "Relații Interpersonale",
+      "stress": "Gestionarea Stresului",
+      "learning": "Dezvoltare & Învățare",
+      "overallImpact": "Profilul tău Big Five oferă o perspectivă cuprinzătoare asupra modului în care personalitatea ta influențează toate aspectele vieții, de la carieră la relații și dezvoltare personală."
+    }
+  },
+  "progressPath": {
+    "title": "Planul tău de progres",
+    "subtitle": "Pași concreți pentru îmbunătățire și monitorizare",
+    "howToTrack": "Cum să urmărești progresul",
+    "retestRecommendation": "Recomandare re-testare",
+    "setReminder": "Setează Reminder",
+    "bigFive": {
+      "understandProfile": "Înțelege-ți profilul complet",
+      "understandProfileDesc": "Analizează fiecare dimensiune Big Five și identifică cum se manifestă în comportamentul tău zilnic.",
+      "valorizeStrengths": "Valorifică punctele forte",
+      "valorizeStrengthsDesc": "Concentrează-te pe cum poți folosi mai eficient următoarele puncte forte: {{strengths}}.",
+      "developBalance": "Dezvoltă zonele de echilibru",
+      "developBalanceDesc": "Explorează strategii pentru a aduce mai mult echilibru la: {{weaknesses}}.",
+      "buildSimpleOrganization": "Construiește sisteme simple de organizare",
+      "buildSimpleOrganizationDesc": "Implementează 1-2 sisteme simple de organizare care să nu te restricționeze.",
+      "expandSocialNetwork": "Extinde-ți rețeaua socială",
+      "expandSocialNetworkDesc": "Participă la evenimente noi și construiește conexiuni în domenii de interes.",
+      "developDeepRelationships": "Dezvoltă relații profunde",
+      "developDeepRelationshipsDesc": "Investește timp de calitate în 2-3 relații importante pentru tine.",
+      "exploreNewTerritories": "Explorează teritorii noi",
+      "exploreNewTerritoriesDesc": "Încearcă 2-3 activități sau hobby-uri complet noi pentru tine.",
+      "evaluateProgress": "Evaluează progresul",
+      "evaluateProgressDesc": "Analizează cum au evoluat comportamentele și atitudinile tale în ultimele luni.",
+      "weeklyReflectionJournal": "Ține un jurnal săptămânal de reflecție asupra personalității",
+      "monthlyFeedback": "Solicită feedback lunar de la 2-3 persoane apropiate",
+      "observeStrengths": "Observă și notează momentele când îți folosești punctele forte",
+      "useTrackingApps": "Folosește aplicații simple de tracking pentru a construi obiceiuri",
+      "retestRecommendation": "Re-testează după 8-12 luni pentru a vedea evoluția personalității tale și eficacitatea strategiilor implementate."
+    },
+    "personalizedResults": {
+      "title": "Profil Personal",
+      "personalizedInterpretation": "Interpretarea personalizată:",
+      "contextualFactors": "Factori de context:",
+      "context": "Context:",
+      "bullet": "•",
+      "factors": {
+        "development": "Personalitatea se dezvoltă de-a lungul timpului prin experiențe",
+        "situational": "Fiecare dimensiune influențează diferit comportamentul în diverse situații",
+        "unique": "Combinația ta unică de trăsături determină stilul tău personal"
+      },
+      "normalityContext": "Toate scorurile Big Five sunt normale. Diversitatea personalităților umane este ceea ce face societatea funcțională și creativă."
+    },
+    "aiAnalysis": {
+      "title": "Analiză Detaliată cu AI",
+      "description": "Obține o interpretare aprofundată a rezultatelor tale, recomandări personalizate și cum se aplică acestea în cariera ta.",
+      "analyzeButton": "Analizează cu AI",
+      "generating": "Se generează...",
+      "saveToCareerPlan": "Salvează în Planul de Carieră"
+    }
+  },
+  "aiAnalysis": {
+    "title": "AI Analysis & Insights",
+    "description": "Obține o analiză detaliată bazată pe AI a rezultatelor testelor tale cu recomandări personalizate pentru dezvoltarea ta în carieră.",
+    "analyzeButton": "Generează Analiză AI",
+    "generating": "Se generează analiza...",
+    "saveToCareerPlan": "Salvează în Planul de Carieră"
+  },
+  "testResult": {
+    "detailedInterpretations": {
+      "title": "Interpretări Detaliate"
+    },
+    "nextSteps": {
+      "title": "Următorii pași recomandați",
+      "description": "Continuă-ți călătoria cu acești pași recomandați",
+      "createCareerPlan": "Creează-ți Planul de Carieră",
+      "careerPlanDescription": "Lasă AI-ul să te ajute să creezi un plan de carieră personalizat bazat pe profilul tău unic",
+      "careerPlanDescriptionRelevant": "Rezultatele tale vor ajuta AI-ul să creeze un plan de carieră mai precis adaptat personalității tale",
+      "personalityInsight": "Alegere excelentă!",
+      "aiWillUse": "AI-ul nostru va folosi rezultatele tale {{testName}} pentru a personaliza recomandările de carieră",
+      "startCareerPlanning": "Începe Planificarea Carierei",
+      "exploreMoreTests": "Explorează Mai Multe Teste",
+      "moreTestsDescription": "Obține o imagine completă a abilităților și personalității tale",
+      "discoverMoreTests": "Descoperă Mai Multe Teste",
+      "categories": {
+        "personality": "Personalitate",
+        "cognitive": "Cognitiv",
+        "emotional": "Emoțional",
+        "leadership": "Leadership"
+      }
+    },
+    "interpretation": {
+      "high": "Ridicat",
+      "moderate": "Moderat",
+      "low": "Scăzut",
+      "highScore": "Scor Ridicat",
+      "lowScore": "Scor Scăzut",
+      "notAvailable": "Interpretarea nu este disponibilă"
+    },
+    "incomplete": "Test Incomplet",
+    "scoring": {
+      "title": "Cum se calculează scorul",
+      "description": "Explicația sistemului de evaluare pentru acest test",
+      "testDescription": "Testul Big Five evaluează cinci dimensiuni principale ale personalității: Deschidere, Conștiinciozitate, Extraversiune, Agreabilitate și Nevrotism.",
+      "interpretation": "Interpretarea scorurilor:",
+      "whatMeans": "Ce înseamnă rezultatele tale:",
+      "resultMeaning": "Rezultatele tale indică profilul tău general Big Five și punctele tale forte în diverse dimensiuni ale personalității.",
+      "ranges": {
+        "low": "Scăzut",
+        "moderate": "Moderat",
+        "good": "Bun", 
+        "excellent": "Excelent"
+      }
+    },
+    "overallScore": {
+      "title": "Rezultatul Testului: {{testName}}",
+      "totalScore": "Scorul Total",
+      "description": "Rezultatele testului tău oferă perspective valoroase asupra personalității și tiparelor tale de comportament.",
+      "pointsObtained": "Puncte Obținute:",
+      "maxPoints": "Puncte Maxime:",
+      "whatMeansTitle": "Ce înseamnă pentru tine"
+    },
+    "interpretation": {
+      "notAvailable": "Interpretarea nu este disponibilă"
+    },
+    "incomplete": "Test",
+    "categories": {
+      "personality": "Teste de Personalitate",
+      "cognitive": "Teste Cognitive",
+      "emotional": "Inteligență Emoțională", 
+      "leadership": "Abilități de Leadership"
+    },
+    "bigFive": {
+      "explanationsTitle": "Explicații Detaliate ale Dimensiunilor",
+      "explanationsSubtitle": "Înțelege ce înseamnă fiecare dimensiune și cum te poziționezi",
+      "scoreLabel": "Scor:",
+      "chartTitle": "Big Five Career Profile",
+      "yourScore": "Your Score",
+      "dimensions": {
+        "openness": {
+          "title": "Openness",
+          "description": "Măsoară creativitatea, curiozitatea și deschiderea către experiențe noi",
+          "high": "Creativ, imaginativ, curios cu privire la idei și experiențe noi",
+          "low": "Preferați rutina și tradițiile, fiind mai conservator în abordări"
+        },
+        "conscientiousness": {
+          "title": "Conscientiousness", 
+          "description": "Măsoară organizarea, disciplina și orientarea către obiective",
+          "high": "Foarte organizat, disciplinat și orientat spre obiective",
+          "low": "Sunteți mai flexibil și spontan, dar uneori mai puțin organizat"
+        },
+        "extraversion": {
+          "title": "Extraversion",
+          "description": "Măsoară sociabilitatea, asertivitatea și energia",
+          "high": "Sociabil, asertiv, energic în interacțiunile sociale",
+          "low": "Preferați activitățile solitudinale și sunteți mai rezervat în social"
+        },
+        "agreeableness": {
+          "title": "Agreeableness",
+          "description": "Măsoară cooperarea, empatia și încrederea",
+          "high": "Cooperant, empatic și vă place să ajutați pe alții",
+          "low": "Sunteți mai competitiv și direct în relațiile interpersonale"
+        },
+        "neuroticism": {
+          "title": "Neuroticism",
+          "description": "Măsoară stabilitatea emoțională și gestionarea stresului",
+          "high": "Mai sensibil la stres și fluctuații emotionale",
+          "low": "Sunteți stabil emoțional, calm și gestionați bine stresul"
+        }
+      }
+    }
+  },
+  "common": {
+    "loading": "Se încarcă...",
+    "error": "Eroare",
+    "success": "Succes",
+    "save": "Salvează",
+    "cancel": "Anulează",
+    "delete": "Șterge",
+    "edit": "Editează",
+    "close": "Închide",
+    "confirm": "Confirmă",
+    "back": "Înapoi",
+    "next": "Următorul",
+    "previous": "Anterior",
+    "submit": "Trimite"
   }
 }
