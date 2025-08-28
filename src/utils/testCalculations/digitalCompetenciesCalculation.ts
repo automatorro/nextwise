@@ -60,13 +60,12 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
   // Creăm interpretări detaliate pentru fiecare dimensiune
   const interpretations: Record<string, string> = {};
   Object.entries(dimensionScores).forEach(([dimension, score]) => {
-    // Convertim scorul înapoi la procent pentru interpretare
-    const percentageScore = Math.round((score / 10) * 100);
-    if (percentageScore >= 86) {
+    // Folosim direct scorul pe scala 0-10 pentru interpretare
+    if (score >= 8.6) { // 86% din 10
       interpretations[dimension] = getExpertInterpretation(dimension);
-    } else if (percentageScore >= 66) {
+    } else if (score >= 6.6) { // 66% din 10
       interpretations[dimension] = getAdvancedInterpretation(dimension);
-    } else if (percentageScore >= 41) {
+    } else if (score >= 4.1) { // 41% din 10
       interpretations[dimension] = getIntermediateInterpretation(dimension);
     } else {
       interpretations[dimension] = getBeginnerInterpretation(dimension);
