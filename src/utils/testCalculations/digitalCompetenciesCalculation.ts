@@ -58,7 +58,7 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
     // Calculăm scorul pentru dimensiune (0-10 pentru radar chart)
     if (validAnswers > 0) {
       const rawScore = totalScore;
-      const maxPossible = questionNumbers.length * 5; // 5 puncte maxim per întrebare
+      const maxPossible = questionIds.length * 5; // Fixed: use questionIds instead of questionNumbers
       dimensionScores[dimensionKey] = Math.round((rawScore / maxPossible) * 10); // Convertim la scală 0-10
       console.log(`Rezultat ${dimensionKey}:`, { 
         totalScore, 
