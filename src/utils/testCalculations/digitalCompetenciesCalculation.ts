@@ -1,4 +1,3 @@
-
 import { StandardizedScore } from '@/types/tests';
 
 export const calculateDigitalCompetenciesScore = (answers: Record<string, number>): StandardizedScore => {
@@ -10,9 +9,9 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
   // Simplifică răspunsurile doar la valori
   const answerValues = Object.values(answers);
   
-  // Verificăm dacă toate răspunsurile sunt 5
-  const toateRaspunsurile5 = answerValues.every(score => score === 5);
-  console.log('Toate răspunsurile sunt 5?', toateRaspunsurile5);
+  // Verificăm dacă toate răspunsurile sunt 4 (întotdeauna)
+  const toateRaspunsurile4 = answerValues.every(score => score === 4);
+  console.log('Toate răspunsurile sunt 4 (întotdeauna)?', toateRaspunsurile4);
   
   // Verificăm dacă avem toate cele 35 de răspunsuri
   const numarRaspunsuri = answerValues.length;
@@ -35,7 +34,7 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
   };
   
   const dimensionScores: Record<string, number> = {};
-  const maxScorePerDimension = 35; // 7 întrebări × 5 puncte maxim
+  const maxScorePerDimension = 28; // 7 întrebări × 4 puncte maxim
   
   // Calculăm scorul pentru fiecare dimensiune
   Object.entries(dimensions).forEach(([dimensionKey, questionIds]) => {
@@ -58,7 +57,7 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
     // Calculăm scorul pentru dimensiune (0-10 pentru radar chart)
     if (validAnswers > 0) {
       const rawScore = totalScore;
-      const maxPossible = questionIds.length * 5; // Fixed: use questionIds instead of questionNumbers
+      const maxPossible = questionIds.length * 4; // 4 puncte maxim per întrebare
       dimensionScores[dimensionKey] = Math.round((rawScore / maxPossible) * 10); // Convertim la scală 0-10
       console.log(`Rezultat ${dimensionKey}:`, { 
         totalScore, 
@@ -76,7 +75,7 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
   
   // Calculăm procentajul general (0-100%)
   const total = Object.values(answers).reduce((sum, score) => sum + score, 0);
-  const maxPossible = 35 * 5; // 35 întrebări × 5 puncte maxim
+  const maxPossible = 35 * 4; // 35 întrebări × 4 puncte maxim
   const overall = Math.round((total / maxPossible) * 100);
   
   console.log('\nCalcul scor general:', {
@@ -132,7 +131,7 @@ export const calculateDigitalCompetenciesScore = (answers: Record<string, number
     detailed_interpretations: interpretations,
     interpretation,
     raw_score: Object.values(answers).reduce((sum, score) => sum + score, 0),
-    max_score: 35 * 5 // 35 questions × 5 points max
+    max_score: 35 * 4 // 35 questions × 4 points max
   };
 };
 
