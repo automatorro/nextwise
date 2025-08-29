@@ -4,7 +4,7 @@ import React from 'react';
 import { StandardizedScore } from '@/types/tests';
 import OverallScoreCard from '../OverallScoreCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { PersonalizedResultsCard } from '../PersonalizedResultsCard';
 import { ScoringExplanation } from '../ScoringExplanation';
 import { AiAnalysisCard } from '../AiAnalysisCard';
@@ -26,7 +26,7 @@ interface ProfileResultLayoutProps {
  * (ex: DISC, Enneagram), care identifică un tip dominant.
  */
 export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score, testName, resultId }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const dominantProfileId = score.dominant_profile;
   
   // Get the translated profile information for DISC and Enneagram tests
@@ -57,7 +57,7 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
   // Get the translated interpretation for DISC and Enneagram tests
   const getInterpretation = () => {
     if (testName?.includes('DISC') && dominantProfileId && profileInfo?.name) {
-      return t('tests.disc.explanation.interpretation.dominant').replace('{{profile}}', profileInfo.name);
+      return t('tests.disc.explanation.interpretation.dominant', { profile: profileInfo.name });
     }
     
     if (testName?.toLowerCase().includes('enneagram') && dominantProfileId && profileInfo?.name) {
@@ -94,7 +94,7 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
           <CardHeader>
             <CardTitle>
               {testName?.includes('DISC') 
-                ? t('tests.disc.explanation.profileTitle').replace('{{profile}}', profileInfo.name)
+                ? t('tests.disc.explanation.profileTitle', { profile: profileInfo.name })
                 : testName?.toLowerCase().includes('enneagram')
                 ? `Tipul tău Enneagram: ${profileInfo.name}`
                 : `Profilul tău Principal: ${profileInfo.name}`

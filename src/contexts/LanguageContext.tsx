@@ -1,12 +1,16 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import type { Language, Translations } from '@/types/language';
+import type { Language } from '@/types/language';
+import type { Translations } from '@/types/language';
+
+export type { Translations };
 
 interface LanguageContextType {
   language: Language;
   translations: Translations;
   loading: boolean;
   changeLanguage: (newLanguage: Language) => Promise<void>;
+  setLanguage: (newLanguage: Language) => void;
   t: (key: string) => string;
 }
 
@@ -29,27 +33,72 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [translations, setTranslations] = useState<Translations>({});
   const [loading, setLoading] = useState(true);
 
-  // Simple translation function with better error handling
+  // Improved translation function with better error handling and fallback
   const translateKey = useCallback((translations: Translations, key: string): string => {
     if (!key || typeof key !== 'string') {
-      console.warn('Invalid translation key:', key);
+      if (import.meta.env.DEV) {
+        console.warn('Invalid translation key:', key);
+      }
       return '';
     }
 
     const keys = key.split('.');
     let value: any = translations;
     
+    // Try to find the translation in the current language
     for (const k of keys) {
       if (value && typeof value === 'object' && k in value) {
         value = value[k];
       } else {
-        console.warn(`Translation missing: "${key}"`);
-        return key; // Return the key itself if not found
+        // If in development mode, show a warning
+        if (import.meta.env.DEV) {
+          console.warn(`Translation missing: "${key}" in current language`);
+        }
+        
+        // If the value is an array, convert to string
+        if (Array.isArray(value)) {
+          return '';
+        }
+        
+        // Try to find the key in the fallback language (English)
+        if (language !== 'en') {
+          try {
+            // Attempt to load from fallback translations
+            const fallbackValue = minimalFallback['en'];
+            let fbValue = fallbackValue;
+            
+            for (const fbk of keys) {
+              if (fbValue && typeof fbValue === 'object' && fbk in fbValue) {
+                fbValue = fbValue[fbk];
+              } else {
+                if (import.meta.env.DEV) {
+                  console.warn(`Translation also missing in fallback language: "${key}"`);
+                }
+                return typeof key === 'string' ? key : '';
+              }
+            }
+            
+            if (typeof fbValue === 'string') {
+              return fbValue;
+            }
+          } catch (error) {
+            if (import.meta.env.DEV) {
+              console.error('Error accessing fallback translation:', error);
+            }
+          }
+        }
+        
+        return typeof key === 'string' ? key : '';
       }
     }
     
-    return typeof value === 'string' ? value : key;
-  }, []);
+    // Handle arrays and objects properly
+    if (Array.isArray(value)) {
+      return value.join(', ');
+    }
+    
+    return typeof value === 'string' ? value : (typeof key === 'string' ? key : '');
+  }, [language]);
 
   // Load translations from JSON file with simplified error handling
   const loadTranslations = useCallback(async (lang: Language): Promise<Translations> => {
@@ -144,6 +193,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     translations,
     loading,
     changeLanguage,
+    setLanguage,
     t,
   };
 

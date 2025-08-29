@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { StandardizedScore } from '@/types/tests';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface OverallScoreCardProps {
   score: Partial<StandardizedScore>;
@@ -9,7 +9,7 @@ interface OverallScoreCardProps {
 }
 
 export const OverallScoreCard: React.FC<OverallScoreCardProps> = ({ score, testName }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   
   const overallPercentage = score.overall ?? 0;
   const rawScore = score.raw_score ?? 0;
@@ -20,7 +20,7 @@ export const OverallScoreCard: React.FC<OverallScoreCardProps> = ({ score, testN
     <Card>
       <CardHeader>
         <CardTitle>
-          {t('testResult.overallScore.title').replace('{{testName}}', testName || t('testResult.incomplete'))}
+          {t('testResult.overallScore.title', { testName: testName || t('testResult.incomplete') })}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

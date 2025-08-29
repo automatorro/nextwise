@@ -2,11 +2,11 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from '@/hooks/use-toast';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 
 export const useTestResultsManager = () => {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
 
   const deleteTestResult = useMutation({
@@ -71,7 +71,7 @@ export const useTestResultsManager = () => {
       queryClient.invalidateQueries({ queryKey: ['test-results'] });
       toast({
         title: t('careerPlan.testInfluence.bulkDeleteSuccess'),
-        description: t('careerPlan.testInfluence.bulkDeleteSuccessDesc').replace('{{count}}', deletedCount.toString()),
+        description: t('careerPlan.testInfluence.bulkDeleteSuccessDesc', { count: deletedCount.toString() }),
       });
     },
     onError: (error) => {

@@ -1,6 +1,8 @@
 import { StandardizedScore } from '@/types/tests';
 import { translateKey } from '@/utils/translationUtils';
 
+import { useTranslation } from '@/hooks/useTranslation';
+
 // Get translations function
 const getTranslations = async () => {
   const language = localStorage.getItem('language') || 'ro';
@@ -276,7 +278,7 @@ async function getBigFiveProgressPath(score: StandardizedScore): Promise<Progres
     milestones.push({
       timeframe: 'Săptămâna 3-4',
       goal: t('progressPath.bigFive.valorizeStrengths'),
-      description: t('progressPath.bigFive.valorizeStrengthsDesc').replace('{{strengths}}', strongDimensions.map(d => d.name).join(', '))
+      description: t('progressPath.bigFive.valorizeStrengthsDesc')
     });
   }
 
@@ -284,7 +286,7 @@ async function getBigFiveProgressPath(score: StandardizedScore): Promise<Progres
     milestones.push({
       timeframe: 'Luna 2',
       goal: t('progressPath.bigFive.developBalance'),
-      description: t('progressPath.bigFive.developBalanceDesc').replace('{{weaknesses}}', weakDimensions.map(d => d.name).join(', '))
+      description: t('progressPath.bigFive.developBalanceDesc')
     });
   }
 

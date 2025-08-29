@@ -15,14 +15,14 @@ import { useToast } from '@/hooks/use-toast';
 import { PageLoader } from '@/components/layout/PageLoader';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useSecureTestQuestions } from '@/hooks/useSecureTestQuestions';
 
 export default function TestRunner() {
   const { testId } = useParams<{ testId: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { t, language } = useLanguage();
+  const { t, language } = useTranslation();
 
   // Starea gestionată activ de TestRunner
   const [testStarted, setTestStarted] = useState(false);
@@ -172,7 +172,7 @@ export default function TestRunner() {
         <div className="flex justify-between items-center">
           <div className="flex-1">
             <h2 className="text-2xl font-bold">{testData.name}</h2>
-            <p className="text-muted-foreground">{t('testRunner.questionProgress').replace('{{current}}', String(currentQuestionIndex + 1)).replace('{{total}}', String(totalQuestions))}</p>
+            <p className="text-muted-foreground">{t('testRunner.questionProgress', { current: String(currentQuestionIndex + 1), total: String(totalQuestions) })}</p>
           </div>
           <div className="flex items-center space-x-4">
             <TestTimer

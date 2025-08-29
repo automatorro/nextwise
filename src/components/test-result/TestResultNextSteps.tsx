@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,7 +19,7 @@ interface TestResultNextStepsProps {
 }
 
 const TestResultNextSteps: React.FC<TestResultNextStepsProps> = ({ testName, testType }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleCreateCareerPlan = () => {
@@ -80,7 +80,7 @@ const TestResultNextSteps: React.FC<TestResultNextStepsProps> = ({ testName, tes
                       {t('testResult.nextSteps.personalityInsight')}
                     </p>
                     <p className="text-xs text-green-700 mt-1">
-                      {t('testResult.nextSteps.aiWillUse').replace('{{testName}}', testName || '')}
+                      {t('testResult.nextSteps.aiWillUse', { testName: testName || '' })}
                     </p>
                   </div>
                 </div>

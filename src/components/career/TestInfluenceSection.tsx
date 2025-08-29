@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
+'use client';
+import { useState } from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -24,7 +25,7 @@ interface TestInfluenceSectionProps {
 }
 
 const TestInfluenceSection: React.FC<TestInfluenceSectionProps> = ({ testResults }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { deleteTestResult, bulkDeleteOldResults, isDeleting } = useTestResultsManager();
   const [showAll, setShowAll] = useState(false);
   
@@ -211,7 +212,7 @@ const TestInfluenceSection: React.FC<TestInfluenceSectionProps> = ({ testResults
             <div className="flex items-center space-x-2 text-sm text-gray-600">
               <Brain className="w-4 h-4" />
               <span>
-                {t('careerPlan.testInfluence.aiCombination').replace('{{count}}', testResults.length.toString())}
+                {t('careerPlan.testInfluence.aiCombination', { count: testResults.length.toString() })}
               </span>
             </div>
             
