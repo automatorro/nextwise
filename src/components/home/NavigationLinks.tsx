@@ -12,6 +12,7 @@ const NavigationLinks = () => {
     { to: '/tests', label: t('header.tests') },
     { to: '/career-paths', label: t('header.career') },
     { to: '/my-profile', label: t('header.profile') },
+    { to: '/how-it-works', label: t('header.howItWorks') },
   ];
 
   return (

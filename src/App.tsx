@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
+import HowItWorks from "./pages/HowItWorks";
 import { AuthPage } from "./components/auth/AuthPage";
 import Dashboard from "./pages/Dashboard";
 import TestsPage from "./pages/TestsPage";
@@ -51,6 +52,7 @@ function App() {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
+                <Route path="/how-it-works" element={<HowItWorks />} />
                 <Route path="/auth" element={<AuthPage />} />
                 <Route path="/shared-plan/:planId" element={<SharedPlanPage />} />
                 <Route path="/dashboard" element={

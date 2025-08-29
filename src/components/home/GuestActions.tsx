@@ -40,6 +40,17 @@ const GuestActions = () => {
 
   return (
     <>
+      <Link 
+        to="/how-it-works"
+        className="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors duration-200 min-h-[44px] min-w-[44px] px-4 py-2 flex items-center justify-center"
+        style={{ 
+          WebkitTapHighlightColor: 'transparent',
+          touchAction: 'manipulation',
+          userSelect: 'none'
+        }}
+      >
+        {t('header.howItWorks')}
+      </Link>
       <Button 
         variant="ghost" 
         className="hover:bg-gray-100 transition-colors duration-200 min-h-[44px] min-w-[44px] px-4 py-2"

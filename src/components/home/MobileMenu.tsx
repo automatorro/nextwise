@@ -75,6 +75,13 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
             {t('header.profile')}
           </button>
           <button
+            onClick={handleNavigation('/how-it-works')}
+            className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-colors duration-200"
+            style={{ minHeight: '48px' }}
+          >
+            {t('header.howItWorks')}
+          </button>
+          <button
             onClick={handleNavigation('/subscription')}
             className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-colors duration-200"
             style={{ minHeight: '48px' }}
@@ -104,6 +111,13 @@ const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
       ) : (
         // Guest user menu
         <>
+          <button
+            onClick={handleNavigation('/how-it-works')}
+            className="text-gray-700 hover:text-gray-900 hover:bg-gray-50 block w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-colors duration-200"
+            style={{ minHeight: '48px' }}
+          >
+            {t('header.howItWorks')}
+          </button>
           <button
             onClick={handleNavigation('/auth')}
             className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 block w-full text-left px-4 py-4 rounded-lg text-base font-medium transition-colors duration-200"
