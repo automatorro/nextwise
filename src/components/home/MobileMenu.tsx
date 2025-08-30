@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,7 @@ interface MobileMenuProps {
 }
 
 const MobileMenu = ({ isMenuOpen, setIsMenuOpen }: MobileMenuProps) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { isAdmin } = useUserRole();
   const { signOut, user } = useAuth();
   const navigate = useNavigate();

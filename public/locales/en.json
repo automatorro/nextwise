@@ -8,7 +8,10 @@
     "edit": "Edit",
     "delete": "Delete",
     "confirm": "Confirm",
-    "back": "Back"
+    "back": "Back",
+    "close": "Close",
+    "continue": "Continue",
+    "finish": "Finish"
   },
   "header": {
     "dashboard": "Dashboard",
@@ -21,6 +24,232 @@
     "subscriptionSettings": "Subscription Settings",
     "adminPanel": "Admin Panel",
     "howItWorks": "How It Works"
+  },
+  "home": {
+    "heroTitle": "Discover Your Potential and Grow Your Career",
+    "heroSubtitle": "The AI platform that helps you understand your personality, identify your strengths, and build your ideal career path through advanced psychological assessments.",
+    "startFreeAssessment": "Start Free Assessment",
+    "featuresTitle": "Discover Our Features",
+    "featuresSubtitle": "AI-powered tools to accelerate your career.",
+    "ctaFinalTitle": "Ready to Transform Your Career?",
+    "ctaFinalSubtitle": "Join thousands of professionals who have accelerated their development with NextWise",
+    "ctaFinalButton": "Start Now For Free",
+    "features": {
+      "psychologicalEvaluations": "Psychological Evaluations",
+      "psychologicalEvaluationsDesc": "Understand your personality and cognitive skills.",
+      "personalizedCareerPlans": "Personalized Career Plans",
+      "personalizedCareerPlansDesc": "Get a clear roadmap based on your unique profile.",
+      "advancedAnalytics": "Advanced Analytics",
+      "advancedAnalyticsDesc": "Track your progress with detailed insights.",
+      "aiMentoring": "AI Mentoring",
+      "aiMentoringDesc": "Receive continuous guidance from your AI mentor."
+    }
+  },
+  "dashboard": {
+    "welcome": "Welcome,",
+    "welcomeSubtext": "Start your personal and professional development journey with our AI tests.",
+    "stats": {
+      "testsCompleted": "Tests Completed",
+      "careerPlans": "Career Plans",
+      "timeSaved": "Time Saved",
+      "careerProgress": "Career Progress"
+    },
+    "actions": {
+      "startFirstTest": "Take the first step towards self-discovery",
+      "startFirstTestDesc": "Complete a test to receive personalized recommendations.",
+      "exploreTests": "Explore Tests",
+      "planCareer": "Create a personalized career plan",
+      "planCareerDesc": "Set your goals and track your progress step by step.",
+      "startCareerPlan": "Start Plan"
+    }
+  },
+  "tests": {
+    "title": "Available Tests",
+    "subtitle": "Discover your personality and abilities through our scientifically validated tests",
+    "categories": {
+      "personality": "Personality",
+      "cognitive": "Cognitive",
+      "professional": "Professional",
+      "clinical": "Clinical"
+    },
+    "backToTests": "Back to Tests",
+    "generateAnalysis": "Generate AI Analysis",
+    "analysisInProgress": "Generating analysis...",
+    "aiAnalysis": "AI Analysis",
+    "result": "Result",
+    "completedOn": "Completed on",
+    "overallScore": "Overall Score",
+    "scoredPoints": "Scored Points",
+    "maxPoints": "Max Points",
+    "noResults": "You haven't completed this test yet",
+    "bigFive": {
+      "title": "Big Five",
+      "description": "The Big Five test measures the five fundamental dimensions of personality",
+      "explanation": {
+        "title": "Big Five Test Explanation",
+        "description": "Big Five is one of the most validated and used personality models in psychology. It measures five fundamental dimensions of human personality.",
+        "dimensions": {
+          "openness": {
+            "name": "Openness to Experience",
+            "description": "Measures creativity, curiosity, and openness to new ideas"
+          },
+          "conscientiousness": {
+            "name": "Conscientiousness",
+            "description": "Reflects organization, discipline, and goal orientation"
+          },
+          "extraversion": {
+            "name": "Extraversion",
+            "description": "Indicates social energy and tendency to seek external stimulation"
+          },
+          "agreeableness": {
+            "name": "Agreeableness",
+            "description": "Measures cooperation, trust, and empathy towards others"
+          },
+          "neuroticism": {
+            "name": "Neuroticism",
+            "description": "Reflects emotional stability and tendency to experience negative emotions"
+          }
+        }
+      }
+    },
+    "disc": {
+      "title": "DISC",
+      "description": "The DISC test analyzes your behavioral style in four main dimensions",
+      "explanation": {
+        "title": "DISC Test Explanation",
+        "description": "DISC is a behavioral assessment tool that categorizes people into four main personality types.",
+        "whatItMeans": "What your results mean",
+        "interpretation": {
+          "general": "Your DISC result shows your predominant behavioral style in different situations."
+        },
+        "profiles": {
+          "D": {
+            "name": "Dominance",
+            "description": "Results-oriented, direct and decisive"
+          },
+          "I": {
+            "name": "Influence",
+            "description": "Sociable, optimistic and persuasive"
+          },
+          "S": {
+            "name": "Steadiness",
+            "description": "Cooperative, patient and reliable"
+          },
+          "C": {
+            "name": "Conscientiousness",
+            "description": "Analytical, precise and systematic"
+          }
+        }
+      }
+    },
+    "hexaco": {
+      "title": "HEXACO",
+      "description": "The HEXACO model extends Big Five with the Honesty-Humility dimension",
+      "explanation": {
+        "title": "HEXACO Test Explanation",
+        "description": "HEXACO is an extension of the Big Five model that includes a sixth dimension: Honesty-Humility.",
+        "dimensions": {
+          "H": {
+            "name": "Honesty-Humility",
+            "description": "Measures sincerity, modesty, and lack of greed"
+          },
+          "E": {
+            "name": "Emotionality",
+            "description": "Reflects anxiety, sensitivity, and emotional dependence"
+          },
+          "X": {
+            "name": "Extraversion",
+            "description": "Indicates sociability, energy, and self-confidence"
+          },
+          "A": {
+            "name": "Agreeableness",
+            "description": "Measures patience, gentleness, and tolerance"
+          },
+          "C": {
+            "name": "Conscientiousness",
+            "description": "Reflects organization, discipline, and prudence"
+          },
+          "O": {
+            "name": "Openness to Experience",
+            "description": "Measures creativity, curiosity, and aesthetic appreciation"
+          }
+        }
+      }
+    },
+    "belbin": {
+      "title": "Belbin Team Roles",
+      "description": "Discover your preferred team roles according to the Belbin model",
+      "explanation": {
+        "title": "Belbin Test Explanation",
+        "description": "The Belbin test identifies the roles you prefer to play in a team, based on your natural strengths."
+      }
+    },
+    "cattell": {
+      "title": "16PF Cattell",
+      "description": "Personality assessment on 16 factors according to the Cattell model",
+      "comingSoon": "This feature will be available soon."
+    },
+    "emotionalIntelligence": {
+      "title": "Emotional Intelligence",
+      "description": "Evaluate your ability to understand and manage emotions",
+      "comingSoon": "This feature will be available soon."
+    },
+    "cognitive": {
+      "title": "Cognitive Abilities",
+      "description": "Test memory, attention, and other cognitive functions"
+    }
+  },
+  "careerPaths": {
+    "title": "Your Personalized Career Plans",
+    "subtitle": "AI creates career plans based on your test results, giving you a clear path to your professional goals.",
+    "tabs": {
+      "dashboard": "Dashboard",
+      "create": "New Plan",
+      "mentoring": "AI Mentoring",
+      "cvAnalyzer": "CV Analysis",
+      "programs": "14-Day AI Programs",
+      "progressSheets": "AI Progress Sheets",
+      "simulations": "AI Simulations",
+      "progressAnalysis": "Progress Analytics"
+    },
+    "dashboard": {
+      "title": "Career Dashboard",
+      "subtitle": "Monitor your progress and plan your next steps.",
+      "createPlan": "Create New Plan",
+      "progress": "Progress",
+      "created": "Created",
+      "viewDetails": "View Details"
+    }
+  },
+  "cvOptimization": {
+    "title": "CV Optimization",
+    "description": "Analyze your CV against a job description to improve your chances. Get detailed feedback and optimization suggestions.",
+    "startAnalysis": "Start Analysis"
+  },
+  "profile": {
+    "title": "My Profile",
+    "welcome": "Welcome,",
+    "welcomeMessage": "Here you can see a summary of your activity and personal information.",
+    "administrator": "Administrator",
+    "admin": {
+      "notice": "This is an administrator account with access to all features."
+    },
+    "personalInfo": {
+      "title": "Profile Information",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "memberSince": "Member Since"
+    }
+  },
+  "auth": {
+    "backToMain": "Back to main page",
+    "welcome": "Welcome",
+    "signInMessage": "Sign in to your account or create a new one",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password"
   },
   "howItWorks": {
     "title": "How NextWise Works",

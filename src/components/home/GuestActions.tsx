@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 
 const GuestActions = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleLoginClick = (e: React.MouseEvent<HTMLButtonElement>) => {

@@ -1,9 +1,8 @@
 
 import { useLanguageContext } from '@/contexts/LanguageContext';
-import { interpolateVariables } from '@/utils/i18n/translationUtils';
 
 /**
- * Hook personalizat pentru traduceri cu suport pentru interpolarea variabilelor
+ * Hook consolidat pentru traduceri cu suport complet pentru interpolarea variabilelor
  * @returns Funcții pentru traducere și schimbarea limbii
  */
 export function useTranslation() {
@@ -12,21 +11,29 @@ export function useTranslation() {
   /**
    * Traduce o cheie și interpolează variabilele în textul rezultat
    * @param key Cheia de traducere
-   * @param variables Obiect cu variabilele pentru interpolare
+   * @param variables Obiect cu variabilele pentru interpolare (opțional)
    * @returns Textul tradus cu variabilele interpolate
    */
-  const translate = (key: string, variables?: Record<string, string | number>) => {
+  const t = (key: string, variables?: Record<string, string | number>): string => {
     const translatedText = contextT(key);
     
+    // Dacă nu avem variabile, returnăm direct textul tradus
     if (!variables || Object.keys(variables).length === 0) {
       return translatedText;
     }
     
-    return interpolateVariables(translatedText, variables);
+    // Interpolăm variabilele în textul tradus
+    let result = translatedText;
+    for (const [varKey, varValue] of Object.entries(variables)) {
+      const placeholder = `{{${varKey}}}`;
+      result = result.replace(new RegExp(placeholder, 'g'), String(varValue));
+    }
+    
+    return result;
   };
   
   return {
-    t: translate,
+    t,
     language,
     setLanguage,
     changeLanguage,
@@ -35,5 +42,5 @@ export function useTranslation() {
   };
 }
 
-// Alias pentru compatibilitate
+// Alias pentru compatibilitate - toate hook-urile să folosească useTranslation
 export const useLanguage = useTranslation;

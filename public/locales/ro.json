@@ -8,7 +8,10 @@
     "edit": "Editează",
     "delete": "Șterge",
     "confirm": "Confirmă",
-    "back": "Înapoi"
+    "back": "Înapoi",
+    "close": "Închide",
+    "continue": "Continuă",
+    "finish": "Finalizează"
   },
   "header": {
     "dashboard": "Dashboard",
@@ -21,6 +24,232 @@
     "subscriptionSettings": "Setări Abonament",
     "adminPanel": "Panou Admin",
     "howItWorks": "Cum Funcționează"
+  },
+  "home": {
+    "heroTitle": "Descoperă-ți Potențialul și Dezvoltă-ți Cariera",
+    "heroSubtitle": "Platforma AI care te ajută să îți înțelegi personalitatea, să îți identifici punctele forte și să îți construiești calea ideală în carieră prin evaluări psihologice avansate.",
+    "startFreeAssessment": "Începe Evaluarea Gratuită",
+    "featuresTitle": "Descoperă Funcționalitățile Noastre",
+    "featuresSubtitle": "Unelte bazate pe inteligență artificială pentru a-ți accelera cariera.",
+    "ctaFinalTitle": "Gata să Îți Transformi Cariera?",
+    "ctaFinalSubtitle": "Alătură-te miilor de profesioniști care și-au accelerat dezvoltarea cu NextWise",
+    "ctaFinalButton": "Începe Acum Gratuit",
+    "features": {
+      "psychologicalEvaluations": "Evaluări Psihologice",
+      "psychologicalEvaluationsDesc": "Înțelege-ți personalitatea și abilitățile cognitive.",
+      "personalizedCareerPlans": "Planuri de Carieră Personalizate",
+      "personalizedCareerPlansDesc": "Primește o foaie de parcurs clară, bazată pe profilul tău unic.",
+      "advancedAnalytics": "Analiză Avansată",
+      "advancedAnalyticsDesc": "Urmărește-ți progresul cu informații detaliate.",
+      "aiMentoring": "Mentorat AI",
+      "aiMentoringDesc": "Primește ghidare continuă de la mentorul tău AI."
+    }
+  },
+  "dashboard": {
+    "welcome": "Bun venit,",
+    "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
+    "stats": {
+      "testsCompleted": "Teste Completate",
+      "careerPlans": "Planuri de Carieră",
+      "timeSaved": "Timp Economisit",
+      "careerProgress": "Progres Carieră"
+    },
+    "actions": {
+      "startFirstTest": "Fă primul pas spre autocunoaștere",
+      "startFirstTestDesc": "Completează un test pentru a primi recomandări personalizate.",
+      "exploreTests": "Explorează Testele",
+      "planCareer": "Creează-ți un plan de carieră personalizat",
+      "planCareerDesc": "Setează-ți obiectivele și urmărește-ți progresul pas cu pas.",
+      "startCareerPlan": "Începe Planul"
+    }
+  },
+  "tests": {
+    "title": "Testele Disponibile",
+    "subtitle": "Descoperă-ți personalitatea și abilitățile prin testele noastre validate științific",
+    "categories": {
+      "personality": "Personalitate",
+      "cognitive": "Cognitive",
+      "professional": "Profesionale",
+      "clinical": "Clinice"
+    },
+    "backToTests": "Înapoi la Teste",
+    "generateAnalysis": "Generează Analiză AI",
+    "analysisInProgress": "Generez analiza...",
+    "aiAnalysis": "Analiză AI",
+    "result": "Rezultat",
+    "completedOn": "Completat pe",
+    "overallScore": "Scorul General",
+    "scoredPoints": "Puncte Obținute",
+    "maxPoints": "Puncte Maxime",
+    "noResults": "Nu ai completat încă acest test",
+    "bigFive": {
+      "title": "Big Five",
+      "description": "Testul Big Five măsoară cele cinci dimensiuni fundamentale ale personalității",
+      "explanation": {
+        "title": "Explicația Testului Big Five",
+        "description": "Big Five este unul dintre cele mai validate și utilizate modele de personalitate din psihologie. Măsoară cinci dimensiuni fundamentale ale personalității umane.",
+        "dimensions": {
+          "openness": {
+            "name": "Deschidere către Experiență",
+            "description": "Măsoară creativitatea, curiozitatea și deschiderea către idei noi"
+          },
+          "conscientiousness": {
+            "name": "Conștiinciozitate",
+            "description": "Reflectă organizarea, disciplina și orientarea către obiective"
+          },
+          "extraversion": {
+            "name": "Extraversiune",
+            "description": "Indică energia socială și tendința de a căuta stimulare externă"
+          },
+          "agreeableness": {
+            "name": "Agreabilitate",
+            "description": "Măsoară cooperarea, încrederea și empatia față de alții"
+          },
+          "neuroticism": {
+            "name": "Neuroticismul",
+            "description": "Reflectă stabilitatea emotională și tendința de a experimenta emoții negative"
+          }
+        }
+      }
+    },
+    "disc": {
+      "title": "DISC",
+      "description": "Testul DISC analizează stilul tău de comportament în patru dimensiuni principale",
+      "explanation": {
+        "title": "Explicația Testului DISC",
+        "description": "DISC este un instrument de evaluare a comportamentului care categorisează oamenii în patru tipuri principale de personalitate.",
+        "whatItMeans": "Ce înseamnă rezultatele tale",
+        "interpretation": {
+          "general": "Rezultatul tău DISC arată stilul tău predominant de comportament în diferite situații."
+        },
+        "profiles": {
+          "D": {
+            "name": "Dominanță",
+            "description": "Orientat către rezultate, direct și hotărât"
+          },
+          "I": {
+            "name": "Influență",
+            "description": "Sociabil, optimist și persuasiv"
+          },
+          "S": {
+            "name": "Stabilitate",
+            "description": "Cooperant, răbdător și de încredere"
+          },
+          "C": {
+            "name": "Conformitate",
+            "description": "Analitic, precis și sistematic"
+          }
+        }
+      }
+    },
+    "hexaco": {
+      "title": "HEXACO",
+      "description": "Modelul HEXACO extinde Big Five cu dimensiunea Onestitate-Umilință",
+      "explanation": {
+        "title": "Explicația Testului HEXACO",
+        "description": "HEXACO este o extensie a modelului Big Five care include o a șasea dimensiune: Onestitate-Umilința.",
+        "dimensions": {
+          "H": {
+            "name": "Onestitate-Umilință",
+            "description": "Măsoară sinceritatea, modestia și lipsa lăcomiei"
+          },
+          "E": {
+            "name": "Emotivitatea",
+            "description": "Reflectă anxietatea, sensibilitatea și dependența emotională"
+          },
+          "X": {
+            "name": "Extraversiunea",
+            "description": "Indică sociabilitatea, energia și încrederea în sine"
+          },
+          "A": {
+            "name": "Agreabilitatea",
+            "description": "Măsoară răbdarea, blândețea și toleranța"
+          },
+          "C": {
+            "name": "Conștiinciozitatea",
+            "description": "Reflectă organizarea, disciplina și prudența"
+          },
+          "O": {
+            "name": "Deschiderea către Experiență",
+            "description": "Măsoară creativitatea, curiozitatea și aprecierea esteticului"
+          }
+        }
+      }
+    },
+    "belbin": {
+      "title": "Belbin Roluri în Echipă",
+      "description": "Descoperă rolurile tale preferate în echipă conform modelului Belbin",
+      "explanation": {
+        "title": "Explicația Testului Belbin",
+        "description": "Testul Belbin identifică rolurile pe care le preferi să le joci în echipă, bazându-se pe punctele tale forte naturale."
+      }
+    },
+    "cattell": {
+      "title": "16PF Cattell",
+      "description": "Evaluarea personalității pe 16 factori conform modelului Cattell",
+      "comingSoon": "Această funcționalitate va fi disponibilă în curând."
+    },
+    "emotionalIntelligence": {
+      "title": "Inteligența Emoțională",
+      "description": "Evaluează capacitatea ta de a înțelege și gestiona emoțiile",
+      "comingSoon": "Această funcționalitate va fi disponibilă în curând."
+    },
+    "cognitive": {
+      "title": "Abilități Cognitive",
+      "description": "Testează memoria, atenția și alte funcții cognitive"
+    }
+  },
+  "careerPaths": {
+    "title": "Planurile tale de carieră personalizate",
+    "subtitle": "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale.",
+    "tabs": {
+      "dashboard": "Dashboard",
+      "create": "Plan Nou",
+      "mentoring": "Mentoring AI",
+      "cvAnalyzer": "Analiza CV",
+      "programs": "Programe AI de 14 Zile",
+      "progressSheets": "Fișe de Progres AI",
+      "simulations": "Simulări AI",
+      "progressAnalysis": "Analiza Progresului"
+    },
+    "dashboard": {
+      "title": "Dashboard Carieră",
+      "subtitle": "Monitorizează progresul și planifică următorii pași.",
+      "createPlan": "Creează Plan Nou",
+      "progress": "Progres",
+      "created": "Creat",
+      "viewDetails": "Vezi Detalii"
+    }
+  },
+  "cvOptimization": {
+    "title": "Optimizare CV",
+    "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele.",
+    "startAnalysis": "Începe Analiza"
+  },
+  "profile": {
+    "title": "Profilul Meu",
+    "welcome": "Bun venit,",
+    "welcomeMessage": "Aici poți vedea sumarul activității tale și informațiile personale.",
+    "administrator": "Administrator",
+    "admin": {
+      "notice": "Acesta este un cont de administrator cu acces la toate funcționalitățile."
+    },
+    "personalInfo": {
+      "title": "Informații Profil",
+      "name": "Nume",
+      "email": "Email",
+      "role": "Rol",
+      "memberSince": "Membru din"
+    }
+  },
+  "auth": {
+    "backToMain": "Înapoi la pagina principală",
+    "welcome": "Bun venit",
+    "signInMessage": "Autentifică-te în cont sau creează unul nou",
+    "signIn": "Autentificare",
+    "signUp": "Înregistrare",
+    "email": "Email",
+    "password": "Parolă"
   },
   "howItWorks": {
     "title": "Cum Funcționează NextWise",
