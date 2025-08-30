@@ -142,6 +142,7 @@ const HowItWorks = () => {
               {steps.map((step, index) => {
                 const Icon = step.icon;
                 const isEven = index % 2 === 0;
+                const stepFeatures = Array.isArray(step.features) ? step.features : [];
                 
                 return (
                   <div key={index} className={`flex flex-col ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'} items-center gap-12`}>
@@ -171,7 +172,7 @@ const HowItWorks = () => {
                       </div>
 
                       <div className="space-y-3">
-                        {step.features.map((feature: string, featureIndex: number) => (
+                        {stepFeatures.map((feature: string, featureIndex: number) => (
                           <div key={featureIndex} className="flex items-start gap-3">
                             <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
                             <span className="text-gray-700">{feature}</span>
@@ -203,7 +204,7 @@ const HowItWorks = () => {
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-2">
-                          {step.features.slice(0, 3).map((feature: string, featureIndex: number) => (
+                          {stepFeatures.slice(0, 3).map((feature: string, featureIndex: number) => (
                             <div key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600">
                               <CheckCircle className="h-4 w-4 text-green-500 flex-shrink-0" />
                               <span>{feature}</span>
