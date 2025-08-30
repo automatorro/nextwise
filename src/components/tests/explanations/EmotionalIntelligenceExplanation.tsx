@@ -1,20 +1,27 @@
 
 import React from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface EmotionalIntelligenceExplanationProps {
   score?: any;
   language?: string;
 }
 
-const EmotionalIntelligenceExplanation: React.FC<EmotionalIntelligenceExplanationProps> = ({ score, language = 'ro' }) => {
+const EmotionalIntelligenceExplanation: React.FC<EmotionalIntelligenceExplanationProps> = ({ score }) => {
+  const { t } = useTranslation();
+
   return (
-    <div className="p-4 bg-gray-50 rounded-lg">
-      <p className="text-gray-600">
-        {language === 'en' 
-          ? 'Emotional Intelligence explanation will be available soon.'
-          : 'Explicația pentru testul de inteligență emoțională va fi disponibilă în curând.'}
-      </p>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('tests.emotionalIntelligence.title')}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-600">
+          {t('tests.emotionalIntelligence.comingSoon')}
+        </p>
+      </CardContent>
+    </Card>
   );
 };
 

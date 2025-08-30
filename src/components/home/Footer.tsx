@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const Footer = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <footer className="bg-gray-900 text-white py-12 px-4 sm:px-6 lg:px-8">

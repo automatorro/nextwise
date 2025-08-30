@@ -1,20 +1,27 @@
 
 import React from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface BigFiveExplanationProps {
   score?: any;
   language?: string;
 }
 
-const BigFiveExplanation: React.FC<BigFiveExplanationProps> = ({ score, language = 'ro' }) => {
+const BigFiveExplanation: React.FC<BigFiveExplanationProps> = ({ score }) => {
+  const { t } = useTranslation();
+
   return (
-    <div className="p-4 bg-gray-50 rounded-lg">
-      <p className="text-gray-600">
-        {language === 'en' 
-          ? 'Big Five personality explanation will be available soon.'
-          : 'Explicația pentru testul Big Five va fi disponibilă în curând.'}
-      </p>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('tests.bigFive.title')}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-600">
+          {t('tests.bigFive.comingSoon')}
+        </p>
+      </CardContent>
+    </Card>
   );
 };
 

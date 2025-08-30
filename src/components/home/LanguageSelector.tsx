@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import {
   Select,
   SelectContent,
@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/select';
 
 const LanguageSelector = () => {
-  const { language, changeLanguage } = useLanguage();
+  const { language, changeLanguage } = useTranslation();
 
   const handleLanguageChange = async (newLanguage: string) => {
     if (newLanguage === language) return;

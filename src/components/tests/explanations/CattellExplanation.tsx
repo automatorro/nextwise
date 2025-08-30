@@ -1,20 +1,27 @@
 
 import React from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface CattellExplanationProps {
   score?: any;
   language?: string;
 }
 
-const CattellExplanation: React.FC<CattellExplanationProps> = ({ score, language = 'ro' }) => {
+const CattellExplanation: React.FC<CattellExplanationProps> = ({ score }) => {
+  const { t } = useTranslation();
+
   return (
-    <div className="p-4 bg-gray-50 rounded-lg">
-      <p className="text-gray-600">
-        {language === 'en' 
-          ? 'Cattell 16PF explanation will be available soon.'
-          : 'Explicația pentru testul Cattell 16PF va fi disponibilă în curând.'}
-      </p>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('tests.cattell.title')}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-600">
+          {t('tests.cattell.comingSoon')}
+        </p>
+      </CardContent>
+    </Card>
   );
 };
 

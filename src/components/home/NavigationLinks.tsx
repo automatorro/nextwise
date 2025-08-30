@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const NavigationLinks = () => {
   const location = useLocation();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   const links = [
     { to: '/dashboard', label: t('header.dashboard') },

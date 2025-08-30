@@ -3,7 +3,7 @@ import React from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { getResultLabels } from '@/utils/testResultTranslations';
 
 interface TestResultHeaderProps {
@@ -13,7 +13,7 @@ interface TestResultHeaderProps {
 
 const TestResultHeader = ({ testName, completedAt }: TestResultHeaderProps) => {
   const navigate = useNavigate();
-  const { language } = useLanguage();
+  const { language } = useTranslation();
   const labels = getResultLabels(language);
 
   return (

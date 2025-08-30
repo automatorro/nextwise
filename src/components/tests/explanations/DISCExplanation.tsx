@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface DISCExplanationProps {
@@ -8,7 +8,7 @@ interface DISCExplanationProps {
 }
 
 const DISCExplanation: React.FC<DISCExplanationProps> = ({ score }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-6">

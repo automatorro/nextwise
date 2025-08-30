@@ -1,4 +1,5 @@
-import { useLanguage } from './useLanguage';
+
+import { useLanguageContext } from '@/contexts/LanguageContext';
 import { interpolateVariables } from '@/utils/i18n/translationUtils';
 
 /**
@@ -6,7 +7,7 @@ import { interpolateVariables } from '@/utils/i18n/translationUtils';
  * @returns Funcții pentru traducere și schimbarea limbii
  */
 export function useTranslation() {
-  const { t, language, setLanguage } = useLanguage();
+  const { language, setLanguage, translations, loading, changeLanguage, t: contextT } = useLanguageContext();
   
   /**
    * Traduce o cheie și interpolează variabilele în textul rezultat
@@ -15,7 +16,7 @@ export function useTranslation() {
    * @returns Textul tradus cu variabilele interpolate
    */
   const translate = (key: string, variables?: Record<string, string | number>) => {
-    const translatedText = t(key);
+    const translatedText = contextT(key);
     
     if (!variables || Object.keys(variables).length === 0) {
       return translatedText;
@@ -27,6 +28,12 @@ export function useTranslation() {
   return {
     t: translate,
     language,
-    setLanguage
+    setLanguage,
+    changeLanguage,
+    translations,
+    loading
   };
 }
+
+// Alias pentru compatibilitate
+export const useLanguage = useTranslation;

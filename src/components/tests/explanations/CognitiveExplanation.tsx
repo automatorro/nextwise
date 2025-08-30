@@ -1,20 +1,27 @@
 
 import React from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface CognitiveExplanationProps {
   score?: any;
   language?: string;
 }
 
-const CognitiveExplanation: React.FC<CognitiveExplanationProps> = ({ score, language = 'ro' }) => {
+const CognitiveExplanation: React.FC<CognitiveExplanationProps> = ({ score }) => {
+  const { t } = useTranslation();
+
   return (
-    <div className="p-4 bg-gray-50 rounded-lg">
-      <p className="text-gray-600">
-        {language === 'en' 
-          ? 'Cognitive abilities explanation will be available soon.'
-          : 'Explicația pentru testul de aptitudini cognitive va fi disponibilă în curând.'}
-      </p>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('tests.cognitive.title')}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-600">
+          {t('tests.cognitive.comingSoon')}
+        </p>
+      </CardContent>
+    </Card>
   );
 };
 

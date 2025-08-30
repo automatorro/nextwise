@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
 const CTASection = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const handleFinalCTAClick = (e: React.MouseEvent<HTMLButtonElement>) => {

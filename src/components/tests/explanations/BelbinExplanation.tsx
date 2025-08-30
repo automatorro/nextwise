@@ -1,20 +1,27 @@
 
 import React from 'react';
+import { useTranslation } from '@/hooks/useTranslation';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface BelbinExplanationProps {
   score?: any;
   language?: string;
 }
 
-const BelbinExplanation: React.FC<BelbinExplanationProps> = ({ score, language = 'ro' }) => {
+const BelbinExplanation: React.FC<BelbinExplanationProps> = ({ score }) => {
+  const { t } = useTranslation();
+
   return (
-    <div className="p-4 bg-gray-50 rounded-lg">
-      <p className="text-gray-600">
-        {language === 'en' 
-          ? 'Belbin explanation will be available soon.'
-          : 'Explicația pentru testul Belbin va fi disponibilă în curând.'}
-      </p>
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>{t('tests.belbin.title')}</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-gray-600">
+          {t('tests.belbin.comingSoon')}
+        </p>
+      </CardContent>
+    </Card>
   );
 };
 
