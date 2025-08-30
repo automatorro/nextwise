@@ -40,7 +40,7 @@ const HowItWorks = () => {
       title: t('howItWorks.step1.title'),
       subtitle: t('howItWorks.step1.subtitle'),
       description: t('howItWorks.step1.description'),
-      features: t('howItWorks.step1.features'),
+      features: Array.isArray(t('howItWorks.step1.features')) ? t('howItWorks.step1.features') : [],
       cta: t('howItWorks.step1.cta'),
       path: '/auth',
       color: 'from-blue-500 to-blue-600'
@@ -50,7 +50,7 @@ const HowItWorks = () => {
       title: t('howItWorks.step2.title'),
       subtitle: t('howItWorks.step2.subtitle'),
       description: t('howItWorks.step2.description'),
-      features: t('howItWorks.step2.features'),
+      features: Array.isArray(t('howItWorks.step2.features')) ? t('howItWorks.step2.features') : [],
       cta: t('howItWorks.step2.cta'),
       path: '/dashboard',
       color: 'from-green-500 to-green-600'
@@ -60,7 +60,7 @@ const HowItWorks = () => {
       title: t('howItWorks.step3.title'),
       subtitle: t('howItWorks.step3.subtitle'),
       description: t('howItWorks.step3.description'),
-      features: t('howItWorks.step3.features'),
+      features: Array.isArray(t('howItWorks.step3.features')) ? t('howItWorks.step3.features') : [],
       cta: t('howItWorks.step3.cta'),
       path: '/tests',
       color: 'from-purple-500 to-purple-600'
@@ -70,7 +70,7 @@ const HowItWorks = () => {
       title: t('howItWorks.step4.title'),
       subtitle: t('howItWorks.step4.subtitle'),
       description: t('howItWorks.step4.description'),
-      features: t('howItWorks.step4.features'),
+      features: Array.isArray(t('howItWorks.step4.features')) ? t('howItWorks.step4.features') : [],
       cta: t('howItWorks.step4.cta'),
       path: '/test-result/demo',
       color: 'from-orange-500 to-orange-600'
@@ -80,7 +80,7 @@ const HowItWorks = () => {
       title: t('howItWorks.step5.title'),
       subtitle: t('howItWorks.step5.subtitle'),
       description: t('howItWorks.step5.description'),
-      features: t('howItWorks.step5.features'),
+      features: Array.isArray(t('howItWorks.step5.features')) ? t('howItWorks.step5.features') : [],
       cta: t('howItWorks.step5.cta'),
       path: '/career-paths',
       color: 'from-red-500 to-red-600'
@@ -90,7 +90,7 @@ const HowItWorks = () => {
       title: t('howItWorks.step6.title'),
       subtitle: t('howItWorks.step6.subtitle'),
       description: t('howItWorks.step6.description'),
-      features: t('howItWorks.step6.features'),
+      features: Array.isArray(t('howItWorks.step6.features')) ? t('howItWorks.step6.features') : [],
       cta: t('howItWorks.step6.cta'),
       path: '/career-paths/simulations',
       color: 'from-indigo-500 to-indigo-600',
@@ -101,7 +101,7 @@ const HowItWorks = () => {
       title: t('howItWorks.step7.title'),
       subtitle: t('howItWorks.step7.subtitle'),
       description: t('howItWorks.step7.description'),
-      features: t('howItWorks.step7.features'),
+      features: Array.isArray(t('howItWorks.step7.features')) ? t('howItWorks.step7.features') : [],
       cta: t('howItWorks.step7.cta'),
       path: '/my-profile',
       color: 'from-teal-500 to-teal-600'
