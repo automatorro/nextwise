@@ -11,7 +11,22 @@
     "back": "Back",
     "close": "Close",
     "continue": "Continue",
-    "finish": "Finish"
+    "finish": "Finish",
+    "yes": "Yes",
+    "no": "No",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "clear": "Clear",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "export": "Export",
+    "import": "Import",
+    "print": "Print",
+    "share": "Share",
+    "copy": "Copy"
   },
   "header": {
     "dashboard": "Dashboard",
@@ -66,11 +81,31 @@
   "tests": {
     "title": "Available Tests",
     "subtitle": "Discover your personality and abilities through our scientifically validated tests",
+    "searchPlaceholder": "Search tests...",
+    "allCategories": "All Categories",
+    "duration": "Duration",
+    "questions": "Questions",
+    "startTest": "Start Test",
+    "takeTest": "Take Test",
+    "noTestsFound": "No tests found",
+    "filterByCategory": "Filter by category",
+    "testCompleted": "Test completed",
+    "testInProgress": "Test in progress",
+    "testNotStarted": "Test not started",
+    "estimatedTime": "Estimated time",
+    "difficulty": "Difficulty",
+    "prerequisites": "Prerequisites",
+    "description": "Description",
+    "instructions": "Instructions",
     "categories": {
       "personality": "Personality",
       "cognitive": "Cognitive",
       "professional": "Professional",
-      "clinical": "Clinical"
+      "clinical": "Clinical",
+      "aptitude": "Aptitude",
+      "intelligence": "Intelligence",
+      "emotional": "Emotional",
+      "behavioral": "Behavioral"
     },
     "backToTests": "Back to Tests",
     "generateAnalysis": "Generate AI Analysis",
@@ -82,9 +117,14 @@
     "scoredPoints": "Scored Points",
     "maxPoints": "Max Points",
     "noResults": "You haven't completed this test yet",
+    "viewResult": "View Result",
+    "retakeTest": "Retake Test",
+    "shareResult": "Share Result",
+    "downloadResult": "Download Result",
     "bigFive": {
       "title": "Big Five",
       "description": "The Big Five test measures the five fundamental dimensions of personality",
+      "comingSoon": "This feature will be available soon.",
       "explanation": {
         "title": "Big Five Test Explanation",
         "description": "Big Five is one of the most validated and used personality models in psychology. It measures five fundamental dimensions of human personality.",
@@ -115,6 +155,7 @@
     "disc": {
       "title": "DISC",
       "description": "The DISC test analyzes your behavioral style in four main dimensions",
+      "comingSoon": "This feature will be available soon.",
       "explanation": {
         "title": "DISC Test Explanation",
         "description": "DISC is a behavioral assessment tool that categorizes people into four main personality types.",
@@ -145,6 +186,7 @@
     "hexaco": {
       "title": "HEXACO",
       "description": "The HEXACO model extends Big Five with the Honesty-Humility dimension",
+      "comingSoon": "This feature will be available soon.",
       "explanation": {
         "title": "HEXACO Test Explanation",
         "description": "HEXACO is an extension of the Big Five model that includes a sixth dimension: Honesty-Humility.",
@@ -179,6 +221,7 @@
     "belbin": {
       "title": "Belbin Team Roles",
       "description": "Discover your preferred team roles according to the Belbin model",
+      "comingSoon": "This feature will be available soon.",
       "explanation": {
         "title": "Belbin Test Explanation",
         "description": "The Belbin test identifies the roles you prefer to play in a team, based on your natural strengths."
@@ -196,12 +239,29 @@
     },
     "cognitive": {
       "title": "Cognitive Abilities",
-      "description": "Test memory, attention, and other cognitive functions"
+      "description": "Test memory, attention, and other cognitive functions",
+      "comingSoon": "This feature will be available soon."
     }
   },
   "careerPaths": {
     "title": "Your Personalized Career Plans",
     "subtitle": "AI creates career plans based on your test results, giving you a clear path to your professional goals.",
+    "createPlan": "Create New Plan",
+    "nPlansFound": "plans found",
+    "searchPlans": "Search plans...",
+    "filterByStatus": "Filter by status",
+    "allStatuses": "All Statuses",
+    "active": "Active",
+    "completed": "Completed",
+    "paused": "Paused",
+    "draft": "Draft",
+    "milestones": "Milestones",
+    "progress": "Progress",
+    "daysLeft": "Days left",
+    "targetDate": "Target date",
+    "startDate": "Start date",
+    "completionRate": "Completion rate",
+    "nextMilestone": "Next milestone",
     "tabs": {
       "dashboard": "Dashboard",
       "create": "New Plan",
@@ -218,19 +278,48 @@
       "createPlan": "Create New Plan",
       "progress": "Progress",
       "created": "Created",
-      "viewDetails": "View Details"
+      "viewDetails": "View Details",
+      "editPlan": "Edit Plan",
+      "deletePlan": "Delete Plan",
+      "duplicatePlan": "Duplicate Plan",
+      "exportPlan": "Export Plan",
+      "sharePlan": "Share Plan"
     }
   },
   "cvOptimization": {
     "title": "CV Optimization",
     "description": "Analyze your CV against a job description to improve your chances. Get detailed feedback and optimization suggestions.",
-    "startAnalysis": "Start Analysis"
+    "startAnalysis": "Start Analysis",
+    "uploadCV": "Upload CV",
+    "pasteJobDescription": "Paste job description",
+    "analyzeMatch": "Analyze match",
+    "improvementSuggestions": "Improvement suggestions",
+    "keywordOptimization": "Keyword optimization",
+    "matchScore": "Match score",
+    "missingSkills": "Missing skills",
+    "strongPoints": "Strong points",
+    "recommendedChanges": "Recommended changes"
   },
   "profile": {
     "title": "My Profile",
     "welcome": "Welcome,",
     "welcomeMessage": "Here you can see a summary of your activity and personal information.",
     "administrator": "Administrator",
+    "profileUpdated": "Profile updated successfully",
+    "fullName": "Full name",
+    "updateProfile": "Update profile",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordChanged": "Password changed successfully",
+    "invalidCurrentPassword": "Current password is incorrect",
+    "passwordMismatch": "Passwords do not match",
+    "quickActions": "Quick actions",
+    "viewAllTests": "View all tests",
+    "createCareerPlan": "Create career plan",
+    "downloadReports": "Download reports",
+    "manageSubscription": "Manage subscription",
     "admin": {
       "notice": "This is an administrator account with access to all features."
     },
@@ -239,7 +328,33 @@
       "name": "Name",
       "email": "Email",
       "role": "Role",
-      "memberSince": "Member Since"
+      "memberSince": "Member Since",
+      "lastLogin": "Last login",
+      "accountStatus": "Account status",
+      "subscription": "Subscription",
+      "timeZone": "Time zone",
+      "language": "Language",
+      "notifications": "Notifications"
+    },
+    "stats": {
+      "testsCompleted": "Tests completed",
+      "careerPlans": "Career plans",
+      "hoursSpent": "Hours spent",
+      "achievementsUnlocked": "Achievements unlocked",
+      "overallProgress": "Overall progress",
+      "weeklyActivity": "Weekly activity",
+      "monthlyGoals": "Monthly goals",
+      "yearlyMilestones": "Yearly milestones"
+    },
+    "achievements": {
+      "title": "Achievements",
+      "firstTest": "First test completed",
+      "fiveTests": "5 tests completed",
+      "tenTests": "10 tests completed",
+      "firstCareerPlan": "First career plan created",
+      "monthlyStreak": "Monthly consistency streak",
+      "perfectScore": "Perfect score on a test",
+      "earlyAdopter": "Early adopter"
     }
   },
   "auth": {
@@ -249,7 +364,22 @@
     "signIn": "Sign In",
     "signUp": "Sign Up",
     "email": "Email",
-    "password": "Password"
+    "password": "Password",
+    "forgotPassword": "Forgot password?",
+    "rememberMe": "Remember me",
+    "createAccount": "Create account",
+    "alreadyHaveAccount": "Already have an account?",
+    "dontHaveAccount": "Don't have an account?",
+    "resetPassword": "Reset password",
+    "checkEmail": "Check your email",
+    "invalidCredentials": "Invalid credentials",
+    "emailRequired": "Email is required",
+    "passwordRequired": "Password is required",
+    "emailInvalid": "Email format is invalid",
+    "passwordTooShort": "Password must be at least 6 characters",
+    "accountCreated": "Account created successfully",
+    "loginSuccessful": "Login successful",
+    "logoutSuccessful": "Logout successful"
   },
   "howItWorks": {
     "title": "How NextWise Works",
@@ -353,6 +483,50 @@
       "title": "Ready to Transform Your Career?",
       "subtitle": "Join thousands of professionals who have accelerated their development with NextWise",
       "button": "Start Now For Free"
+    }
+  },
+  "subscription": {
+    "title": "Subscription Plans",
+    "subtitle": "Choose the right plan for your development needs",
+    "free": {
+      "title": "Free Plan",
+      "price": "Free",
+      "description": "Perfect for starting your self-discovery journey",
+      "features": [
+        "3 basic tests",
+        "Basic results",
+        "Simple dashboard",
+        "Community support"
+      ],
+      "cta": "Start Free"
+    },
+    "premium": {
+      "title": "Premium Plan",
+      "price": "$19/month",
+      "description": "For accelerated professional development",
+      "features": [
+        "All available tests",
+        "Detailed AI analysis",
+        "Personalized career plans",
+        "24/7 AI mentoring",
+        "14-day AI programs",
+        "Priority support"
+      ],
+      "cta": "Upgrade to Premium"
+    },
+    "enterprise": {
+      "title": "Enterprise Plan",
+      "price": "Contact for pricing",
+      "description": "For teams and organizations",
+      "features": [
+        "All Premium features",
+        "Team dashboard",
+        "Organizational reports",
+        "Custom integrations",
+        "Dedicated training",
+        "Dedicated account manager"
+      ],
+      "cta": "Contact Us"
     }
   }
 }

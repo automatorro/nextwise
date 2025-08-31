@@ -11,7 +11,22 @@
     "back": "Înapoi",
     "close": "Închide",
     "continue": "Continuă",
-    "finish": "Finalizează"
+    "finish": "Finalizează",
+    "yes": "Da",
+    "no": "Nu",
+    "next": "Următorul",
+    "previous": "Anteriorii",
+    "submit": "Trimite",
+    "reset": "Resetează",
+    "clear": "Șterge",
+    "search": "Caută",
+    "filter": "Filtrează",
+    "sort": "Sortează",
+    "export": "Exportă",
+    "import": "Importă",
+    "print": "Printează",
+    "share": "Partajează",
+    "copy": "Copiază"
   },
   "header": {
     "dashboard": "Dashboard",
@@ -66,11 +81,31 @@
   "tests": {
     "title": "Testele Disponibile",
     "subtitle": "Descoperă-ți personalitatea și abilitățile prin testele noastre validate științific",
+    "searchPlaceholder": "Caută teste...",
+    "allCategories": "Toate Categoriile",
+    "duration": "Durată",
+    "questions": "Întrebări",
+    "startTest": "Începe Testul",
+    "takeTest": "Participă la Test",
+    "noTestsFound": "Nu au fost găsite teste",
+    "filterByCategory": "Filtrează după categorie",
+    "testCompleted": "Test completat",
+    "testInProgress": "Test în progres",
+    "testNotStarted": "Test neînceput",
+    "estimatedTime": "Timp estimat",
+    "difficulty": "Dificultate",
+    "prerequisites": "Cerințe preliminare",
+    "description": "Descriere",
+    "instructions": "Instrucțiuni",
     "categories": {
       "personality": "Personalitate",
       "cognitive": "Cognitive",
       "professional": "Profesionale",
-      "clinical": "Clinice"
+      "clinical": "Clinice",
+      "aptitude": "Aptitudini",
+      "intelligence": "Inteligență",
+      "emotional": "Emoționale",
+      "behavioral": "Comportamentale"
     },
     "backToTests": "Înapoi la Teste",
     "generateAnalysis": "Generează Analiză AI",
@@ -82,9 +117,14 @@
     "scoredPoints": "Puncte Obținute",
     "maxPoints": "Puncte Maxime",
     "noResults": "Nu ai completat încă acest test",
+    "viewResult": "Vezi Rezultatul",
+    "retakeTest": "Reluează Testul",
+    "shareResult": "Partajează Rezultatul",
+    "downloadResult": "Descarcă Rezultatul",
     "bigFive": {
       "title": "Big Five",
       "description": "Testul Big Five măsoară cele cinci dimensiuni fundamentale ale personalității",
+      "comingSoon": "Această funcționalitate va fi disponibilă în curând.",
       "explanation": {
         "title": "Explicația Testului Big Five",
         "description": "Big Five este unul dintre cele mai validate și utilizate modele de personalitate din psihologie. Măsoară cinci dimensiuni fundamentale ale personalității umane.",
@@ -115,6 +155,7 @@
     "disc": {
       "title": "DISC",
       "description": "Testul DISC analizează stilul tău de comportament în patru dimensiuni principale",
+      "comingSoon": "Această funcționalitate va fi disponibilă în curând.",
       "explanation": {
         "title": "Explicația Testului DISC",
         "description": "DISC este un instrument de evaluare a comportamentului care categorisează oamenii în patru tipuri principale de personalitate.",
@@ -145,6 +186,7 @@
     "hexaco": {
       "title": "HEXACO",
       "description": "Modelul HEXACO extinde Big Five cu dimensiunea Onestitate-Umilință",
+      "comingSoon": "Această funcționalitate va fi disponibilă în curând.",
       "explanation": {
         "title": "Explicația Testului HEXACO",
         "description": "HEXACO este o extensie a modelului Big Five care include o a șasea dimensiune: Onestitate-Umilința.",
@@ -179,6 +221,7 @@
     "belbin": {
       "title": "Belbin Roluri în Echipă",
       "description": "Descoperă rolurile tale preferate în echipă conform modelului Belbin",
+      "comingSoon": "Această funcționalitate va fi disponibilă în curând.",
       "explanation": {
         "title": "Explicația Testului Belbin",
         "description": "Testul Belbin identifică rolurile pe care le preferi să le joci în echipă, bazându-se pe punctele tale forte naturale."
@@ -196,12 +239,29 @@
     },
     "cognitive": {
       "title": "Abilități Cognitive",
-      "description": "Testează memoria, atenția și alte funcții cognitive"
+      "description": "Testează memoria, atenția și alte funcții cognitive",
+      "comingSoon": "Această funcționalitate va fi disponibilă în curând."
     }
   },
   "careerPaths": {
     "title": "Planurile tale de carieră personalizate",
     "subtitle": "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale.",
+    "createPlan": "Creează Plan Nou",
+    "nPlansFound": "planuri găsite",
+    "searchPlans": "Caută planuri...",
+    "filterByStatus": "Filtrează după status",
+    "allStatuses": "Toate Statusurile",
+    "active": "Activ",
+    "completed": "Completat",
+    "paused": "Pauzat",
+    "draft": "Ciornă",
+    "milestones": "Repere importante",
+    "progress": "Progres",
+    "daysLeft": "Zile rămase",
+    "targetDate": "Data țintă",
+    "startDate": "Data începerii",
+    "completionRate": "Rata de completare",
+    "nextMilestone": "Următorul reper",
     "tabs": {
       "dashboard": "Dashboard",
       "create": "Plan Nou",
@@ -218,19 +278,48 @@
       "createPlan": "Creează Plan Nou",
       "progress": "Progres",
       "created": "Creat",
-      "viewDetails": "Vezi Detalii"
+      "viewDetails": "Vezi Detalii",
+      "editPlan": "Editează Planul",
+      "deletePlan": "Șterge Planul",
+      "duplicatePlan": "Duplică Planul",
+      "exportPlan": "Exportă Planul",
+      "sharePlan": "Partajează Planul"
     }
   },
   "cvOptimization": {
     "title": "Optimizare CV",
     "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele.",
-    "startAnalysis": "Începe Analiza"
+    "startAnalysis": "Începe Analiza",
+    "uploadCV": "Încarcă CV-ul",
+    "pasteJobDescription": "Lipește descrierea jobului",
+    "analyzeMatch": "Analizează compatibilitatea",
+    "improvementSuggestions": "Sugestii de îmbunătățire",
+    "keywordOptimization": "Optimizare cuvinte cheie",
+    "matchScore": "Scorul de compatibilitate",
+    "missingSkills": "Competențe lipsă",
+    "strongPoints": "Puncte forte",
+    "recommendedChanges": "Modificări recomandate"
   },
   "profile": {
     "title": "Profilul Meu",
     "welcome": "Bun venit,",
     "welcomeMessage": "Aici poți vedea sumarul activității tale și informațiile personale.",
     "administrator": "Administrator",
+    "profileUpdated": "Profil actualizat cu succes",
+    "fullName": "Nume complet",
+    "updateProfile": "Actualizează profilul",
+    "changePassword": "Schimbă parola",
+    "currentPassword": "Parola curentă",
+    "newPassword": "Parola nouă",
+    "confirmPassword": "Confirmă parola",
+    "passwordChanged": "Parola a fost schimbată cu succes",
+    "invalidCurrentPassword": "Parola curentă nu este corectă",
+    "passwordMismatch": "Parolele nu se potrivesc",
+    "quickActions": "Acțiuni rapide",
+    "viewAllTests": "Vezi toate testele",
+    "createCareerPlan": "Creează un plan de carieră",
+    "downloadReports": "Descarcă rapoartele",
+    "manageSubscription": "Gestionează abonamentul",
     "admin": {
       "notice": "Acesta este un cont de administrator cu acces la toate funcționalitățile."
     },
@@ -239,7 +328,33 @@
       "name": "Nume",
       "email": "Email",
       "role": "Rol",
-      "memberSince": "Membru din"
+      "memberSince": "Membru din",
+      "lastLogin": "Ultima autentificare",
+      "accountStatus": "Statusul contului",
+      "subscription": "Abonament",
+      "timeZone": "Fus orar",
+      "language": "Limbă",
+      "notifications": "Notificări"
+    },
+    "stats": {
+      "testsCompleted": "Teste completate",
+      "careerPlans": "Planuri de carieră",
+      "hoursSpent": "Ore petrecute",
+      "achievementsUnlocked": "Realizări deblocate",
+      "overallProgress": "Progres general",
+      "weeklyActivity": "Activitatea săptămânală",
+      "monthlyGoals": "Obiective lunare",
+      "yearlyMilestones": "Repere anuale"
+    },
+    "achievements": {
+      "title": "Realizări",
+      "firstTest": "Primul test completat",
+      "fiveTests": "5 teste completate",
+      "tenTests": "10 teste completate",
+      "firstCareerPlan": "Primul plan de carieră creat",
+      "monthlyStreak": "Activitate consistentă o lună",
+      "perfectScore": "Scor perfect la un test",
+      "earlyAdopter": "Adoptator timpuriu"
     }
   },
   "auth": {
@@ -249,7 +364,22 @@
     "signIn": "Autentificare",
     "signUp": "Înregistrare",
     "email": "Email",
-    "password": "Parolă"
+    "password": "Parolă",
+    "forgotPassword": "Ai uitat parola?",
+    "rememberMe": "Ține-mă minte",
+    "createAccount": "Creează cont",
+    "alreadyHaveAccount": "Ai deja cont?",
+    "dontHaveAccount": "Nu ai cont?",
+    "resetPassword": "Resetează parola",
+    "checkEmail": "Verifică-ți emailul",
+    "invalidCredentials": "Credențiale invalide",
+    "emailRequired": "Emailul este obligatoriu",
+    "passwordRequired": "Parola este obligatorie",
+    "emailInvalid": "Formatul emailului nu este valid",
+    "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
+    "accountCreated": "Contul a fost creat cu succes",
+    "loginSuccessful": "Autentificare reușită",
+    "logoutSuccessful": "Deconectare reușită"
   },
   "howItWorks": {
     "title": "Cum Funcționează NextWise",
@@ -353,6 +483,50 @@
       "title": "Gata să Îți Transformi Cariera?",
       "subtitle": "Alătură-te miilor de profesioniști care și-au accelerat dezvoltarea cu NextWise",
       "button": "Începe Acum Gratuit"
+    }
+  },
+  "subscription": {
+    "title": "Planurile de Abonament",
+    "subtitle": "Alege planul potrivit pentru nevoile tale de dezvoltare",
+    "free": {
+      "title": "Plan Gratuit",
+      "price": "Gratuit",
+      "description": "Perfect pentru a începe călătoria de autocunoaștere",
+      "features": [
+        "3 teste de bază",
+        "Rezultate de bază",
+        "Dashboard simplu",
+        "Suport comunitate"
+      ],
+      "cta": "Începe Gratuit"
+    },
+    "premium": {
+      "title": "Plan Premium",
+      "price": "49 RON/lună",
+      "description": "Pentru dezvoltare profesională accelerată",
+      "features": [
+        "Toate testele disponibile",
+        "Analiză AI detaliată",
+        "Planuri de carieră personalizate",
+        "Mentoring AI 24/7",
+        "Programe AI de 14 zile",
+        "Suport prioritar"
+      ],
+      "cta": "Upgrade la Premium"
+    },
+    "enterprise": {
+      "title": "Plan Enterprise",
+      "price": "Contact pentru preț",
+      "description": "Pentru echipe și organizații",
+      "features": [
+        "Toate funcționalitățile Premium",
+        "Dashboard pentru echipe",
+        "Rapoarte organizaționale",
+        "Integrări personalizate",
+        "Training dedicat",
+        "Manager de cont dedicat"
+      ],
+      "cta": "Contactează-ne"
     }
   }
 }
