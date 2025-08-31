@@ -63,6 +63,40 @@
   "dashboard": {
     "welcome": "Welcome,",
     "welcomeSubtext": "Start your personal and professional development journey with our AI tests.",
+    "testCategories": {
+      "title": "Test Categories",
+      "exploreCategories": "Explore categories",
+      "seeAllTests": "See all tests",
+      "personality": "Personality",
+      "cognitive": "Cognitive",
+      "professional": "Professional", 
+      "clinical": "Clinical",
+      "personalityDesc": "Discover your personality traits",
+      "cognitiveDesc": "Test cognitive abilities",
+      "professionalDesc": "Assess professional skills",
+      "clinicalDesc": "Clinical psychological screening"
+    },
+    "globalProgress": {
+      "title": "Global Progress",
+      "overallProgress": "Overall Progress",
+      "completedTests": "Tests Completed",
+      "activeGoals": "Active Goals",
+      "milestones": "Milestones",
+      "milestonesReached": "Milestones Reached",
+      "currentStreak": "Current Streak",
+      "days": "days",
+      "weeklyActivity": "Weekly Activity", 
+      "monthlyProgress": "Monthly Progress"
+    },
+    "gamification": {
+      "achievements": "Achievements",
+      "streak": "Streak",
+      "level": "Level",
+      "points": "Points",
+      "badges": "Badges",
+      "ranking": "Ranking",
+      "experience": "Experience"
+    },
     "stats": {
       "testsCompleted": "Tests Completed",
       "careerPlans": "Career Plans",
@@ -76,6 +110,11 @@
       "planCareer": "Create a personalized career plan",
       "planCareerDesc": "Set your goals and track your progress step by step.",
       "startCareerPlan": "Start Plan"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "noActivity": "No recent activity",
+      "viewAll": "View all"
     }
   },
   "tests": {
@@ -315,11 +354,15 @@
     "passwordChanged": "Password changed successfully",
     "invalidCurrentPassword": "Current password is incorrect",
     "passwordMismatch": "Passwords do not match",
-    "quickActions": "Quick actions",
-    "viewAllTests": "View all tests",
-    "createCareerPlan": "Create career plan",
-    "downloadReports": "Download reports",
-    "manageSubscription": "Manage subscription",
+    "quickActions": {
+      "title": "Quick actions",
+      "tryNewTest": "Try a new test",
+      "goToDashboard": "Go to Dashboard",
+      "viewAllTests": "View all tests",
+      "createCareerPlan": "Create career plan",
+      "downloadReports": "Download reports",
+      "manageSubscription": "Manage subscription"
+    },
     "admin": {
       "notice": "This is an administrator account with access to all features."
     },

@@ -63,6 +63,40 @@
   "dashboard": {
     "welcome": "Bun venit,",
     "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
+    "testCategories": {
+      "title": "Categorii de Teste",
+      "exploreCategories": "Explorează categoriile",
+      "seeAllTests": "Vezi toate testele",
+      "personality": "Personalitate",
+      "cognitive": "Cognitive", 
+      "professional": "Profesionale",
+      "clinical": "Clinice",
+      "personalityDesc": "Descoperă-ți trăsăturile de personalitate",
+      "cognitiveDesc": "Testează abilitățile cognitive",
+      "professionalDesc": "Evaluează competențele profesionale",
+      "clinicalDesc": "Screening psihologic clinic"
+    },
+    "globalProgress": {
+      "title": "Progresul Global",
+      "overallProgress": "Progres General",
+      "completedTests": "Teste Completate",
+      "activeGoals": "Obiective Active", 
+      "milestones": "Repere Importante",
+      "milestonesReached": "Repere Atinse",
+      "currentStreak": "Seria Curentă",
+      "days": "zile",
+      "weeklyActivity": "Activitate Săptămânală",
+      "monthlyProgress": "Progres Lunar"
+    },
+    "gamification": {
+      "achievements": "Realizări",
+      "streak": "Seria de Zile",
+      "level": "Nivel",
+      "points": "Puncte",
+      "badges": "Insigne",
+      "ranking": "Clasament",
+      "experience": "Experiență"
+    },
     "stats": {
       "testsCompleted": "Teste Completate",
       "careerPlans": "Planuri de Carieră",
@@ -76,6 +110,11 @@
       "planCareer": "Creează-ți un plan de carieră personalizat",
       "planCareerDesc": "Setează-ți obiectivele și urmărește-ți progresul pas cu pas.",
       "startCareerPlan": "Începe Planul"
+    },
+    "recentActivity": {
+      "title": "Activitatea Recentă",
+      "noActivity": "Nicio activitate recentă",
+      "viewAll": "Vezi toate"
     }
   },
   "tests": {
@@ -245,7 +284,7 @@
   },
   "careerPaths": {
     "title": "Planurile tale de carieră personalizate",
-    "subtitle": "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale.",
+    "subtitle": "Inteligența artificială creează planuri de carieră bazate pe rezultatele testelor tale, oferindu-ți o cale clară către obiectivele profesionale.",
     "createPlan": "Creează Plan Nou",
     "nPlansFound": "planuri găsite",
     "searchPlans": "Caută planuri...",
@@ -288,7 +327,7 @@
   },
   "cvOptimization": {
     "title": "Optimizare CV",
-    "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele.",
+    "description": "Analizează-ți CV-ul în raport cu un anunț de angajare pentru a-ți îmbunătăți șansele. Primește feedback detaliat și sugestii de optimizare.",
     "startAnalysis": "Începe Analiza",
     "uploadCV": "Încarcă CV-ul",
     "pasteJobDescription": "Lipește descrierea jobului",
@@ -315,11 +354,15 @@
     "passwordChanged": "Parola a fost schimbată cu succes",
     "invalidCurrentPassword": "Parola curentă nu este corectă",
     "passwordMismatch": "Parolele nu se potrivesc",
-    "quickActions": "Acțiuni rapide",
-    "viewAllTests": "Vezi toate testele",
-    "createCareerPlan": "Creează un plan de carieră",
-    "downloadReports": "Descarcă rapoartele",
-    "manageSubscription": "Gestionează abonamentul",
+    "quickActions": {
+      "title": "Acțiuni rapide",
+      "tryNewTest": "Încearcă un test nou",
+      "goToDashboard": "Mergi la Dashboard",
+      "viewAllTests": "Vezi toate testele",
+      "createCareerPlan": "Creează un plan de carieră",
+      "downloadReports": "Descarcă rapoartele",
+      "manageSubscription": "Gestionează abonamentul"
+    },
     "admin": {
       "notice": "Acesta este un cont de administrator cu acces la toate funcționalitățile."
     },
