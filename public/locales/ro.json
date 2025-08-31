@@ -1,5 +1,44 @@
 
 {
+  "dashboard": {
+    "testCategories": "Categorii de Teste",
+    "exploreCategories": "Explorează diferitele tipuri de evaluări disponibile",
+    "seeAllTests": "Vezi Toate Testele",
+    "categories": {
+      "testLabel": "test",
+      "testsLabel": "teste"
+    }
+  },
+  "profile": {
+    "stats": {
+      "testsCompleted": "Teste Completate",
+      "averageScore": "Scor Mediu",
+      "thisMonth": "Luna Aceasta", 
+      "bestAt": "Cel Mai Bun La",
+      "status": "Status",
+      "administrator": "Administrator"
+    },
+    "progress": {
+      "title": "Progresul Tău",
+      "overall": "Progres General",
+      "testsCompleted": "Teste Completate"
+    },
+    "quickActions": {
+      "tryNewTest": "Încearcă un test nou",
+      "goToDashboard": "Mergi la Dashboard",
+      "viewResults": "Vezi rezultate"
+    }
+  },
+  "toasts": {
+    "success": "Operația a fost completată cu succes",
+    "error": "A apărut o eroare",
+    "loading": "Se încarcă...",
+    "saved": "Salvat cu succes",
+    "deleted": "Șters cu succes",
+    "updated": "Actualizat cu succes",
+    "profileUpdated": "Profilul a fost actualizat",
+    "passwordChanged": "Parola a fost schimbată"
+  },
   "common": {
     "loading": "Se încarcă...",
     "error": "Eroare",

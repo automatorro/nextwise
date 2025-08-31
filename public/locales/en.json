@@ -1,5 +1,44 @@
 
 {
+  "dashboard": {
+    "testCategories": "Test Categories",
+    "exploreCategories": "Explore different types of available assessments",
+    "seeAllTests": "See All Tests",
+    "categories": {
+      "testLabel": "test",
+      "testsLabel": "tests"
+    }
+  },
+  "profile": {
+    "stats": {
+      "testsCompleted": "Tests Completed",
+      "averageScore": "Average Score",
+      "thisMonth": "This Month",
+      "bestAt": "Best At",
+      "status": "Status",
+      "administrator": "Administrator"
+    },
+    "progress": {
+      "title": "Your Progress",
+      "overall": "Overall Progress",
+      "testsCompleted": "Tests Completed"
+    },
+    "quickActions": {
+      "tryNewTest": "Try a new test",
+      "goToDashboard": "Go to Dashboard",
+      "viewResults": "View results"
+    }
+  },
+  "toasts": {
+    "success": "Operation completed successfully",
+    "error": "An error occurred",
+    "loading": "Loading...",
+    "saved": "Saved successfully",
+    "deleted": "Deleted successfully",
+    "updated": "Updated successfully",
+    "profileUpdated": "Profile updated",
+    "passwordChanged": "Password changed"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",

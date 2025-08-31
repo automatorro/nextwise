@@ -2,6 +2,7 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Trophy, TrendingUp, Calendar, Award, Shield } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface UserStats {
   totalTests: number;
@@ -16,6 +17,7 @@ interface StatsCardsProps {
 }
 
 const StatsCards = ({ userStats, isAdmin }: StatsCardsProps) => {
+  const { t } = useTranslation();
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600';
     if (score >= 60) return 'text-yellow-600';
@@ -29,7 +31,7 @@ const StatsCards = ({ userStats, isAdmin }: StatsCardsProps) => {
           <div className="flex items-center">
             <Trophy className="h-8 w-8 text-yellow-600" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Teste Completate</p>
+              <p className="text-sm font-medium text-gray-600">{t('profile.stats.testsCompleted')}</p>
               <p className="text-2xl font-bold text-gray-900">{userStats.totalTests}</p>
             </div>
           </div>
@@ -41,7 +43,7 @@ const StatsCards = ({ userStats, isAdmin }: StatsCardsProps) => {
           <div className="flex items-center">
             <TrendingUp className="h-8 w-8 text-blue-600" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Scor Mediu</p>
+              <p className="text-sm font-medium text-gray-600">{t('profile.stats.averageScore')}</p>
               <p className={`text-2xl font-bold ${getScoreColor(userStats.averageScore)}`}>
                 {userStats.averageScore}%
               </p>
@@ -55,7 +57,7 @@ const StatsCards = ({ userStats, isAdmin }: StatsCardsProps) => {
           <div className="flex items-center">
             <Calendar className="h-8 w-8 text-green-600" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Luna Aceasta</p>
+              <p className="text-sm font-medium text-gray-600">{t('profile.stats.thisMonth')}</p>
               <p className="text-2xl font-bold text-gray-900">{userStats.completedThisMonth}</p>
             </div>
           </div>
@@ -68,10 +70,10 @@ const StatsCards = ({ userStats, isAdmin }: StatsCardsProps) => {
             <Award className="h-8 w-8 text-purple-600" />
             <div className="ml-4">
               <p className="text-sm font-medium text-gray-600">
-                {isAdmin ? 'Status' : 'Cel Mai Bun La'}
+                {isAdmin ? t('profile.stats.status') : t('profile.stats.bestAt')}
               </p>
               <p className="text-sm font-bold text-gray-900">
-                {isAdmin ? 'Administrator' : userStats.bestCategory}
+                {isAdmin ? t('profile.stats.administrator') : userStats.bestCategory}
               </p>
             </div>
           </div>
