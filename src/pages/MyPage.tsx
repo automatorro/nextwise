@@ -8,12 +8,12 @@ import { Loader2 } from 'lucide-react';
 import HomeNavigation from '@/components/home/HomeNavigation';
 import Footer from '@/components/home/Footer';
 import ProfileHeader from '@/components/profile/ProfileHeader';
-import StatsCards from '@/components/profile/StatsCards';
-import AdminNotice from '@/components/profile/AdminNotice';
-import RecentTestResults from '@/components/profile/RecentTestResults';
 import ProfileInfoCard from '@/components/profile/ProfileInfoCard';
 import ProgressOverview from '@/components/profile/ProgressOverview';
 import QuickActions from '@/components/profile/QuickActions';
+import RecentTestResults from '@/components/profile/RecentTestResults';
+import StatsCards from '@/components/profile/StatsCards';
+import AdminNotice from '@/components/profile/AdminNotice';
 
 const MyPage = () => {
   const { user } = useAuth();
@@ -23,69 +23,53 @@ const MyPage = () => {
 
   if (isLoading || roleLoading) {
     return (
-      <div>
-        <HomeNavigation />
-        <div className="pt-28">
-          <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-            <Loader2 className="w-8 h-8 animate-spin" />
-          </div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="flex items-center space-x-2">
+          <Loader2 className="w-6 h-6 animate-spin" />
+          <span>{t('common.loading')}</span>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       <HomeNavigation />
-      <div className="pt-28">
-        <div className="min-h-screen bg-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {/* Profile Header */}
-            <div className="mb-8">
-              <h1 className="text-3xl font-bold text-gray-900">
-                {t('profile.title')}
-              </h1>
-              <div className="mt-2">
-                <p className="text-xl text-gray-600">
-                  {t('profile.welcome')} {profile?.full_name || user?.email}! 👋
-                </p>
-                <p className="text-gray-600">
-                  {t('profile.welcomeMessage')}
-                </p>
-                {isAdmin() && (
-                  <div className="mt-2">
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
-                      {t('profile.administrator')}
-                    </span>
-                  </div>
-                )}
+      
+      <div className="pt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          {/* Header Section */}
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+              {t('profile.myProfile')}
+            </h1>
+            <p className="text-gray-600">
+              {t('profile.profileDescription')}
+            </p>
+          </div>
+
+          <ProfileHeader profile={profile} />
+
+          {/* Admin Notice */}
+          {isAdmin() && <AdminNotice />}
+
+          {/* Main Content Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
+            {/* Left Column - Profile & Stats */}
+            <div className="lg:col-span-1">
+              <div className="space-y-6">
+                {/* Stats Cards */}
+                <StatsCards userStats={userStats} />
               </div>
             </div>
 
-            <StatsCards userStats={userStats} isAdmin={isAdmin()} />
-
-            {isAdmin() && (
-              <div className="mb-8">
-                <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
-                  <p className="text-purple-800">
-                    {t('profile.admin.notice')}
-                  </p>
-                </div>
-              </div>
-            )}
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              <div className="lg:col-span-2">
-                <RecentTestResults testResults={testResults} />
-              </div>
-
+            {/* Middle Column - Profile Info & Progress */}
+            <div className="lg:col-span-1">
               <div className="space-y-6">
                 <ProfileInfoCard 
                   user={{
                     full_name: profile?.full_name,
                     email: user?.email,
-                    role: profile?.role,
                     created_at: profile?.created_at,
                     last_sign_in_at: user?.last_sign_in_at
                   }}
@@ -95,9 +79,15 @@ const MyPage = () => {
                 <QuickActions isAdmin={isAdmin()} />
               </div>
             </div>
+
+            {/* Right Column - Recent Results */}
+            <div className="lg:col-span-1">
+              <RecentTestResults testResults={testResults} />
+            </div>
           </div>
         </div>
       </div>
+      
       <Footer />
     </div>
   );
