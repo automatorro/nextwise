@@ -1,133 +1,171 @@
 
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
+import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
-import { useToast } from '@/hooks/use-toast';
+import { Label } from '@/components/ui/label';
+import { useTranslation } from '@/hooks/useTranslation';
 import { supabase } from '@/integrations/supabase/client';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage } from '@/hooks/useLanguage';
-
-const profileSchema = z.object({
-  fullName: z.string().min(2, 'Full name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-});
-
-type ProfileFormData = z.infer<typeof profileSchema>;
+import { useToast } from '@/hooks/use-toast';
 
 interface ProfileEditFormProps {
-  initialData: {
-    fullName: string;
-    email: string;
+  user: {
+    id: string;
+    full_name?: string;
+    email?: string;
   };
+  onUpdate: () => void;
 }
 
-const ProfileEditForm = ({ initialData }: ProfileEditFormProps) => {
+const ProfileEditForm = ({ user, onUpdate }: ProfileEditFormProps) => {
+  const { t } = useTranslation();
   const { toast } = useToast();
-  const { user } = useAuth();
-  const { t } = useLanguage();
-  
-  const form = useForm<ProfileFormData>({
-    resolver: zodResolver(profileSchema),
-    defaultValues: initialData,
-  });
+  const [fullName, setFullName] = useState(user.full_name || '');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const onSubmit = async (data: ProfileFormData) => {
+  const handleUpdateProfile = async () => {
+    if (!fullName.trim()) return;
+
+    setLoading(true);
     try {
-      // Update email in Supabase Auth if changed
-      if (data.email !== initialData.email) {
-        const { error: emailError } = await supabase.auth.updateUser({
-          email: data.email
-        });
-        
-        if (emailError) throw emailError;
-        
-        toast({
-          title: t('common.success'),
-          description: t('profile.profileUpdated'),
-        });
-      }
-
-      // Update profile in profiles table
-      const { error: profileError } = await supabase
-        .from('profiles')
-        .update({ full_name: data.fullName })
-        .eq('id', user?.id);
-
-      if (profileError) throw profileError;
-
-      // Update user metadata
-      const { error: metadataError } = await supabase.auth.updateUser({
-        data: { full_name: data.fullName }
+      const { error } = await supabase.auth.updateUser({
+        data: { full_name: fullName }
       });
 
-      if (metadataError) throw metadataError;
+      if (error) throw error;
 
       toast({
-        title: t('common.success'),
-        description: t('profile.profileUpdated'),
+        title: t('toasts.success'),
+        description: t('toasts.profileUpdated'),
       });
-
+      
+      onUpdate();
     } catch (error: any) {
       toast({
-        title: "Eroare",
-        description: error.message || "A apărut o eroare la actualizarea profilului.",
-        variant: "destructive",
+        title: t('toasts.error'),
+        description: error.message,
+        variant: 'destructive',
       });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChangePassword = async () => {
+    if (newPassword !== confirmPassword) {
+      toast({
+        title: t('toasts.error'),
+        description: t('profile.passwordMismatch'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast({
+        title: t('toasts.error'),
+        description: t('auth.passwordTooShort'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: t('toasts.success'),
+        description: t('toasts.passwordChanged'),
+      });
+      
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error: any) {
+      toast({
+        title: t('toasts.error'),
+        description: error.message,
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t('profile.personalInfo')}</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="fullName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('profile.fullName')}</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Introduceți numele complet" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('profile.updateProfile')}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="fullName">{t('profile.fullName')}</Label>
+            <Input
+              id="fullName"
+              value={fullName}
+              onChange={(e) => setFullName(e.target.value)}
+              placeholder={t('profile.fullName')}
             />
+          </div>
+          <Button 
+            onClick={handleUpdateProfile} 
+            disabled={loading || !fullName.trim()}
+          >
+            {loading ? t('common.loading') : t('profile.updateProfile')}
+          </Button>
+        </CardContent>
+      </Card>
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t('profile.email')}</FormLabel>
-                  <FormControl>
-                    <Input type="email" placeholder="Introduceți adresa de email" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('profile.changePassword')}</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="currentPassword">{t('profile.currentPassword')}</Label>
+            <Input
+              id="currentPassword"
+              type="password"
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
             />
-
-            <Button 
-              type="submit" 
-              disabled={form.formState.isSubmitting}
-              className="w-full"
-            >
-              {form.formState.isSubmitting ? t('common.loading') : t('profile.updateProfile')}
-            </Button>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="newPassword">{t('profile.newPassword')}</Label>
+            <Input
+              id="newPassword"
+              type="password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="confirmPassword">{t('profile.confirmPassword')}</Label>
+            <Input
+              id="confirmPassword"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          </div>
+          <Button 
+            onClick={handleChangePassword} 
+            disabled={loading || !newPassword || !confirmPassword}
+          >
+            {loading ? t('common.loading') : t('profile.changePassword')}
+          </Button>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

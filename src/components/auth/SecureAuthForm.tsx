@@ -1,218 +1,120 @@
 
-import { useState } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { SecurePasswordInput } from './SecurePasswordInput';
-import { useSecureAuth } from '@/hooks/useSecureAuth';
-import { emailSchema, passwordSchema, sanitizeInput } from '@/utils/security';
-import { toast } from 'sonner';
-import { z } from 'zod';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
-export const SecureAuthForm = () => {
-  const { t } = useLanguage();
-  const { signIn, signUp, isRateLimited, attemptCount } = useSecureAuth();
-  const [isLoading, setIsLoading] = useState(false);
-  
-  // Sign in form state
-  const [signInData, setSignInData] = useState({
-    email: '',
-    password: ''
-  });
-  
-  // Sign up form state
-  const [signUpData, setSignUpData] = useState({
-    email: '',
-    password: '',
-    fullName: ''
-  });
+interface SecureAuthFormProps {
+  mode: 'signin' | 'signup';
+}
 
-  const handleSignIn = async (e: React.FormEvent) => {
+const SecureAuthForm = ({ mode }: SecureAuthFormProps) => {
+  const { t } = useTranslation();
+  const { toast } = useToast();
+  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (isRateLimited) {
-      toast.error('Too many failed attempts. Please try again later.');
+    if (!email || !password) {
+      toast({
+        title: t('toasts.error'),
+        description: !email ? t('auth.emailRequired') : t('auth.passwordRequired'),
+        variant: 'destructive',
+      });
       return;
     }
 
-    setIsLoading(true);
-    
+    if (password.length < 6) {
+      toast({
+        title: t('toasts.error'),
+        description: t('auth.passwordTooShort'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    setLoading(true);
+
     try {
-      // Validate email
-      const emailResult = emailSchema.safeParse(signInData.email);
-      if (!emailResult.success) {
-        toast.error(emailResult.error.errors[0].message);
-        return;
-      }
+      if (mode === 'signup') {
+        const { error } = await supabase.auth.signUp({
+          email,
+          password,
+        });
 
-      // Validate password
-      const passwordResult = passwordSchema.safeParse(signInData.password);
-      if (!passwordResult.success) {
-        toast.error('Please check your password');
-        return;
-      }
+        if (error) throw error;
 
-      const result = await signIn(signInData.email, signInData.password);
-      
-      if (result.error) {
-        toast.error('Invalid email or password');
+        toast({
+          title: t('toasts.success'),
+          description: t('toasts.accountCreated'),
+        });
+      } else {
+        const { error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+
+        if (error) throw error;
+
+        toast({
+          title: t('toasts.success'),
+          description: t('toasts.loginSuccessful'),
+        });
         
-        if (attemptCount >= 2) {
-          toast.warning('Multiple failed attempts. Please verify your credentials.');
-        }
-      } else {
-        toast.success('Successfully signed in!');
+        navigate('/dashboard');
       }
-    } catch (error) {
-      console.error('Sign in error:', error);
-      toast.error('Sign in failed. Please try again.');
+    } catch (error: any) {
+      toast({
+        title: t('toasts.error'),
+        description: error.message === 'Invalid login credentials' 
+          ? t('auth.invalidCredentials') 
+          : error.message,
+        variant: 'destructive',
+      });
     } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (isRateLimited) {
-      toast.error('Too many attempts. Please try again later.');
-      return;
-    }
-
-    setIsLoading(true);
-    
-    try {
-      // Validate email
-      const emailResult = emailSchema.safeParse(signUpData.email);
-      if (!emailResult.success) {
-        toast.error(emailResult.error.errors[0].message);
-        return;
-      }
-
-      // Validate password
-      const passwordResult = passwordSchema.safeParse(signUpData.password);
-      if (!passwordResult.success) {
-        toast.error(passwordResult.error.errors[0].message);
-        return;
-      }
-
-      // Validate full name
-      const sanitizedName = sanitizeInput(signUpData.fullName);
-      if (sanitizedName.length < 2) {
-        toast.error('Please enter your full name');
-        return;
-      }
-
-      const result = await signUp(signUpData.email, signUpData.password, sanitizedName);
-      
-      if (result.error) {
-        toast.error(result.error.message || 'Registration failed');
-      } else {
-        toast.success('Registration successful! Please check your email to verify your account.');
-      }
-    } catch (error) {
-      console.error('Sign up error:', error);
-      toast.error('Registration failed. Please try again.');
-    } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader>
-        <CardTitle>{t('auth.welcome')}</CardTitle>
-        <CardDescription>{t('auth.signInMessage')}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="signin" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signin">{t('auth.signIn')}</TabsTrigger>
-            <TabsTrigger value="signup">{t('auth.signUp')}</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="signin" className="space-y-4">
-            <form onSubmit={handleSignIn} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="signin-email">{t('auth.email')}</Label>
-                <Input
-                  id="signin-email"
-                  type="email"
-                  value={signInData.email}
-                  onChange={(e) => setSignInData({ ...signInData, email: e.target.value })}
-                  placeholder={t('auth.enterEmail')}
-                  required
-                />
-              </div>
-              
-              <SecurePasswordInput
-                value={signInData.password}
-                onChange={(password) => setSignInData({ ...signInData, password })}
-                showStrengthIndicator={false}
-              />
-              
-              {attemptCount > 0 && (
-                <div className="text-sm text-yellow-600">
-                  Failed attempts: {attemptCount}/5
-                </div>
-              )}
-              
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={isLoading || isRateLimited}
-              >
-                {isLoading ? t('auth.signingIn') : t('auth.signIn')}
-              </Button>
-            </form>
-          </TabsContent>
-          
-          <TabsContent value="signup" className="space-y-4">
-            <form onSubmit={handleSignUp} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="signup-name">{t('auth.fullName')}</Label>
-                <Input
-                  id="signup-name"
-                  type="text"
-                  value={signUpData.fullName}
-                  onChange={(e) => setSignUpData({ ...signUpData, fullName: e.target.value })}
-                  placeholder={t('auth.enterFullName')}
-                  required
-                />
-              </div>
-              
-              <div className="space-y-2">
-                <Label htmlFor="signup-email">{t('auth.email')}</Label>
-                <Input
-                  id="signup-email"
-                  type="email"
-                  value={signUpData.email}
-                  onChange={(e) => setSignUpData({ ...signUpData, email: e.target.value })}
-                  placeholder={t('auth.enterEmail')}
-                  required
-                />
-              </div>
-              
-              <SecurePasswordInput
-                value={signUpData.password}
-                onChange={(password) => setSignUpData({ ...signUpData, password })}
-                showStrengthIndicator={true}
-              />
-              
-              <Button 
-                type="submit" 
-                className="w-full" 
-                disabled={isLoading || isRateLimited}
-              >
-                {isLoading ? t('auth.creatingAccount') : t('auth.createAccount')}
-              </Button>
-            </form>
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-    </Card>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="email">{t('auth.email')}</Label>
+        <Input
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder={t('auth.email')}
+          required
+        />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="password">{t('auth.password')}</Label>
+        <Input
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          placeholder={t('auth.password')}
+          required
+        />
+      </div>
+
+      <Button type="submit" className="w-full" disabled={loading}>
+        {loading ? t('common.loading') : mode === 'signin' ? t('auth.signIn') : t('auth.signUp')}
+      </Button>
+    </form>
   );
 };
+
+export default SecureAuthForm;

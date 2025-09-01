@@ -1,71 +1,69 @@
 
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage } from '@/hooks/useLanguage';
-import { useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import { SecureAuthForm } from './SecureAuthForm';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useTranslation } from '@/hooks/useTranslation';
+import SecureAuthForm from './SecureAuthForm';
 
-export const AuthPage = () => {
-  const { loading, user } = useAuth();
-  const { t } = useLanguage();
-  const navigate = useNavigate();
-
-  // Redirect to dashboard if user is already logged in
-  useEffect(() => {
-    if (!loading && user) {
-      navigate('/dashboard', { replace: true });
-    }
-  }, [loading, user, navigate]);
-
-  const handleGoHome = () => {
-    navigate('/');
-  };
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">{t('common.loading')}</p>
-        </div>
-      </div>
-    );
-  }
-
-  // Don't render the auth form if user is logged in (will redirect)
-  if (user) {
-    return null;
-  }
+const AuthPage = () => {
+  const { t } = useTranslation();
+  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <div className="w-full max-w-md space-y-4">
-        <Button
-          variant="ghost"
-          onClick={handleGoHome}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-800"
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+        <Link 
+          to="/" 
+          className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900 mb-6"
         >
-          <ArrowLeft className="h-4 w-4" />
+          <ArrowLeft className="h-4 w-4 mr-2" />
           {t('auth.backToMain')}
-        </Button>
+        </Link>
         
         <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl font-bold text-gray-900">
+          <CardHeader>
+            <CardTitle className="text-center text-2xl font-bold">
               {t('auth.welcome')}
             </CardTitle>
-            <CardDescription className="text-gray-600">
+            <p className="text-center text-gray-600">
               {t('auth.signInMessage')}
-            </CardDescription>
+            </p>
           </CardHeader>
           <CardContent>
-            <SecureAuthForm />
+            <SecureAuthForm mode={mode} />
+            
+            <div className="mt-6 text-center">
+              {mode === 'signin' ? (
+                <p className="text-sm text-gray-600">
+                  {t('auth.dontHaveAccount')}{' '}
+                  <Button
+                    variant="link"
+                    onClick={() => setMode('signup')}
+                    className="p-0 h-auto font-semibold"
+                  >
+                    {t('auth.signUp')}
+                  </Button>
+                </p>
+              ) : (
+                <p className="text-sm text-gray-600">
+                  {t('auth.alreadyHaveAccount')}{' '}
+                  <Button
+                    variant="link"
+                    onClick={() => setMode('signin')}
+                    className="p-0 h-auto font-semibold"
+                  >
+                    {t('auth.signIn')}
+                  </Button>
+                </p>
+              )}
+            </div>
           </CardContent>
         </Card>
       </div>
     </div>
   );
 };
+
+export default AuthPage;

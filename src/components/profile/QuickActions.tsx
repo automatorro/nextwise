@@ -3,54 +3,65 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Play, BarChart3, FileText, Target, Download, Settings } from 'lucide-react';
+import { 
+  TestTube, 
+  BarChart3, 
+  FileText, 
+  Users, 
+  Download,
+  Settings
+} from 'lucide-react';
 import { useTranslation } from '@/hooks/useTranslation';
 
-const QuickActions = () => {
+interface QuickActionsProps {
+  isAdmin: boolean;
+}
+
+const QuickActions = ({ isAdmin }: QuickActionsProps) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
   const actions = [
     {
-      icon: Play,
       title: t('profile.quickActions.tryNewTest'),
       description: t('profile.quickActions.tryNewTestDesc'),
-      action: () => navigate('/tests'),
+      icon: TestTube,
+      onClick: () => navigate('/tests'),
       color: 'text-blue-600'
     },
     {
-      icon: BarChart3,
       title: t('profile.quickActions.goToDashboard'),
       description: t('profile.quickActions.goToDashboardDesc'),
-      action: () => navigate('/dashboard'),
+      icon: BarChart3,
+      onClick: () => navigate('/dashboard'),
       color: 'text-green-600'
     },
     {
-      icon: FileText,
       title: t('profile.quickActions.viewAllTests'),
       description: t('profile.quickActions.viewAllTestsDesc'),
-      action: () => navigate('/tests'),
+      icon: FileText,
+      onClick: () => navigate('/tests'),
       color: 'text-purple-600'
     },
     {
-      icon: Target,
       title: t('profile.quickActions.createCareerPlan'),
       description: t('profile.quickActions.createCareerPlanDesc'),
-      action: () => navigate('/career-paths'),
+      icon: Users,
+      onClick: () => navigate('/career'),
       color: 'text-orange-600'
     },
     {
-      icon: Download,
       title: t('profile.quickActions.downloadReports'),
       description: t('profile.quickActions.downloadReportsDesc'),
-      action: () => console.log('Download reports'),
+      icon: Download,
+      onClick: () => {},
       color: 'text-indigo-600'
     },
     {
-      icon: Settings,
       title: t('profile.quickActions.manageSubscription'),
       description: t('profile.quickActions.manageSubscriptionDesc'),
-      action: () => navigate('/subscription'),
+      icon: Settings,
+      onClick: () => {},
       color: 'text-red-600'
     }
   ];
@@ -68,13 +79,13 @@ const QuickActions = () => {
               <Button
                 key={index}
                 variant="outline"
-                className="h-auto p-4 flex flex-col items-start text-left space-y-2 hover:bg-gray-50"
-                onClick={action.action}
+                className="h-auto p-4 text-left flex flex-col items-start space-y-2"
+                onClick={action.onClick}
               >
-                <IconComponent className={`h-6 w-6 ${action.color}`} />
+                <IconComponent className={`h-5 w-5 ${action.color}`} />
                 <div>
-                  <p className="font-medium">{action.title}</p>
-                  <p className="text-sm text-muted-foreground">{action.description}</p>
+                  <div className="font-semibold text-sm">{action.title}</div>
+                  <div className="text-xs text-muted-foreground">{action.description}</div>
                 </div>
               </Button>
             );
