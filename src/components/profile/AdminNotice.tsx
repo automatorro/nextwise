@@ -2,10 +2,16 @@
 import React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Shield } from 'lucide-react';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 
-const AdminNotice = () => {
-  const { t } = useLanguage();
+interface AdminNoticeProps {
+  isAdmin: boolean;
+}
+
+const AdminNotice = ({ isAdmin }: AdminNoticeProps) => {
+  const { t } = useTranslation();
+
+  if (!isAdmin) return null;
 
   return (
     <Card className="mb-8 border-orange-200 bg-orange-50">
