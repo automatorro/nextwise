@@ -48,10 +48,17 @@ const MyPage = () => {
             </p>
           </div>
 
-          <ProfileHeader profile={profile} />
+          <ProfileHeader 
+            user={{
+              full_name: profile?.full_name,
+              email: user?.email,
+              role: profile?.role
+            }}
+            isAdmin={isAdmin()}
+          />
 
           {/* Admin Notice */}
-          {isAdmin() && <AdminNotice />}
+          {isAdmin() && <AdminNotice isAdmin={isAdmin()} />}
 
           {/* Main Content Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mt-8">
@@ -59,7 +66,7 @@ const MyPage = () => {
             <div className="lg:col-span-1">
               <div className="space-y-6">
                 {/* Stats Cards */}
-                <StatsCards userStats={userStats} />
+                <StatsCards userStats={userStats} isAdmin={isAdmin()} />
               </div>
             </div>
 
