@@ -3,7 +3,7 @@ import React from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useUserRole } from '@/hooks/useUserRole';
 import { useProfileData } from '@/hooks/useProfileData';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Loader2 } from 'lucide-react';
 import HomeNavigation from '@/components/home/HomeNavigation';
 import Footer from '@/components/home/Footer';
@@ -17,7 +17,7 @@ import QuickActions from '@/components/profile/QuickActions';
 
 const MyPage = () => {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { isAdmin, loading: roleLoading } = useUserRole();
   const { testResults, profile, userStats, isLoading } = useProfileData();
 
@@ -82,10 +82,14 @@ const MyPage = () => {
 
               <div className="space-y-6">
                 <ProfileInfoCard 
-                  fullName={profile?.full_name}
-                  email={user?.email}
+                  user={{
+                    full_name: profile?.full_name,
+                    email: user?.email,
+                    role: profile?.role,
+                    created_at: profile?.created_at,
+                    last_sign_in_at: user?.last_sign_in_at
+                  }}
                   isAdmin={isAdmin()}
-                  createdAt={profile?.created_at}
                 />
                 <ProgressOverview userStats={userStats} isAdmin={isAdmin()} />
                 <QuickActions isAdmin={isAdmin()} />

@@ -1,8 +1,9 @@
+
 import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useUserRole } from '@/hooks/useUserRole';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -15,7 +16,7 @@ import Footer from '@/components/home/Footer';
 
 const SubscriptionPage = () => {
   const { user } = useAuth();
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { isAdmin, loading: roleLoading } = useUserRole();
 
   // Fetch user profile
@@ -113,9 +114,14 @@ const SubscriptionPage = () => {
               </div>
               
               <ProfileEditForm 
-                initialData={{
-                  fullName: profile?.full_name || user?.user_metadata?.full_name || '',
+                user={{
+                  id: user?.id || '',
+                  full_name: profile?.full_name || user?.user_metadata?.full_name || '',
                   email: user?.email || '',
+                }}
+                onUpdate={() => {
+                  // Refresh profile data
+                  window.location.reload();
                 }}
               />
               
