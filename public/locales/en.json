@@ -1,22 +1,94 @@
-
 {
   "dashboard": {
-    "testCategories": "Test Categories",
-    "exploreCategories": "Explore different types of available assessments",
-    "seeAllTests": "See All Tests",
+    "welcome": "Welcome,",
+    "welcomeSubtext": "Start your personal and professional development journey with our AI tests.",
+    "testCategories": {
+      "title": "Test Categories",
+      "exploreCategories": "Explore categories",
+      "seeAllTests": "See all tests",
+      "personality": "Personality",
+      "cognitive": "Cognitive", 
+      "professional": "Professional",
+      "clinical": "Clinical",
+      "personalityDesc": "Discover your personality traits",
+      "cognitiveDesc": "Test cognitive abilities",
+      "professionalDesc": "Assess professional skills",
+      "clinicalDesc": "Clinical psychological screening"
+    },
     "categories": {
       "testLabel": "test",
       "testsLabel": "tests"
+    },
+    "globalProgress": {
+      "title": "Global Progress",
+      "overallProgress": "Overall Progress",
+      "completedTests": "Tests Completed",
+      "activeGoals": "Active Goals",
+      "milestones": "Milestones",
+      "milestonesReached": "Milestones Reached",
+      "currentStreak": "Current Streak",
+      "days": "days",
+      "weeklyActivity": "Weekly Activity",
+      "monthlyProgress": "Monthly Progress"
+    },
+    "gamification": {
+      "achievements": "Achievements",
+      "streak": "Streak",
+      "level": "Level",
+      "points": "Points",
+      "badges": "Badges",
+      "ranking": "Ranking",
+      "experience": "Experience"
+    },
+    "stats": {
+      "testsCompleted": "Tests Completed",
+      "careerPlans": "Career Plans",
+      "timeSaved": "Time Saved",
+      "careerProgress": "Career Progress"
+    },
+    "actions": {
+      "startFirstTest": "Take the first step towards self-discovery",
+      "startFirstTestDesc": "Complete a test to receive personalized recommendations.",
+      "exploreTests": "Explore Tests",
+      "planCareer": "Create a personalized career plan",
+      "planCareerDesc": "Set your goals and track your progress step by step.",
+      "startCareerPlan": "Start Plan"
+    },
+    "recentActivity": {
+      "title": "Recent Activity",
+      "noActivity": "No recent activity",
+      "viewAll": "View all"
     }
   },
   "profile": {
+    "title": "My Profile",
+    "welcome": "Welcome,",
+    "welcomeMessage": "Here you can see a summary of your activity and personal information.",
+    "administrator": "Administrator",
+    "profileUpdated": "Profile updated successfully",
+    "fullName": "Full name",
+    "updateProfile": "Update profile",
+    "changePassword": "Change password",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "confirmPassword": "Confirm password",
+    "passwordChanged": "Password changed successfully",
+    "invalidCurrentPassword": "Current password is incorrect",
+    "passwordMismatch": "Passwords do not match",
     "stats": {
-      "testsCompleted": "Tests Completed",
+      "testsCompleted": "Tests completed",
       "averageScore": "Average Score",
       "thisMonth": "This Month",
       "bestAt": "Best At",
       "status": "Status",
-      "administrator": "Administrator"
+      "administrator": "Administrator",
+      "careerPlans": "Career plans",
+      "hoursSpent": "Hours spent",
+      "achievementsUnlocked": "Achievements unlocked",
+      "overallProgress": "Overall progress",
+      "weeklyActivity": "Weekly activity",
+      "monthlyGoals": "Monthly goals",
+      "yearlyMilestones": "Yearly milestones"
     },
     "progress": {
       "title": "Your Progress",
@@ -24,9 +96,46 @@
       "testsCompleted": "Tests Completed"
     },
     "quickActions": {
+      "title": "Quick actions",
       "tryNewTest": "Try a new test",
+      "tryNewTestDesc": "Discover new aspects of your personality",
       "goToDashboard": "Go to Dashboard",
-      "viewResults": "View results"
+      "goToDashboardDesc": "View overall progress and statistics",
+      "viewResults": "View results",
+      "viewAllTests": "View all tests",
+      "viewAllTestsDesc": "Explore the complete test library",
+      "createCareerPlan": "Create career plan",
+      "createCareerPlanDesc": "Plan your professional future",
+      "downloadReports": "Download reports",
+      "downloadReportsDesc": "Export results in PDF format",
+      "manageSubscription": "Manage subscription",
+      "manageSubscriptionDesc": "Change plan or update payment"
+    },
+    "admin": {
+      "notice": "This is an administrator account with access to all features."
+    },
+    "personalInfo": {
+      "title": "Profile Information",
+      "name": "Name",
+      "email": "Email",
+      "role": "Role",
+      "memberSince": "Member Since",
+      "lastLogin": "Last login",
+      "accountStatus": "Account status",
+      "subscription": "Subscription",
+      "timeZone": "Time zone",
+      "language": "Language",
+      "notifications": "Notifications"
+    },
+    "achievements": {
+      "title": "Achievements",
+      "firstTest": "First test completed",
+      "fiveTests": "5 tests completed",
+      "tenTests": "10 tests completed",
+      "firstCareerPlan": "First career plan created",
+      "monthlyStreak": "Monthly consistency streak",
+      "perfectScore": "Perfect score on a test",
+      "earlyAdopter": "Early adopter"
     }
   },
   "toasts": {
@@ -37,7 +146,18 @@
     "deleted": "Deleted successfully",
     "updated": "Updated successfully",
     "profileUpdated": "Profile updated",
-    "passwordChanged": "Password changed"
+    "passwordChanged": "Password changed",
+    "testCompleted": "Test completed successfully",
+    "planCreated": "Career plan created",
+    "analysisGenerated": "AI analysis generated",
+    "reportDownloaded": "Report downloaded",
+    "subscriptionUpdated": "Subscription updated",
+    "settingsSaved": "Settings saved",
+    "emailSent": "Email sent",
+    "passwordReset": "Password reset",
+    "accountCreated": "Account created successfully",
+    "loginSuccessful": "Login successful",
+    "logoutSuccessful": "Logout successful"
   },
   "common": {
     "loading": "Loading...",
@@ -88,6 +208,8 @@
     "ctaFinalTitle": "Ready to Transform Your Career?",
     "ctaFinalSubtitle": "Join thousands of professionals who have accelerated their development with NextWise",
     "ctaFinalButton": "Start Now For Free",
+    "footerText": "Accelerate your professional development with NextWise - the AI platform for careers.",
+    "footerCopyright": "© 2024 NextWise. All rights reserved.",
     "features": {
       "psychologicalEvaluations": "Psychological Evaluations",
       "psychologicalEvaluationsDesc": "Understand your personality and cognitive skills.",
@@ -97,63 +219,6 @@
       "advancedAnalyticsDesc": "Track your progress with detailed insights.",
       "aiMentoring": "AI Mentoring",
       "aiMentoringDesc": "Receive continuous guidance from your AI mentor."
-    }
-  },
-  "dashboard": {
-    "welcome": "Welcome,",
-    "welcomeSubtext": "Start your personal and professional development journey with our AI tests.",
-    "testCategories": {
-      "title": "Test Categories",
-      "exploreCategories": "Explore categories",
-      "seeAllTests": "See all tests",
-      "personality": "Personality",
-      "cognitive": "Cognitive",
-      "professional": "Professional", 
-      "clinical": "Clinical",
-      "personalityDesc": "Discover your personality traits",
-      "cognitiveDesc": "Test cognitive abilities",
-      "professionalDesc": "Assess professional skills",
-      "clinicalDesc": "Clinical psychological screening"
-    },
-    "globalProgress": {
-      "title": "Global Progress",
-      "overallProgress": "Overall Progress",
-      "completedTests": "Tests Completed",
-      "activeGoals": "Active Goals",
-      "milestones": "Milestones",
-      "milestonesReached": "Milestones Reached",
-      "currentStreak": "Current Streak",
-      "days": "days",
-      "weeklyActivity": "Weekly Activity", 
-      "monthlyProgress": "Monthly Progress"
-    },
-    "gamification": {
-      "achievements": "Achievements",
-      "streak": "Streak",
-      "level": "Level",
-      "points": "Points",
-      "badges": "Badges",
-      "ranking": "Ranking",
-      "experience": "Experience"
-    },
-    "stats": {
-      "testsCompleted": "Tests Completed",
-      "careerPlans": "Career Plans",
-      "timeSaved": "Time Saved",
-      "careerProgress": "Career Progress"
-    },
-    "actions": {
-      "startFirstTest": "Take the first step towards self-discovery",
-      "startFirstTestDesc": "Complete a test to receive personalized recommendations.",
-      "exploreTests": "Explore Tests",
-      "planCareer": "Create a personalized career plan",
-      "planCareerDesc": "Set your goals and track your progress step by step.",
-      "startCareerPlan": "Start Plan"
-    },
-    "recentActivity": {
-      "title": "Recent Activity",
-      "noActivity": "No recent activity",
-      "viewAll": "View all"
     }
   },
   "tests": {
@@ -377,67 +442,6 @@
     "missingSkills": "Missing skills",
     "strongPoints": "Strong points",
     "recommendedChanges": "Recommended changes"
-  },
-  "profile": {
-    "title": "My Profile",
-    "welcome": "Welcome,",
-    "welcomeMessage": "Here you can see a summary of your activity and personal information.",
-    "administrator": "Administrator",
-    "profileUpdated": "Profile updated successfully",
-    "fullName": "Full name",
-    "updateProfile": "Update profile",
-    "changePassword": "Change password",
-    "currentPassword": "Current password",
-    "newPassword": "New password",
-    "confirmPassword": "Confirm password",
-    "passwordChanged": "Password changed successfully",
-    "invalidCurrentPassword": "Current password is incorrect",
-    "passwordMismatch": "Passwords do not match",
-    "quickActions": {
-      "title": "Quick actions",
-      "tryNewTest": "Try a new test",
-      "goToDashboard": "Go to Dashboard",
-      "viewAllTests": "View all tests",
-      "createCareerPlan": "Create career plan",
-      "downloadReports": "Download reports",
-      "manageSubscription": "Manage subscription"
-    },
-    "admin": {
-      "notice": "This is an administrator account with access to all features."
-    },
-    "personalInfo": {
-      "title": "Profile Information",
-      "name": "Name",
-      "email": "Email",
-      "role": "Role",
-      "memberSince": "Member Since",
-      "lastLogin": "Last login",
-      "accountStatus": "Account status",
-      "subscription": "Subscription",
-      "timeZone": "Time zone",
-      "language": "Language",
-      "notifications": "Notifications"
-    },
-    "stats": {
-      "testsCompleted": "Tests completed",
-      "careerPlans": "Career plans",
-      "hoursSpent": "Hours spent",
-      "achievementsUnlocked": "Achievements unlocked",
-      "overallProgress": "Overall progress",
-      "weeklyActivity": "Weekly activity",
-      "monthlyGoals": "Monthly goals",
-      "yearlyMilestones": "Yearly milestones"
-    },
-    "achievements": {
-      "title": "Achievements",
-      "firstTest": "First test completed",
-      "fiveTests": "5 tests completed",
-      "tenTests": "10 tests completed",
-      "firstCareerPlan": "First career plan created",
-      "monthlyStreak": "Monthly consistency streak",
-      "perfectScore": "Perfect score on a test",
-      "earlyAdopter": "Early adopter"
-    }
   },
   "auth": {
     "backToMain": "Back to main page",

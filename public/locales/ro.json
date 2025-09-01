@@ -1,22 +1,94 @@
-
 {
   "dashboard": {
-    "testCategories": "Categorii de Teste",
-    "exploreCategories": "Explorează diferitele tipuri de evaluări disponibile",
-    "seeAllTests": "Vezi Toate Testele",
+    "welcome": "Bun venit,",
+    "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
+    "testCategories": {
+      "title": "Categorii de Teste",
+      "exploreCategories": "Explorează categoriile",
+      "seeAllTests": "Vezi toate testele",
+      "personality": "Personalitate",
+      "cognitive": "Cognitive", 
+      "professional": "Profesionale",
+      "clinical": "Clinice",
+      "personalityDesc": "Descoperă-ți trăsăturile de personalitate",
+      "cognitiveDesc": "Testează abilitățile cognitive",
+      "professionalDesc": "Evaluează competențele profesionale",
+      "clinicalDesc": "Screening psihologic clinic"
+    },
     "categories": {
       "testLabel": "test",
       "testsLabel": "teste"
+    },
+    "globalProgress": {
+      "title": "Progresul Global",
+      "overallProgress": "Progres General",
+      "completedTests": "Teste Completate",
+      "activeGoals": "Obiective Active", 
+      "milestones": "Repere Importante",
+      "milestonesReached": "Repere Atinse",
+      "currentStreak": "Seria Curentă",
+      "days": "zile",
+      "weeklyActivity": "Activitate Săptămânală",
+      "monthlyProgress": "Progres Lunar"
+    },
+    "gamification": {
+      "achievements": "Realizări",
+      "streak": "Seria de Zile",
+      "level": "Nivel",
+      "points": "Puncte",
+      "badges": "Insigne",
+      "ranking": "Clasament",
+      "experience": "Experiență"
+    },
+    "stats": {
+      "testsCompleted": "Teste Completate",
+      "careerPlans": "Planuri de Carieră",
+      "timeSaved": "Timp Economisit",
+      "careerProgress": "Progres Carieră"
+    },
+    "actions": {
+      "startFirstTest": "Fă primul pas spre autocunoaștere",
+      "startFirstTestDesc": "Completează un test pentru a primi recomandări personalizate.",
+      "exploreTests": "Explorează Testele",
+      "planCareer": "Creează-ți un plan de carieră personalizat",
+      "planCareerDesc": "Setează-ți obiectivele și urmărește-ți progresul pas cu pas.",
+      "startCareerPlan": "Începe Planul"
+    },
+    "recentActivity": {
+      "title": "Activitatea Recentă",
+      "noActivity": "Nicio activitate recentă",
+      "viewAll": "Vezi toate"
     }
   },
   "profile": {
+    "title": "Profilul Meu",
+    "welcome": "Bun venit,",
+    "welcomeMessage": "Aici poți vedea sumarul activității tale și informațiile personale.",
+    "administrator": "Administrator",
+    "profileUpdated": "Profil actualizat cu succes",
+    "fullName": "Nume complet",
+    "updateProfile": "Actualizează profilul",
+    "changePassword": "Schimbă parola",
+    "currentPassword": "Parola curentă",
+    "newPassword": "Parola nouă",
+    "confirmPassword": "Confirmă parola",
+    "passwordChanged": "Parola a fost schimbată cu succes",
+    "invalidCurrentPassword": "Parola curentă nu este corectă",
+    "passwordMismatch": "Parolele nu se potrivesc",
     "stats": {
       "testsCompleted": "Teste Completate",
       "averageScore": "Scor Mediu",
       "thisMonth": "Luna Aceasta", 
       "bestAt": "Cel Mai Bun La",
       "status": "Status",
-      "administrator": "Administrator"
+      "administrator": "Administrator",
+      "careerPlans": "Planuri de carieră",
+      "hoursSpent": "Ore petrecute",
+      "achievementsUnlocked": "Realizări deblocate",
+      "overallProgress": "Progres general",
+      "weeklyActivity": "Activitatea săptămânală",
+      "monthlyGoals": "Obiective lunare",
+      "yearlyMilestones": "Repere anuale"
     },
     "progress": {
       "title": "Progresul Tău",
@@ -24,9 +96,46 @@
       "testsCompleted": "Teste Completate"
     },
     "quickActions": {
+      "title": "Acțiuni rapide",
       "tryNewTest": "Încearcă un test nou",
+      "tryNewTestDesc": "Descoperă noi aspecte ale personalității tale",
       "goToDashboard": "Mergi la Dashboard",
-      "viewResults": "Vezi rezultate"
+      "goToDashboardDesc": "Vezi progresul general și statisticile",
+      "viewResults": "Vezi rezultate",
+      "viewAllTests": "Vezi toate testele",
+      "viewAllTestsDesc": "Explorează biblioteca completă de teste",
+      "createCareerPlan": "Creează un plan de carieră",
+      "createCareerPlanDesc": "Planifică-ți viitorul profesional",
+      "downloadReports": "Descarcă rapoartele",
+      "downloadReportsDesc": "Exportă rezultatele în format PDF",
+      "manageSubscription": "Gestionează abonamentul",
+      "manageSubscriptionDesc": "Schimbă planul sau actualizează plata"
+    },
+    "admin": {
+      "notice": "Acesta este un cont de administrator cu acces la toate funcționalitățile."
+    },
+    "personalInfo": {
+      "title": "Informații Profil",
+      "name": "Nume",
+      "email": "Email",
+      "role": "Rol",
+      "memberSince": "Membru din",
+      "lastLogin": "Ultima autentificare",
+      "accountStatus": "Statusul contului",
+      "subscription": "Abonament",
+      "timeZone": "Fus orar",
+      "language": "Limbă",
+      "notifications": "Notificări"
+    },
+    "achievements": {
+      "title": "Realizări",
+      "firstTest": "Primul test completat",
+      "fiveTests": "5 teste completate",
+      "tenTests": "10 teste completate",
+      "firstCareerPlan": "Primul plan de carieră creat",
+      "monthlyStreak": "Activitate consistentă o lună",
+      "perfectScore": "Scor perfect la un test",
+      "earlyAdopter": "Adoptator timpuriu"
     }
   },
   "toasts": {
@@ -37,7 +146,18 @@
     "deleted": "Șters cu succes",
     "updated": "Actualizat cu succes",
     "profileUpdated": "Profilul a fost actualizat",
-    "passwordChanged": "Parola a fost schimbată"
+    "passwordChanged": "Parola a fost schimbată",
+    "testCompleted": "Test completat cu succes",
+    "planCreated": "Plan de carieră creat",
+    "analysisGenerated": "Analiză AI generată",
+    "reportDownloaded": "Raport descărcat",
+    "subscriptionUpdated": "Abonament actualizat",
+    "settingsSaved": "Setări salvate",
+    "emailSent": "Email trimis",
+    "passwordReset": "Parolă resetată",
+    "accountCreated": "Cont creat cu succes",
+    "loginSuccessful": "Autentificare reușită",
+    "logoutSuccessful": "Deconectare reușită"
   },
   "common": {
     "loading": "Se încarcă...",
@@ -88,6 +208,8 @@
     "ctaFinalTitle": "Gata să Îți Transformi Cariera?",
     "ctaFinalSubtitle": "Alătură-te miilor de profesioniști care și-au accelerat dezvoltarea cu NextWise",
     "ctaFinalButton": "Începe Acum Gratuit",
+    "footerText": "Accelerează-ți dezvoltarea profesională cu NextWise - platforma AI pentru carieră.",
+    "footerCopyright": "© 2024 NextWise. Toate drepturile rezervate.",
     "features": {
       "psychologicalEvaluations": "Evaluări Psihologice",
       "psychologicalEvaluationsDesc": "Înțelege-ți personalitatea și abilitățile cognitive.",
@@ -97,63 +219,6 @@
       "advancedAnalyticsDesc": "Urmărește-ți progresul cu informații detaliate.",
       "aiMentoring": "Mentorat AI",
       "aiMentoringDesc": "Primește ghidare continuă de la mentorul tău AI."
-    }
-  },
-  "dashboard": {
-    "welcome": "Bun venit,",
-    "welcomeSubtext": "Începe călătoria ta de dezvoltare personală și profesională cu testele noastre AI.",
-    "testCategories": {
-      "title": "Categorii de Teste",
-      "exploreCategories": "Explorează categoriile",
-      "seeAllTests": "Vezi toate testele",
-      "personality": "Personalitate",
-      "cognitive": "Cognitive", 
-      "professional": "Profesionale",
-      "clinical": "Clinice",
-      "personalityDesc": "Descoperă-ți trăsăturile de personalitate",
-      "cognitiveDesc": "Testează abilitățile cognitive",
-      "professionalDesc": "Evaluează competențele profesionale",
-      "clinicalDesc": "Screening psihologic clinic"
-    },
-    "globalProgress": {
-      "title": "Progresul Global",
-      "overallProgress": "Progres General",
-      "completedTests": "Teste Completate",
-      "activeGoals": "Obiective Active", 
-      "milestones": "Repere Importante",
-      "milestonesReached": "Repere Atinse",
-      "currentStreak": "Seria Curentă",
-      "days": "zile",
-      "weeklyActivity": "Activitate Săptămânală",
-      "monthlyProgress": "Progres Lunar"
-    },
-    "gamification": {
-      "achievements": "Realizări",
-      "streak": "Seria de Zile",
-      "level": "Nivel",
-      "points": "Puncte",
-      "badges": "Insigne",
-      "ranking": "Clasament",
-      "experience": "Experiență"
-    },
-    "stats": {
-      "testsCompleted": "Teste Completate",
-      "careerPlans": "Planuri de Carieră",
-      "timeSaved": "Timp Economisit",
-      "careerProgress": "Progres Carieră"
-    },
-    "actions": {
-      "startFirstTest": "Fă primul pas spre autocunoaștere",
-      "startFirstTestDesc": "Completează un test pentru a primi recomandări personalizate.",
-      "exploreTests": "Explorează Testele",
-      "planCareer": "Creează-ți un plan de carieră personalizat",
-      "planCareerDesc": "Setează-ți obiectivele și urmărește-ți progresul pas cu pas.",
-      "startCareerPlan": "Începe Planul"
-    },
-    "recentActivity": {
-      "title": "Activitatea Recentă",
-      "noActivity": "Nicio activitate recentă",
-      "viewAll": "Vezi toate"
     }
   },
   "tests": {
@@ -377,67 +442,6 @@
     "missingSkills": "Competențe lipsă",
     "strongPoints": "Puncte forte",
     "recommendedChanges": "Modificări recomandate"
-  },
-  "profile": {
-    "title": "Profilul Meu",
-    "welcome": "Bun venit,",
-    "welcomeMessage": "Aici poți vedea sumarul activității tale și informațiile personale.",
-    "administrator": "Administrator",
-    "profileUpdated": "Profil actualizat cu succes",
-    "fullName": "Nume complet",
-    "updateProfile": "Actualizează profilul",
-    "changePassword": "Schimbă parola",
-    "currentPassword": "Parola curentă",
-    "newPassword": "Parola nouă",
-    "confirmPassword": "Confirmă parola",
-    "passwordChanged": "Parola a fost schimbată cu succes",
-    "invalidCurrentPassword": "Parola curentă nu este corectă",
-    "passwordMismatch": "Parolele nu se potrivesc",
-    "quickActions": {
-      "title": "Acțiuni rapide",
-      "tryNewTest": "Încearcă un test nou",
-      "goToDashboard": "Mergi la Dashboard",
-      "viewAllTests": "Vezi toate testele",
-      "createCareerPlan": "Creează un plan de carieră",
-      "downloadReports": "Descarcă rapoartele",
-      "manageSubscription": "Gestionează abonamentul"
-    },
-    "admin": {
-      "notice": "Acesta este un cont de administrator cu acces la toate funcționalitățile."
-    },
-    "personalInfo": {
-      "title": "Informații Profil",
-      "name": "Nume",
-      "email": "Email",
-      "role": "Rol",
-      "memberSince": "Membru din",
-      "lastLogin": "Ultima autentificare",
-      "accountStatus": "Statusul contului",
-      "subscription": "Abonament",
-      "timeZone": "Fus orar",
-      "language": "Limbă",
-      "notifications": "Notificări"
-    },
-    "stats": {
-      "testsCompleted": "Teste completate",
-      "careerPlans": "Planuri de carieră",
-      "hoursSpent": "Ore petrecute",
-      "achievementsUnlocked": "Realizări deblocate",
-      "overallProgress": "Progres general",
-      "weeklyActivity": "Activitatea săptămânală",
-      "monthlyGoals": "Obiective lunare",
-      "yearlyMilestones": "Repere anuale"
-    },
-    "achievements": {
-      "title": "Realizări",
-      "firstTest": "Primul test completat",
-      "fiveTests": "5 teste completate",
-      "tenTests": "10 teste completate",
-      "firstCareerPlan": "Primul plan de carieră creat",
-      "monthlyStreak": "Activitate consistentă o lună",
-      "perfectScore": "Scor perfect la un test",
-      "earlyAdopter": "Adoptator timpuriu"
-    }
   },
   "auth": {
     "backToMain": "Înapoi la pagina principală",
