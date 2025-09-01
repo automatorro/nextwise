@@ -51,8 +51,7 @@ const MyPage = () => {
           <ProfileHeader 
             user={{
               full_name: profile?.full_name,
-              email: user?.email,
-              role: profile?.role
+              email: user?.email
             }}
             isAdmin={isAdmin()}
           />
