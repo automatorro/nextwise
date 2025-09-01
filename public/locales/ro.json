@@ -1,3 +1,4 @@
+
 {
   "dashboard": {
     "welcome": "Bun venit,",
@@ -451,6 +452,7 @@
     "signUp": "Înregistrare",
     "email": "Email",
     "password": "Parolă",
+    "fullName": "Nume Complet",
     "forgotPassword": "Ai uitat parola?",
     "rememberMe": "Ține-mă minte",
     "createAccount": "Creează cont",
@@ -461,11 +463,16 @@
     "invalidCredentials": "Credențiale invalide",
     "emailRequired": "Emailul este obligatoriu",
     "passwordRequired": "Parola este obligatorie",
+    "fullNameRequired": "Numele complet este obligatoriu",
     "emailInvalid": "Formatul emailului nu este valid",
     "passwordTooShort": "Parola trebuie să aibă cel puțin 6 caractere",
     "accountCreated": "Contul a fost creat cu succes",
     "loginSuccessful": "Autentificare reușită",
-    "logoutSuccessful": "Deconectare reușită"
+    "logoutSuccessful": "Deconectare reușită",
+    "signInTitle": "Autentifică-te în Contul Tău",
+    "signUpTitle": "Creează-ți Contul",
+    "signInSubtitle": "Introdu credențialele pentru a accesa contul",
+    "signUpSubtitle": "Alătură-te NextWise și începe călătoria în carieră"
   },
   "howItWorks": {
     "title": "Cum Funcționează NextWise",

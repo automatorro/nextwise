@@ -25,10 +25,10 @@ const AuthPage = () => {
         <Card>
           <CardHeader>
             <CardTitle className="text-center text-2xl font-bold">
-              {t('auth.welcome')}
+              {mode === 'signin' ? t('auth.signInTitle') : t('auth.signUpTitle')}
             </CardTitle>
             <p className="text-center text-gray-600">
-              {t('auth.signInMessage')}
+              {mode === 'signin' ? t('auth.signInSubtitle') : t('auth.signUpSubtitle')}
             </p>
           </CardHeader>
           <CardContent>

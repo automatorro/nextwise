@@ -1,3 +1,4 @@
+
 {
   "dashboard": {
     "welcome": "Welcome,",
@@ -451,6 +452,7 @@
     "signUp": "Sign Up",
     "email": "Email",
     "password": "Password",
+    "fullName": "Full Name",
     "forgotPassword": "Forgot password?",
     "rememberMe": "Remember me",
     "createAccount": "Create account",
@@ -461,11 +463,16 @@
     "invalidCredentials": "Invalid credentials",
     "emailRequired": "Email is required",
     "passwordRequired": "Password is required",
+    "fullNameRequired": "Full name is required",
     "emailInvalid": "Email format is invalid",
     "passwordTooShort": "Password must be at least 6 characters",
     "accountCreated": "Account created successfully",
     "loginSuccessful": "Login successful",
-    "logoutSuccessful": "Logout successful"
+    "logoutSuccessful": "Logout successful",
+    "signInTitle": "Sign In to Your Account",
+    "signUpTitle": "Create Your Account",
+    "signInSubtitle": "Enter your credentials to access your account",
+    "signUpSubtitle": "Join NextWise and start your career journey"
   },
   "howItWorks": {
     "title": "How NextWise Works",

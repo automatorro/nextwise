@@ -18,6 +18,7 @@ const SecureAuthForm = ({ mode }: SecureAuthFormProps) => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -27,6 +28,15 @@ const SecureAuthForm = ({ mode }: SecureAuthFormProps) => {
       toast({
         title: t('toasts.error'),
         description: !email ? t('auth.emailRequired') : t('auth.passwordRequired'),
+        variant: 'destructive',
+      });
+      return;
+    }
+
+    if (mode === 'signup' && !fullName) {
+      toast({
+        title: t('toasts.error'),
+        description: t('auth.fullNameRequired'),
         variant: 'destructive',
       });
       return;
@@ -48,13 +58,18 @@ const SecureAuthForm = ({ mode }: SecureAuthFormProps) => {
         const { error } = await supabase.auth.signUp({
           email,
           password,
+          options: {
+            data: {
+              full_name: fullName
+            }
+          }
         });
 
         if (error) throw error;
 
         toast({
           title: t('toasts.success'),
-          description: t('toasts.accountCreated'),
+          description: t('auth.accountCreated'),
         });
       } else {
         const { error } = await supabase.auth.signInWithPassword({
@@ -66,7 +81,7 @@ const SecureAuthForm = ({ mode }: SecureAuthFormProps) => {
 
         toast({
           title: t('toasts.success'),
-          description: t('toasts.loginSuccessful'),
+          description: t('auth.loginSuccessful'),
         });
         
         navigate('/dashboard');
@@ -86,6 +101,20 @@ const SecureAuthForm = ({ mode }: SecureAuthFormProps) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      {mode === 'signup' && (
+        <div className="space-y-2">
+          <Label htmlFor="fullName">{t('auth.fullName')}</Label>
+          <Input
+            id="fullName"
+            type="text"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            placeholder={t('auth.fullName')}
+            required
+          />
+        </div>
+      )}
+
       <div className="space-y-2">
         <Label htmlFor="email">{t('auth.email')}</Label>
         <Input
