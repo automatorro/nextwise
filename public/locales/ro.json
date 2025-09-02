@@ -18,7 +18,15 @@
     },
     "categories": {
       "testLabel": "test",
-      "testsLabel": "teste"
+      "testsLabel": "teste",
+      "emotionalIntelligence": "Inteligență Emoțională",
+      "personality": "Personalitate",
+      "leadership": "Leadership",
+      "technicalSkills": "Competențe Tehnice",
+      "wellness": "Bunăstare",
+      "cognitive": "Cognitive",
+      "digital": "Competențe Digitale",
+      "sensory": "Percepție Senzorială"
     },
     "globalProgress": {
       "title": "Progresul Global",
@@ -243,6 +251,10 @@
     "ctaFinalButton": "Începe Acum Gratuit",
     "footerText": "Accelerează-ți dezvoltarea profesională cu NextWise - platforma pentru dezvoltarea carierei.",
     "footerCopyright": "© 2024 NextWise. Toate drepturile rezervate.",
+    "categoriesTitle": "Categorii de Teste",
+    "categoriesSubtitle": "Explorează toate categoriile de teste disponibile pentru a-ți descoperi personalitatea și abilitățile",
+    "pricingTitle": "Planuri de Abonament",
+    "pricingSubtitle": "Alege planul potrivit pentru nevoile tale de dezvoltare",
     "features": {
       "psychologicalEvaluations": "Evaluări Psihometrice",
       "psychologicalEvaluationsDesc": "Înțelege-ți personalitatea și abilitățile cognitive.",
@@ -252,6 +264,51 @@
       "advancedAnalyticsDesc": "Urmărește-ți progresul cu informații detaliate.",
       "aiMentoring": "Mentorat AI",
       "aiMentoringDesc": "Primește ghidare continuă de la mentorul tău AI."
+    }
+  },
+  "careerJourney": {
+    "title": "Călătoria Ta de Dezvoltare Profesională",
+    "subtitle": "Transformă-ți cariera în 4 pași simpli cu ajutorul inteligenței artificiale",
+    "step1": {
+      "title": "Completează Testele",
+      "description": "Începe cu testele noastre validate științific pentru a-ți înțelege personalitatea și abilitățile."
+    },
+    "step2": {
+      "title": "Primește Analiza AI",
+      "description": "Inteligența artificială analizează rezultatele și îți oferă interpretări personalizate detaliate."
+    },
+    "step3": {
+      "title": "Creează Planul de Carieră",
+      "description": "Pe baza rezultatelor, AI-ul generează un plan personalizat cu obiective și pași concreți."
+    },
+    "step4": {
+      "title": "Urmărește Progresul",
+      "description": "Monitorizează-ți dezvoltarea și primește recomandări continue pentru îmbunătățire."
+    },
+    "benefits": {
+      "title": "Beneficiile Platformei",
+      "benefit1": "Teste validate științific",
+      "benefit2": "Analize AI personalizate",
+      "benefit3": "Planuri de carieră concrete",
+      "benefit4": "Urmărire progres în timp real"
+    }
+  },
+  "plans": {
+    "mostPopular": "Cel mai popular",
+    "basic": {
+      "name": "Plan Basic",
+      "price": "19 RON/lună",
+      "description": "Perfect pentru începerea călătoriei de autocunoaștere"
+    },
+    "professional": {
+      "name": "Plan Professional",
+      "price": "49 RON/lună",
+      "description": "Pentru dezvoltare profesională accelerată"
+    },
+    "premium": {
+      "name": "Plan Premium",
+      "price": "89 RON/lună",
+      "description": "Pentru accesul complet la toate funcționalitățile"
     }
   },
   "tests": {

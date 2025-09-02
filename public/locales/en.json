@@ -18,7 +18,15 @@
     },
     "categories": {
       "testLabel": "test",
-      "testsLabel": "tests"
+      "testsLabel": "tests",
+      "emotionalIntelligence": "Emotional Intelligence",
+      "personality": "Personality",
+      "leadership": "Leadership",
+      "technicalSkills": "Technical Skills",
+      "wellness": "Wellness",
+      "cognitive": "Cognitive",
+      "digital": "Digital Skills",
+      "sensory": "Sensory Perception"
     },
     "globalProgress": {
       "title": "Global Progress",
@@ -243,6 +251,10 @@
     "ctaFinalButton": "Start Now For Free",
     "footerText": "Accelerate your professional development with NextWise - the platform for career development.",
     "footerCopyright": "© 2024 NextWise. All rights reserved.",
+    "categoriesTitle": "Test Categories",
+    "categoriesSubtitle": "Explore all available test categories to discover your personality and abilities",
+    "pricingTitle": "Subscription Plans",
+    "pricingSubtitle": "Choose the right plan for your development needs",
     "features": {
       "psychologicalEvaluations": "Psychological Evaluations",
       "psychologicalEvaluationsDesc": "Understand your personality and cognitive skills.",
@@ -252,6 +264,51 @@
       "advancedAnalyticsDesc": "Track your progress with detailed insights.",
       "aiMentoring": "AI Mentoring",
       "aiMentoringDesc": "Receive continuous guidance from your AI mentor."
+    }
+  },
+  "careerJourney": {
+    "title": "Your Professional Development Journey",
+    "subtitle": "Transform your career in 4 simple steps with artificial intelligence",
+    "step1": {
+      "title": "Complete the Tests",
+      "description": "Start with our scientifically validated tests to understand your personality and abilities."
+    },
+    "step2": {
+      "title": "Receive AI Analysis",
+      "description": "Artificial intelligence analyzes the results and provides detailed personalized interpretations."
+    },
+    "step3": {
+      "title": "Create Career Plan",
+      "description": "Based on the results, AI generates a personalized plan with concrete objectives and steps."
+    },
+    "step4": {
+      "title": "Track Progress",
+      "description": "Monitor your development and receive continuous recommendations for improvement."
+    },
+    "benefits": {
+      "title": "Platform Benefits",
+      "benefit1": "Scientifically validated tests",
+      "benefit2": "Personalized AI analysis",
+      "benefit3": "Concrete career plans",
+      "benefit4": "Real-time progress tracking"
+    }
+  },
+  "plans": {
+    "mostPopular": "Most Popular",
+    "basic": {
+      "name": "Basic Plan",
+      "price": "$19/month",
+      "description": "Perfect for starting your self-discovery journey"
+    },
+    "professional": {
+      "name": "Professional Plan",
+      "price": "$49/month",
+      "description": "For accelerated professional development"
+    },
+    "premium": {
+      "name": "Premium Plan",
+      "price": "$89/month",
+      "description": "For complete access to all features"
     }
   },
   "tests": {
