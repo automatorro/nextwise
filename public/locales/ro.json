@@ -1,4 +1,3 @@
-
 {
   "dashboard": {
     "welcome": "Bun venit,",
@@ -67,6 +66,20 @@
       "title": "Activitatea Recentă",
       "noActivity": "Nicio activitate recentă",
       "viewAll": "Vezi toate"
+    }
+  },
+  "globalProgress": {
+    "title": "Progresul Global",
+    "overallProgress": "Progres General",
+    "milestones": {
+      "completeAssessment": "Completează Primul Test",
+      "createCareerPlan": "Creează Planul de Carieră",
+      "trackDevelopment": "Urmărește Dezvoltarea"
+    },
+    "stats": {
+      "tests": "teste",
+      "plans": "planuri",
+      "avgProgress": "progres mediu"
     }
   },
   "profile": {
@@ -298,17 +311,38 @@
     "basic": {
       "name": "Plan Basic",
       "price": "19 RON/lună",
-      "description": "Perfect pentru începerea călătoriei de autocunoaștere"
+      "description": "Perfect pentru începerea călătoriei de autocunoaștere",
+      "features": [
+        "4 teste psihologice pe lună",
+        "Plan de învățare scurt",
+        "Rezultate de bază",
+        "Suport email"
+      ]
     },
     "professional": {
-      "name": "Plan Professional",
+      "name": "Plan Professional", 
       "price": "49 RON/lună",
-      "description": "Pentru dezvoltare profesională accelerată"
+      "description": "Pentru dezvoltare profesională accelerată",
+      "features": [
+        "7 teste psihologice pe lună",
+        "Plan de învățare și dezvoltare extins",
+        "Analize detaliate AI",
+        "Recomandări personalizate",
+        "Suport prioritar"
+      ]
     },
     "premium": {
       "name": "Plan Premium",
-      "price": "89 RON/lună",
-      "description": "Pentru accesul complet la toate funcționalitățile"
+      "price": "89 RON/lună", 
+      "description": "Pentru accesul complet la toate funcționalitățile",
+      "features": [
+        "Acces complet nelimitat",
+        "Toate testele disponibile",
+        "Planuri de carieră avansate",
+        "Consultanță personalizată",
+        "Sesiuni video 1-la-1",
+        "Suport 24/7"
+      ]
     }
   },
   "tests": {

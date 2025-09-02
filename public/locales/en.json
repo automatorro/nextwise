@@ -1,4 +1,3 @@
-
 {
   "dashboard": {
     "welcome": "Welcome,",
@@ -67,6 +66,20 @@
       "title": "Recent Activity",
       "noActivity": "No recent activity",
       "viewAll": "View all"
+    }
+  },
+  "globalProgress": {
+    "title": "Global Progress",
+    "overallProgress": "Overall Progress",
+    "milestones": {
+      "completeAssessment": "Complete First Assessment",
+      "createCareerPlan": "Create Career Plan",
+      "trackDevelopment": "Track Development"
+    },
+    "stats": {
+      "tests": "tests",
+      "plans": "plans",
+      "avgProgress": "avg progress"
     }
   },
   "profile": {
@@ -298,17 +311,38 @@
     "basic": {
       "name": "Basic Plan",
       "price": "$19/month",
-      "description": "Perfect for starting your self-discovery journey"
+      "description": "Perfect for starting your self-discovery journey",
+      "features": [
+        "4 psychological tests per month",
+        "Short learning plan",
+        "Basic results",
+        "Email support"
+      ]
     },
     "professional": {
       "name": "Professional Plan",
       "price": "$49/month",
-      "description": "For accelerated professional development"
+      "description": "For accelerated professional development",
+      "features": [
+        "7 psychological tests per month",
+        "Extended learning and development plan",
+        "Detailed AI analysis",
+        "Personalized recommendations",
+        "Priority support"
+      ]
     },
     "premium": {
       "name": "Premium Plan",
       "price": "$89/month",
-      "description": "For complete access to all features"
+      "description": "For complete access to all features",
+      "features": [
+        "Complete unlimited access",
+        "All available tests",
+        "Advanced career plans",
+        "Personalized consulting",
+        "1-on-1 video sessions",
+        "24/7 support"
+      ]
     }
   },
   "tests": {
