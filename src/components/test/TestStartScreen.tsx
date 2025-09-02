@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { getTestTranslation } from '@/utils/testTranslationMapping';
 
 interface TestType {
@@ -24,7 +24,7 @@ const TestStartScreen: React.FC<TestStartScreenProps> = ({
   questionsCount,
   onStartTest
 }) => {
-  const { t, language } = useLanguage();
+  const { t, language } = useTranslation();
   
   // Get translated test name and description
   const translation = getTestTranslation(testType.name, language);

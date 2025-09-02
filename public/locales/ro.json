@@ -139,6 +139,38 @@
       "earlyAdopter": "Adoptator timpuriu"
     }
   },
+  "testRunner": {
+    "questionsLabel": "Întrebări",
+    "durationLabel": "Durată",
+    "minutes": "minute",
+    "startTest": "Începe Testul",
+    "question": "Întrebarea",
+    "of": "din",
+    "next": "Următoarea",
+    "previous": "Precedenta",
+    "finish": "Finalizează",
+    "timeRemaining": "Timp rămas",
+    "testCompleted": "Test Completat",
+    "submitting": "Se trimite...",
+    "thankYou": "Mulțumim!",
+    "completionMessage": "Ai completat cu succes testul. Rezultatele tale sunt în curs de procesare.",
+    "viewResults": "Vezi Rezultatele",
+    "exitTest": "Ieși din Test",
+    "confirmExit": "Ești sigur că vrei să ieși din test?",
+    "progressLost": "Progresul va fi pierdut.",
+    "cancel": "Anulează",
+    "confirmExitButton": "Da, Ieși"
+  },
+  "testResult": {
+    "detailedInterpretations": {
+      "title": "Interpretări Detaliate",
+      "subtitle": "Analiză aprofundată a rezultatelor tale"
+    },
+    "scoreLabel": "Scor",
+    "interpretation": {
+      "notAvailable": "Interpretarea nu este disponibilă momentan"
+    }
+  },
   "toasts": {
     "success": "Operația a fost completată cu succes",
     "error": "A apărut o eroare",

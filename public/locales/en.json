@@ -139,6 +139,38 @@
       "earlyAdopter": "Early adopter"
     }
   },
+  "testRunner": {
+    "questionsLabel": "Questions",
+    "durationLabel": "Duration",
+    "minutes": "minutes",
+    "startTest": "Start Test",
+    "question": "Question",
+    "of": "of",
+    "next": "Next",
+    "previous": "Previous",
+    "finish": "Finish",
+    "timeRemaining": "Time remaining",
+    "testCompleted": "Test Completed",
+    "submitting": "Submitting...",
+    "thankYou": "Thank you!",
+    "completionMessage": "You have successfully completed the test. Your results are being processed.",
+    "viewResults": "View Results",
+    "exitTest": "Exit Test",
+    "confirmExit": "Are you sure you want to exit the test?",
+    "progressLost": "Progress will be lost.",
+    "cancel": "Cancel",
+    "confirmExitButton": "Yes, Exit"
+  },
+  "testResult": {
+    "detailedInterpretations": {
+      "title": "Detailed Interpretations",
+      "subtitle": "In-depth analysis of your results"
+    },
+    "scoreLabel": "Score",
+    "interpretation": {
+      "notAvailable": "Interpretation is not available at the moment"
+    }
+  },
   "toasts": {
     "success": "Operation completed successfully",
     "error": "An error occurred",

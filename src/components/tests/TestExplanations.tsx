@@ -3,7 +3,7 @@ import React from 'react';
 import { StandardizedScore } from '@/types/tests';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 
 interface TestExplanationsProps {
   score: StandardizedScore | null;
@@ -11,7 +11,7 @@ interface TestExplanationsProps {
 }
 
 export const TestExplanations: React.FC<TestExplanationsProps> = ({ score }) => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   // Use defensive checks to ensure data exists before rendering
   if (!score?.dimensions || !score.detailed_interpretations) {
     return null; // Don't render anything if the necessary data is missing

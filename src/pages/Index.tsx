@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import HeroSection from '@/components/home/HeroSection';
 import FeaturesSection from '@/components/home/FeaturesSection';
 import TestCategoriesSection from '@/components/home/TestCategoriesSection';
@@ -12,7 +12,7 @@ import HomeNavigation from '@/components/home/HomeNavigation';
 import LoadingSkeleton from '@/components/home/LoadingSkeleton';
 
 const Index = () => {
-  const { loading } = useLanguage();
+  const { loading } = useTranslation();
 
   // Show loading skeleton only while initial translations are being loaded
   if (loading) {

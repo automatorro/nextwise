@@ -2,7 +2,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -13,7 +13,7 @@ import {
 import { User, LogOut, Settings } from 'lucide-react';
 
 const UserMenu = () => {
-  const { t } = useLanguage();
+  const { t } = useTranslation();
   const { signOut } = useAuth();
   const navigate = useNavigate();
 

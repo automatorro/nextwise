@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useLanguage } from '@/hooks/useLanguage';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useAuth } from '@/contexts/AuthContext';
 import NavigationLogo from './NavigationLogo';
 import NavigationLinks from './NavigationLinks';
@@ -11,7 +11,7 @@ import GuestActions from './GuestActions';
 
 
 const HomeNavigation = () => {
-  const { loading } = useLanguage();
+  const { loading } = useTranslation();
   const { user } = useAuth();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
