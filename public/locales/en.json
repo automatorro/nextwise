@@ -759,7 +759,7 @@
       },
       "firstCompletion": {
         "title": "First Completion",
-        "description": "You completed your first career goal"
+        "description": "You completed your first career objective"
       },
       "aiCollaborator": {
         "title": "AI Collaborator",
@@ -772,6 +772,35 @@
       "activeDays": "Active Days",
       "stepsCompleted": "Steps Completed",
       "milestonesReached": "Milestones Reached"
+    }
+  },
+  "careerPlan": {
+    "testInfluence": {
+      "title": "Tests influencing your plan",
+      "description": "The results of these tests will be used to personalize your career plan",
+      "new": "New",
+      "general": "General",
+      "completed": "Completed",
+      "aiCombination": "AI Combination of test results"
+    },
+    "createCustomTitle": "Create a custom plan",
+    "createCustomDescription": "Fill in the details to generate a customized plan",
+    "targetRole": "Target role",
+    "targetRolePlaceholder": "E.g.: Data Scientist, UX Designer",
+    "currentRole": "Current role",
+    "currentRolePlaceholder": "E.g.: Junior Developer, Student",
+    "timeframe": "Timeframe",
+    "timeframePlaceholder": "Select timeframe",
+    "objectiveDescription": "Objective description",
+    "objectiveDescriptionPlaceholder": "Describe your career objective...",
+    "availableTemplates": "Available templates",
+    "popularTemplates": "Popular templates",
+    "months": "months",
+    "more": "more",
+    "difficulty": {
+      "beginner": "Beginner",
+      "intermediate": "Intermediate",
+      "advanced": "Advanced"
     }
   }
 }

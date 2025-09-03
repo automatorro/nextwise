@@ -772,5 +772,34 @@
       "stepsCompleted": "Pași Completați",
       "milestonesReached": "Repere Atinse"
     }
+  },
+  "careerPlan": {
+    "testInfluence": {
+      "title": "Teste care influențează planul tău",
+      "description": "Rezultatele acestor teste vor fi folosite pentru a personaliza planul tău de carieră",
+      "new": "Nou",
+      "general": "General",
+      "completed": "Completat",
+      "aiCombination": "Combinație AI a rezultatelor testelor"
+    },
+    "createCustomTitle": "Creează un plan personalizat",
+    "createCustomDescription": "Completează detaliile pentru a genera un plan personalizat",
+    "targetRole": "Rol țintă",
+    "targetRolePlaceholder": "Ex: Data Scientist, UX Designer",
+    "currentRole": "Rol actual",
+    "currentRolePlaceholder": "Ex: Junior Developer, Student",
+    "timeframe": "Interval de timp",
+    "timeframePlaceholder": "Selectează intervalul de timp",
+    "objectiveDescription": "Descrierea obiectivului",
+    "objectiveDescriptionPlaceholder": "Descrie obiectivul tău de carieră...",
+    "availableTemplates": "Șabloane disponibile",
+    "popularTemplates": "Șabloane populare",
+    "months": "luni",
+    "more": "mai multe",
+    "difficulty": {
+      "beginner": "Începător",
+      "intermediate": "Intermediar",
+      "advanced": "Avansat"
+    }
   }
 }
