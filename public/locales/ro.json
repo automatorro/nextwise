@@ -800,6 +800,17 @@
       "beginner": "Începător",
       "intermediate": "Intermediar",
       "advanced": "Avansat"
-    }
+    },
+    "useTemplate": "Folosește șablonul",
+    "generateWithAI": "Generează cu AI",
+    "generatingPlan": "Generez planul...",
+    "creatingPlan": "Creez planul...",
+    "loadingTemplates": "Se încarcă șabloanele...",
+    "cancel": "Anulează",
+    "readyToStart": "Ești pregătit să începi?",
+    "createThisPlan": "Creează acest plan",
+    "viewDetails": "Vezi detalii",
+    "skills": "Abilități",
+    "category": "Categorie"
   }
 }

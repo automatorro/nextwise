@@ -801,6 +801,17 @@
       "beginner": "Beginner",
       "intermediate": "Intermediate",
       "advanced": "Advanced"
-    }
+    },
+    "useTemplate": "Use template",
+    "generateWithAI": "Generate with AI",
+    "generatingPlan": "Generating plan...",
+    "creatingPlan": "Creating plan...",
+    "loadingTemplates": "Loading templates...",
+    "cancel": "Cancel",
+    "readyToStart": "Ready to start your journey?",
+    "createThisPlan": "Create this plan",
+    "viewDetails": "View details",
+    "skills": "Skills",
+    "category": "Category"
   }
 }
