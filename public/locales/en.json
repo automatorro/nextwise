@@ -1,3 +1,4 @@
+
 {
   "dashboard": {
     "welcome": "Welcome,",
@@ -743,6 +744,34 @@
         "Dedicated account manager"
       ],
       "cta": "Contact Us"
+    }
+  },
+  "gamification": {
+    "achievements": {
+      "title": "Achievements",
+      "firstPlan": {
+        "title": "First Plan",
+        "description": "You created your first career plan"
+      },
+      "threePlans": {
+        "title": "Expert Planner",
+        "description": "You created three different career plans"
+      },
+      "firstCompletion": {
+        "title": "First Completion",
+        "description": "You completed your first career goal"
+      },
+      "aiCollaborator": {
+        "title": "AI Collaborator",
+        "description": "You used the AI assistant to improve your plan"
+      }
+    },
+    "streak": {
+      "title": "Activity Streak",
+      "days": "consecutive days",
+      "activeDays": "Active Days",
+      "stepsCompleted": "Steps Completed",
+      "milestonesReached": "Milestones Reached"
     }
   }
 }

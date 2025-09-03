@@ -744,5 +744,33 @@
       ],
       "cta": "Contactează-ne"
     }
+  },
+  "gamification": {
+    "achievements": {
+      "title": "Realizări",
+      "firstPlan": {
+        "title": "Primul Plan",
+        "description": "Ai creat primul tău plan de carieră"
+      },
+      "threePlans": {
+        "title": "Planificator Expert",
+        "description": "Ai creat trei planuri de carieră diferite"
+      },
+      "firstCompletion": {
+        "title": "Prima Finalizare",
+        "description": "Ai finalizat primul tău obiectiv de carieră"
+      },
+      "aiCollaborator": {
+        "title": "Colaborator AI",
+        "description": "Ai folosit asistentul AI pentru a-ți îmbunătăți planul"
+      }
+    },
+    "streak": {
+      "title": "Seria de Activitate",
+      "days": "zile consecutive",
+      "activeDays": "Zile Active",
+      "stepsCompleted": "Pași Completați",
+      "milestonesReached": "Repere Atinse"
+    }
   }
 }
