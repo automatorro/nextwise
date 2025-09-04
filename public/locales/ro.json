@@ -812,5 +812,13 @@
     "viewDetails": "Vezi detalii",
     "skills": "Abilități",
     "category": "Categorie"
+  },
+  "notes": {
+    "editNote": "Editează nota",
+    "saveChanges": "Salvează modificările",
+    "cancelEdit": "Anulează editarea",
+    "saving": "Se salvează...",
+    "noteUpdated": "Nota a fost actualizată cu succes",
+    "updateError": "Nu am putut actualiza nota. Te rugăm să încerci din nou."
   }
 }

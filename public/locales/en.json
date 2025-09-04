@@ -813,5 +813,13 @@
     "viewDetails": "View details",
     "skills": "Skills",
     "category": "Category"
+  },
+  "notes": {
+    "editNote": "Edit note",
+    "saveChanges": "Save changes",
+    "cancelEdit": "Cancel editing",
+    "saving": "Saving...",
+    "noteUpdated": "Note updated successfully",
+    "updateError": "Could not update note. Please try again."
   }
 }
