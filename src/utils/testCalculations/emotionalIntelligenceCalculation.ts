@@ -1,4 +1,6 @@
 
+import { StandardizedScore } from '@/types/tests';
+
 export interface EmotionalIntelligenceScore {
   overall: number;
   dimensions: {
@@ -11,7 +13,7 @@ export interface EmotionalIntelligenceScore {
   interpretation: string;
 }
 
-export const calculateEmotionalIntelligenceScore = (answers: Record<string, number>): EmotionalIntelligenceScore => {
+export const calculateEmotionalIntelligenceScore = (answers: Record<string, number>): StandardizedScore => {
   const scores = {
     self_awareness: 0,
     self_regulation: 0,
@@ -60,9 +62,40 @@ export const calculateEmotionalIntelligenceScore = (answers: Record<string, numb
     interpretation = 'Inteligență emoțională scăzută - Se recomandă focus pe dezvoltarea abilităților emoționale';
   }
   
+  // Determine scale level based on overall score
+  let scale_level: string;
+  if (overall >= 80) {
+    scale_level = 'Avansat';
+  } else if (overall >= 65) {
+    scale_level = 'Intermediar-Avansat';
+  } else if (overall >= 50) {
+    scale_level = 'Intermediar';
+  } else if (overall >= 30) {
+    scale_level = 'Începător-Intermediar';
+  } else {
+    scale_level = 'Începător';
+  }
+  
+  // Convert dimensions to StandardizedScore format
+  const dimensionsArray = Object.entries(normalizedScores).map(([id, score]) => ({
+    id,
+    name: id.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' '), // Convert snake_case to Title Case
+    score
+  }));
+  
+  // Calculate raw score as sum of all answer values
+  const raw_score = Object.values(answers).reduce((sum, value) => sum + value, 0);
+  
+  // Calculate max score (assuming each question is scored 0-4)
+  const max_score = Object.keys(answers).length * 4;
+  
   return {
+    type: 'scale',
     overall,
-    dimensions: normalizedScores,
-    interpretation
+    dimensions: dimensionsArray,
+    interpretation,
+    scale_level,
+    raw_score,
+    max_score
   };
 };

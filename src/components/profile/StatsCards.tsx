@@ -18,7 +18,6 @@ interface StatsCardsProps {
 
 const StatsCards = ({ userStats, isAdmin }: StatsCardsProps) => {
   const { t } = useTranslation();
-  
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-600';
     if (score >= 60) return 'text-yellow-600';
@@ -70,14 +69,12 @@ const StatsCards = ({ userStats, isAdmin }: StatsCardsProps) => {
           <div className="flex items-center">
             <Award className="h-8 w-8 text-purple-600" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">{t('profile.stats.bestAt')}</p>
-              <p className="text-lg font-bold text-gray-900">{userStats.bestCategory}</p>
-              {isAdmin && (
-                <div className="flex items-center mt-1">
-                  <Shield className="h-4 w-4 text-red-500 mr-1" />
-                  <span className="text-xs text-red-600 font-medium">{t('profile.stats.administrator')}</span>
-                </div>
-              )}
+              <p className="text-sm font-medium text-gray-600">
+                {isAdmin ? t('profile.stats.status') : t('profile.stats.bestAt')}
+              </p>
+              <p className="text-sm font-bold text-gray-900">
+                {isAdmin ? t('profile.stats.administrator') : userStats.bestCategory}
+              </p>
             </div>
           </div>
         </CardContent>

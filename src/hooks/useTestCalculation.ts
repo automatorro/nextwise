@@ -15,10 +15,15 @@ import { calculateWatsonGlaserScore } from '@/utils/testCalculations/watsonGlase
 import { calculateDigitalCompetenciesScore } from '@/utils/testCalculations/digitalCompetenciesCalculation';
 import { calculateSensoryPerceptionScore } from '@/utils/testCalculations/sensoryPerceptionCalculation';
 import { calculateBeckDepressionScore } from '@/utils/beckDepressionInventoryCalculator';
+// Import noile calculatoare
+import { calculateEmotionalIntelligenceScore } from '@/utils/testCalculations/emotionalIntelligenceCalculation';
+import { calculateManagerialCompetenciesScore } from '@/utils/testCalculations/managerialCompetenciesCalculation';
+import { calculateCognitiveAbilitiesScoreFromDB, calculateCognitiveAbilitiesScoreFallback } from '@/utils/cognitiveAbilitiesCalculator';
 
 export const useTestCalculation = (
   testName: string | undefined,
-  answers: Record<string, any> | undefined
+  answers: Record<string, any> | undefined,
+  questions?: any[]
 ): StandardizedScore | null => {
   const score = useMemo((): StandardizedScore | null => {
     if (!testName || !answers) {
@@ -98,24 +103,48 @@ export const useTestCalculation = (
       // === TESTUL PERCEPȚIE SENZORIALĂ ===
       case 'Percepție Senzorială':
       case 'Sensory Perception Test':
-      case 'Test Percepție Senzorială':
         return calculateSensoryPerceptionScore(answers);
-
+        
       // === TESTUL BECK DEPRESSION INVENTORY ===
       case 'Beck Depression Inventory':
-      case 'Inventarul de Depresie Beck':
-      case 'BDI-II':
-      case 'Beck Depression Inventory (BDI-II)':
+      case 'BDI':
+      case 'Test Depresie Beck':
         return calculateBeckDepressionScore(answers);
+        
+      // === TESTUL INTELIGENȚĂ EMOȚIONALĂ ===
+      case 'Inteligență Emoțională':
+      case 'Emotional Intelligence Test':
+      case 'Test Inteligență Emoțională':
+        return calculateEmotionalIntelligenceScore(answers);
+        
+      // === TESTUL APTITUDINI COGNITIVE ===
+      case 'Aptitudini Cognitive':
+      case 'Cognitive Abilities Test':
+      case 'Test Aptitudini Cognitive':
+        if (questions && questions.length > 0) {
+          return calculateCognitiveAbilitiesScoreFromDB(answers, questions);
+        } else {
+          return calculateCognitiveAbilitiesScoreFallback(answers);
+        }
+        
+      // === TESTUL COMPETENȚE MANAGERIALE ===
+      case 'Competențe Manageriale':
+      case 'Managerial Competencies Test':
+      case 'Test Competențe Manageriale':
+        return calculateManagerialCompetenciesScore(answers);
 
       default:
-        console.warn(`Nu există logică de calcul în noul sistem pentru: ${testName}.`);
+        console.warn(`No calculation logic defined for test: ${testName}`);
         return {
           type: 'scale',
-          interpretation: `Afișarea rezultatelor pentru testul "${testName}" este în curs de implementare în noul sistem.`,
+          overall: 50,
+          interpretation: 'Rezultat placeholder - logica de calcul nu este încă implementată',
+          scale_level: 'Intermediar',
+          raw_score: 0,
+          max_score: 0
         };
     }
-  }, [testName, answers]);
+  }, [testName, answers, questions]);
 
   return score;
 };

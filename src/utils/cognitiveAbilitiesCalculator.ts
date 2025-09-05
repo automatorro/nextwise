@@ -1,3 +1,5 @@
+import { StandardizedScore } from '@/types/tests';
+
 export interface CognitiveAbilitiesScore {
   overall: number;
   dimensions: {
@@ -11,7 +13,7 @@ export interface CognitiveAbilitiesScore {
   details: string;
 }
 
-export const calculateCognitiveAbilitiesScoreFromDB = (answers: Record<string, number>, questions: any[]): CognitiveAbilitiesScore => {
+export const calculateCognitiveAbilitiesScoreFromDB = (answers: Record<string, number>, questions: any[]): StandardizedScore => {
   const scores = {
     verbal: 0,
     numeric: 0,
@@ -98,15 +100,45 @@ export const calculateCognitiveAbilitiesScoreFromDB = (answers: Record<string, n
     interpretation = 'Aptitudini cognitive în dezvoltare - Se recomandă antrenament suplimentar';
   }
 
+  // Determine scale level based on overall score
+  let scale_level: string;
+  if (overall >= 80) {
+    scale_level = 'Avansat';
+  } else if (overall >= 65) {
+    scale_level = 'Intermediar-Avansat';
+  } else if (overall >= 50) {
+    scale_level = 'Intermediar';
+  } else if (overall >= 30) {
+    scale_level = 'Începător-Intermediar';
+  } else {
+    scale_level = 'Începător';
+  }
+
+  // Convert dimensions to StandardizedScore format
+  const dimensionsArray = Object.entries(normalizedScores).map(([id, score]) => ({
+    id,
+    name: id.charAt(0).toUpperCase() + id.slice(1), // Capitalize first letter
+    score
+  }));
+
+  // Calculate raw score as sum of correct answers
+  const raw_score = Object.values(correctAnswers).reduce((sum, count) => sum + count, 0);
+  // Calculate max score as sum of total questions
+  const max_score = Object.values(totalQuestions).reduce((sum, count) => sum + count, 0);
+
   return {
+    type: 'scale',
     overall,
-    dimensions: normalizedScores,
+    dimensions: dimensionsArray,
     interpretation,
+    scale_level,
+    raw_score,
+    max_score,
     details: `Ai obținut ${overall}% din punctajul total posibil în testul de aptitudini cognitive.`
   };
 };
 
-export const calculateCognitiveAbilitiesScoreFallback = (answers: Record<string, number>): CognitiveAbilitiesScore => {
+export const calculateCognitiveAbilitiesScoreFallback = (answers: Record<string, number>): StandardizedScore => {
   const scores = {
     verbal: 0,
     numeric: 0,
@@ -178,10 +210,34 @@ export const calculateCognitiveAbilitiesScoreFallback = (answers: Record<string,
     interpretation = 'Aptitudini cognitive în dezvoltare - Se recomandă antrenament suplimentar';
   }
 
+  // Return StandardizedScore format
   return {
+    type: 'scale',
     overall,
-    dimensions: normalizedScores,
+    dimensions: Object.entries(normalizedScores).map(([id, score]) => ({
+      id,
+      name: id.charAt(0).toUpperCase() + id.slice(1),
+      score
+    })),
     interpretation,
-    details: `Scor calculat bazat pe ${Object.keys(answers).length} răspunsuri (metodă fallback).`
+    scale_level: determineScaleLevel(overall),
+    raw_score: 0, // Fallback doesn't have access to raw scores
+    max_score: 50, // Assuming 50 questions total
+    details: `Ai obținut ${overall}% din punctajul total posibil în testul de aptitudini cognitive.`
   };
 };
+
+// Helper function to determine scale level
+function determineScaleLevel(overall: number): string {
+  if (overall >= 80) {
+    return 'Avansat';
+  } else if (overall >= 65) {
+    return 'Intermediar-Avansat';
+  } else if (overall >= 50) {
+    return 'Intermediar';
+  } else if (overall >= 30) {
+    return 'Începător-Intermediar';
+  } else {
+    return 'Începător';
+  }
+}

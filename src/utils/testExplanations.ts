@@ -125,6 +125,120 @@ export function getDimensionExplanation(testName: string, dimensionKey: string):
     }
   }
 
+  if (testKey === 'test inteligenta emotionala' || testKey === 'inteligenta emotionala') {
+    switch (dimensionKey) {
+      case 'self_awareness':
+        return {
+          description: 'Conștientizarea de sine reprezintă capacitatea de a-ți recunoaște și înțelege propriile emoții, punctele forte, slăbiciunile și valorile.',
+          interpretations: {
+            high: 'Ai o înțelegere profundă a propriilor emoții și reacții, fiind conștient de impactul tău asupra celorlalți.',
+            low: 'Poți dezvolta această abilitate prin reflecție regulată și feedback din partea celorlalți.'
+          }
+        };
+      case 'self_regulation':
+        return {
+          description: 'Autocontrolul emoțional este capacitatea de a gestiona și controla emoțiile, impulsurile și reacțiile în mod constructiv.',
+          interpretations: {
+            high: 'Reușești să-ți controlezi emoțiile și să reacționezi calm și rațional în situații dificile.',
+            low: 'Poți îmbunătăți această abilitate prin tehnici de relaxare și mindfulness.'
+          }
+        };
+      case 'motivation':
+        return {
+          description: 'Motivația internă se referă la dorința de a atinge obiective pentru satisfacția personală, nu doar pentru recompense externe.',
+          interpretations: {
+            high: 'Ești motivat intern, perseverent și orientat către excelență și dezvoltare personală.',
+            low: 'Poți dezvolta motivația internă prin stabilirea de obiective personale semnificative.'
+          }
+        };
+      case 'empathy':
+        return {
+          description: 'Empatia este capacitatea de a înțelege și simți emoțiile celorlalți, de a te pune în locul lor.',
+          interpretations: {
+            high: 'Înțelegi bine emoțiile celorlalți și poți răspunde adecvat la nevoile lor emoționale.',
+            low: 'Poți dezvolta empatia prin ascultare activă și observarea semnalelor non-verbale.'
+          }
+        };
+      case 'social_skills':
+        return {
+          description: 'Abilitățile sociale includ capacitatea de a comunica eficient, de a influența pozitiv și de a gestiona relațiile interpersonale.',
+          interpretations: {
+            high: 'Ai abilități sociale excelente, comunicând eficient și construind relații puternice.',
+            low: 'Poți îmbunătăți aceste abilități prin practică și feedback în interacțiunile sociale.'
+          }
+        };
+      default:
+        return {
+          description: 'Această dimensiune contribuie la profilul general de inteligență emoțională.'
+        };
+    }
+  }
+
+  if (testKey === 'test competente manageriale' || testKey === 'competente manageriale') {
+    switch (dimensionKey) {
+      case 'leadership':
+        return {
+          description: 'Leadership-ul reprezintă capacitatea de a inspira, motiva și ghida echipele către atingerea obiectivelor comune.',
+          interpretations: {
+            high: 'Ai abilități de leadership puternice, inspirând încredere și motivând echipele eficient.',
+            low: 'Poți dezvolta aceste abilități prin asumarea de responsabilități și mentoring.'
+          }
+        };
+      case 'strategic_thinking':
+        return {
+          description: 'Gândirea strategică implică capacitatea de a vedea imaginea de ansamblu, de a anticipa tendințele și de a planifica pe termen lung.',
+          interpretations: {
+            high: 'Gândești strategic, anticipezi schimbările și dezvolți planuri eficiente pe termen lung.',
+            low: 'Poți îmbunătăți această abilitate prin analiză de piață și planificare sistematică.'
+          }
+        };
+      case 'decision_making':
+        return {
+          description: 'Luarea deciziilor se referă la capacitatea de a analiza informații, evalua opțiuni și lua decizii eficiente în timp util.',
+          interpretations: {
+            high: 'Iei decizii bine fundamentate rapid și eficient, chiar și în situații complexe.',
+            low: 'Poți dezvolta această abilitate prin practică și folosirea unor cadre de decizie structurate.'
+          }
+        };
+      case 'communication':
+        return {
+          description: 'Comunicarea managerială include abilitatea de a transmite clar informații, de a asculta activ și de a adapta mesajul la audiență.',
+          interpretations: {
+            high: 'Comunici clar și eficient, adaptându-ți stilul la diferite audiențe și situații.',
+            low: 'Poți îmbunătăți comunicarea prin practică, feedback și cursuri de comunicare.'
+          }
+        };
+      case 'team_management':
+        return {
+          description: 'Managementul echipei implică coordonarea eficientă a membrilor echipei, delegarea sarcinilor și crearea unui mediu colaborativ.',
+          interpretations: {
+            high: 'Gestionezi echipele eficient, delegând adecvat și creând un mediu de lucru productiv.',
+            low: 'Poți dezvolta aceste abilități prin cursuri de management și practică în conducerea echipelor.'
+          }
+        };
+      case 'problem_solving':
+        return {
+          description: 'Rezolvarea problemelor se referă la capacitatea de a identifica, analiza și rezolva provocările complexe în mod sistematic.',
+          interpretations: {
+            high: 'Abordezi problemele complex în mod sistematic și găsești soluții creative și eficiente.',
+            low: 'Poți îmbunătăți această abilitate prin tehnici de rezolvare a problemelor și gândire critică.'
+          }
+        };
+      case 'adaptability':
+        return {
+          description: 'Adaptabilitatea reprezintă capacitatea de a răspunde flexibil la schimbări și de a ajusta strategiile în funcție de circumstanțe.',
+          interpretations: {
+            high: 'Te adaptezi rapid la schimbări și găsești oportunități în situații noi și provocatoare.',
+            low: 'Poți dezvolta flexibilitatea prin expunerea la situații noi și practică în gestionarea schimbării.'
+          }
+        };
+      default:
+        return {
+          description: 'Această dimensiune contribuie la profilul general de competențe manageriale.'
+        };
+    }
+  }
+
   if (testKey.includes('cattell') || testKey.includes('16pf')) {
     switch (dimensionKey.toUpperCase()) {
       case 'A':
