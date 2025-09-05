@@ -130,11 +130,10 @@ export const calculateCognitiveAbilitiesScoreFromDB = (answers: Record<string, n
     type: 'scale',
     overall,
     dimensions: dimensionsArray,
-    interpretation,
+    interpretation: `${interpretation}\n\nAi obținut ${overall}% din punctajul total posibil în testul de aptitudini cognitive.`,
     scale_level,
     raw_score,
-    max_score,
-    details: `Ai obținut ${overall}% din punctajul total posibil în testul de aptitudini cognitive.`
+    max_score
   };
 };
 
@@ -219,11 +218,10 @@ export const calculateCognitiveAbilitiesScoreFallback = (answers: Record<string,
       name: id.charAt(0).toUpperCase() + id.slice(1),
       score
     })),
-    interpretation,
+    interpretation: `${interpretation}\n\nAi obținut ${overall}% din punctajul total posibil în testul de aptitudini cognitive.`,
     scale_level: determineScaleLevel(overall),
     raw_score: 0, // Fallback doesn't have access to raw scores
-    max_score: 50, // Assuming 50 questions total
-    details: `Ai obținut ${overall}% din punctajul total posibil în testul de aptitudini cognitive.`
+    max_score: 50 // Assuming 50 questions total
   };
 };
 

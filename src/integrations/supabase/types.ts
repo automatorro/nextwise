@@ -883,6 +883,10 @@ export type Database = {
         Args: { profile_user_id: string }
         Returns: boolean
       }
+      can_view_profile: {
+        Args: { profile_user_id: string }
+        Returns: boolean
+      }
       get_user_subscription_access: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -923,6 +927,10 @@ export type Database = {
       is_admin: {
         Args: { _user_id: string }
         Returns: boolean
+      }
+      log_security_event: {
+        Args: { details?: Json; event_type: string }
+        Returns: undefined
       }
     }
     Enums: {

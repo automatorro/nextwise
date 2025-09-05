@@ -108,10 +108,9 @@ const AIInsightsSection: React.FC<AIInsightsSectionProps> = ({
                 <div className="px-4 pb-4 border-t bg-muted/20">
                   <div className="pt-4 space-y-3">
                     <div className="prose prose-sm max-w-none">
-                      <div 
-                        className="text-sm whitespace-pre-wrap"
-                        dangerouslySetInnerHTML={{ __html: insight.content }}
-                      />
+                      <div className="text-sm whitespace-pre-wrap">
+                        {insight.content}
+                      </div>
                     </div>
                     
                     {insight.custom_note && (

@@ -12,12 +12,19 @@ export const useCognitiveAbilitiesCalculation = (answers?: { [key: string]: numb
     
     const result = calculateCognitiveAbilitiesScore(answers);
     
+    // Extract dimensions from the array format
+    const dimensions = result.dimensions || [];
+    const getDimensionScore = (id: string) => {
+      const dimension = dimensions.find(d => d.id === id);
+      return dimension ? dimension.score : 0;
+    };
+    
     return {
-      verbal: result.dimensions.verbal || 0,
-      numeric: result.dimensions.numeric || 0,
-      logic: result.dimensions.logic || 0,
-      spatial: result.dimensions.spatial || 0,
-      abstract: result.dimensions.abstract || 0
+      verbal: getDimensionScore('verbal'),
+      numeric: getDimensionScore('numeric'),
+      logic: getDimensionScore('logic'),
+      spatial: getDimensionScore('spatial'),
+      abstract: getDimensionScore('abstract')
     };
   }, [answers]);
 };

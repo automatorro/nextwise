@@ -177,7 +177,9 @@ Salvează această analiză în "Notele mele personale" din aplicație pentru re
 
         {analysis && (
           <div className="p-4 border rounded-md bg-secondary/50 space-y-4">
-            <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap" dangerouslySetInnerHTML={{ __html: analysis }} />
+            <div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap">
+              {analysis}
+            </div>
             <div className="flex flex-wrap items-center gap-2 pt-4">
                <Button variant="outline" size="sm" onClick={handleCopyToClipboard}>
                  <Copy className="mr-2 h-4 w-4" /> Copiază
