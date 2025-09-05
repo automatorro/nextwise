@@ -191,6 +191,55 @@
     "scoreLabel": "Score",
     "interpretation": {
       "notAvailable": "Interpretation is not available at the moment"
+    },
+    "overallScore": {
+      "title": "Overall Score",
+      "totalScore": "Total Score",
+      "description": "Description of your overall test score",
+      "pointsObtained": "Points Obtained",
+      "maxPoints": "Max Points",
+      "whatMeansTitle": "What your result means"
+    },
+    "nextSteps": {
+      "title": "Next Steps",
+      "description": "Recommendations for your continued development",
+      "createCareerPlan": "Create Career Plan",
+      "careerPlanDescriptionRelevant": "Use this test results to build a personalized professional development plan",
+      "personalityInsight": "Personality Insights",
+      "aiWillUse": "AI will use these results to provide you with personalized recommendations",
+      "exploreMoreTests": "Explore More Tests",
+      "moreTestsDescription": "Complete additional tests for deeper understanding"
+    },
+    "categories": {
+      "personality": "Personality",
+      "cognitive": "Cognitive",
+      "emotional": "Emotional",
+      "leadership": "Leadership"
+    },
+    "scoring": {
+      "title": "Scoring Explanation",
+      "description": "How your results are calculated and interpreted",
+      "interpretation": "Score Interpretation",
+      "whatMeans": "What your results mean and how to use them"
+    },
+    "bigFive": {
+      "dimensions": {
+        "openness": {
+          "title": "Openness to Experience"
+        },
+        "conscientiousness": {
+          "title": "Conscientiousness"
+        },
+        "extraversion": {
+          "title": "Extraversion"
+        },
+        "agreeableness": {
+          "title": "Agreeableness"
+        },
+        "neuroticism": {
+          "title": "Neuroticism"
+        }
+      }
     }
   },
   "toasts": {
@@ -821,5 +870,89 @@
     "saving": "Saving...",
     "noteUpdated": "Note updated successfully",
     "updateError": "Could not update note. Please try again."
+  },
+  "personalizedResults": {
+    "title": "Personal Profile",
+    "personalizedInterpretation": "Personalized Interpretation",
+    "contextualFactors": "Contextual Factors",
+    "bullet": "Important Point",
+    "context": "Context"
+  },
+  "lifeImpact": {
+    "title": "Life Impact",
+    "subtitle": "How your personality influences different aspects of life",
+    "bigFive": {
+      "career": "Your Career",
+      "relationships": "Your Relationships",
+      "stress": "Stress Management",
+      "learning": "Learning Style",
+      "overallImpact": "Your Big Five profile influences how you approach challenges, build relationships, and manage your emotions in daily life."
+    }
+  },
+  "progressPath": {
+    "title": "Progress Path",
+    "subtitle": "Structured 6-month development plan",
+    "bigFive": {
+      "understandProfile": "Understand Your Profile",
+      "understandProfileDesc": "Study your test results in detail and identify your strengths and development areas.",
+      "valorizeStrengths": "Leverage Your Strengths",
+      "valorizeStrengthsDesc": "Focus on using your strengths in daily and professional activities.",
+      "developBalance": "Develop Balance",
+      "developBalanceDesc": "Work on improving lower dimensions for a balanced profile.",
+      "developDeepRelationships": "Develop Deep Relationships",
+      "developDeepRelationshipsDesc": "Use your personality understanding to build more authentic relationships.",
+      "exploreNewTerritories": "Explore New Territories",
+      "exploreNewTerritoriesDesc": "Step out of your comfort zone and experiment with new activities or roles.",
+      "evaluateProgress": "Evaluate Progress",
+      "evaluateProgressDesc": "Reflect on your progress and plan next steps.",
+      "weeklyReflectionJournal": "Weekly reflection journal",
+      "monthlyFeedback": "Monthly feedback from colleagues or friends",
+      "observeStrengths": "Observe how you apply your strengths in new situations",
+      "retestRecommendation": "We recommend retaking the test after 6-12 months to observe evolution."
+    }
+  },
+  "bigFive": {
+    "chartTitle": "Big Five Dimensions",
+    "yourScore": "Your Score"
+  },
+  "recommendations": {
+    "specific": "Specific Recommendations",
+    "creativity": "Creativity",
+    "flexibility": "Flexibility",
+    "introspection": "Introspection",
+    "selfAwareness": "Self-Awareness",
+    "comfort": "Comfort",
+    "productivity": "Productivity",
+    "socialization": "Socialization",
+    "bigFive": {
+      "channelCreativity": "Channel Creativity",
+      "channelCreativityDesc": "Your high openness to experience gives you exceptional creative potential.",
+      "channelCreativityActions": [
+        "Participate in brainstorming sessions",
+        "Explore visual arts or music",
+        "Try unconventional approaches to problems"
+      ],
+      "developFlexibility": "Develop Flexibility",
+      "developFlexibilityDesc": "Improve your ability to adapt to changes and unexpected situations.",
+      "developFlexibilityActions": [
+        "Use visual reminders",
+        "Create short routines",
+        "Work in organized teams"
+      ],
+      "valorizeDeepReflection": "Value Deep Reflection",
+      "valorizeDeepReflectionDesc": "Use your introverted tendency for deep analysis and thoughtful decision-making.",
+      "valorizeDeepReflectionActions": [
+        "Create quiet workspaces",
+        "Develop deep 1-on-1 relationships",
+        "Use alone time for planning"
+      ],
+      "developSelfAwareness": "Develop Self-Awareness",
+      "developSelfAwarenessDesc": "Use the results for a deeper understanding of your personality.",
+      "developSelfAwarenessActions": [
+        "Keep a reflection journal",
+        "Observe how you react in different situations",
+        "Discuss results with close people"
+      ]
+    }
   }
 }

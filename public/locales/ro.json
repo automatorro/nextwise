@@ -190,6 +190,55 @@
     "scoreLabel": "Scor",
     "interpretation": {
       "notAvailable": "Interpretarea nu este disponibilă momentan"
+    },
+    "overallScore": {
+      "title": "Scor General",
+      "totalScore": "Scor Total",
+      "description": "Descrierea scorului tău general în cadrul testului",
+      "pointsObtained": "Puncte Obținute",
+      "maxPoints": "Puncte Maxime",
+      "whatMeansTitle": "Ce înseamnă rezultatul tău"
+    },
+    "nextSteps": {
+      "title": "Pașii Următori",
+      "description": "Recomandări pentru dezvoltarea ta continuă",
+      "createCareerPlan": "Creează Plan de Carieră",
+      "careerPlanDescriptionRelevant": "Folosește rezultatele acestui test pentru a-ți construi un plan personalizat de dezvoltare profesională",
+      "personalityInsight": "Perspective asupra Personalității",
+      "aiWillUse": "AI-ul va folosi aceste rezultate pentru a-ți oferi recomandări personalizate",
+      "exploreMoreTests": "Explorează Mai Multe Teste",
+      "moreTestsDescription": "Completează teste suplimentare pentru o înțelegere mai profundă"
+    },
+    "categories": {
+      "personality": "Personalitate",
+      "cognitive": "Cognitive",
+      "emotional": "Emoționale",
+      "leadership": "Leadership"
+    },
+    "scoring": {
+      "title": "Explicația Scorului",
+      "description": "Cum sunt calculate și interpretate rezultatele tale",
+      "interpretation": "Interpretarea Scorului",
+      "whatMeans": "Ce înseamnă rezultatele tale și cum să le folosești"
+    },
+    "bigFive": {
+      "dimensions": {
+        "openness": {
+          "title": "Deschidere către Experiență"
+        },
+        "conscientiousness": {
+          "title": "Conștiinciozitate"
+        },
+        "extraversion": {
+          "title": "Extraversiune"
+        },
+        "agreeableness": {
+          "title": "Agreabilitate"
+        },
+        "neuroticism": {
+          "title": "Neuroticismul"
+        }
+      }
     }
   },
   "toasts": {
@@ -820,5 +869,89 @@
     "saving": "Se salvează...",
     "noteUpdated": "Nota a fost actualizată cu succes",
     "updateError": "Nu am putut actualiza nota. Te rugăm să încerci din nou."
+  },
+  "personalizedResults": {
+    "title": "Profil Personal",
+    "personalizedInterpretation": "Interpretare Personalizată",
+    "contextualFactors": "Factori Contextuali",
+    "bullet": "Punct Important",
+    "context": "Context"
+  },
+  "lifeImpact": {
+    "title": "Impactul asupra Vieții",
+    "subtitle": "Cum influențează personalitatea ta diferite aspecte ale vieții",
+    "bigFive": {
+      "career": "Cariera Ta",
+      "relationships": "Relațiile Tale",
+      "stress": "Gestionarea Stresului",
+      "learning": "Stilul de Învățare",
+      "overallImpact": "Profilul tău Big Five îți influențează modul în care abordezi provocările, construiești relații și îți gestionezi emoțiile în viața de zi cu zi."
+    }
+  },
+  "progressPath": {
+    "title": "Calea de Progres",
+    "subtitle": "Plan structurat de dezvoltare pe 6 luni",
+    "bigFive": {
+      "understandProfile": "Înțelege-ți Profilul",
+      "understandProfileDesc": "Studiază în detaliu rezultatele testului și identifică-ți punctele forte și zonele de dezvoltare.",
+      "valorizeStrengths": "Valorifică Punctele Forte",
+      "valorizeStrengthsDesc": "Concentrează-te pe utilizarea punctelor tale forte în activitățile zilnice și profesionale.",
+      "developBalance": "Dezvoltă Echilibrul",
+      "developBalanceDesc": "Lucrează la îmbunătățirea dimensiunilor mai scăzute pentru un profil echilibrat.",
+      "developDeepRelationships": "Dezvoltă Relații Profunde",
+      "developDeepRelationshipsDesc": "Folosește-ți înțelegerea personalității pentru a construi relații mai autentice.",
+      "exploreNewTerritories": "Explorează Teritorii Noi",
+      "exploreNewTerritoriesDesc": "Ieși din zona de confort și experimentează noi activități sau roluri.",
+      "evaluateProgress": "Evaluează Progresul",
+      "evaluateProgressDesc": "Reflectează asupra progresului făcut și planifică următorii pași.",
+      "weeklyReflectionJournal": "Jurnal de reflecție săptămânală",
+      "monthlyFeedback": "Feedback lunar de la colegi sau prieteni",
+      "observeStrengths": "Observă cum îți aplici punctele forte în situații noi",
+      "retestRecommendation": "Recomandăm să refaci testul după 6-12 luni pentru a observa evoluția."
+    }
+  },
+  "bigFive": {
+    "chartTitle": "Dimensiunile Big Five",
+    "yourScore": "Scorul Tău"
+  },
+  "recommendations": {
+    "specific": "Recomandări Specifice",
+    "creativity": "Creativitate",
+    "flexibility": "Flexibilitate", 
+    "introspection": "Introspecție",
+    "selfAwareness": "Autocunoaștere",
+    "comfort": "Confort",
+    "productivity": "Productivitate",
+    "socialization": "Socializare",
+    "bigFive": {
+      "channelCreativity": "Canalizează Creativitatea",
+      "channelCreativityDesc": "Deschiderea ta ridicată către experiențe îți oferă un potențial creativ excepțional.",
+      "channelCreativityActions": [
+        "Participă la sesiuni de brainstorming",
+        "Explorează arte vizuale sau muzică",
+        "Încearcă abordări neconvenționale la probleme"
+      ],
+      "developFlexibility": "Dezvoltă Flexibilitatea",
+      "developFlexibilityDesc": "Îmbunătățește-ți capacitatea de adaptare la schimbări și situații neprevăzute.",
+      "developFlexibilityActions": [
+        "Folosește reminder-uri vizuale",
+        "Creează rutine scurte",
+        "Lucrează în echipe organizate"
+      ],
+      "valorizeDeepReflection": "Valorifică Reflecția Profundă",
+      "valorizeDeepReflectionDesc": "Folosește tendința ta introvertă pentru analiză profundă și luare de decizii ponderată.",
+      "valorizeDeepReflectionActions": [
+        "Creează spații de lucru liniștite",
+        "Dezvoltă relații 1-la-1 profunde",
+        "Folosește timpul singur pentru planificare"
+      ],
+      "developSelfAwareness": "Dezvoltă Autocunoașterea",
+      "developSelfAwarenessDesc": "Folosește rezultatele pentru o înțelegere mai profundă a personalității tale.",
+      "developSelfAwarenessActions": [
+        "Ține un jurnal de reflecție",
+        "Observă cum reacționezi în situații diverse",
+        "Discută rezultatele cu persoane apropiate"
+      ]
+    }
   }
 }

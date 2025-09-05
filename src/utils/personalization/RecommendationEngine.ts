@@ -368,11 +368,7 @@ async function getBigFiveRecommendations(score: StandardizedScore): Promise<Cont
           category: t('recommendations.creativity'),
           title: t('recommendations.bigFive.channelCreativity'),
           description: t('recommendations.bigFive.channelCreativityDesc'),
-          actionItems: [
-            t('recommendations.bigFive.channelCreativityActions.0') || "Explorează hobby-uri artistice",
-            t('recommendations.bigFive.channelCreativityActions.1') || "Caută experiențe noi", 
-            t('recommendations.bigFive.channelCreativityActions.2') || "Participă la evenimente culturale"
-          ]
+          actionItems: t('recommendations.bigFive.channelCreativityActions')
         });
       } else {
         recommendations.push({
@@ -380,7 +376,7 @@ async function getBigFiveRecommendations(score: StandardizedScore): Promise<Cont
           category: t('recommendations.comfort'),
           title: t('recommendations.bigFive.valorizeStability'),
           description: t('recommendations.bigFive.valorizeStabilityDesc'),
-          actionItems: [
+          actionItems: t('recommendations.bigFive.valorizeStabilityActions') || [
             "Creează rutine productive", 
             "Specializează-te într-un domeniu", 
             "Construiește sisteme organizate"
@@ -396,7 +392,7 @@ async function getBigFiveRecommendations(score: StandardizedScore): Promise<Cont
           category: t('recommendations.productivity'),
           title: t('recommendations.bigFive.valorizeProductivity'),
           description: t('recommendations.bigFive.valorizeProductivityDesc'),
-          actionItems: [
+          actionItems: t('recommendations.bigFive.valorizeProductivityActions') || [
             "Acceptă roluri de leadership", 
             "Gestionează proiecte complexe", 
             "Creează sisteme de productivitate"
@@ -408,11 +404,7 @@ async function getBigFiveRecommendations(score: StandardizedScore): Promise<Cont
           category: t('recommendations.flexibility'),
           title: t('recommendations.bigFive.developFlexibility'),
           description: t('recommendations.bigFive.developFlexibilityDesc'),
-          actionItems: [
-            "Folosește reminder-uri vizuale", 
-            "Creează rutine scurte", 
-            "Lucrează în echipe organizate"
-          ]
+          actionItems: t('recommendations.bigFive.developFlexibilityActions')
         });
       }
     }
@@ -424,7 +416,7 @@ async function getBigFiveRecommendations(score: StandardizedScore): Promise<Cont
           category: t('recommendations.socialization'),
           title: t('recommendations.bigFive.energizeThroughInteraction'),
           description: t('recommendations.bigFive.energizeThroughInteractionDesc'),
-          actionItems: [
+          actionItems: t('recommendations.bigFive.energizeThroughInteractionActions') || [
             "Participă la evenimente de networking", 
             "Alătură-te grupurilor de interes", 
             "Consideră roluri care implică prezentări"
@@ -436,11 +428,7 @@ async function getBigFiveRecommendations(score: StandardizedScore): Promise<Cont
           category: t('recommendations.introspection'),
           title: t('recommendations.bigFive.valorizeDeepReflection'),
           description: t('recommendations.bigFive.valorizeDeepReflectionDesc'),
-          actionItems: [
-            "Creează spații de lucru liniștite", 
-            "Dezvoltă relații 1-la-1 profunde", 
-            "Folosește timpul singur pentru planificare"
-          ]
+          actionItems: t('recommendations.bigFive.valorizeDeepReflectionActions')
         });
       }
     }
@@ -452,11 +440,7 @@ async function getBigFiveRecommendations(score: StandardizedScore): Promise<Cont
     category: t('recommendations.selfAwareness') || 'Autocunoaștere',
     title: t('recommendations.bigFive.developSelfAwareness') || 'Dezvoltă autocunoașterea',
     description: t('recommendations.bigFive.developSelfAwarenessDesc') || 'Folosește rezultatele pentru o înțelegere mai profundă a personalității tale.',
-    actionItems: [
-      "Ține un jurnal de reflecție", 
-      "Observă cum reacționezi în situații diverse", 
-      "Discută rezultatele cu persoane apropiate"
-    ]
+    actionItems: t('recommendations.bigFive.developSelfAwarenessActions')
   });
 
   return recommendations;
