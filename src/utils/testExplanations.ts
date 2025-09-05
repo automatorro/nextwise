@@ -376,6 +376,64 @@ export function getDimensionExplanation(testName: string, dimensionKey: string):
     }
   }
   
+  // === TESTUL HOLLAND RIASEC ===
+  if (testKey.includes('holland') || testKey.includes('riasec')) {
+    switch (dimensionKey) {
+      case 'realistic':
+        return {
+          description: 'Tipul Realist (R) - Persoanele realiste preferă activitățile practice, concrete și fizice. Sunt orientate spre lucrul cu unelte, mașini și obiecte tangibile.',
+          interpretations: {
+            high: 'Ești o persoană practică care preferă activitățile concrete și lucrul cu mâinile.',
+            low: 'Preferi activitățile teoretice și conceptuale în detrimentul celor practice.'
+          }
+        };
+      case 'investigative':
+        return {
+          description: 'Tipul Investigativ (I) - Persoanele investigative sunt curioase, analitice și orientate spre cercetare. Preferă să observe, să învețe și să rezolve probleme.',
+          interpretations: {
+            high: 'Ești o persoană analitică care iubește cercetarea și rezolvarea problemelor complexe.',
+            low: 'Preferi activitățile practice în detrimentul analizei teoretice.'
+          }
+        };
+      case 'artistic':
+        return {
+          description: 'Tipul Artistic (A) - Persoanele artistice sunt creative, imaginative și expresive. Preferă activitățile nestructurate care permit exprimarea creativă.',
+          interpretations: {
+            high: 'Ești o persoană creativă care valorează exprimarea artistică și originalitatea.',
+            low: 'Preferi structura și rutina în detrimentul creativității libere.'
+          }
+        };
+      case 'social':
+        return {
+          description: 'Tipul Social (S) - Persoanele sociale sunt empatice, comunicative și orientate spre ajutorarea altora. Preferă activitățile care implică interacțiunea cu oamenii.',
+          interpretations: {
+            high: 'Ești o persoană sociabilă care se împlinește prin ajutorarea și sprijinirea altora.',
+            low: 'Preferi activitățile independente în detrimentul interacțiunii sociale intense.'
+          }
+        };
+      case 'enterprising':
+        return {
+          description: 'Tipul Întreprinzător (E) - Persoanele întreprinzătoare sunt ambițioase, persuasive și orientate spre leadership. Preferă activitățile care implică influențarea altora.',
+          interpretations: {
+            high: 'Ești o persoană ambițioasă cu abilități de leadership și orientare spre afaceri.',
+            low: 'Preferi rolurile de suport în detrimentul pozițiilor de leadership.'
+          }
+        };
+      case 'conventional':
+        return {
+          description: 'Tipul Convențional (C) - Persoanele convenționale sunt organizate, metodice și orientate spre detalii. Preferă activitățile structurate și predictibile.',
+          interpretations: {
+            high: 'Ești o persoană organizată care valorează structura, ordinea și procedurile clare.',
+            low: 'Preferi flexibilitatea și spontaneitatea în detrimentul structurii rigide.'
+          }
+        };
+      default:
+        return {
+          description: 'Această dimensiune contribuie la profilul tău vocațional Holland RIASEC.'
+        };
+    }
+  }
+  
   return {
     description: 'Această dimensiune contribuie la profilul general al testului.'
   };
