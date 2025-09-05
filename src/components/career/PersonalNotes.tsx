@@ -16,12 +16,17 @@ const PersonalNotes: React.FC = () => {
   const [filterType, setFilterType] = useState<string>('all');
   const [selectedNote, setSelectedNote] = useState<UserNote | null>(null);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [newNote, setNewNote] = useState({
     title: '',
     content: '',
     note_type: 'ai_analysis',
     test_type: '',
     tags: [] as string[]
+  });
+  const [editingNote, setEditingNote] = useState({
+    title: '',
+    content: ''
   });
 
   const filteredNotes = notes.filter(note => {
@@ -42,6 +47,31 @@ const PersonalNotes: React.FC = () => {
           test_type: '',
           tags: []
         });
+      }
+    });
+  };
+
+  const handleEditNote = (note: UserNote) => {
+    setSelectedNote(note);
+    setEditingNote({
+      title: note.title,
+      content: note.content
+    });
+    setIsEditModalOpen(true);
+  };
+
+  const handleUpdateNote = () => {
+    if (!selectedNote) return;
+    
+    updateNote.mutate({
+      id: selectedNote.id,
+      title: editingNote.title,
+      content: editingNote.content
+    }, {
+      onSuccess: () => {
+        setIsEditModalOpen(false);
+        setSelectedNote(null);
+        setEditingNote({ title: '', content: '' });
       }
     });
   };
@@ -166,7 +196,7 @@ const PersonalNotes: React.FC = () => {
                     size="sm"
                     onClick={(e) => {
                       e.stopPropagation();
-                      setSelectedNote(note);
+                      handleEditNote(note);
                     }}
                   >
                     <Edit className="h-3 w-3" />
@@ -218,6 +248,39 @@ const PersonalNotes: React.FC = () => {
           </div>
         </Card>
       )}
+
+      {/* Edit Note Modal */}
+      <Dialog open={isEditModalOpen} onOpenChange={setIsEditModalOpen}>
+        <DialogContent className="max-w-2xl">
+          <DialogHeader>
+            <DialogTitle>Editează nota</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <Input
+              placeholder="Titlul notei"
+              value={editingNote.title}
+              onChange={(e) => setEditingNote({ ...editingNote, title: e.target.value })}
+            />
+            <Textarea
+              placeholder="Conținutul notei"
+              rows={6}
+              value={editingNote.content}
+              onChange={(e) => setEditingNote({ ...editingNote, content: e.target.value })}
+            />
+            <div className="flex gap-4">
+              <Button 
+                onClick={handleUpdateNote} 
+                disabled={!editingNote.title || !editingNote.content || updateNote.isPending}
+              >
+                {updateNote.isPending ? 'Se salvează...' : 'Salvează modificările'}
+              </Button>
+              <Button variant="outline" onClick={() => setIsEditModalOpen(false)}>
+                Anulează
+              </Button>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
