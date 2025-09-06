@@ -29,6 +29,7 @@ export interface StandardizedScore {
 
   // --- For 'profile' tests (DISC, Enneagram) ---
   dominant_profile?: string; // e.g., 'Dominance'
+  dominant_code?: string; // e.g., 'RIA' for Holland RIASEC tests
   // Contains descriptions for ALL possible profiles of the test
   profile_details?: { 
     [key: string]: { name: string; description: string };
