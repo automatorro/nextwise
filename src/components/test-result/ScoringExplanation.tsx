@@ -89,12 +89,47 @@ export const ScoringExplanation = ({ testName, dimensions, roleScores }: Scoring
           <div className="space-y-3">
             <h4 className="font-semibold text-lg">Scorurile tale actuale</h4>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {dimensions && Object.entries(dimensions).map(([key, value]) => (
-                <div key={key} className="text-center p-3 border rounded-lg bg-white">
-                  <div className="font-bold text-lg text-blue-600">{Math.round(value)}%</div>
-                  <div className="text-xs text-gray-600 uppercase tracking-wide">{key}</div>
-                </div>
-              ))}
+              {dimensions && Object.entries(dimensions).map(([key, value]) => {
+                // Traducere pentru tipurile Enneagram
+                let displayName = key;
+                if (testName.toLowerCase().includes('enneagram') && key.startsWith('type')) {
+                  const { language } = useLanguage();
+                  const isEnglish = language === 'en';
+                  
+                  const typeNamesRo = {
+                    type1: 'Reformatorul',
+                    type2: 'Ajutătorul',
+                    type3: 'Realizatorul',
+                    type4: 'Individualistul',
+                    type5: 'Investigatorul',
+                    type6: 'Loyalul',
+                    type7: 'Entuziastul',
+                    type8: 'Provocatorul',
+                    type9: 'Mediatorul'
+                  };
+                  
+                  const typeNamesEn = {
+                    type1: 'The Reformer',
+                    type2: 'The Helper',
+                    type3: 'The Achiever',
+                    type4: 'The Individualist',
+                    type5: 'The Investigator',
+                    type6: 'The Loyalist',
+                    type7: 'The Enthusiast',
+                    type8: 'The Challenger',
+                    type9: 'The Peacemaker'
+                  };
+                  
+                  const typeNames = isEnglish ? typeNamesEn : typeNamesRo;
+                  displayName = typeNames[key as keyof typeof typeNames] || key;
+                }
+                return (
+                  <div key={key} className="text-center p-3 border rounded-lg bg-white">
+                    <div className="font-bold text-lg text-blue-600">{Math.round(value)}%</div>
+                    <div className="text-xs text-gray-600 uppercase tracking-wide">{displayName}</div>
+                  </div>
+                );
+              })}
               {roleScores && Object.entries(roleScores).map(([key, value]) => (
                 <div key={key} className="text-center p-3 border rounded-lg bg-white">
                   <div className="font-bold text-lg text-blue-600">{Math.round(value)}%</div>
