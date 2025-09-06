@@ -66,7 +66,7 @@ export const useTestCalculation = (
             percentage: Math.round((value / maxScorePerType) * 100)
           })),
           interpretation: `Tipul tău dominant Enneagram este ${dominantType.replace('type', 'Type ')}`,
-          overall: dominantScore,
+          overall: Math.round((dominantScore / maxScorePerType) * 100),
           raw_score: dominantScore,
           max_score: maxScorePerType
         };
