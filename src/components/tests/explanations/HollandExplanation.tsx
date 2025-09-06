@@ -8,7 +8,7 @@ import {
   getHollandCareerRecommendations,
   getHollandOverallInterpretation 
 } from '@/utils/testSpecificExplanations/hollandExplanations';
-import { CheckCircle, ArrowRight, Briefcase, School, Timeline } from 'lucide-react';
+import { CheckCircle, ArrowRight, Briefcase, School, Calendar } from 'lucide-react';
 
 interface HollandExplanationProps {
   score: any;
@@ -367,7 +367,7 @@ const HollandExplanation = ({ score, language = 'ro' }: HollandExplanationProps)
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center">
-            <Timeline className="h-5 w-5 mr-2" />
+            <Calendar className="h-5 w-5 mr-2" />
             {language === 'en' ? 'Next Steps' : 'Pașii Următori'}
           </CardTitle>
         </CardHeader>
