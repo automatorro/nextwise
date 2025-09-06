@@ -13,6 +13,7 @@ import { LifeImpactExplanation } from '../LifeImpactExplanation';
 import { ProgressPathCard } from '../ProgressPathCard';
 import DetailedInterpretations from '../DetailedInterpretations';
 import { DiscRadarChart } from '../../charts/DiscRadarChart';
+import { SecureRadarChart } from '@/components/charts/SecureRadarChart';
 import { getEnneagramTypeDescription } from '@/utils/testCalculations/enneagramCalculation';
 
 interface ProfileResultLayoutProps {
@@ -29,7 +30,7 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
   const { t } = useTranslation();
   const dominantProfileId = score.dominant_profile;
   
-  // Get the translated profile information for DISC and Enneagram tests
+  // Get the translated profile information for DISC, Enneagram and Holland RIASEC tests
   const getProfileInfo = () => {
     if (testName?.includes('DISC') && dominantProfileId) {
       const profileKey = dominantProfileId;
@@ -48,13 +49,44 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
       };
     }
     
+    if ((testName?.toLowerCase().includes('holland') || testName?.toLowerCase().includes('riasec')) && dominantProfileId) {
+      // Pentru testul Holland RIASEC, folosim profile_details dacă există
+      if (score.profile_details?.[dominantProfileId]) {
+        return score.profile_details[dominantProfileId];
+      }
+      
+      // Altfel, construim manual informațiile profilului
+      const typeLabels: Record<string, string> = {
+        'REALISTIC': 'Realistic (R)',
+        'INVESTIGATIVE': 'Investigative (I)',
+        'ARTISTIC': 'Artistic (A)',
+        'SOCIAL': 'Social (S)',
+        'ENTERPRISING': 'Enterprising (E)',
+        'CONVENTIONAL': 'Conventional (C)'
+      };
+      
+      const typeDescriptions: Record<string, string> = {
+        'REALISTIC': 'Tipul Realistic preferă activitățile practice care implică manipularea obiectelor, uneltelor și mașinilor.',
+        'INVESTIGATIVE': 'Tipul Investigativ preferă activitățile analitice și intelectuale care implică gândirea, organizarea și înțelegerea.',
+        'ARTISTIC': 'Tipul Artistic preferă activitățile creative și expresive care permit exprimarea liberă și originalitatea.',
+        'SOCIAL': 'Tipul Social preferă activitățile care implică interacțiunea cu alți oameni pentru a-i ajuta, dezvolta sau informa.',
+        'ENTERPRISING': 'Tipul Întreprinzător preferă activitățile de conducere și persuasiune pentru a atinge obiective organizaționale sau economice.',
+        'CONVENTIONAL': 'Tipul Convențional preferă activitățile organizate și structurate care urmează proceduri clare și stabilite.'
+      };
+      
+      return {
+        name: typeLabels[dominantProfileId] || dominantProfileId,
+        description: typeDescriptions[dominantProfileId] || ''
+      };
+    }
+    
     // Fallback to old system for other tests
     return dominantProfileId ? score.profile_details?.[dominantProfileId] : null;
   };
   
   const profileInfo = getProfileInfo();
 
-  // Get the translated interpretation for DISC and Enneagram tests
+  // Get the translated interpretation for DISC, Enneagram and Holland RIASEC tests
   const getInterpretation = () => {
     if (testName?.includes('DISC') && dominantProfileId && profileInfo?.name) {
       return t('tests.disc.explanation.interpretation.dominant', { profile: profileInfo.name });
@@ -62,6 +94,11 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
     
     if (testName?.toLowerCase().includes('enneagram') && dominantProfileId && profileInfo?.name) {
       return `Tipul tău dominant Enneagram este ${profileInfo.name}. ${profileInfo.description}`;
+    }
+    
+    if ((testName?.toLowerCase().includes('holland') || testName?.toLowerCase().includes('riasec')) && dominantProfileId && profileInfo?.name) {
+      const dominantCode = score.dominant_code || dominantProfileId;
+      return `Codul tău Holland RIASEC dominant este ${dominantCode}. ${profileInfo.description}`;
     }
     
     // For other profile tests, return the interpretation as-is
@@ -88,6 +125,28 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
       {testName?.includes('DISC') && score.dimensions && (
         <DiscRadarChart dimensions={score.dimensions} testName={testName} />
       )}
+      
+      {/* Holland RIASEC Radar Chart */}
+      {(testName?.toLowerCase().includes('holland') || testName?.toLowerCase().includes('riasec')) && score.dimensions && (
+        <Card>
+          <CardHeader>
+            <CardTitle>
+              {t('common.language') === 'English' ? 'RIASEC Profile Chart' : 'Graficul Profilului RIASEC'}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <SecureRadarChart
+              data={score.dimensions.map(dim => ({
+                dimension: dim.id.charAt(0).toUpperCase() + dim.id.slice(1),
+                score: dim.score
+              }))}
+              dataKey="score"
+              fill="hsl(var(--primary))"
+              stroke="hsl(var(--primary))"
+            />
+          </CardContent>
+        </Card>
+      )
 
       {profileInfo && (
         <Card>
