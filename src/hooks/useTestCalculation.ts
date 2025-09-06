@@ -53,6 +53,9 @@ export const useTestCalculation = (
       case 'Enneagram Personality Test':
         const enneagramScores = calculateEnneagramScore(answers);
         const dominantType = getEnneagramDominantType(enneagramScores);
+        // Scorul maxim teoretic: 4 întrebări per tip × 4 puncte maxim per întrebare = 16 puncte per tip
+        const maxScorePerType = 16;
+        const dominantScore = enneagramScores[dominantType as keyof typeof enneagramScores];
         return {
           type: 'profile',
           dominant_profile: dominantType,
@@ -60,12 +63,12 @@ export const useTestCalculation = (
             id: key,
             name: key.replace('type', 'Type '),
             score: value,
-            percentage: Math.round((value / Math.max(...Object.values(enneagramScores))) * 100)
+            percentage: Math.round((value / maxScorePerType) * 100)
           })),
           interpretation: `Tipul tău dominant Enneagram este ${dominantType.replace('type', 'Type ')}`,
-          overall: Math.max(...Object.values(enneagramScores)),
-          raw_score: Math.max(...Object.values(enneagramScores)),
-          max_score: Math.max(...Object.values(enneagramScores))
+          overall: dominantScore,
+          raw_score: dominantScore,
+          max_score: maxScorePerType
         };
 
       // === TESTUL BELBIN ===
