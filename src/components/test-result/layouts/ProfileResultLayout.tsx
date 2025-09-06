@@ -14,6 +14,7 @@ import { ProgressPathCard } from '../ProgressPathCard';
 import DetailedInterpretations from '../DetailedInterpretations';
 import { DiscRadarChart } from '../../charts/DiscRadarChart';
 import { SecureRadarChart } from '@/components/charts/SecureRadarChart';
+import HollandExplanation from '@/components/tests/explanations/HollandExplanation';
 import { getEnneagramTypeDescription } from '@/utils/testCalculations/enneagramCalculation';
 
 interface ProfileResultLayoutProps {
@@ -128,25 +129,19 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
       
       {/* Holland RIASEC Radar Chart */}
       {(testName?.toLowerCase().includes('holland') || testName?.toLowerCase().includes('riasec')) && score.dimensions && (
-        <Card>
-          <CardHeader>
-            <CardTitle>
-              {t('common.language') === 'English' ? 'RIASEC Profile Chart' : 'Graficul Profilului RIASEC'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <SecureRadarChart
-              data={score.dimensions.map(dim => ({
-                dimension: dim.id.charAt(0).toUpperCase() + dim.id.slice(1),
-                score: dim.score
-              }))}
-              dataKey="score"
-              fill="hsl(var(--primary))"
-              stroke="hsl(var(--primary))"
-            />
-          </CardContent>
-        </Card>
-      )
+        <HollandExplanation 
+          score={{
+            overall: score.overall,
+            dimensions: score.dimensions.reduce((acc, dim) => ({ ...acc, [dim.id]: dim.score }), {}),
+            dominant_code: score.dominant_code,
+            interpretation: score.interpretation,
+            raw_score: score.raw_score,
+            max_score: score.max_score,
+            profile_details: score.profile_details
+          }}
+          language={t('common.language') === 'English' ? 'en' : 'ro'}
+        />
+      )}
 
       {profileInfo && (
         <Card>

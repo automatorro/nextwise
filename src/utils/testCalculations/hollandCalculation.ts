@@ -11,6 +11,9 @@ export interface HollandScore {
   };
   dominant_code: string;
   interpretation: string;
+  raw_score?: number;
+  max_score?: number;
+  profile_details?: Record<string, any>;
 }
 
 import { StandardizedScore } from '@/types/tests';
