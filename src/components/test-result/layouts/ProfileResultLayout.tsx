@@ -146,7 +146,7 @@ export const ProfileResultLayout: React.FC<ProfileResultLayoutProps> = ({ score,
             />
           </CardContent>
         </Card>
-      )
+      )}
 
       {profileInfo && (
         <Card>
